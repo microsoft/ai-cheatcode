@@ -1,0 +1,105 @@
+{
+  "name": "classify-request",
+  "description": "Power Automate flow that classifies an incoming triage request using Azure OpenAI. Called from Copilot Studio as a plugin action.",
+  "trigger": {
+    "type": "manual",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "userRequest": {
+            "type": "string",
+            "description": "The user's triage request text"
+          }
+        },
+        "required": ["userRequest"]
+      }
+    }
+  },
+  "actions": {
+    "step1_extract_and_classify": {
+      "type": "HTTP",
+      "description": "Call Azure OpenAI to extract entities and classify the request",
+      "inputs": {
+        "method": "POST",
+        "uri": "@{parameters('AzureOpenAI_Endpoint')}/openai/deployments/@{parameters('AzureOpenAI_Deployment')}/chat/completions?api-version=2024-06-01",
+        "headers": {
+          "Content-Type": "application/json",
+          "api-key": "@{parameters('AzureOpenAI_Key')}"
+        },
+        "body": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a request classifier. Analyze the incoming request and return a JSON response with these fields: category (it-support, hr-requests, legal-intake, or other), confidence (0-1), entities (object with relevant extracted fields like device_type, issue_type, urgency, request_type, counterparty, deadline), and reasoning (one sentence explaining the classification). If confidence is below 0.6, classify as 'other'. Set urgency to 'high' if the issue blocks work."
+            },
+            {
+              "role": "user",
+              "content": "@{triggerBody()?['userRequest']}"
+            }
+          ],
+          "temperature": 0.1,
+          "max_tokens": 500,
+          "response_format": { "type": "json_object" }
+        }
+      }
+    },
+    "step2_parse_classification": {
+      "type": "ParseJSON",
+      "description": "Parse the classification JSON from OpenAI response",
+      "inputs": {
+        "content": "@{body('step1_extract_and_classify')?['choices']?[0]?['message']?['content']}",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": { "type": "string" },
+            "confidence": { "type": "number" },
+            "entities": { "type": "object" },
+            "reasoning": { "type": "string" }
+          }
+        }
+      }
+    },
+    "step3_log_to_dataverse": {
+      "type": "Dataverse_CreateRecord",
+      "description": "Log the classification result for audit trail",
+      "inputs": {
+        "table": "cheatcode_triagelog",
+        "record": {
+          "cheatcode_request_text": "@{triggerBody()?['userRequest']}",
+          "cheatcode_category": "@{body('step2_parse_classification')?['category']}",
+          "cheatcode_confidence": "@{body('step2_parse_classification')?['confidence']}",
+          "cheatcode_entities": "@{string(body('step2_parse_classification')?['entities'])}",
+          "cheatcode_reasoning": "@{body('step2_parse_classification')?['reasoning']}"
+        }
+      }
+    },
+    "step4_return_result": {
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "category": "@{body('step2_parse_classification')?['category']}",
+          "confidence": "@{body('step2_parse_classification')?['confidence']}",
+          "entities": "@{body('step2_parse_classification')?['entities']}",
+          "reasoning": "@{body('step2_parse_classification')?['reasoning']}"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "AzureOpenAI_Endpoint": {
+      "type": "string",
+      "description": "Your Azure OpenAI endpoint (e.g., https://your-instance.openai.azure.com)"
+    },
+    "AzureOpenAI_Deployment": {
+      "type": "string",
+      "defaultValue": "gpt-4o",
+      "description": "Azure OpenAI deployment name"
+    },
+    "AzureOpenAI_Key": {
+      "type": "securestring",
+      "description": "Azure OpenAI API key"
+    }
+  }
+}

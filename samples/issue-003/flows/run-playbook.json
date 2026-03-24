@@ -1,0 +1,113 @@
+{
+  "name": "run-playbook",
+  "description": "Power Automate flow that fetches the matched playbook from Dataverse and generates recommended actions using Azure OpenAI.",
+  "trigger": {
+    "type": "manual",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "userRequest": {
+            "type": "string",
+            "description": "The original user request"
+          },
+          "category": {
+            "type": "string",
+            "description": "Classification result (it-support, hr-requests, legal-intake)"
+          },
+          "entities": {
+            "type": "object",
+            "description": "Extracted entities from classification step"
+          }
+        },
+        "required": ["userRequest", "category"]
+      }
+    }
+  },
+  "actions": {
+    "step1_fetch_playbook": {
+      "type": "Dataverse_ListRecords",
+      "description": "Look up the playbook for this category from Dataverse",
+      "inputs": {
+        "table": "cheatcode_playbooks",
+        "filter": "cheatcode_category eq '@{triggerBody()?['category']}'",
+        "select": "cheatcode_name, cheatcode_category, cheatcode_yaml_content"
+      }
+    },
+    "step2_check_playbook_exists": {
+      "type": "Condition",
+      "description": "Check if a playbook was found for this category",
+      "expression": "@greater(length(body('step1_fetch_playbook')?['value']), 0)",
+      "ifTrue": {
+        "step3_generate_recommendations": {
+          "type": "HTTP",
+          "description": "Call Azure OpenAI to generate recommendations based on the playbook",
+          "inputs": {
+            "method": "POST",
+            "uri": "@{parameters('AzureOpenAI_Endpoint')}/openai/deployments/@{parameters('AzureOpenAI_Deployment')}/chat/completions?api-version=2024-06-01",
+            "headers": {
+              "Content-Type": "application/json",
+              "api-key": "@{parameters('AzureOpenAI_Key')}"
+            },
+            "body": {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "You are a triage recommendation engine. Given a classified request and its matched playbook, generate specific recommended actions. Return JSON with: summary (one sentence), recommended_actions (array of {step, action, details, owner}), escalation_needed (boolean), and estimated_resolution (string). Be specific — generic advice like 'contact support' is not helpful."
+                },
+                {
+                  "role": "user",
+                  "content": "REQUEST: @{triggerBody()?['userRequest']}\n\nCATEGORY: @{triggerBody()?['category']}\n\nENTITIES: @{string(triggerBody()?['entities'])}\n\nPLAYBOOK:\n@{first(body('step1_fetch_playbook')?['value'])?['cheatcode_yaml_content']}"
+                }
+              ],
+              "temperature": 0.3,
+              "max_tokens": 800,
+              "response_format": { "type": "json_object" }
+            }
+          }
+        },
+        "step4_return_recommendations": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@{body('step3_generate_recommendations')?['choices']?[0]?['message']?['content']}"
+          }
+        }
+      },
+      "ifFalse": {
+        "step3_no_playbook": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "summary": "No playbook found for this category",
+              "recommended_actions": [
+                {
+                  "step": 1,
+                  "action": "Route to general help",
+                  "details": "This request doesn't match any configured playbook. Routing to general support.",
+                  "owner": "General Help Desk"
+                }
+              ],
+              "escalation_needed": true,
+              "estimated_resolution": "Varies — needs human triage"
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "AzureOpenAI_Endpoint": {
+      "type": "string",
+      "description": "Your Azure OpenAI endpoint"
+    },
+    "AzureOpenAI_Deployment": {
+      "type": "string",
+      "defaultValue": "gpt-4o"
+    },
+    "AzureOpenAI_Key": {
+      "type": "securestring"
+    }
+  }
+}

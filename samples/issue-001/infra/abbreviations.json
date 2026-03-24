@@ -1,0 +1,10 @@
+{
+  "resourceGroup": "rg-",
+  "storageAccount": "st",
+  "functionApp": "func-",
+  "appServicePlan": "plan-",
+  "searchService": "srch-",
+  "openAiAccount": "oai-",
+  "applicationInsights": "appi-",
+  "logAnalyticsWorkspace": "log-"
+}

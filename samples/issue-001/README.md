@@ -21,13 +21,17 @@ An Azure-hosted agent that ingests large PDFs from SharePoint, processes them th
 | File/Folder | What It Is |
 |-------------|-----------|
 | `README.md` | This file — setup and demo instructions |
-| `azure.yaml` | azd project definition |
-| `infra/` | Bicep infrastructure templates (Azure Functions, AI Services) |
-| `src/` | Agent application code |
-| `data/sample-pdfs/` | Sample PDF documents for testing |
-| `teams-manifest/` | Pre-built Teams manifest for publishing |
-| `.env.sample` | Environment variables template |
-| `prompts/` | The GitHub Copilot agent-mode prompt used to scaffold this, plus system prompts |
+| `azure.yaml` | azd project definition — connects infra and app code |
+| `infra/main.bicep` | Root Bicep template (provisions all Azure resources) |
+| `infra/modules/` | Bicep modules: storage, search, openai, functions |
+| `src/function_app.py` | Azure Functions entry point (3 endpoints: upload, query, status) |
+| `src/services/` | Service layer: pdf_processor, openai_client, search_client, blob_client |
+| `src/requirements.txt` | Python dependencies |
+| `data/sample-pdfs/` | Instructions for creating test PDFs |
+| `teams-manifest/` | Teams app manifest for publishing to M365 |
+| `prompts/` | System prompts and the Copilot agent-mode prompt |
+| `smoke-test.sh` | Post-deployment verification script |
+| `.env.sample` | Environment variables (auto-populated by `azd up`) |
 
 ## How This Was Built
 
@@ -39,6 +43,30 @@ Deploy to Azure with Bicep and integrate with Teams.
 ```
 
 You can re-run this prompt in Copilot Agent mode to see how the scaffolding works, or simply use the pre-built template below.
+
+## Architecture
+
+```
+┌─────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│  User/Teams  │────▶│  Azure Functions  │────▶│  Blob Storage   │
+│              │◀────│  (3 endpoints)    │     │  (PDF originals)│
+└─────────────┘     └────────┬─────────┘     └─────────────────┘
+                             │
+                    ┌────────┴─────────┐
+                    │                  │
+              ┌─────▼──────┐   ┌──────▼───────┐
+              │ Azure AI   │   │ Azure OpenAI │
+              │ Search     │   │ (GPT-4o +    │
+              │ (index +   │   │  embeddings) │
+              │  hybrid    │   └──────────────┘
+              │  search)   │
+              └────────────┘
+```
+
+**API Endpoints:**
+- `POST /api/upload` — Upload a PDF, extract text, chunk, embed, and index
+- `POST /api/query` — Ask a question (hybrid search + RAG answer with citations)
+- `GET  /api/status` — Check index health and document count
 
 ## Deploy
 
@@ -115,6 +143,20 @@ If the customer prefers a no-code approach:
 1. VS Code can export the agent as a ZIP package
 2. Import the ZIP into Copilot Studio via Solutions → Import
 3. Schema mismatches may need manual fixing — check the import log
+
+## Smoke Test
+
+After deployment, verify everything works:
+
+```bash
+# Get your function URL and key from the azd output
+./smoke-test.sh https://your-func-app.azurewebsites.net your-function-key
+```
+
+The smoke test checks:
+1. `/api/status` returns healthy
+2. `/api/query` handles empty index gracefully
+3. `/api/upload` processes a PDF (if sample PDFs are present)
 
 ## Known Limitations
 

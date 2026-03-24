@@ -19,12 +19,13 @@ A Copilot Studio agent that decomposes triage tasks into discrete prompt chains 
 | File/Folder | What It Is |
 |-------------|-----------|
 | `README.md` | This file — setup and demo instructions |
-| `solution/triage-agent.zip` | Copilot Studio solution — import into your environment |
-| `flows/classify-request.json` | Power Automate flow: classifies incoming requests |
-| `flows/run-playbook.json` | Power Automate flow: executes the matched playbook |
+| `solution/BUILD_GUIDE.md` | Step-by-step Copilot Studio build instructions (~20 min) |
+| `flows/classify-request.json` | Power Automate flow: classifies requests via Azure OpenAI |
+| `flows/run-playbook.json` | Power Automate flow: fetches playbook + generates recommendations |
+| `schema/dataverse-tables.md` | Dataverse table schemas + seed data instructions |
 | `data/playbooks/` | YAML playbook definitions (IT, HR, Legal examples) |
 | `data/test-queries.csv` | 50 synthetic test queries for validation |
-| `prompts/system-prompt.md` | The agent's system prompt |
+| `prompts/system-prompt.md` | Agent system prompt (paste into Copilot Studio Instructions) |
 | `prompts/classify-prompt.md` | The classification prompt used in the chain |
 | `prompts/recommend-prompt.md` | The recommendation prompt used in the chain |
 
@@ -43,27 +44,33 @@ Each step is a separate prompt with a specific job. This is more reliable than a
 
 ## Setup Steps
 
-### Step 1: Import the Copilot Studio Solution (~5 min)
-1. Go to [make.powerapps.com](https://make.powerapps.com) → Solutions → Import
-2. Upload `solution/triage-agent.zip`
-3. Follow the import wizard
-4. When prompted for connection references:
-   - **Dataverse**: Select your default Dataverse connection
-   - **Azure OpenAI** (if used): Enter your Azure OpenAI endpoint and key
+> **Full step-by-step build**: See [`solution/BUILD_GUIDE.md`](solution/BUILD_GUIDE.md) for the detailed Copilot Studio walkthrough with screenshots.
 
-### Step 2: Import Power Automate Flows (~5 min)
-1. Go to [make.powerautomate.com](https://make.powerautomate.com) → My Flows → Import
-2. Import `flows/classify-request.json` — configure the Azure OpenAI (or HTTP) connection
-3. Import `flows/run-playbook.json` — configure the Dataverse connection
-4. Turn on both flows
-
-### Step 3: Load the Playbooks (~5 min)
-1. In Dataverse, find the `Triage Playbooks` table (created by the solution import)
-2. Import the YAML playbooks from `data/playbooks/`:
+### Step 1: Create Dataverse Tables (~5 min)
+1. Follow the schema in [`schema/dataverse-tables.md`](schema/dataverse-tables.md)
+2. Create the `Triage Playbooks` table and the `Triage Log` table
+3. Seed the Playbooks table with the 3 YAML files from `data/playbooks/`:
    - `it-support.yaml` — Device provisioning, access requests, software issues
    - `hr-requests.yaml` — PTO, benefits, onboarding questions
    - `legal-intake.yaml` — Contract review, compliance questions, NDA requests
-3. Or create your own — the YAML format is documented below
+
+### Step 2: Create the Agent in Copilot Studio (~2 min)
+1. Go to [copilotstudio.microsoft.com](https://copilotstudio.microsoft.com) → Create → New agent
+2. Name: `Triage Agent`
+3. Paste contents of `prompts/system-prompt.md` into the Instructions field
+
+### Step 3: Import Power Automate Flows (~5 min)
+1. Go to [make.powerautomate.com](https://make.powerautomate.com) → My Flows → Import
+2. Import `flows/classify-request.json` — configure the Azure OpenAI + Dataverse connections
+3. Import `flows/run-playbook.json` — configure the Azure OpenAI + Dataverse connections
+4. Turn on both flows
+
+### Step 4: Wire the Triage Topic (~10 min)
+Follow the topic flow diagram in `solution/BUILD_GUIDE.md`:
+1. Create topic with trigger phrases ("I need help", "Something is broken", etc.)
+2. Add classify-request action → check confidence → route
+3. Add run-playbook action for high-confidence results
+4. Add escalation for low-confidence results
 
 ### Step 4: Test It (~15 min)
 Open the agent in Copilot Studio's test chat and run these queries:

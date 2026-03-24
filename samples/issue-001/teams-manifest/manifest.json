@@ -1,0 +1,52 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.17/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.17",
+  "version": "1.0.0",
+  "id": "{{APP_ID}}",
+  "developer": {
+    "name": "ABS Tech Strategy",
+    "websiteUrl": "https://aka.ms/the-cheat-code",
+    "privacyUrl": "https://privacy.microsoft.com",
+    "termsOfUseUrl": "https://www.microsoft.com/servicesagreement"
+  },
+  "name": {
+    "short": "PDF Agent",
+    "full": "PDF Document Analysis Agent"
+  },
+  "description": {
+    "short": "Analyze large PDF documents with AI",
+    "full": "Upload PDFs and ask natural language questions about their content. The agent processes documents that exceed normal token limits by chunking and indexing them with Azure AI Search, then uses Azure OpenAI for RAG-based question answering."
+  },
+  "icons": {
+    "color": "icons/color.png",
+    "outline": "icons/outline.png"
+  },
+  "accentColor": "#6B2FA0",
+  "bots": [
+    {
+      "botId": "{{BOT_ID}}",
+      "scopes": ["personal", "team"],
+      "commandLists": [
+        {
+          "scopes": ["personal"],
+          "commands": [
+            {
+              "title": "upload",
+              "description": "Upload a PDF document for analysis"
+            },
+            {
+              "title": "query",
+              "description": "Ask a question about uploaded documents"
+            },
+            {
+              "title": "status",
+              "description": "Check how many documents are indexed"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": []
+}
