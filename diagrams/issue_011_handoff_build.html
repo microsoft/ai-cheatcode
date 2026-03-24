@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1680px;
+    min-height: 1400px;
+    background: #FFFFFF;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 40px 40px;
+    color: #1B1B3A;
+  }
+  .title { text-align: center; margin-bottom: 8px; font-size: 28px; font-weight: 700; }
+  .subtitle { text-align: center; margin-bottom: 40px; font-size: 16px; color: #6B6B8D; }
+
+  /* Layout */
+  .architecture {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+  }
+  .row-agents {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+    width: 100%;
+  }
+  .row-infra {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 0;
+  }
+
+  /* Zone containers */
+  .zone {
+    border-radius: 16px;
+    padding: 24px 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .zone-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .zone-agent-a {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.10);
+    flex: 1;
+  }
+  .zone-agent-a .zone-label { color: #6B2FA0; }
+
+  .zone-agent-b {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.10);
+    flex: 1;
+  }
+  .zone-agent-b .zone-label { color: #6B2FA0; }
+
+  .zone-infra {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 2px solid #0078D4;
+    box-shadow: 0 4px 16px rgba(0,120,212,0.10);
+  }
+  .zone-infra .zone-label { color: #0078D4; }
+
+  .zone-analytics {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 2px solid #107C10;
+    box-shadow: 0 4px 16px rgba(16,124,16,0.10);
+  }
+  .zone-analytics .zone-label { color: #107C10; }
+
+  /* Components */
+  .component {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .component:last-child { margin-bottom: 0; }
+  .comp-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .comp-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+  .comp-outputs { margin-top: 8px; }
+  .comp-outputs li { font-size: 11px; color: #555; margin-bottom: 3px; list-style: none; display: flex; align-items: center; gap: 4px; }
+
+  .icon { width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 15px; color: white; flex-shrink: 0; }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-orange { background: #CA5010; }
+  .icon-amber { background: #CA5010; }
+  .icon-green { background: #107C10; }
+
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 4px; }
+  .badge-purple { background: #6B2FA0; color: white; }
+  .badge-blue { background: #0078D4; color: white; }
+  .badge-green { background: #107C10; color: white; }
+
+  /* Arrows */
+  .arrow-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    flex-shrink: 0;
+    gap: 4px;
+  }
+  .arrow-right .arrow-h { display: flex; align-items: center; }
+  .arrow-right .shaft { width: 28px; height: 2px; background: #333; }
+  .arrow-right .head { width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-left: 10px solid #333; }
+  .arrow-right .alabel { font-size: 10px; color: #6B6B8D; font-style: italic; max-width: 90px; text-align: center; line-height: 1.3; }
+
+  .arrow-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 0;
+    gap: 4px;
+  }
+  .arrow-down .shaft-v { width: 2px; height: 24px; background: #333; }
+  .arrow-down .head-v { width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 10px solid #333; }
+  .arrow-down .alabel { font-size: 10px; color: #6B6B8D; font-style: italic; text-align: center; line-height: 1.3; }
+
+  /* Handoff flow between agents */
+  .handoff-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    flex-shrink: 0;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .handoff-flow-box {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 2px solid #0078D4;
+    border-radius: 12px;
+    padding: 12px 16px;
+    text-align: center;
+    width: 180px;
+  }
+  .handoff-flow-box .hf-title { font-size: 11px; font-weight: 700; color: #0078D4; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .handoff-flow-box .hf-desc { font-size: 10px; color: #6B6B8D; line-height: 1.3; }
+  .handoff-arrows {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .handoff-arrows .ha-line { width: 2px; height: 12px; background: #0078D4; }
+  .handoff-arrows .ha-head-down { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid #0078D4; }
+  .handoff-arrows .ha-head-up { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 8px solid #0078D4; }
+
+  /* Dataverse schema display */
+  .schema-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 11px;
+  }
+  .schema-table th {
+    background: rgba(0,120,212,0.08);
+    color: #0078D4;
+    font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 10px;
+    text-align: left;
+    border-bottom: 1.5px solid rgba(0,120,212,0.2);
+  }
+  .schema-table td {
+    padding: 5px 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    color: #555;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10px;
+  }
+
+  .handoff-note {
+    margin-top: 28px;
+    text-align: center;
+    background: #F8F8FC;
+    border: 1.5px solid #E0E0F0;
+    border-radius: 12px;
+    padding: 16px 28px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .handoff-note .hn-label { font-size: 12px; font-weight: 700; color: #6B2FA0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .handoff-note .hn-text { font-size: 13px; color: #555; line-height: 1.5; }
+
+  /* Topic flow */
+  .topic-flow {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .topic-step {
+    background: #FFFFFF;
+    border: 1.5px solid rgba(107,47,160,0.3);
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #6B2FA0;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .topic-arrow { color: #6B2FA0; font-size: 12px; font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="title">Building Multi-Agent Handoff in Copilot Studio</div>
+  <div class="subtitle">Issue #011 — Practical Build: Two Agents + Shared Dataverse Session State + Power Automate Handoff Flow + Analytics Dashboard</div>
+
+  <div class="architecture">
+
+    <!-- Row 1: Two Agents with Handoff Flow -->
+    <div class="row-agents">
+
+      <!-- Agent A: HR Knowledge Agent -->
+      <div class="zone zone-agent-a">
+        <div class="zone-label">🤖 Agent A: HR Knowledge Agent <span class="badge badge-purple">PTO · Benefits · Onboarding</span></div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-purple">📚</div> Knowledge Sources</div>
+          <div class="comp-desc">SharePoint HR library: PTO policies, benefits guides, onboarding checklists, org charts. Scoped to HR domain only.</div>
+        </div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-purple">🧠</div> System Prompt</div>
+          <div class="comp-desc">"You are an HR support agent. If the user asks about IT, devices, software, or access — do not attempt to answer. Trigger the handoff topic."</div>
+        </div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-purple">🔍</div> Out-of-Scope Detection</div>
+          <div class="comp-desc">Fallback topic fires when generative answers return low confidence. Power Automate classifies: "Is this HR or IT?"</div>
+          <div class="topic-flow">
+            <div class="topic-step">Low Confidence</div>
+            <div class="topic-arrow">→</div>
+            <div class="topic-step">Classify Domain</div>
+            <div class="topic-arrow">→</div>
+            <div class="topic-step">IT Detected</div>
+            <div class="topic-arrow">→</div>
+            <div class="topic-step">Trigger Handoff</div>
+          </div>
+        </div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-purple">📋</div> Summary Generation</div>
+          <div class="comp-desc">Azure OpenAI generates 3-sentence summary: user's question, context discussed, handoff reason. Written to Dataverse before transfer.</div>
+        </div>
+      </div>
+
+      <!-- Handoff Flow (center) -->
+      <div class="handoff-flow">
+        <div class="handoff-arrows">
+          <div class="ha-line"></div>
+          <div class="ha-head-down"></div>
+        </div>
+        <div class="handoff-flow-box">
+          <div class="hf-title">⚡ Power Automate</div>
+          <div class="hf-desc">Handoff flow: write summary → create session record → trigger agent transfer</div>
+        </div>
+        <div class="handoff-arrows">
+          <div class="ha-line"></div>
+          <div class="ha-head-down"></div>
+        </div>
+
+        <div class="arrow-right" style="transform: rotate(0deg); padding: 8px 0;">
+          <div class="alabel">Writes to shared Dataverse table</div>
+          <div class="arrow-h"><div class="shaft" style="width: 2px; height: 20px;"></div></div>
+        </div>
+
+        <div class="handoff-arrows">
+          <div class="ha-head-up"></div>
+          <div class="ha-line"></div>
+        </div>
+        <div class="handoff-flow-box">
+          <div class="hf-title">📥 Context Pickup</div>
+          <div class="hf-desc">Greeting topic queries Dataverse for session and injects context</div>
+        </div>
+        <div class="handoff-arrows">
+          <div class="ha-head-up"></div>
+          <div class="ha-line"></div>
+        </div>
+      </div>
+
+      <!-- Agent B: IT Support Agent -->
+      <div class="zone zone-agent-b">
+        <div class="zone-label">🤖 Agent B: IT Support Agent <span class="badge badge-purple">Devices · Access · Software</span></div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-purple">📚</div> Knowledge Sources</div>
+          <div class="comp-desc">SharePoint IT library: device catalog, software request forms, access provisioning guides, troubleshooting docs.</div>
+        </div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-purple">🧠</div> System Prompt</div>
+          <div class="comp-desc">"You are an IT support agent. If the user asks about HR, benefits, PTO, or onboarding policies — do not attempt to answer. Trigger the handoff topic."</div>
+        </div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-purple">📥</div> Context-Aware Greeting</div>
+          <div class="comp-desc">On transfer: reads handoff summary from Dataverse. Greets user with context: "I see you need a laptop for your new engineer — let me help."</div>
+          <div class="topic-flow">
+            <div class="topic-step">Transfer In</div>
+            <div class="topic-arrow">→</div>
+            <div class="topic-step">Query Dataverse</div>
+            <div class="topic-arrow">→</div>
+            <div class="topic-step">Inject Context</div>
+            <div class="topic-arrow">→</div>
+            <div class="topic-step">Continue</div>
+          </div>
+        </div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-purple">🔍</div> Out-of-Scope Detection</div>
+          <div class="comp-desc">Same fallback pattern — can hand off back to HR or to other agents. Prevents dead-end conversations.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrow down to shared infrastructure -->
+    <div class="arrow-down">
+      <div class="alabel">Session records, handoff logs, analytics events</div>
+      <div class="shaft-v"></div>
+      <div class="head-v"></div>
+    </div>
+
+    <!-- Row 2: Shared Infrastructure -->
+    <div class="row-infra">
+
+      <!-- Dataverse Zone -->
+      <div class="zone zone-infra" style="flex: 1.5;">
+        <div class="zone-label">🗄️ Shared Infrastructure: Dataverse <span class="badge badge-blue">Session State</span></div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-blue">📊</div> AgentSession Table</div>
+          <div class="comp-desc">Central session state table shared by all agents. One table, multiple agents.</div>
+          <table class="schema-table">
+            <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+            <tr><td>session_id</td><td>GUID</td><td>Unique conversation session identifier</td></tr>
+            <tr><td>user_id</td><td>String</td><td>Entra ID of the user</td></tr>
+            <tr><td>source_agent</td><td>String</td><td>Agent that initiated the handoff</td></tr>
+            <tr><td>target_agent</td><td>String</td><td>Agent receiving the handoff</td></tr>
+            <tr><td>summary</td><td>Text</td><td>AI-generated conversation summary</td></tr>
+            <tr><td>handoff_reason</td><td>String</td><td>Why the handoff was triggered</td></tr>
+            <tr><td>timestamp</td><td>DateTime</td><td>When the handoff occurred</td></tr>
+          </table>
+        </div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-blue">⚡</div> Power Automate Handoff Flow</div>
+          <div class="comp-desc">Triggered by out-of-scope detection. Creates Dataverse record → generates summary → initiates Copilot Studio agent transfer. Logs every handoff for analytics.</div>
+        </div>
+      </div>
+
+      <!-- Analytics Zone -->
+      <div class="zone zone-analytics" style="flex: 1;">
+        <div class="zone-label">📈 Analytics <span class="badge badge-green">Power BI</span></div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-green">📊</div> Handoff Dashboard</div>
+          <div class="comp-desc">Real-time visibility into multi-agent handoff health:</div>
+          <ul class="comp-outputs">
+            <li>📈 <strong>Handoff volume</strong> — transfers per day/week by direction</li>
+            <li>🔄 <strong>Round-trip rate</strong> — users bounced back (misroutes)</li>
+            <li>✅ <strong>Resolution rate</strong> — queries resolved per agent</li>
+            <li>⏱️ <strong>Time to resolve</strong> — pre vs. post-handoff</li>
+          </ul>
+        </div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-green">🚨</div> Automated Alerts</div>
+          <div class="comp-desc">"HR→IT handoff rate spiked 40% this week" → may indicate a knowledge gap in the HR agent. Triggers review flow.</div>
+        </div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-green">🎯</div> Knowledge Gap Detection</div>
+          <div class="comp-desc">High handoff rates for specific topics signal missing content. Feed insights back to knowledge source curation.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Insight callout -->
+  <div class="handoff-note">
+    <div class="hn-label">🔑 Build Insight</div>
+    <div class="hn-text">Both agents share <strong>one Dataverse table</strong> for session state — context transfers seamlessly without custom integration. The handoff flow is a single Power Automate flow reused by every agent pair. Add a third agent? Just add another out-of-scope topic and point it at the same flow. <strong>The architecture scales horizontally — one shared infrastructure, unlimited agents.</strong></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1680px;
+    min-height: 1300px;
+    background: #FFFFFF;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 40px 40px;
+    color: #1B1B3A;
+  }
+  .title { text-align: center; margin-bottom: 8px; font-size: 28px; font-weight: 700; }
+  .subtitle { text-align: center; margin-bottom: 40px; font-size: 16px; color: #6B6B8D; }
+
+  .architecture {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  /* ── Tiers column (left, wide) ── */
+  .tiers-column {
+    flex: 1.8;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* ── Memory types column (right) ── */
+  .types-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* ── Zone containers ── */
+  .zone {
+    border-radius: 16px;
+    padding: 24px 24px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .zone-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .zone-green {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 2px solid #107C10;
+    box-shadow: 0 4px 16px rgba(16,124,16,0.10);
+  }
+  .zone-green .zone-label { color: #107C10; }
+
+  .zone-blue {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 2px solid #0078D4;
+    box-shadow: 0 4px 16px rgba(0,120,212,0.10);
+  }
+  .zone-blue .zone-label { color: #0078D4; }
+
+  .zone-purple {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.10);
+  }
+  .zone-purple .zone-label { color: #6B2FA0; }
+
+  .zone-amber {
+    background: linear-gradient(135deg, #FFF8E1, #FFF0CC);
+    border: 2px solid #CA5010;
+    box-shadow: 0 4px 16px rgba(202,80,16,0.10);
+  }
+  .zone-amber .zone-label { color: #CA5010; }
+
+  /* ── Components ── */
+  .component {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .component:last-child { margin-bottom: 0; }
+  .comp-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .comp-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+
+  .icon { width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 15px; color: white; flex-shrink: 0; }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-orange { background: #CA5010; }
+  .icon-green { background: #107C10; }
+  .icon-amber { background: #CA5010; }
+
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 4px; }
+  .badge-green { background: #107C10; color: white; }
+  .badge-blue { background: #0078D4; color: white; }
+  .badge-purple { background: #6B2FA0; color: white; }
+
+  /* ── Tier details ── */
+  .tier-meta {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .tier-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .tag-ephemeral { background: rgba(16,124,16,0.12); color: #107C10; }
+  .tag-session { background: rgba(0,120,212,0.12); color: #0078D4; }
+  .tag-persistent { background: rgba(107,47,160,0.12); color: #6B2FA0; }
+
+  /* ── Arrows ── */
+  .arrow-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    gap: 4px;
+  }
+  .arrow-down .shaft-v { width: 2px; height: 20px; background: #333; }
+  .arrow-down .head-v { width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 10px solid #333; }
+  .arrow-down .alabel { font-size: 10px; color: #6B6B8D; font-style: italic; text-align: center; line-height: 1.3; }
+
+  /* ── Memory type items ── */
+  .memory-type-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .mt-header { font-size: 14px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .mt-examples { font-size: 11px; color: #6B6B8D; line-height: 1.5; }
+  .mt-examples li { margin-bottom: 4px; list-style: none; display: flex; align-items: flex-start; gap: 6px; }
+
+  /* ── Callout boxes ── */
+  .callout-row {
+    margin-top: 32px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+  .callout-box {
+    border-radius: 12px;
+    padding: 18px 24px;
+    max-width: 520px;
+    text-align: center;
+    flex: 1;
+  }
+  .callout-box .cb-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .callout-box .cb-text { font-size: 13px; color: #555; line-height: 1.5; }
+
+  .callout-warning {
+    background: #FFF8E1;
+    border: 1.5px solid #FFE082;
+  }
+  .callout-warning .cb-label { color: #CA5010; }
+
+  .callout-privacy {
+    background: #F0ECF5;
+    border: 1.5px solid #D4B8E8;
+  }
+  .callout-privacy .cb-label { color: #6B2FA0; }
+
+  /* ── Persistence scale ── */
+  .persistence-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-top: 12px;
+    margin-bottom: 4px;
+  }
+  .pb-segment {
+    height: 8px;
+    border-radius: 4px;
+  }
+  .pb-short { background: #107C10; flex: 1; border-radius: 4px 0 0 4px; }
+  .pb-medium { background: #0078D4; flex: 2; }
+  .pb-long { background: #6B2FA0; flex: 4; border-radius: 0 4px 4px 0; }
+  .pb-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: #6B6B8D;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+  <div class="title">Persistent Agent Memory — Three Tiers</div>
+  <div class="subtitle">Issue #012 — Pattern: Conversation → Session → Long-Term Memory — From Chatbot to Assistant</div>
+
+  <div class="architecture">
+
+    <!-- Left: Stacked Memory Tiers -->
+    <div class="tiers-column">
+
+      <!-- Tier 1: Conversation Memory -->
+      <div class="zone zone-green">
+        <div class="zone-label">💬 Tier 1: Conversation Memory <span class="badge badge-green">Built-In</span></div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-green">💬</div> What Was Said This Session</div>
+          <div class="comp-desc">The current conversation's message history. Copilot Studio and M365 Copilot manage this natively — no custom work needed. Context window holds the last N turns.</div>
+          <div class="tier-meta">
+            <span class="tier-tag tag-ephemeral">⏱️ Ephemeral</span>
+            <span class="tier-tag tag-ephemeral">🔄 Auto-managed</span>
+            <span class="tier-tag tag-ephemeral">📏 Token-limited</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-down">
+        <div class="alabel">Persistence increases ↓</div>
+        <div class="shaft-v"></div>
+        <div class="head-v"></div>
+      </div>
+
+      <!-- Tier 2: Session Memory -->
+      <div class="zone zone-blue">
+        <div class="zone-label">📋 Tier 2: Session Memory <span class="badge badge-blue">Cross-Turn</span></div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-blue">📌</div> Facts Established During This Task</div>
+          <div class="comp-desc">Structured facts extracted mid-conversation that should persist until the task is complete. Survives context window overflow — even if earlier messages scroll out, the facts remain.</div>
+          <div class="tier-meta">
+            <span class="tier-tag tag-session">📋 Task-scoped</span>
+            <span class="tier-tag tag-session">🔑 Key-value pairs</span>
+            <span class="tier-tag tag-session">🗑️ Cleared on task end</span>
+          </div>
+        </div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-blue">💡</div> Example</div>
+          <div class="comp-desc">"The user is configuring <strong>Project Falcon</strong>." — established on turn 3, still available on turn 47 even after context window rotates.</div>
+        </div>
+      </div>
+
+      <div class="arrow-down">
+        <div class="shaft-v"></div>
+        <div class="head-v"></div>
+      </div>
+
+      <!-- Tier 3: Long-Term Memory -->
+      <div class="zone zone-purple">
+        <div class="zone-label">🧠 Tier 3: Long-Term Memory <span class="badge badge-purple">Cross-Session</span></div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-purple">🏗️</div> Preferences, Past Decisions, Recurring Patterns</div>
+          <div class="comp-desc">Persists across sessions and conversations. The agent knows who you are, what you prefer, and what you've done before. Stored externally in Dataverse or a similar store.</div>
+          <div class="tier-meta">
+            <span class="tier-tag tag-persistent">♾️ Persistent</span>
+            <span class="tier-tag tag-persistent">🗄️ Dataverse-backed</span>
+            <span class="tier-tag tag-persistent">🔒 User-scoped</span>
+          </div>
+        </div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-purple">💡</div> Example</div>
+          <div class="comp-desc">"This user always wants answers in <strong>bullet points</strong> and prefers <strong>PowerShell</strong> over CLI." — learned last month, applied today.</div>
+        </div>
+      </div>
+
+      <!-- Persistence scale bar -->
+      <div style="margin-top: 18px; padding: 0 20px;">
+        <div class="persistence-bar">
+          <div class="pb-segment pb-short"></div>
+          <div class="pb-segment pb-medium"></div>
+          <div class="pb-segment pb-long"></div>
+        </div>
+        <div class="pb-labels">
+          <span>Minutes</span>
+          <span>Hours / Task</span>
+          <span>Days → Months → Permanent</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Memory Types -->
+    <div class="types-column">
+      <div class="zone zone-amber" style="flex: 1;">
+        <div class="zone-label">🗂️ Memory Types <span class="badge" style="background:#CA5010;color:white;">Classification</span></div>
+
+        <div class="memory-type-card">
+          <div class="mt-header"><div class="icon icon-blue">📌</div> Facts</div>
+          <div class="mt-examples">
+            <div style="margin-bottom:4px; font-weight:600; color:#1B1B3A;">Stable truths about the user or context</div>
+            <ul>
+              <li>📎 "User's project is <strong>Project Falcon</strong>"</li>
+              <li>📎 "User is on the Contoso engineering team"</li>
+              <li>📎 "Deployment target is Azure East US 2"</li>
+            </ul>
+            <div style="margin-top:6px; font-size:10px; color:#999;">Rarely change · High confidence · Long retention</div>
+          </div>
+        </div>
+
+        <div class="memory-type-card">
+          <div class="mt-header"><div class="icon icon-purple">⚙️</div> Preferences</div>
+          <div class="mt-examples">
+            <div style="margin-bottom:4px; font-weight:600; color:#1B1B3A;">How the user likes things done</div>
+            <ul>
+              <li>📎 "Summarize in bullet points, not paragraphs"</li>
+              <li>📎 "Skip introductions — get to the answer"</li>
+              <li>📎 "Prefer PowerShell over Azure CLI"</li>
+            </ul>
+            <div style="margin-top:6px; font-size:10px; color:#999;">Evolve over time · Medium confidence · Updateable</div>
+          </div>
+        </div>
+
+        <div class="memory-type-card">
+          <div class="mt-header"><div class="icon icon-green">📅</div> Episodes</div>
+          <div class="mt-examples">
+            <div style="margin-bottom:4px; font-weight:600; color:#1B1B3A;">What happened in past interactions</div>
+            <ul>
+              <li>📎 "On March 12, we debugged the auth timeout"</li>
+              <li>📎 "Last week, user asked about RBAC setup"</li>
+              <li>📎 "User completed Falcon Phase 1 on April 3"</li>
+            </ul>
+            <div style="margin-top:6px; font-size:10px; color:#999;">Historical · May expire · Summarized over time</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom callout boxes -->
+  <div class="callout-row">
+    <div class="callout-box callout-warning">
+      <div class="cb-label">⚠️ The Summarization Trap</div>
+      <div class="cb-text">Saving full conversation transcripts doesn't scale. Transcripts are noisy, token-heavy, and full of irrelevant turns. <strong>Extract structured facts, not raw text.</strong> Memory should be key-value pairs, not paragraphs. The naive approach wastes tokens and retrieves noise.</div>
+    </div>
+    <div class="callout-box callout-privacy">
+      <div class="cb-label">🔒 Privacy: Remember vs. Forget</div>
+      <div class="cb-text">What should agents remember? What should they forget? Memory stored in Dataverse inherits the tenant's data policies (GDPR, data residency). <strong>Always provide "Forget everything about me"</strong> as an explicit agent action. User control is non-negotiable.</div>
+    </div>
+  </div>
+</body>
+</html>

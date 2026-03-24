@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1680px;
+    min-height: 1400px;
+    background: #FFFFFF;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 40px 40px;
+    color: #1B1B3A;
+  }
+  .title { text-align: center; margin-bottom: 8px; font-size: 28px; font-weight: 700; }
+  .subtitle { text-align: center; margin-bottom: 40px; font-size: 16px; color: #6B6B8D; }
+
+  .architecture {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  /* Left column: Regression Detection */
+  .col-left {
+    width: 260px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Center column: Three evaluation layers */
+  .col-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Right column: Trust Signals */
+  .col-right {
+    width: 280px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .zone {
+    border-radius: 16px;
+    padding: 24px 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .zone-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .zone-usage {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 2px solid #0078D4;
+    box-shadow: 0 4px 16px rgba(0,120,212,0.10);
+  }
+  .zone-usage .zone-label { color: #0078D4; }
+
+  .zone-quality {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.10);
+  }
+  .zone-quality .zone-label { color: #6B2FA0; }
+
+  .zone-business {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 2px solid #107C10;
+    box-shadow: 0 4px 16px rgba(16,124,16,0.10);
+  }
+  .zone-business .zone-label { color: #107C10; }
+
+  .zone-trust {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.10);
+  }
+  .zone-trust .zone-label { color: #6B2FA0; }
+
+  .zone-regression {
+    background: linear-gradient(135deg, #FFF8E1, #FFF0CC);
+    border: 2px solid #CA5010;
+    box-shadow: 0 4px 16px rgba(202,80,16,0.10);
+  }
+  .zone-regression .zone-label { color: #CA5010; }
+
+  .component {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .component:last-child { margin-bottom: 0; }
+  .comp-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .comp-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+
+  .icon { width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 15px; color: white; flex-shrink: 0; }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-orange { background: #CA5010; }
+  .icon-green { background: #107C10; }
+  .icon-amber { background: #CA5010; }
+
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 4px; }
+  .badge-purple { background: #6B2FA0; color: white; }
+  .badge-blue { background: #0078D4; color: white; }
+  .badge-green { background: #107C10; color: white; }
+  .badge-amber { background: #CA5010; color: white; }
+
+  .arrow-up {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    gap: 4px;
+  }
+  .arrow-up .head-v { width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 10px solid #333; }
+  .arrow-up .shaft-v { width: 2px; height: 20px; background: #333; }
+  .arrow-up .alabel { font-size: 10px; color: #6B6B8D; font-style: italic; text-align: center; line-height: 1.3; }
+
+  .arrow-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    flex-shrink: 0;
+    gap: 4px;
+  }
+  .arrow-right .arrow-h { display: flex; align-items: center; }
+  .arrow-right .shaft { width: 28px; height: 2px; background: #333; }
+  .arrow-right .head { width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-left: 10px solid #333; }
+  .arrow-right .alabel { font-size: 10px; color: #6B6B8D; font-style: italic; max-width: 90px; text-align: center; line-height: 1.3; }
+
+  .arrow-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    flex-shrink: 0;
+    gap: 4px;
+  }
+  .arrow-left .arrow-h { display: flex; align-items: center; }
+  .arrow-left .shaft { width: 28px; height: 2px; background: #333; }
+  .arrow-left .head { width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-right: 10px solid #333; }
+  .arrow-left .alabel { font-size: 10px; color: #6B6B8D; font-style: italic; max-width: 90px; text-align: center; line-height: 1.3; }
+
+  .question-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+  }
+  .question-tag-blue { background: rgba(0,120,212,0.10); color: #0078D4; }
+  .question-tag-purple { background: rgba(107,47,160,0.10); color: #6B2FA0; }
+  .question-tag-green { background: rgba(16,124,16,0.10); color: #107C10; }
+
+  .metrics-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .metric-chip {
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 10px 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+    flex: 1;
+    min-width: 160px;
+  }
+  .metric-chip .mc-name { font-size: 12px; font-weight: 600; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+  .metric-chip .mc-desc { font-size: 10px; color: #6B6B8D; line-height: 1.3; }
+
+  .handoff-note {
+    margin-top: 28px;
+    text-align: center;
+    background: #F8F8FC;
+    border: 1.5px solid #E0E0F0;
+    border-radius: 12px;
+    padding: 16px 28px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .handoff-note .hn-label { font-size: 12px; font-weight: 700; color: #6B2FA0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .handoff-note .hn-text { font-size: 13px; color: #555; line-height: 1.5; }
+
+  .regression-flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .regression-step {
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+    text-align: center;
+    width: 100%;
+  }
+  .regression-step .rs-name { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; justify-content: center; }
+  .regression-step .rs-desc { font-size: 10px; color: #6B6B8D; line-height: 1.3; margin-top: 3px; }
+
+  .mini-arrow-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 0;
+  }
+  .mini-arrow-down .shaft-v { width: 2px; height: 12px; background: #CA5010; }
+  .mini-arrow-down .head-v { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid #CA5010; }
+</style>
+</head>
+<body>
+  <div class="title">Agent Evaluation & Trust Signals</div>
+  <div class="subtitle">Issue #016 — Pattern: Three Evaluation Layers — Usage → Quality → Business Value</div>
+
+  <div class="architecture">
+
+    <!-- LEFT COLUMN: Regression Detection -->
+    <div class="col-left">
+      <div class="zone zone-regression">
+        <div class="zone-label">🔄 Regression Detection</div>
+
+        <div class="regression-flow">
+          <div class="regression-step">
+            <div class="rs-name"><div class="icon icon-amber" style="width: 22px; height: 22px; font-size: 12px;">📋</div> Golden Test Set</div>
+            <div class="rs-desc">20 known-good Q&A pairs stored as baseline</div>
+          </div>
+
+          <div class="mini-arrow-down">
+            <div class="shaft-v"></div>
+            <div class="head-v"></div>
+          </div>
+
+          <div class="regression-step">
+            <div class="rs-name"><div class="icon icon-amber" style="width: 22px; height: 22px; font-size: 12px;">⏱️</div> Weekly Comparison</div>
+            <div class="rs-desc">Run tests, score similarity vs. expected answers</div>
+          </div>
+
+          <div class="mini-arrow-down">
+            <div class="shaft-v"></div>
+            <div class="head-v"></div>
+          </div>
+
+          <div class="regression-step">
+            <div class="rs-name"><div class="icon icon-amber" style="width: 22px; height: 22px; font-size: 12px;">🚨</div> Drift Alert</div>
+            <div class="rs-desc">Teams notification when answers degrade after knowledge changes</div>
+          </div>
+        </div>
+
+        <div class="question-tag" style="background: rgba(202,80,16,0.10); color: #CA5010; text-align: center; margin-top: 14px;">
+          ⚠️ "New docs can break existing answers"
+        </div>
+      </div>
+    </div>
+
+    <!-- LEFT ARROW -->
+    <div class="arrow-right">
+      <div class="alabel">Monitors all layers</div>
+      <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+    </div>
+
+    <!-- CENTER COLUMN: Three Evaluation Layers -->
+    <div class="col-center">
+
+      <!-- Layer 3: Business Metrics (top) -->
+      <div class="zone zone-business">
+        <div class="zone-label">📊 Layer 3: Business Metrics <span class="badge badge-green">Value</span></div>
+        <div class="metrics-row">
+          <div class="metric-chip">
+            <div class="mc-name"><div class="icon icon-green" style="width: 22px; height: 22px; font-size: 12px;">⚡</div> Tasks Automated</div>
+            <div class="mc-desc">Count of requests resolved without human intervention</div>
+          </div>
+          <div class="metric-chip">
+            <div class="mc-name"><div class="icon icon-green" style="width: 22px; height: 22px; font-size: 12px;">🔀</div> Escalations Avoided</div>
+            <div class="mc-desc">Queries agent handled that previously needed SME routing</div>
+          </div>
+          <div class="metric-chip">
+            <div class="mc-name"><div class="icon icon-green" style="width: 22px; height: 22px; font-size: 12px;">⏱️</div> Time-to-Resolution</div>
+            <div class="mc-desc">Average time from query to answer vs. pre-agent baseline</div>
+          </div>
+        </div>
+        <div class="question-tag question-tag-green">💰 "Is the agent worth the investment?"</div>
+      </div>
+
+      <div class="arrow-up">
+        <div class="head-v"></div>
+        <div class="shaft-v"></div>
+        <div class="alabel">Quality feeds value proof</div>
+      </div>
+
+      <!-- Layer 2: Quality Metrics (middle) -->
+      <div class="zone zone-quality">
+        <div class="zone-label">🎯 Layer 2: Quality Metrics <span class="badge badge-purple">Trustworthiness</span></div>
+        <div class="metrics-row">
+          <div class="metric-chip">
+            <div class="mc-name"><div class="icon icon-purple" style="width: 22px; height: 22px; font-size: 12px;">📊</div> Confidence Scores</div>
+            <div class="mc-desc">Agent self-reported certainty per response</div>
+          </div>
+          <div class="metric-chip">
+            <div class="mc-name"><div class="icon icon-purple" style="width: 22px; height: 22px; font-size: 12px;">📎</div> Source Grounding</div>
+            <div class="mc-desc">% of answers citing real, verifiable documents</div>
+          </div>
+          <div class="metric-chip">
+            <div class="mc-name"><div class="icon icon-purple" style="width: 22px; height: 22px; font-size: 12px;">🔍</div> Hallucination Detection</div>
+            <div class="mc-desc">Citation verification — does the passage support the claim?</div>
+          </div>
+          <div class="metric-chip">
+            <div class="mc-name"><div class="icon icon-purple" style="width: 22px; height: 22px; font-size: 12px;">👍</div> User Feedback</div>
+            <div class="mc-desc">Thumbs up/down ratio, qualitative comments</div>
+          </div>
+        </div>
+        <div class="question-tag question-tag-purple">🔒 "Is the agent trustworthy?"</div>
+      </div>
+
+      <div class="arrow-up">
+        <div class="head-v"></div>
+        <div class="shaft-v"></div>
+        <div class="alabel">Adoption enables quality measurement</div>
+      </div>
+
+      <!-- Layer 1: Usage Metrics (bottom) -->
+      <div class="zone zone-usage">
+        <div class="zone-label">📈 Layer 1: Usage Metrics <span class="badge badge-blue">Adoption</span></div>
+        <div class="metrics-row">
+          <div class="metric-chip">
+            <div class="mc-name"><div class="icon icon-blue" style="width: 22px; height: 22px; font-size: 12px;">👥</div> Sessions / Day</div>
+            <div class="mc-desc">Active sessions and unique users over time</div>
+          </div>
+          <div class="metric-chip">
+            <div class="mc-name"><div class="icon icon-blue" style="width: 22px; height: 22px; font-size: 12px;">🔄</div> Returning Users</div>
+            <div class="mc-desc">Users who come back after first interaction</div>
+          </div>
+          <div class="metric-chip">
+            <div class="mc-name"><div class="icon icon-blue" style="width: 22px; height: 22px; font-size: 12px;">🎯</div> Topic Triggers</div>
+            <div class="mc-desc">Which topics activate most frequently</div>
+          </div>
+          <div class="metric-chip">
+            <div class="mc-name"><div class="icon icon-blue" style="width: 22px; height: 22px; font-size: 12px;">🚪</div> Drop-off Points</div>
+            <div class="mc-desc">Where users abandon conversations</div>
+          </div>
+        </div>
+        <div class="question-tag question-tag-blue">📊 "Is the agent being adopted?"</div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT ARROW -->
+    <div class="arrow-right">
+      <div class="alabel">Signals shown to users</div>
+      <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+    </div>
+
+    <!-- RIGHT COLUMN: Trust Signals for Users -->
+    <div class="col-right">
+      <div class="zone zone-trust">
+        <div class="zone-label">🛡️ Trust Signals for Users</div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-purple">📊</div> Confidence Display</div>
+          <div class="comp-desc">"I'm 85% confident based on 3 sources" — agent self-reports certainty with every response</div>
+        </div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-purple">📎</div> Source Citations</div>
+          <div class="comp-desc">Link to the actual document, not just name it. Users can verify answers independently.</div>
+        </div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-purple">⚠️</div> Uncertainty Flags</div>
+          <div class="comp-desc">"I found partial information but couldn't fully answer — here's what I know and what's missing"</div>
+        </div>
+
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-purple">👍</div> Feedback Capture</div>
+          <div class="comp-desc">Thumbs up/down after every response feeds back into quality metrics loop</div>
+        </div>
+
+        <div class="question-tag question-tag-purple" style="text-align: center;">
+          🏆 Trust = Adoption = ROI
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Handoff note -->
+  <div class="handoff-note">
+    <div class="hn-label">🔑 Architectural Insight</div>
+    <div class="hn-text">Three layers answer three questions: <strong>Are they using it?</strong> (Usage) → <strong>Is it good?</strong> (Quality) → <strong>Is it worth it?</strong> (Business). You can't measure quality without adoption, and you can't prove value without quality. <strong>Build from the bottom up — usage metrics first, business metrics last.</strong></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1680px;
+    min-height: 1400px;
+    background: #FFFFFF;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 40px 40px;
+    color: #1B1B3A;
+  }
+  .title { text-align: center; margin-bottom: 8px; font-size: 28px; font-weight: 700; }
+  .subtitle { text-align: center; margin-bottom: 44px; font-size: 16px; color: #6B6B8D; }
+
+  /* Three-column layout */
+  .columns {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    align-items: stretch;
+  }
+  .column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Zone containers */
+  .zone {
+    border-radius: 16px;
+    padding: 24px 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .zone-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Cold Transfer — orange/red tones */
+  .zone-cold {
+    background: linear-gradient(135deg, #FFF0E6, #FFE0CC);
+    border: 2px solid #D83B01;
+    box-shadow: 0 4px 16px rgba(216,59,1,0.12);
+    flex: 1;
+  }
+  .zone-cold .zone-label { color: #D83B01; }
+
+  /* Warm Transfer — amber tones */
+  .zone-warm {
+    background: linear-gradient(135deg, #FFF8E1, #FFF0CC);
+    border: 2px solid #CA5010;
+    box-shadow: 0 4px 16px rgba(202,80,16,0.12);
+    flex: 1;
+  }
+  .zone-warm .zone-label { color: #CA5010; }
+
+  /* Hot Transfer — green tones */
+  .zone-hot {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 2px solid #107C10;
+    box-shadow: 0 4px 16px rgba(16,124,16,0.12);
+    flex: 1;
+  }
+  .zone-hot .zone-label { color: #107C10; }
+
+  /* Trust boundary zone */
+  .zone-trust {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.10);
+  }
+  .zone-trust .zone-label { color: #6B2FA0; }
+
+  /* Components */
+  .component {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .component:last-child { margin-bottom: 0; }
+  .comp-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .comp-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+
+  .icon { width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 15px; color: white; flex-shrink: 0; }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-orange { background: #D83B01; }
+  .icon-amber { background: #CA5010; }
+  .icon-green { background: #107C10; }
+  .icon-red { background: #D83B01; }
+
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 4px; }
+  .badge-red { background: #D83B01; color: white; }
+  .badge-amber { background: #CA5010; color: white; }
+  .badge-green { background: #107C10; color: white; }
+  .badge-purple { background: #6B2FA0; color: white; }
+
+  /* Vertical arrows */
+  .arrow-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    gap: 4px;
+  }
+  .arrow-down .shaft-v { width: 2px; height: 20px; background: #333; }
+  .arrow-down .head-v { width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 10px solid #333; }
+  .arrow-down .alabel { font-size: 10px; color: #6B6B8D; font-style: italic; text-align: center; line-height: 1.3; }
+
+  /* Break indicator */
+  .break-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    gap: 6px;
+  }
+  .break-line {
+    width: 60px;
+    height: 3px;
+    background: #D83B01;
+    border-radius: 2px;
+  }
+  .break-x {
+    font-size: 20px;
+    font-weight: 700;
+    color: #D83B01;
+  }
+
+  /* Summary pass indicator */
+  .summary-pass {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+  }
+  .summary-box {
+    background: #FFF8E1;
+    border: 1.5px solid #CA5010;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #CA5010;
+    text-align: center;
+  }
+
+  /* Shared memory indicator */
+  .shared-memory {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+  }
+  .memory-box {
+    background: #E8F5E9;
+    border: 1.5px solid #107C10;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #107C10;
+    text-align: center;
+    width: 100%;
+  }
+
+  /* UX rating */
+  .ux-rating {
+    text-align: center;
+    padding: 10px 0;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .ux-bad { color: #D83B01; }
+  .ux-ok { color: #CA5010; }
+  .ux-good { color: #107C10; }
+
+  /* Column header with rating */
+  .col-header {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .col-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .col-rating {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .handoff-note {
+    margin-top: 28px;
+    text-align: center;
+    background: #F8F8FC;
+    border: 1.5px solid #E0E0F0;
+    border-radius: 12px;
+    padding: 16px 28px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .handoff-note .hn-label { font-size: 12px; font-weight: 700; color: #6B2FA0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .handoff-note .hn-text { font-size: 13px; color: #555; line-height: 1.5; }
+
+  /* Comparison table */
+  .comparison-row {
+    display: flex;
+    gap: 24px;
+    margin-top: 16px;
+    width: 100%;
+  }
+  .comparison-cell {
+    flex: 1;
+    text-align: center;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.5;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #FAFAFE;
+    border: 1px solid #E8E8F0;
+  }
+  .comparison-cell strong { display: block; font-size: 12px; color: #1B1B3A; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+  <div class="title">Multi-Agent Handoff — Three Patterns Compared</div>
+  <div class="subtitle">Issue #010 — Pattern: Cold Transfer vs. Warm Transfer vs. Hot Transfer — choosing the right handoff architecture</div>
+
+  <div class="columns">
+
+    <!-- Column 1: Cold Transfer -->
+    <div class="column">
+      <div class="col-header">
+        <div class="col-title" style="color: #D83B01;">❄️ Cold Transfer</div>
+        <div class="col-rating ux-bad">★☆☆ Simple · Terrible UX</div>
+      </div>
+
+      <div class="zone zone-cold">
+        <div class="zone-label">🤖 Agent A <span class="badge badge-red">HR Agent</span></div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-red">💬</div> Conversation</div>
+          <div class="comp-desc">User asks: "I need a laptop for my new hire starting Monday." Agent A recognizes this is out of scope.</div>
+        </div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-red">🚫</div> Scope Boundary</div>
+          <div class="comp-desc">"I can't help with IT requests. Please contact the IT support bot."</div>
+        </div>
+      </div>
+
+      <div class="break-indicator">
+        <div class="break-line"></div>
+        <div class="break-x">✕</div>
+        <div class="break-line"></div>
+      </div>
+      <div class="ux-rating ux-bad">Context Lost — User Must Restart</div>
+
+      <div class="zone zone-cold" style="margin-top: 10px;">
+        <div class="zone-label">🤖 Agent B <span class="badge badge-red">IT Agent</span></div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-red">🔄</div> Fresh Start</div>
+          <div class="comp-desc">User repeats everything: "I have a new hire starting Monday, they need a laptop, they're in the engineering department..."</div>
+        </div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-red">😤</div> User Friction</div>
+          <div class="comp-desc">User must re-explain context, re-authenticate, re-navigate. High abandonment rate.</div>
+        </div>
+      </div>
+
+      <div class="comparison-cell" style="margin-top: 16px;">
+        <strong>Implementation</strong>
+        Simple redirect link or message. No shared state. No integration needed.
+      </div>
+    </div>
+
+    <!-- Column 2: Warm Transfer -->
+    <div class="column">
+      <div class="col-header">
+        <div class="col-title" style="color: #CA5010;">🤝 Warm Transfer</div>
+        <div class="col-rating ux-ok">★★☆ Moderate · Good UX</div>
+      </div>
+
+      <div class="zone zone-warm">
+        <div class="zone-label">🤖 Agent A <span class="badge badge-amber">HR Agent</span></div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-amber">💬</div> Conversation</div>
+          <div class="comp-desc">User asks about laptop for new hire. Agent A detects out-of-scope query via fallback topic.</div>
+        </div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-amber">📋</div> Summary Generation</div>
+          <div class="comp-desc">Azure OpenAI generates a 3-sentence summary: user's question, context discussed, and handoff reason.</div>
+        </div>
+      </div>
+
+      <div class="summary-pass">
+        <div class="summary-box">📋 Summary Passed → "New hire starting Monday in engineering needs laptop provisioning"</div>
+      </div>
+
+      <div class="arrow-down">
+        <div class="alabel">Context variable transfer</div>
+        <div class="shaft-v"></div>
+        <div class="head-v"></div>
+      </div>
+
+      <div class="zone zone-warm">
+        <div class="zone-label">🤖 Agent B <span class="badge badge-amber">IT Agent</span></div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-amber">📥</div> Context Injection</div>
+          <div class="comp-desc">Greeting topic reads the handoff summary and injects it as system context. Agent B knows the situation.</div>
+        </div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-amber">✅</div> Seamless Continue</div>
+          <div class="comp-desc">"I see you need a laptop for a new engineer starting Monday. I can help with that — what's their role level?"</div>
+        </div>
+      </div>
+
+      <div class="comparison-cell" style="margin-top: 16px;">
+        <strong>Implementation</strong>
+        Copilot Studio agent transfer + Power Automate summary generation. Moderate complexity, great ROI.
+      </div>
+    </div>
+
+    <!-- Column 3: Hot Transfer -->
+    <div class="column">
+      <div class="col-header">
+        <div class="col-title" style="color: #107C10;">🔥 Hot Transfer</div>
+        <div class="col-rating ux-good">★★★ Complex · Seamless UX</div>
+      </div>
+
+      <div class="zone zone-hot">
+        <div class="zone-label">🤖 Agent A <span class="badge badge-green">HR Agent</span></div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-green">💬</div> Conversation</div>
+          <div class="comp-desc">User asks about laptop for new hire. Agent A continuously writes to shared memory during the conversation.</div>
+        </div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-green">💾</div> Live State Sync</div>
+          <div class="comp-desc">Every exchange written to shared Dataverse session table in real time. No summary needed at handoff — it's already there.</div>
+        </div>
+      </div>
+
+      <div class="shared-memory">
+        <div class="memory-box">🗄️ Shared Memory Store — Dataverse AgentSession Table ← Both agents read/write</div>
+      </div>
+
+      <div class="arrow-down">
+        <div class="alabel">Continuous shared state</div>
+        <div class="shaft-v"></div>
+        <div class="head-v"></div>
+      </div>
+
+      <div class="zone zone-hot">
+        <div class="zone-label">🤖 Agent B <span class="badge badge-green">IT Agent</span></div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-green">🔗</div> Full Context Access</div>
+          <div class="comp-desc">Agent B reads entire conversation history from shared store. Knows everything Agent A discussed — including nuances.</div>
+        </div>
+        <div class="component">
+          <div class="comp-name"><div class="icon icon-green">⚡</div> Zero Friction</div>
+          <div class="comp-desc">"I've reviewed your conversation with HR. I'll start the laptop provisioning for your new engineer — standard dev setup or custom?"</div>
+        </div>
+      </div>
+
+      <div class="comparison-cell" style="margin-top: 16px;">
+        <strong>Implementation</strong>
+        Shared Dataverse table + real-time sync + both agents instrumented. High complexity, best experience.
+      </div>
+    </div>
+  </div>
+
+  <!-- Trust Boundary Zone -->
+  <div style="margin-top: 28px;">
+    <div class="zone zone-trust" style="max-width: 1200px; margin: 0 auto;">
+      <div class="zone-label">🔐 Trust Boundary — The Question Every Handoff Must Answer</div>
+      <div style="display: flex; gap: 12px;">
+        <div class="component" style="flex: 1;">
+          <div class="comp-name"><div class="icon icon-purple">🤔</div> Classification Trust</div>
+          <div class="comp-desc">Does Agent B trust Agent A's intent classification? If Agent A says "this is an IT question," does Agent B verify — or just accept? Misrouted queries compound when trust is blind.</div>
+        </div>
+        <div class="component" style="flex: 1;">
+          <div class="comp-name"><div class="icon icon-purple">🔑</div> Auth Context</div>
+          <div class="comp-desc">Does the user need to re-authenticate with Agent B? In regulated industries, the handoff may cross security boundaries that require fresh identity verification.</div>
+        </div>
+        <div class="component" style="flex: 1;">
+          <div class="comp-name"><div class="icon icon-purple">🔄</div> Misroute Recovery</div>
+          <div class="comp-desc">What happens when Agent A misroutes? Agent B must detect "this is actually my domain" or "this isn't mine either" — and handle gracefully, not bounce endlessly.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Insight callout -->
+  <div class="handoff-note">
+    <div class="hn-label">🔑 Architectural Insight</div>
+    <div class="hn-text"><strong>Cold = simple but terrible UX.</strong> Warm = good UX, moderate complexity. <strong>Hot = seamless but architecturally complex.</strong> Most enterprise deployments should start with warm transfer — it delivers 90% of the UX benefit at 30% of the implementation cost. Graduate to hot transfer only when handoff volume justifies the shared infrastructure investment.</div>
+  </div>
+</body>
+</html>

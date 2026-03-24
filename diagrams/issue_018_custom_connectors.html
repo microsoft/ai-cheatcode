@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1680px;
+    min-height: 1350px;
+    background: #FFFFFF;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 40px 40px;
+    color: #1B1B3A;
+  }
+  .title { text-align: center; margin-bottom: 8px; font-size: 28px; font-weight: 700; }
+  .subtitle { text-align: center; margin-bottom: 40px; font-size: 16px; color: #6B6B8D; }
+
+  .architecture {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .zone {
+    border-radius: 16px;
+    padding: 24px 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .zone-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .zone-decision {
+    background: linear-gradient(135deg, #FFF8E1, #FFF0CC);
+    border: 2px solid #CA5010;
+    box-shadow: 0 4px 16px rgba(202,80,16,0.10);
+    width: 320px;
+    flex-shrink: 0;
+  }
+  .zone-decision .zone-label { color: #CA5010; }
+
+  .zone-stack {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 2px solid #0078D4;
+    box-shadow: 0 4px 16px rgba(0,120,212,0.10);
+    flex: 1.5;
+  }
+  .zone-stack .zone-label { color: #0078D4; }
+
+  .zone-auth {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.10);
+    width: 340px;
+    flex-shrink: 0;
+  }
+  .zone-auth .zone-label { color: #6B2FA0; }
+
+  .component {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .component:last-child { margin-bottom: 0; }
+  .comp-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .comp-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+
+  .icon { width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 15px; color: white; flex-shrink: 0; }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-orange { background: #D83B01; }
+  .icon-green { background: #107C10; }
+  .icon-amber { background: #CA5010; }
+
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 4px; }
+  .badge-purple { background: #6B2FA0; color: white; }
+  .badge-blue { background: #0078D4; color: white; }
+  .badge-green { background: #107C10; color: white; }
+  .badge-amber { background: #CA5010; color: white; }
+
+  /* Decision diamond */
+  .gate-diamond {
+    width: 110px;
+    height: 110px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 8px auto 12px;
+  }
+  .diamond-shape {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #FFF8E1, #FFE0B2);
+    border: 2.5px solid #CA5010;
+    transform: rotate(45deg);
+    position: absolute;
+    border-radius: 6px;
+    box-shadow: 0 3px 12px rgba(202,80,16,0.18);
+  }
+  .diamond-text {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #CA5010;
+    line-height: 1.2;
+  }
+
+  /* Decision branches */
+  .decision-branch {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    background: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .decision-branch:last-child { margin-bottom: 0; }
+  .branch-condition {
+    font-size: 11px;
+    font-weight: 600;
+    color: #CA5010;
+    min-width: 100%;
+    margin-bottom: 4px;
+  }
+  .branch-result {
+    font-size: 11px;
+    color: #555;
+    line-height: 1.4;
+  }
+  .branch-arrow {
+    font-size: 14px;
+    color: #CA5010;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* Vertical stack for connector pipeline */
+  .stack-pipeline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+  }
+
+  .stack-layer {
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+    position: relative;
+  }
+  .stack-layer .sl-name { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .stack-layer .sl-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+  .stack-layer .sl-detail { font-size: 10px; color: #888; margin-top: 4px; font-style: italic; }
+
+  .stack-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 0;
+  }
+  .stack-arrow .shaft-v { width: 2px; height: 14px; background: #0078D4; }
+  .stack-arrow .head-up { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 8px solid #0078D4; }
+  .stack-arrow .alabel { font-size: 9px; color: #6B6B8D; font-style: italic; }
+
+  /* Auth card styling */
+  .auth-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .auth-card:last-child { margin-bottom: 0; }
+  .auth-card .ac-name { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .auth-card .ac-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+  .auth-card .ac-use { font-size: 10px; color: #555; margin-top: 4px; font-style: italic; }
+
+  .handoff-note {
+    margin-top: 28px;
+    text-align: center;
+    background: #F8F8FC;
+    border: 1.5px solid #E0E0F0;
+    border-radius: 12px;
+    padding: 16px 28px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .handoff-note .hn-label { font-size: 12px; font-weight: 700; color: #6B2FA0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .handoff-note .hn-text { font-size: 13px; color: #555; line-height: 1.5; }
+
+  .stack-layer-orange { border-left: 4px solid #D83B01; }
+  .stack-layer-blue { border-left: 4px solid #0078D4; }
+  .stack-layer-purple { border-left: 4px solid #6B2FA0; }
+</style>
+</head>
+<body>
+  <div class="title">Custom Connector Patterns</div>
+  <div class="subtitle">Issue #018 — Pattern: Decision Tree + Connector Stack + Authentication Matrix</div>
+
+  <div class="architecture">
+
+    <!-- LEFT: Decision Zone -->
+    <div class="zone zone-decision">
+      <div class="zone-label">🔀 When to Use What? <span class="badge badge-amber">Decision</span></div>
+
+      <div class="gate-diamond">
+        <div class="diamond-shape"></div>
+        <div class="diamond-text">Integration<br>Type?</div>
+      </div>
+
+      <div class="decision-branch">
+        <div>
+          <div class="branch-condition">🔄 Multiple agents reuse it?</div>
+          <div class="branch-result"><span class="branch-arrow">→</span> <strong>Custom Connector</strong> — register once, use everywhere. Goverable as a platform asset.</div>
+        </div>
+      </div>
+
+      <div class="decision-branch">
+        <div>
+          <div class="branch-condition">🔧 One-off integration?</div>
+          <div class="branch-result"><span class="branch-arrow">→</span> <strong>Plugin Action</strong> (Power Automate HTTP) — faster to build, no registration overhead.</div>
+        </div>
+      </div>
+
+      <div class="decision-branch">
+        <div>
+          <div class="branch-condition">⚠️ API unstable / undocumented?</div>
+          <div class="branch-result"><span class="branch-arrow">→</span> <strong>Plugin Action</strong> — isolates instability behind a flow. Easier to update without versioning connector.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 14px; padding: 10px 14px; background: rgba(202,80,16,0.08); border-radius: 8px; text-align: center;">
+        <div style="font-size: 11px; font-weight: 600; color: #CA5010;">💡 Rule of Thumb</div>
+        <div style="font-size: 11px; color: #555; margin-top: 4px;">If a second team would benefit from the same integration, make it a connector.</div>
+      </div>
+    </div>
+
+    <!-- CENTER: The Connector Stack -->
+    <div class="zone zone-stack">
+      <div class="zone-label">🏗️ The Connector Stack <span class="badge badge-blue">Architecture</span></div>
+
+      <div class="stack-pipeline">
+
+        <!-- Top: Copilot Studio Agent -->
+        <div class="stack-layer stack-layer-purple">
+          <div class="sl-name"><div class="icon icon-purple">🤖</div> Copilot Studio Agent</div>
+          <div class="sl-desc">Plugin action invokes the connector with natural-language parameter mapping. LLM decides <em>when</em> to call based on operation descriptions.</div>
+          <div class="sl-detail">Conversational entity → connector parameter mapping</div>
+        </div>
+
+        <div class="stack-arrow">
+          <div class="shaft-v"></div>
+          <div class="head-up" style="transform: rotate(180deg); border-bottom-color: #6B2FA0;"></div>
+        </div>
+
+        <!-- Custom Connector -->
+        <div class="stack-layer stack-layer-purple">
+          <div class="sl-name"><div class="icon icon-purple">🔌</div> Custom Connector</div>
+          <div class="sl-desc">Power Platform registration. Defines operations, schemas, and auth. Reusable across agents, flows, and apps in the environment.</div>
+          <div class="sl-detail">Imported from OpenAPI spec → tested in connector editor</div>
+        </div>
+
+        <div class="stack-arrow">
+          <div class="shaft-v"></div>
+          <div class="head-up" style="transform: rotate(180deg); border-bottom-color: #0078D4;"></div>
+        </div>
+
+        <!-- OpenAPI Specification -->
+        <div class="stack-layer stack-layer-blue">
+          <div class="sl-name"><div class="icon icon-blue">📄</div> OpenAPI Specification</div>
+          <div class="sl-desc">The contract layer. Minimum: one GET, one POST, clear parameter descriptions. The LLM reads operation descriptions to decide when to call.</div>
+          <div class="sl-detail">summary + description on every operation — scenario-specific, not just technical</div>
+        </div>
+
+        <div class="stack-arrow">
+          <div class="shaft-v"></div>
+          <div class="head-up" style="transform: rotate(180deg); border-bottom-color: #0078D4;"></div>
+        </div>
+
+        <!-- Azure API Management -->
+        <div class="stack-layer stack-layer-blue">
+          <div class="sl-name"><div class="icon icon-blue">☁️</div> Azure API Management</div>
+          <div class="sl-desc">Production gateway: rate limiting, response caching, retry policies, request/response logging. Connector points to APIM, not directly to backend.</div>
+          <div class="sl-detail">Enables monitoring and governance without changing the API</div>
+        </div>
+
+        <div class="stack-arrow">
+          <div class="shaft-v"></div>
+          <div class="head-up" style="transform: rotate(180deg); border-bottom-color: #D83B01;"></div>
+        </div>
+
+        <!-- Internal API -->
+        <div class="stack-layer stack-layer-orange">
+          <div class="sl-name"><div class="icon icon-orange">🏢</div> Internal API</div>
+          <div class="sl-desc">Legacy ERP, custom CRM, proprietary compliance system — the enterprise data source that no pre-built connector covers.</div>
+          <div class="sl-detail">Timeout budget: ~10 seconds before the user thinks it's broken</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: Auth Patterns -->
+    <div class="zone zone-auth">
+      <div class="zone-label">🔐 Authentication Patterns <span class="badge badge-purple">Security</span></div>
+
+      <div class="auth-card">
+        <div class="ac-name"><div class="icon icon-purple" style="width: 26px; height: 26px; font-size: 13px;">🔑</div> API Key</div>
+        <div class="ac-desc">Simplest authentication method. Key passed in header or query parameter.</div>
+        <div class="ac-use">Best for: Internal APIs with low security requirements</div>
+      </div>
+
+      <div class="auth-card">
+        <div class="ac-name"><div class="icon icon-purple" style="width: 26px; height: 26px; font-size: 13px;">👤</div> OAuth 2.0 Auth Code</div>
+        <div class="ac-desc">User-delegated access. User signs in and grants scoped permission. Agent sees only their data.</div>
+        <div class="ac-use">Best for: SaaS APIs with per-user data isolation</div>
+      </div>
+
+      <div class="auth-card">
+        <div class="ac-name"><div class="icon icon-purple" style="width: 26px; height: 26px; font-size: 13px;">⚙️</div> OAuth 2.0 Client Credentials</div>
+        <div class="ac-desc">Service-to-service, no user context. Application identity with full data access — agent filters by role.</div>
+        <div class="ac-use">Best for: Backend APIs, service accounts, batch processing</div>
+      </div>
+
+      <div class="auth-card">
+        <div class="ac-name"><div class="icon icon-purple" style="width: 26px; height: 26px; font-size: 13px;">🛡️</div> Entra ID / Managed Identity</div>
+        <div class="ac-desc">Microsoft-ecosystem native. Managed identity eliminates credential management. Inherits Power Platform security boundary.</div>
+        <div class="ac-use">Best for: Azure-hosted APIs, M365 integrations</div>
+      </div>
+
+      <div style="margin-top: 14px; padding: 10px 14px; background: rgba(107,47,160,0.06); border-radius: 8px;">
+        <div style="font-size: 11px; font-weight: 600; color: #6B2FA0; margin-bottom: 4px;">🤔 Design Decision</div>
+        <div style="font-size: 11px; color: #555; line-height: 1.4;"><strong>Per-user auth</strong> (sees only their data) vs. <strong>service account</strong> (sees everything, agent filters). Choose based on data sensitivity and compliance requirements.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Handoff note -->
+  <div class="handoff-note">
+    <div class="hn-label">🔑 Architectural Insight</div>
+    <div class="hn-text">The OpenAPI spec is the contract. <strong>Make operation descriptions clear and scenario-specific — the LLM reads them to decide when to call the connector.</strong> NOT "GET /api/employees/{id}" → YES "Look up an employee's profile, team, and current project assignments by their employee ID." Custom connectors unlock the 20% of enterprise use cases where pre-built connectors don't reach.</div>
+  </div>
+</body>
+</html>

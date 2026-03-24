@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1680px;
+    min-height: 1380px;
+    background: #FFFFFF;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 40px 40px;
+    color: #1B1B3A;
+  }
+  .title { text-align: center; margin-bottom: 8px; font-size: 28px; font-weight: 700; }
+  .subtitle { text-align: center; margin-bottom: 40px; font-size: 16px; color: #6B6B8D; }
+
+  /* Layout */
+  .architecture {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+  }
+  .row-top {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+    width: 100%;
+  }
+  .row-bottom {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 0;
+  }
+
+  /* Zone containers */
+  .zone {
+    border-radius: 16px;
+    padding: 24px 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .zone-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .zone-aibuilder {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 2px solid #0078D4;
+    box-shadow: 0 4px 16px rgba(0,120,212,0.10);
+    width: 280px;
+    flex-shrink: 0;
+  }
+  .zone-aibuilder .zone-label { color: #0078D4; }
+
+  .zone-studio {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.10);
+    flex: 1.8;
+  }
+  .zone-studio .zone-label { color: #6B2FA0; }
+
+  .zone-automate {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 2px solid #0078D4;
+    box-shadow: 0 4px 16px rgba(0,120,212,0.10);
+    flex: 1;
+  }
+  .zone-automate .zone-label { color: #0078D4; }
+
+  .zone-dataverse {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 2px solid #107C10;
+    box-shadow: 0 4px 16px rgba(16,124,16,0.10);
+    flex: 1;
+    min-width: 340px;
+  }
+  .zone-dataverse .zone-label { color: #107C10; }
+
+  /* Components */
+  .component {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .component:last-child { margin-bottom: 0; }
+  .comp-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .comp-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+  .comp-outputs { margin-top: 8px; }
+  .comp-outputs li { font-size: 11px; color: #555; margin-bottom: 3px; list-style: none; display: flex; align-items: center; gap: 4px; }
+
+  .icon { width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 15px; color: white; flex-shrink: 0; }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-orange { background: #CA5010; }
+  .icon-amber { background: #CA5010; }
+  .icon-green { background: #107C10; }
+
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 4px; }
+  .badge-purple { background: #6B2FA0; color: white; }
+  .badge-blue { background: #0078D4; color: white; }
+  .badge-green { background: #107C10; color: white; }
+  .badge-amber { background: #CA5010; color: white; }
+
+  /* Arrows */
+  .arrow-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    flex-shrink: 0;
+    gap: 4px;
+  }
+  .arrow-right .arrow-h { display: flex; align-items: center; }
+  .arrow-right .shaft { width: 28px; height: 2px; background: #333; }
+  .arrow-right .head { width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-left: 10px solid #333; }
+  .arrow-right .alabel { font-size: 10px; color: #6B6B8D; font-style: italic; max-width: 90px; text-align: center; line-height: 1.3; }
+
+  .arrow-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 0;
+    gap: 4px;
+  }
+  .arrow-down .shaft-v { width: 2px; height: 24px; background: #333; }
+  .arrow-down .head-v { width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 10px solid #333; }
+  .arrow-down .alabel { font-size: 10px; color: #6B6B8D; font-style: italic; text-align: center; line-height: 1.3; }
+
+  /* Topic flow inside Copilot Studio */
+  .topic-flow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .topic-step {
+    background: #FFFFFF;
+    border: 1.5px solid rgba(107,47,160,0.3);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6B2FA0;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .topic-arrow { color: #6B2FA0; font-size: 14px; font-weight: 700; }
+
+  /* Route branches */
+  .route-branches {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .route-branch {
+    flex: 1;
+    border-radius: 8px;
+    padding: 8px 10px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .route-general { background: rgba(16,124,16,0.10); color: #107C10; border: 1.5px solid rgba(16,124,16,0.25); }
+  .route-sensitive { background: rgba(202,80,16,0.10); color: #CA5010; border: 1.5px solid rgba(202,80,16,0.25); }
+  .route-restricted { background: rgba(216,59,1,0.10); color: #D83B01; border: 1.5px solid rgba(216,59,1,0.25); }
+  .route-label { font-size: 9px; font-weight: 400; color: #6B6B8D; margin-top: 2px; }
+
+  .handoff-note {
+    margin-top: 28px;
+    text-align: center;
+    background: #F8F8FC;
+    border: 1.5px solid #E0E0F0;
+    border-radius: 12px;
+    padding: 16px 28px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .handoff-note .hn-label { font-size: 12px; font-weight: 700; color: #6B2FA0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .handoff-note .hn-text { font-size: 13px; color: #555; line-height: 1.5; }
+</style>
+</head>
+<body>
+  <div class="title">Building Adaptive Guardrails in Copilot Studio</div>
+  <div class="subtitle">Issue #009 — Practical Build: AI Builder Classifier → Copilot Studio Topics → Power Automate Validation → Dataverse Feedback Loop</div>
+
+  <!-- Row 1: AI Builder → Copilot Studio → Power Automate -->
+  <div class="row-top">
+
+    <!-- AI Builder Zone -->
+    <div class="zone zone-aibuilder">
+      <div class="zone-label">🤖 AI Builder <span class="badge badge-blue">Classifier</span></div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">🧠</div> Custom Classification Model</div>
+        <div class="comp-desc">Trained on 50–100 examples per category. Returns classification + confidence score per query.</div>
+      </div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">📊</div> Training Data</div>
+        <div class="comp-desc">Real user queries labeled by category:</div>
+        <ul class="comp-outputs">
+          <li>✅ <strong>General</strong> — "What's the PTO policy?"</li>
+          <li>⚠️ <strong>Sensitive</strong> — "What's the salary range for L6?"</li>
+          <li>🚫 <strong>Restricted</strong> — "What's John's salary?"</li>
+        </ul>
+      </div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">📈</div> Confidence Score</div>
+        <div class="comp-desc">Each classification returns 0–100% confidence. Below 70% → log for human review and default to sensitive handling.</div>
+      </div>
+    </div>
+
+    <div class="arrow-right">
+      <div class="alabel">Classification result + score</div>
+      <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+    </div>
+
+    <!-- Copilot Studio Zone -->
+    <div class="zone zone-studio">
+      <div class="zone-label">🟣 Copilot Studio <span class="badge badge-purple">Agent Orchestration</span></div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-purple">📥</div> Pre-Routing Topic</div>
+        <div class="comp-desc">Entry point for ALL user queries. Intercepts every message before generative answers can process it. Calls AI Builder model via Power Automate connector.</div>
+
+        <div class="topic-flow">
+          <div class="topic-step">User Message</div>
+          <div class="topic-arrow">→</div>
+          <div class="topic-step">Call Classifier</div>
+          <div class="topic-arrow">→</div>
+          <div class="topic-step">Branch on Result</div>
+        </div>
+      </div>
+
+      <div class="route-branches">
+        <div class="route-branch route-general">
+          ✅ General
+          <div class="route-label">→ Generative Answers</div>
+        </div>
+        <div class="route-branch route-sensitive">
+          ⚠️ Sensitive
+          <div class="route-label">→ Answers + Caveat</div>
+        </div>
+        <div class="route-branch route-restricted">
+          🚫 Restricted
+          <div class="route-label">→ Escalation Topic</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; margin-top: 12px;">
+        <div class="component" style="flex: 1;">
+          <div class="comp-name"><div class="icon icon-purple">💬</div> Generative Answers</div>
+          <div class="comp-desc">Standard knowledge source retrieval. Processes general and sensitive queries against SharePoint, Dataverse, and custom connectors.</div>
+        </div>
+        <div class="component" style="flex: 1;">
+          <div class="comp-name"><div class="icon icon-purple">⚠️</div> Caveat Append</div>
+          <div class="comp-desc">For sensitive queries: appends "This response may require verification from [department]" disclaimer after the AI answer.</div>
+        </div>
+        <div class="component" style="flex: 1;">
+          <div class="comp-name"><div class="icon icon-purple">🚫</div> Escalation Topic</div>
+          <div class="comp-desc">No AI answer attempted. Directly routes to human agent with full conversation context. Logs escalation reason.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-right">
+      <div class="alabel">Draft response for validation</div>
+      <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+    </div>
+
+    <!-- Power Automate Zone -->
+    <div class="zone zone-automate">
+      <div class="zone-label">⚡ Power Automate <span class="badge badge-blue">Validation</span></div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">🔍</div> Output Validation Flow</div>
+        <div class="comp-desc">Triggered after generative answer is produced. Calls Azure OpenAI with validation prompt.</div>
+      </div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-amber">☁️</div> Azure OpenAI Check</div>
+        <div class="comp-desc">"Does this response contain PII, salary information, or restricted content?"</div>
+        <ul class="comp-outputs">
+          <li>✅ <strong>Pass</strong> — deliver as-is</li>
+          <li>🚫 <strong>Block</strong> — replace with safe alt</li>
+          <li>⚠️ <strong>Caveat</strong> — append disclaimer</li>
+        </ul>
+      </div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">📝</div> Incident Logging</div>
+        <div class="comp-desc">Every validation decision logged: query, classification, response, validation result, timestamp.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Arrow down to Dataverse -->
+  <div class="arrow-down">
+    <div class="alabel">Classification logs, validation results, user feedback</div>
+    <div class="shaft-v"></div>
+    <div class="head-v"></div>
+  </div>
+
+  <!-- Row 2: Dataverse Zone -->
+  <div class="row-bottom">
+    <div class="zone zone-dataverse" style="max-width: 1200px;">
+      <div class="zone-label">🗃️ Dataverse <span class="badge badge-green">Feedback &amp; Retraining</span></div>
+
+      <div style="display: flex; gap: 12px;">
+        <div class="component" style="flex: 1;">
+          <div class="comp-name"><div class="icon icon-green">📊</div> Classification Logs</div>
+          <div class="comp-desc">Every query logged: input text, classification result, confidence score, user thumbs up/down feedback. Enables model performance tracking.</div>
+        </div>
+        <div class="component" style="flex: 1;">
+          <div class="comp-name"><div class="icon icon-green">🔄</div> Retraining Pipeline</div>
+          <div class="comp-desc">Monthly Power Automate flow exports low-confidence classifications (&lt;70%) as retraining candidates. Model improves with each cycle.</div>
+        </div>
+        <div class="component" style="flex: 1;">
+          <div class="comp-name"><div class="icon icon-green">📈</div> Power BI Dashboard</div>
+          <div class="comp-desc">Guardrail trigger rates, false positive rates, escalation volume, average confidence scores. Track guardrail health over time.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Insight callout -->
+  <div class="handoff-note">
+    <div class="hn-label">🔑 Build Insight</div>
+    <div class="hn-text">The classifier topic runs <strong>BEFORE</strong> generative answers — every query is classified before the agent processes it. This is an <strong>architectural guardrail</strong>, not a prompt-based one. Prompt injection can't bypass a topic that never reaches the LLM. Cost optimization: only validate <code>sensitive</code> classifications; skip validation for <code>general</code> to halve Azure OpenAI costs.</div>
+  </div>
+</body>
+</html>
