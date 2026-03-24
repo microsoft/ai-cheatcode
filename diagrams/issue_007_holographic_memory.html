@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1680px;
+    min-height: 1380px;
+    background: #FFFFFF;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 40px 40px;
+    color: #1B1B3A;
+  }
+  .title { text-align: center; margin-bottom: 8px; font-size: 28px; font-weight: 700; }
+  .subtitle { text-align: center; margin-bottom: 40px; font-size: 16px; color: #6B6B8D; }
+
+  /* ── Layout: 3-row architecture ── */
+  .architecture {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+  }
+
+  /* ── Row 1: Source artifacts ── */
+  .row-sources {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+
+  /* ── Row 2: Enrichment + Index ── */
+  .row-middle {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  /* ── Row 3: Output ── */
+  .row-output {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 0;
+  }
+
+  /* ── Zone containers ── */
+  .zone {
+    border-radius: 16px;
+    padding: 24px 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .zone-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .zone-sources {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 2px solid #0078D4;
+    box-shadow: 0 4px 16px rgba(0,120,212,0.10);
+    flex: 1;
+  }
+  .zone-sources .zone-label { color: #0078D4; }
+
+  .zone-enrich {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.10);
+    flex: 1.3;
+  }
+  .zone-enrich .zone-label { color: #6B2FA0; }
+
+  .zone-index {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 2px solid #0078D4;
+    box-shadow: 0 4px 16px rgba(0,120,212,0.10);
+    flex: 1.4;
+  }
+  .zone-index .zone-label { color: #0078D4; }
+
+  .zone-retrieval {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.10);
+    flex: 1;
+  }
+  .zone-retrieval .zone-label { color: #6B2FA0; }
+
+  .zone-output {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 2px solid #107C10;
+    box-shadow: 0 4px 16px rgba(16,124,16,0.10);
+    flex: 1;
+  }
+  .zone-output .zone-label { color: #107C10; }
+
+  /* ── Components ── */
+  .component {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .component:last-child { margin-bottom: 0; }
+  .comp-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .comp-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+
+  .icon { width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 15px; color: white; flex-shrink: 0; }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-orange { background: #CA5010; }
+  .icon-green { background: #107C10; }
+  .icon-amber { background: #CA5010; }
+  .icon-teal { background: #008272; }
+
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 4px; }
+  .badge-purple { background: #6B2FA0; color: white; }
+  .badge-blue { background: #0078D4; color: white; }
+  .badge-green { background: #107C10; color: white; }
+  .badge-amber { background: #CA5010; color: white; }
+
+  /* ── Arrows ── */
+  .arrow-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 0;
+    gap: 4px;
+  }
+  .arrow-down .shaft-v { width: 2px; height: 24px; background: #333; }
+  .arrow-down .head-v { width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 10px solid #333; }
+  .arrow-down .alabel { font-size: 10px; color: #6B6B8D; font-style: italic; text-align: center; line-height: 1.3; }
+
+  .arrow-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    flex-shrink: 0;
+    gap: 4px;
+  }
+  .arrow-right .arrow-h { display: flex; align-items: center; }
+  .arrow-right .shaft { width: 28px; height: 2px; background: #333; }
+  .arrow-right .head { width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-left: 10px solid #333; }
+  .arrow-right .alabel { font-size: 10px; color: #6B6B8D; font-style: italic; max-width: 90px; text-align: center; line-height: 1.3; }
+
+  /* ── Domain linkage layers (special element) ── */
+  .layers-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 4px;
+  }
+  .layer-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+  }
+  .layer-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: white; flex-shrink: 0;
+  }
+  .layer-name { font-size: 13px; font-weight: 700; min-width: 100px; }
+  .layer-desc { font-size: 11px; color: #555; }
+  .layer-4 { background: rgba(107,47,160,0.08); }
+  .layer-4 .layer-num { background: #6B2FA0; }
+  .layer-4 .layer-name { color: #6B2FA0; }
+  .layer-3 { background: rgba(0,120,212,0.06); }
+  .layer-3 .layer-num { background: #0078D4; }
+  .layer-3 .layer-name { color: #0078D4; }
+  .layer-2 { background: rgba(202,80,16,0.06); }
+  .layer-2 .layer-num { background: #CA5010; }
+  .layer-2 .layer-name { color: #CA5010; }
+  .layer-1 { background: rgba(16,124,16,0.06); }
+  .layer-1 .layer-num { background: #107C10; }
+  .layer-1 .layer-name { color: #107C10; }
+
+  /* ── Holographic property callout ── */
+  .holo-callout {
+    margin-top: 24px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+  .holo-box {
+    background: #F8F8FC;
+    border: 1.5px solid #E0E0F0;
+    border-radius: 12px;
+    padding: 16px 22px;
+    max-width: 500px;
+    text-align: center;
+  }
+  .holo-box .hb-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .holo-box .hb-text { font-size: 13px; color: #555; line-height: 1.5; }
+  .holo-box-purple { border-color: #D4B8E8; }
+  .holo-box-purple .hb-label { color: #6B2FA0; }
+  .holo-box-green { border-color: #A8D5A8; }
+  .holo-box-green .hb-label { color: #107C10; }
+  .holo-box-blue { border-color: #A8CCE8; }
+  .holo-box-blue .hb-label { color: #0078D4; }
+
+  /* ── Node detail ── */
+  .node-detail {
+    background: #FFFFFF;
+    border-radius: 10px;
+    border: 1.5px solid rgba(107,47,160,0.2);
+    padding: 12px 14px;
+    margin: 8px 0;
+  }
+  .node-field { font-size: 11px; color: #555; line-height: 1.6; }
+  .node-field strong { color: #1B1B3A; }
+  .node-field .field-key { color: #6B2FA0; font-weight: 600; font-family: Consolas, monospace; font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="title">Holographic Memory Architecture</div>
+  <div class="subtitle">Issue #007 — Pattern: Redundant Context Nodes + Layered Domain Linkage + Azure AI Search</div>
+
+  <!-- ROW 1: Sources → Enrichment → Index → Retrieval → Output (horizontal pipeline) -->
+  <div class="row-middle">
+
+    <!-- Zone 1: Source Artifacts -->
+    <div class="zone zone-sources">
+      <div class="zone-label">📥 Source Artifacts</div>
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">📄</div> SharePoint Docs</div>
+        <div class="comp-desc">Design docs, specs, decision records across projects</div>
+      </div>
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">💬</div> Chat Exports</div>
+        <div class="comp-desc">Copilot, ChatGPT, Claude — exported conversation histories</div>
+      </div>
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">🎙️</div> Meeting Transcripts</div>
+        <div class="comp-desc">Teams recordings indexed via Issue #006 pipeline</div>
+      </div>
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">📦</div> Repo Artifacts</div>
+        <div class="comp-desc">README files, ADRs, PR descriptions, code comments</div>
+      </div>
+    </div>
+
+    <div class="arrow-right">
+      <div class="alabel">Raw content</div>
+      <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+    </div>
+
+    <!-- Zone 2: Enrichment Pipeline -->
+    <div class="zone zone-enrich">
+      <div class="zone-label">🧠 Enrichment Pipeline <span class="badge badge-purple">Holographic Encoding</span></div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-purple">🔍</div> Entity Extraction</div>
+        <div class="comp-desc">Azure OpenAI custom skill identifies people, projects, decisions, technologies, and dependencies mentioned in each document.</div>
+      </div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-purple">🔗</div> Relationship Mapping</div>
+        <div class="comp-desc">AI identifies cross-references: "This decision references Project B's auth architecture." Populates <strong>related_artifacts</strong> metadata field.</div>
+      </div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-purple">🏷️</div> Layer Classification</div>
+        <div class="comp-desc">Each link classified by abstraction distance:</div>
+        <div class="layers-stack">
+          <div class="layer-row layer-1">
+            <div class="layer-num">1</div>
+            <div class="layer-name">Trails</div>
+            <div class="layer-desc">Direct local references — "Function X calls Y"</div>
+          </div>
+          <div class="layer-row layer-2">
+            <div class="layer-num">2</div>
+            <div class="layer-name">Roads</div>
+            <div class="layer-desc">Thematic connections — "Rate limiting ↔ Token budgets"</div>
+          </div>
+          <div class="layer-row layer-3">
+            <div class="layer-num">3</div>
+            <div class="layer-name">Sea Routes</div>
+            <div class="layer-desc">Cross-domain abstractions — "Auth in Proj A ↔ Compliance in Proj B"</div>
+          </div>
+          <div class="layer-row layer-4">
+            <div class="layer-num">4</div>
+            <div class="layer-name">Air Routes</div>
+            <div class="layer-desc">Conceptual parallels — "Design patterns ↔ Regulatory frameworks"</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-purple">📋</div> Context Redundancy</div>
+        <div class="comp-desc">Each node stamped with: origin project, author, date, key decisions, related artifacts, summary context. <strong>Every node can reconstruct the broader picture alone.</strong></div>
+      </div>
+    </div>
+
+    <div class="arrow-right">
+      <div class="alabel">Enriched nodes with metadata</div>
+      <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+    </div>
+
+    <!-- Zone 3: Azure AI Search Index -->
+    <div class="zone zone-index">
+      <div class="zone-label">☁️ Azure AI Search <span class="badge badge-blue">Hybrid Index</span></div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">🔤</div> Keyword Index</div>
+        <div class="comp-desc">Full-text search on document content, titles, and extracted entities</div>
+      </div>
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">📐</div> Vector Index</div>
+        <div class="comp-desc">Embeddings for semantic similarity — finds conceptually related docs even without keyword overlap</div>
+      </div>
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">🏷️</div> Metadata Facets</div>
+        <div class="comp-desc">Filterable fields: <strong>project</strong>, <strong>author</strong>, <strong>link_layer</strong> (1–4), <strong>related_artifacts[]</strong>, <strong>decision_type</strong></div>
+      </div>
+
+      <!-- Example node detail -->
+      <div class="node-detail">
+        <div class="comp-name" style="font-size: 12px; margin-bottom: 6px;"><div class="icon icon-purple" style="width: 22px; height: 22px; font-size: 12px;">📄</div> Example Indexed Node</div>
+        <div class="node-field">
+          <span class="field-key">content:</span> "We chose OAuth 2.0 PKCE for the mobile app..."<br>
+          <span class="field-key">project:</span> "Project Alpha" &nbsp; <span class="field-key">author:</span> "J. Chen"<br>
+          <span class="field-key">decisions:</span> ["OAuth PKCE", "No session tokens"]<br>
+          <span class="field-key">related_artifacts:</span> ["Project Beta compliance review", "Q3 security audit"]<br>
+          <span class="field-key">link_layers:</span> {trail: ["auth-service PR #42"], road: ["identity-patterns"], sea: ["Beta compliance"], air: ["zero-trust philosophy"]}
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-right">
+      <div class="alabel">Layer-aware query</div>
+      <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+    </div>
+
+    <!-- Zone 4: Agent Retrieval -->
+    <div class="zone zone-retrieval">
+      <div class="zone-label">🤖 Copilot Agent <span class="badge badge-purple">Layer-Aware</span></div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-purple">🎯</div> Query Classifier</div>
+        <div class="comp-desc">Determines traversal depth: code question → Trails only; strategy question → all layers up to Air Routes</div>
+      </div>
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-purple">🔀</div> Graph Traversal</div>
+        <div class="comp-desc">Follows related_artifacts links across nodes, widening by layer. Discovers connections never explicitly stated.</div>
+      </div>
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-purple">📝</div> Synthesis</div>
+        <div class="comp-desc">Combines evidence from multiple nodes into a single cross-domain answer with source citations.</div>
+      </div>
+    </div>
+
+    <div class="arrow-right">
+      <div class="alabel">Cross-domain answer</div>
+      <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+    </div>
+
+    <!-- Zone 5: Output -->
+    <div class="zone zone-output">
+      <div class="zone-label">💬 Output</div>
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-green">💬</div> Copilot Chat</div>
+        <div class="comp-desc">"What decisions from Project A affect Project B's timeline?"</div>
+      </div>
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-green">📊</div> Decision Trail</div>
+        <div class="comp-desc">Cited sources across projects with link-layer annotations</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Holographic property callouts -->
+  <div class="holo-callout">
+    <div class="holo-box holo-box-purple">
+      <div class="hb-label">🔮 Holographic Property</div>
+      <div class="hb-text">Every node carries redundant context. <strong>Remove any node and the remaining nodes still reconstruct the answer</strong> — at lower fidelity, but without blind spots. Storage trades for resilience.</div>
+    </div>
+    <div class="holo-box holo-box-blue">
+      <div class="hb-label">🗺️ Layered Traversal</div>
+      <div class="hb-text">Code questions stay on <strong>Trails</strong> (fast, precise). Strategy questions take <strong>Air Routes</strong> (broad, conceptual). The agent chooses depth based on query intent — not a fixed search radius.</div>
+    </div>
+    <div class="holo-box holo-box-green">
+      <div class="hb-label">⚡ Graceful Degradation</div>
+      <div class="hb-text">SharePoint offline? Repo archived? Chat history deleted? Remaining nodes still have the context stamps. <strong>Fidelity degrades; coherence doesn't.</strong> The opposite of flat keyword search.</div>
+    </div>
+  </div>
+</body>
+</html>

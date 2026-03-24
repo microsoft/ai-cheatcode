@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1680px;
+    min-height: 1400px;
+    background: #FFFFFF;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 40px;
+    color: #1B1B3A;
+  }
+  .title { text-align: center; margin-bottom: 8px; font-size: 28px; font-weight: 700; }
+  .subtitle { text-align: center; margin-bottom: 44px; font-size: 16px; color: #6B6B8D; }
+
+  .flow { display: flex; flex-direction: column; align-items: center; gap: 0; }
+
+  /* Shared component styles */
+  .node {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 18px 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    border: 2px solid;
+    text-align: center;
+    position: relative;
+  }
+  .node-name { font-size: 16px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .node-desc { font-size: 12px; color: #6B6B8D; line-height: 1.4; }
+  .node-purple { border-color: #6B2FA0; }
+  .node-blue { border-color: #0078D4; }
+  .node-green { border-color: #107C10; }
+
+  .icon { width: 34px; height: 34px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; color: white; flex-shrink: 0; }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-green { background: #107C10; }
+  .icon-teal { background: #008272; }
+
+  .arrow-down { display: flex; flex-direction: column; align-items: center; padding: 6px 0; }
+  .arrow-down .shaft { width: 2px; height: 20px; background: #333; }
+  .arrow-down .head { width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 10px solid #333; }
+  .arrow-down .label { font-size: 11px; color: #6B6B8D; font-style: italic; margin-top: 2px; margin-bottom: 2px; }
+
+  /* Input node */
+  .input-node {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    border-radius: 14px;
+    padding: 20px 40px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.15);
+  }
+  .input-node .node-name { font-size: 18px; color: #6B2FA0; }
+
+  /* Analyzer zone */
+  .analyzer-zone {
+    background: linear-gradient(135deg, #F5F0FA 0%, #EDE5F5 100%);
+    border: 2px solid #6B2FA0;
+    border-radius: 16px;
+    padding: 24px 40px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.12);
+    width: 520px;
+  }
+  .analyzer-zone .zone-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #6B2FA0; margin-bottom: 14px; }
+
+  /* Fan-out section */
+  .fanout {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    width: 100%;
+  }
+  .source-lane {
+    flex: 1;
+    max-width: 420px;
+    border-radius: 16px;
+    padding: 24px 20px;
+    text-align: center;
+    border: 2px solid #0078D4;
+    background: linear-gradient(135deg, #EBF3FD 0%, #D6E8FA 100%);
+    box-shadow: 0 4px 16px rgba(0,120,212,0.10);
+  }
+  .source-lane .lane-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0078D4;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .source-lane .component {
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,120,212,0.15);
+    text-align: left;
+  }
+  .source-lane .component:last-child { margin-bottom: 0; }
+  .comp-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .comp-scope { font-size: 11px; color: #0078D4; font-weight: 600; margin-bottom: 2px; }
+  .comp-returns { font-size: 11px; color: #6B6B8D; }
+
+  /* Processing zone */
+  .process-zone {
+    background: linear-gradient(135deg, #E8F5E9 0%, #D4EDD5 100%);
+    border: 2px solid #107C10;
+    border-radius: 16px;
+    padding: 24px 40px;
+    box-shadow: 0 4px 16px rgba(16,124,16,0.10);
+    width: 90%;
+  }
+  .process-zone .zone-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #107C10; margin-bottom: 16px; text-align: center; }
+  .process-steps {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: stretch;
+  }
+  .process-step {
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 16px 20px;
+    flex: 1;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border: 1px solid rgba(16,124,16,0.15);
+    text-align: center;
+  }
+  .step-num { font-size: 11px; font-weight: 700; color: #107C10; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .step-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .step-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+  .step-arrow { display: flex; align-items: center; font-size: 22px; color: #107C10; padding: 0 4px; }
+
+  /* Output node */
+  .output-node {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 2px solid #107C10;
+    border-radius: 14px;
+    padding: 20px 40px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(16,124,16,0.15);
+  }
+  .output-node .node-name { font-size: 18px; color: #107C10; }
+
+  /* Fan-in arrows */
+  .fan-arrows {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    width: 100%;
+    padding: 0 60px;
+  }
+  .fan-arrow-item {
+    flex: 1;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .key-insight {
+    margin-top: 30px;
+    background: #FFF8E1;
+    border: 2px solid #CA5010;
+    border-radius: 12px;
+    padding: 16px 28px;
+    text-align: center;
+    max-width: 700px;
+  }
+  .key-insight .label { font-size: 12px; font-weight: 700; color: #CA5010; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .key-insight .text { font-size: 14px; color: #333; line-height: 1.5; }
+</style>
+</head>
+<body>
+  <div class="title">Scoped Multi-Source Search</div>
+  <div class="subtitle">Issue #002 — Pattern: Query Analysis → Targeted Source Routing → Grounded Response</div>
+
+  <div class="flow">
+    <!-- Input -->
+    <div class="input-node">
+      <div class="node-name"><div class="icon icon-purple">💬</div> User Query via Copilot Chat</div>
+      <div class="node-desc">Natural language question spanning work items, email, documents</div>
+    </div>
+
+    <div class="arrow-down"><div class="shaft"></div><div class="label">Raw user intent</div><div class="head"></div></div>
+
+    <!-- Query Analyzer -->
+    <div class="analyzer-zone">
+      <div class="zone-label">🧠 Intelligence Layer</div>
+      <div class="node node-purple" style="border: none; box-shadow: none; padding: 14px 20px;">
+        <div class="node-name"><div class="icon icon-purple">🎯</div> Query Analyzer</div>
+        <div class="node-desc">Intent classification — determines which data sources to query and how to scope each request. Avoids broad, noisy RAG retrieval.</div>
+      </div>
+    </div>
+
+    <div class="arrow-down"><div class="shaft"></div><div class="label">Scoped queries dispatched per source</div><div class="head"></div></div>
+
+    <!-- Three source lanes -->
+    <div class="fanout">
+      <div class="source-lane">
+        <div class="lane-title"><div class="icon icon-blue" style="width:28px;height:28px;font-size:14px;">🔧</div> Azure DevOps</div>
+        <div class="component">
+          <div class="comp-name">ADO REST API</div>
+          <div class="comp-scope">🔒 Scoped: Project + Work Item Type</div>
+          <div class="comp-returns">Returns: Work items, repos, pipelines</div>
+        </div>
+      </div>
+
+      <div class="source-lane">
+        <div class="lane-title"><div class="icon icon-blue" style="width:28px;height:28px;font-size:14px;">📧</div> Microsoft Graph</div>
+        <div class="component">
+          <div class="comp-name">Graph API</div>
+          <div class="comp-scope">🔒 Scoped: User + Date Range</div>
+          <div class="comp-returns">Returns: Email, calendar, people, files</div>
+        </div>
+      </div>
+
+      <div class="source-lane">
+        <div class="lane-title"><div class="icon icon-blue" style="width:28px;height:28px;font-size:14px;">📄</div> SharePoint</div>
+        <div class="component">
+          <div class="comp-name">Search API</div>
+          <div class="comp-scope">🔒 Scoped: Site + Library</div>
+          <div class="comp-returns">Returns: Documents, lists, pages</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fan-in arrows -->
+    <div class="fan-arrows">
+      <div class="fan-arrow-item"><div class="arrow-down"><div class="shaft"></div><div class="head"></div></div></div>
+      <div class="fan-arrow-item"><div class="arrow-down"><div class="shaft"></div><div class="head"></div></div></div>
+      <div class="fan-arrow-item"><div class="arrow-down"><div class="shaft"></div><div class="head"></div></div></div>
+    </div>
+
+    <!-- Processing zone -->
+    <div class="process-zone">
+      <div class="zone-label">⚙️ Response Assembly</div>
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="step-num">Step 1</div>
+          <div class="step-name">Merge Results</div>
+          <div class="step-desc">Deduplicate and normalize results across all three sources</div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="process-step">
+          <div class="step-num">Step 2</div>
+          <div class="step-name">Relevance Ranking</div>
+          <div class="step-desc">Score and filter by original query intent</div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="process-step">
+          <div class="step-num">Step 3</div>
+          <div class="step-name">Synthesize Response</div>
+          <div class="step-desc">Azure OpenAI generates grounded answer from ranked results</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-down"><div class="shaft"></div><div class="head"></div></div>
+
+    <!-- Output -->
+    <div class="output-node">
+      <div class="node-name"><div class="icon icon-green">✅</div> Grounded Response with Source Citations</div>
+      <div class="node-desc">Each claim linked to its source document, email, or work item</div>
+    </div>
+
+    <!-- Key insight -->
+    <div class="key-insight">
+      <div class="label">🔑 Key Insight</div>
+      <div class="text"><strong>Scoped search beats broad retrieval.</strong> By analyzing intent first and querying each source with targeted filters, you eliminate the noise that makes RAG answers unreliable. Quality input = quality output.</div>
+    </div>
+  </div>
+</body>
+</html>

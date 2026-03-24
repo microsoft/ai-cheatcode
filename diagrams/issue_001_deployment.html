@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1680px;
+    min-height: 1060px;
+    background: #FFFFFF;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 40px;
+    color: #1B1B3A;
+  }
+  .title {
+    text-align: center;
+    margin-bottom: 8px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1B1B3A;
+  }
+  .subtitle {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 16px;
+    color: #6B6B8D;
+    font-weight: 400;
+  }
+  .canvas {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 48px;
+    padding: 0 20px;
+  }
+  .zone {
+    border-radius: 16px;
+    padding: 28px 24px;
+    position: relative;
+    flex: 1;
+    min-width: 0;
+  }
+  .zone-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .zone-dev {
+    background: linear-gradient(135deg, #F5F0FA 0%, #EDE5F5 100%);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 20px rgba(107, 47, 160, 0.12);
+  }
+  .zone-dev .zone-label { color: #6B2FA0; }
+  .zone-azure {
+    background: linear-gradient(135deg, #EBF3FD 0%, #D6E8FA 100%);
+    border: 2px solid #0078D4;
+    box-shadow: 0 4px 20px rgba(0, 120, 212, 0.12);
+    flex: 1.3;
+  }
+  .zone-azure .zone-label { color: #0078D4; }
+  .zone-m365 {
+    background: linear-gradient(135deg, #F0EBF5 0%, #E5DCF0 100%);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 20px rgba(107, 47, 160, 0.12);
+  }
+  .zone-m365 .zone-label { color: #6B2FA0; }
+  .component {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.08);
+    position: relative;
+  }
+  .component:last-child { margin-bottom: 0; }
+  .component-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .component-desc {
+    font-size: 12px;
+    color: #6B6B8D;
+    line-height: 1.4;
+  }
+  .component-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .icon-purple { background: #6B2FA0; color: white; }
+  .icon-blue { background: #0078D4; color: white; }
+  .icon-green { background: #107C10; color: white; }
+  .icon-teal { background: #008272; color: white; }
+  .component.optional {
+    border: 2px dashed #999;
+    opacity: 0.7;
+  }
+  .azure-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .azure-grid .component.full-width {
+    grid-column: 1 / -1;
+  }
+  /* Connection labels between zones */
+  .connections {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 20px;
+  }
+  .conn-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: #F8F8FC;
+    border-radius: 10px;
+    border: 1px solid #E8E8F0;
+  }
+  .conn-arrow {
+    font-size: 20px;
+    color: #333;
+    flex-shrink: 0;
+  }
+  .conn-from, .conn-to {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .conn-from-purple { background: #F5F0FA; color: #6B2FA0; border: 1px solid #6B2FA0; }
+  .conn-from-blue { background: #EBF3FD; color: #0078D4; border: 1px solid #0078D4; }
+  .conn-label {
+    font-size: 12px;
+    color: #6B6B8D;
+    font-style: italic;
+    flex: 1;
+  }
+  .conn-dashed .conn-arrow { color: #999; }
+  .conn-dashed { border-style: dashed; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 8px;
+  }
+  .badge-purple { background: #6B2FA0; color: white; }
+  .badge-blue { background: #0078D4; color: white; }
+  .badge-green { background: #107C10; color: white; }
+  .badge-orange { background: #D83B01; color: white; }
+  .lifecycle-badge {
+    position: absolute;
+    bottom: -8px;
+    right: 16px;
+    background: #107C10;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+  <div class="title">Code-First Agent Delivery Pipeline</div>
+  <div class="subtitle">Issue #001 — Pattern: VS Code → Azure → M365 Copilot Chat</div>
+
+  <div class="canvas">
+    <!-- Zone 1: Developer Workstation -->
+    <div class="zone zone-dev">
+      <div class="zone-label">
+        <svg width="18" height="18" viewBox="0 0 18 18"><rect x="1" y="3" width="16" height="12" rx="2" fill="none" stroke="#6B2FA0" stroke-width="1.5"/><line x1="1" y1="15" x2="17" y2="15" stroke="#6B2FA0" stroke-width="1.5"/><line x1="7" y1="15" x2="7" y2="17" stroke="#6B2FA0" stroke-width="1.5"/><line x1="11" y1="15" x2="11" y2="17" stroke="#6B2FA0" stroke-width="1.5"/><line x1="5" y1="17" x2="13" y2="17" stroke="#6B2FA0" stroke-width="1.5"/></svg>
+        Developer Workstation
+      </div>
+
+      <div class="component">
+        <div class="component-name">
+          <div class="component-icon icon-purple">⌨</div>
+          VS Code + GitHub Copilot Chat
+        </div>
+        <div class="component-desc">Primary development environment. Copilot generates agent code from natural language prompts.</div>
+      </div>
+
+      <div class="component">
+        <div class="component-name">
+          <div class="component-icon icon-purple">🧰</div>
+          Teams Toolkit Extension
+        </div>
+        <div class="component-desc">Scaffolding, local debug, and deployment via <code>azd up</code>. Manages app registration and manifest.</div>
+      </div>
+
+      <div class="component" style="position: relative;">
+        <div class="component-name">
+          <div class="component-icon icon-purple">📄</div>
+          Bicep / IaC Templates
+        </div>
+        <div class="component-desc">Infrastructure-as-Code definitions. Provision and tear down Azure resources deterministically.</div>
+        <div class="lifecycle-badge">azd up ↑ &nbsp; azd down ↓</div>
+      </div>
+    </div>
+
+    <!-- Zone 2: Azure Resource Group -->
+    <div class="zone zone-azure">
+      <div class="zone-label">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path d="M9 2L2 7v4l7 5 7-5V7L9 2z" fill="none" stroke="#0078D4" stroke-width="1.5"/></svg>
+        Azure Resource Group
+      </div>
+
+      <div class="azure-grid">
+        <div class="component full-width">
+          <div class="component-name">
+            <div class="component-icon icon-blue">⚡</div>
+            Azure Functions
+            <span class="badge badge-blue">Runtime</span>
+          </div>
+          <div class="component-desc">Agent execution runtime. Hosts the declarative agent's API plugin endpoints. Serverless, auto-scaling.</div>
+        </div>
+
+        <div class="component">
+          <div class="component-name">
+            <div class="component-icon icon-blue">🧠</div>
+            Azure OpenAI
+          </div>
+          <div class="component-desc">GPT-4o language model. Processes prompts and generates responses. Customer-managed deployment.</div>
+        </div>
+
+        <div class="component">
+          <div class="component-name">
+            <div class="component-icon icon-blue">🔍</div>
+            Azure AI Search
+          </div>
+          <div class="component-desc">Vector + keyword hybrid search index. Grounds agent responses in customer documents.</div>
+        </div>
+
+        <div class="component full-width">
+          <div class="component-name">
+            <div class="component-icon icon-blue">🗄</div>
+            Azure Blob Storage
+          </div>
+          <div class="component-desc">Document store for PDFs, reports, and source materials. Feeds the AI Search index via integrated indexer.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zone 3: M365 Copilot Platform -->
+    <div class="zone zone-m365">
+      <div class="zone-label">
+        <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7" fill="none" stroke="#6B2FA0" stroke-width="1.5"/><path d="M5 9h8M9 5v8" stroke="#6B2FA0" stroke-width="1.5"/></svg>
+        M365 Copilot Platform
+      </div>
+
+      <div class="component">
+        <div class="component-name">
+          <div class="component-icon icon-teal">💬</div>
+          Copilot Chat
+          <span class="badge badge-green">User-Facing</span>
+        </div>
+        <div class="component-desc">End-user interface in Microsoft Teams and M365. Users interact with the agent through natural conversation.</div>
+      </div>
+
+      <div class="component">
+        <div class="component-name">
+          <div class="component-icon icon-purple">📋</div>
+          Declarative Agent
+        </div>
+        <div class="component-desc">Teams app manifest + OpenAPI plugin spec. Defines agent capabilities, instructions, and API surface.</div>
+      </div>
+
+      <div class="component optional">
+        <div class="component-name">
+          <div class="component-icon" style="background: #999; color: white;">📦</div>
+          Copilot Studio
+          <span class="badge" style="background: #999; color: white;">Optional</span>
+        </div>
+        <div class="component-desc">ZIP import path. Export from VS Code → import into Studio for low-code teams to customize.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connection Legend -->
+  <div class="connections">
+    <div class="conn-row">
+      <span class="conn-from conn-from-purple">VS Code + Copilot</span>
+      <span class="conn-arrow">→</span>
+      <span class="conn-label">Copilot generates full agent project scaffold from natural language</span>
+      <span class="conn-arrow">→</span>
+      <span class="conn-to conn-from-purple">Teams Toolkit</span>
+    </div>
+    <div class="conn-row">
+      <span class="conn-from conn-from-purple">Teams Toolkit</span>
+      <span class="conn-arrow">→</span>
+      <span class="conn-label"><code>azd up</code> — provisions Azure resources via Bicep, deploys Functions code, registers app</span>
+      <span class="conn-arrow">→</span>
+      <span class="conn-to conn-from-blue">Azure Resource Group</span>
+    </div>
+    <div class="conn-row">
+      <span class="conn-from conn-from-blue">Azure Functions</span>
+      <span class="conn-arrow">⇄</span>
+      <span class="conn-label">API Plugin (OpenAPI spec) — bidirectional request/response</span>
+      <span class="conn-arrow">⇄</span>
+      <span class="conn-to conn-from-purple">Declarative Agent</span>
+    </div>
+    <div class="conn-row conn-dashed">
+      <span class="conn-from conn-from-purple">Teams Toolkit</span>
+      <span class="conn-arrow" style="color:#999">⇢</span>
+      <span class="conn-label" style="color:#999">Optional: Export as ZIP package → import into Copilot Studio for low-code customization</span>
+      <span class="conn-arrow" style="color:#999">⇢</span>
+      <span class="conn-to" style="background:#f0f0f0; color:#999; border: 1px solid #999; font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 6px; white-space: nowrap;">Copilot Studio</span>
+    </div>
+  </div>
+</body>
+</html>

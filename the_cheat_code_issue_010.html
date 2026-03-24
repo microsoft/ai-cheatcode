@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>The Ch(e)at Code — Issue #010: Multi-Agent Handoff</title>
+<!--[if mso]>
+<style type="text/css">
+  body, table, td, p, h1, h2, h3 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
+  .mono { font-family: Consolas, 'Courier New', monospace !important; }
+</style>
+<![endif]-->
+<style type="text/css">
+  body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+  table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+  img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+  body { margin: 0; padding: 0; width: 100% !important; -webkit-font-smoothing: antialiased; }
+  @media only screen and (max-width: 620px) {
+    .wrapper { width: 100% !important; padding: 8px !important; }
+    .content-block { padding: 16px !important; }
+    .header-title { font-size: 22px !important; }
+    .konami { font-size: 7px !important; letter-spacing: 1px !important; }
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;color:#333333;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f4f4;">
+<tr><td align="center" style="padding:24px 10px;">
+<table role="presentation" class="wrapper" width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-radius:8px;max-width:600px;width:100%;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+
+<!-- HEADER -->
+<tr><td style="padding:0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="background:#6B2FA0;height:6px;border-radius:8px 8px 0 0;font-size:1px;">&nbsp;</td></tr>
+    <tr><td align="center" style="background:#1B1B3A;padding:32px 24px 12px 24px;">
+      <h1 class="header-title" style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:28px;font-weight:700;color:#ffffff;line-height:1.3;letter-spacing:0.5px;">The Ch(e)at Code</h1>
+      <p style="margin:8px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#B8A9C9;letter-spacing:0.3px;">Agent Patterns for Copilot Chat</p>
+    </td></tr>
+    <tr><td align="center" style="background:#1B1B3A;padding:0 24px 8px 24px;">
+      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#11165; &#11165; &#11167; &#11167; &#11164; &#11166; &#11164; &#11166; B A START</p>
+    </td></tr>
+    <tr><td align="center" style="background:#F0ECF5;padding:12px 24px;">
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #010 &nbsp;&bull;&nbsp; JUNE 2, 2026 &nbsp;&bull;&nbsp; &#129504; CONCEPTUAL PATTERN</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- INTRO -->
+<tr><td class="content-block" style="padding:24px 32px 16px 32px;">
+  <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
+    Your customer built an HR agent. It works. Now they want an IT support agent, a finance agent, and a facilities agent. Great &#8212; until an employee asks the HR agent about laptop provisioning for a new hire. The HR agent doesn't know. The IT agent does. But the user has to start over, re-explain the context, and hope they picked the right bot this time. The moment you have two agents, you have a handoff problem.
+  </p>
+  <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
+    <strong>This issue's pattern:</strong> Multi-Agent Handoff &#8212; a framework for when to split agents, how to transfer conversations between them, and where to draw the trust boundaries that keep the system coherent. If you've read <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/the_cheat_code_issue_005.html" style="color:#6B2FA0;text-decoration:underline;">Issue #005</a> (Prompt Chaining) and <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/the_cheat_code_issue_008.html" style="color:#6B2FA0;text-decoration:underline;">Issue #008</a> (Scoped Knowledge), this is what happens when those patterns need to talk to each other.
+  </p>
+</td></tr>
+
+<!-- PATTERN BREAKDOWN -->
+<tr><td class="content-block" style="padding:8px 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #0078D4;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#0078D4;letter-spacing:1.5px;text-transform:uppercase;">&#129513; Pattern Breakdown</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Multi-Agent Handoff</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Three handoff models + trust boundaries + shared context architecture</p>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+
+      <p style="margin:0 0 12px 0;"><strong>Why this matters:</strong> This is the #1 blocker to multi-agent deployment at enterprise scale. Customers start with one agent, prove value, then want five more. The technical challenge isn't building the second agent &#8212; it's connecting them. CSAs who can solve the handoff problem own the expansion conversation.</p>
+
+      <!-- The Cognitive Load Test -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 16px 0;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
+          <strong style="color:#6B2FA0;">The Cognitive Load Test:</strong> When should you split into multiple agents? Two signals: (1)&nbsp;agent scope exceeds ~3 knowledge domains, or (2)&nbsp;the system prompt exceeds ~2,000 tokens of instruction. But when domains overlap significantly or users can't predict which agent to ask, keep it as one agent with a <strong>"receptionist" pattern</strong> &#8212; a single front-door agent that routes to specialists behind the scenes.
+        </td></tr>
+      </table>
+
+      <!-- Three Handoff Patterns -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
+        <tr><td style="padding:14px 16px;">
+          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Three Handoff Patterns</p>
+          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
+            <strong>Cold Transfer</strong> &#8212; restart with new agent, user repeats context<br>
+            &nbsp;&nbsp;Simple &#10003; &nbsp;| &nbsp;Terrible UX &#10007;<br>
+            <strong>Warm Transfer</strong> &#8212; Agent A summarizes, passes context to Agent B<br>
+            &nbsp;&nbsp;Good UX &#10003; &nbsp;| &nbsp;Moderate complexity &#9670;<br>
+            <strong>Hot Transfer</strong> &#8212; shared memory store, both agents read/write<br>
+            &nbsp;&nbsp;Seamless UX &#10003; &nbsp;| &nbsp;High complexity &#10007;
+          </p>
+        </td></tr>
+      </table>
+
+      <p style="margin:0 0 10px 0;"><strong>The pattern has three design decisions:</strong></p>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>Cold transfer: simple but brutal.</strong> The conversation ends with Agent A and restarts with Agent B. The user has to re-explain their problem. This is what most multi-bot deployments do today, and it's why users hate them. The only time cold transfer is acceptable: when the domains are so different that no context would help (e.g., handing off from an internal agent to an external vendor's support bot). In every other case, you need at least a warm transfer.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>Warm transfer: the sweet spot for most builds.</strong> Before handing off, Agent A generates a conversation summary &#8212; typically via an Azure OpenAI call: <em>"Summarize this conversation in 3 sentences, including the user's original question and what's been discussed so far."</em> This summary is passed to Agent B as a context variable. Agent B's greeting topic reads it and picks up mid-stride. Good UX, moderate complexity, and the approach we'll build in <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/the_cheat_code_issue_011.html" style="color:#6B2FA0;text-decoration:underline;">Issue #011</a>. This is what you should default to.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>Hot transfer: shared memory for advanced scenarios.</strong> Both agents read and write to the same session state &#8212; a Dataverse table, Redis cache, or external orchestrator. The user sees one continuous conversation even though multiple agents are serving it. This is architecturally complex but necessary when agents collaborate within a single workflow (e.g., an approval chain that spans HR and Finance). Reserve this for scenarios where warm transfer's slight context gap is unacceptable.
+        </td></tr>
+      </table>
+
+      <!-- Trust Boundaries -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 14px 0;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
+          <strong style="color:#6B2FA0;">Trust boundaries matter:</strong> Should Agent B trust Agent A's intent classification? What if Agent A misrouted &#8212; how does Agent B detect and recover? Does the user need to re-authenticate with Agent B? These aren't edge cases; they're the questions that determine whether your multi-agent system feels coherent or feels like being transferred between call centers. Build a misroute detection topic in every receiving agent &#8212; if the user's first message after transfer doesn't match the expected domain, route them back.
+        </td></tr>
+      </table>
+
+      <!-- Where to Store Shared Context -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 14px 0;">
+        <tr><td style="padding:14px 16px;">
+          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Where to Store Shared Context</p>
+          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
+            <strong>Conversation variables</strong> &#8212; lightweight, ephemeral, lost on session end<br>
+            &nbsp;&nbsp;Best for: warm transfer summary passing<br>
+            <strong>Dataverse session table</strong> &#8212; persistent, queryable, auditable<br>
+            &nbsp;&nbsp;Best for: analytics, audit trails, multi-step workflows<br>
+            <strong>External orchestrator</strong> &#8212; Azure Bot Framework, API-based routing<br>
+            &nbsp;&nbsp;Best for: complex multi-agent topologies with 5+ agents
+          </p>
+        </td></tr>
+      </table>
+
+      <!-- Warning Callout -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF8E1;border-radius:4px;border:1px solid #FFE082;">
+        <tr><td style="padding:10px 14px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#795548;line-height:1.5;">
+          <strong>&#9888; Design warning:</strong> Don't build a hot transfer when a warm transfer will do. Shared session state adds architectural complexity, Dataverse dependencies, and debugging difficulty. Start with warm transfer (<a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/the_cheat_code_issue_011.html" style="color:#6B2FA0;text-decoration:underline;">Issue #011</a> shows you how), measure whether the context gap matters, and upgrade to hot transfer only if users report losing context mid-handoff. Premature shared state is the #1 over-engineering mistake in multi-agent builds.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- WHERE THIS LANDS -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #CA5010;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#CA5010;letter-spacing:1.5px;text-transform:uppercase;">&#127942; Where This Pattern Lands</h2>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>HR + IT shared services</strong> &#8212; the canonical example. New hire onboarding touches both domains. An employee asks the HR agent about laptop provisioning &#8212; the agent should route to IT with full context, not say "contact IT support."
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Customer service tiers</strong> &#8212; general inquiry agent routes to billing, technical support, or account management based on intent. Warm transfer carries the customer's issue summary so they never repeat themselves.
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Regulated industries (finance, healthcare)</strong> &#8212; compliance requires that certain queries are handled only by agents with access to specific data. Handoff isn't a convenience &#8212; it's a policy enforcement mechanism.
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Any enterprise with 2+ Copilot Studio agents</strong> &#8212; this is the pattern that turns a collection of bots into a coherent agent ecosystem. Without it, every new agent is an island.
+        </td></tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF3E0;border-radius:6px;border:1px solid #FFCC80;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#5D4037;line-height:1.6;">
+          <strong>Positioning tip:</strong> Frame this as "agent ecosystem, not agent collection." The customer's first agent proved AI works. The second agent proves they need architecture. You're the CSA who turns a successful pilot into a scalable platform &#8212; and that conversation starts with handoff.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- QUICK TIPS -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #107C10;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#107C10;letter-spacing:1.5px;text-transform:uppercase;">&#9889; Quick Tips</h2>
+    </td></tr>
+    <tr><td style="padding:4px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>The "receptionist" test.</strong> Ask your customer: "Can your users predict which agent to talk to?" If the answer is no, don't deploy multiple user-facing agents &#8212; deploy one front-door agent that routes internally. The user never sees the handoff. This is cheaper to build and dramatically better UX.
+        </td></tr>
+        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Pair with <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/the_cheat_code_issue_005.html" style="color:#6B2FA0;text-decoration:underline;">Issue #005</a> (Prompt Chaining)</strong> for the pattern that structures <em>within</em>-agent multi-step workflows, and <strong><a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/the_cheat_code_issue_008.html" style="color:#6B2FA0;text-decoration:underline;">Issue #008</a></strong> for scoped knowledge boundaries. Multi-Agent Handoff is the <em>between</em>-agent coordination layer.
+        </td></tr>
+        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Next week: we build it.</strong> <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/the_cheat_code_issue_011.html" style="color:#6B2FA0;text-decoration:underline;">Issue #011</a> takes this conceptual framework and implements a two-agent warm handoff in Copilot Studio with Dataverse session state and handoff analytics. If you're reading this and thinking "show me the code," that's next Monday.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- NEXT ISSUE CTA -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
+    <tr><td align="center" style="padding:20px 24px;">
+      <p style="margin:0 0 6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;font-weight:700;color:#6B2FA0;">Got an agent or pattern to share?</p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#666666;line-height:1.5;">Reply to this email and you might be featured in a future issue.</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- FOOTER -->
+<tr><td style="padding:0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="padding:0 32px;"><hr style="border:none;border-top:1px solid #E0E0E0;margin:0;"></td></tr>
+    <tr><td align="center" style="padding:20px 32px 24px 32px;">
+      <p style="margin:0 0 4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;font-weight:600;color:#1B1B3A;">The Ch(e)at Code</p>
+      <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;line-height:1.5;">AIWF Team &bull; AI Business Solutions<br>Questions or ideas for the next issue? Reply to this email.</p>
+      <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;"><a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/" style="color:#6B2FA0;text-decoration:underline;">Browse the full archive</a></p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:10px;color:#BBBBBB;">Microsoft Internal &bull; Not for external distribution</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>

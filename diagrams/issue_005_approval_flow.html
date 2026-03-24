@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1680px;
+    min-height: 1300px;
+    background: #FFFFFF;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 40px 80px;
+    color: #1B1B3A;
+  }
+  .title { text-align: center; margin-bottom: 8px; font-size: 28px; font-weight: 700; }
+  .subtitle { text-align: center; margin-bottom: 44px; font-size: 16px; color: #6B6B8D; }
+
+  .flow { display: flex; flex-direction: column; align-items: center; gap: 0; }
+
+  .stage {
+    border-radius: 16px;
+    padding: 24px 32px;
+    width: 640px;
+    position: relative;
+  }
+  .stage-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .stage-content {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 18px 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .sc-name { font-size: 16px; font-weight: 600; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
+  .sc-desc { font-size: 13px; color: #6B6B8D; line-height: 1.5; }
+  .icon { width: 34px; height: 34px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; color: white; flex-shrink: 0; }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-orange { background: #CA5010; }
+  .icon-green { background: #107C10; }
+  .icon-red { background: #D83B01; }
+
+  .stage-generate {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.10);
+  }
+  .stage-generate .stage-label { color: #6B2FA0; }
+
+  .stage-draft {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 2px solid #0078D4;
+    box-shadow: 0 4px 16px rgba(0,120,212,0.10);
+  }
+  .stage-draft .stage-label { color: #0078D4; }
+
+  .stage-review {
+    background: linear-gradient(135deg, #FFF8E1, #FFF0CC);
+    border: 3px solid #CA5010;
+    box-shadow: 0 6px 24px rgba(202,80,16,0.18);
+    width: 720px;
+  }
+  .stage-review .stage-label { color: #CA5010; font-size: 14px; }
+
+  .stage-publish {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 2px solid #107C10;
+    box-shadow: 0 4px 16px rgba(16,124,16,0.10);
+  }
+  .stage-publish .stage-label { color: #107C10; }
+
+  /* Arrow down */
+  .arrow-down { display: flex; flex-direction: column; align-items: center; padding: 6px 0; }
+  .arrow-down .shaft { width: 2px; height: 18px; background: #333; }
+  .arrow-down .head { width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 10px solid #333; }
+  .arrow-down .label { font-size: 11px; color: #6B6B8D; font-style: italic; margin-top: 2px; margin-bottom: 2px; }
+
+  /* Decision diamond */
+  .decision-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: 100%;
+    position: relative;
+  }
+  .decision-diamond {
+    width: 140px;
+    height: 140px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .diamond-shape {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #FFF8E1, #FFE0B2);
+    border: 3px solid #CA5010;
+    transform: rotate(45deg);
+    position: absolute;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(202,80,16,0.20);
+  }
+  .diamond-text {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #CA5010;
+    line-height: 1.3;
+  }
+
+  /* Approved / Rejected paths */
+  .paths {
+    display: flex;
+    gap: 60px;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 0;
+  }
+  .path-approved { flex: 1; display: flex; flex-direction: column; align-items: center; }
+  .path-rejected { flex: 1; display: flex; flex-direction: column; align-items: center; }
+
+  .path-label-approved {
+    background: #107C10;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  .path-label-rejected {
+    background: #D83B01;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+
+  /* Publish targets */
+  .publish-targets {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .pub-target {
+    background: #FFFFFF;
+    border: 1.5px solid #107C10;
+    border-radius: 10px;
+    padding: 12px 16px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(16,124,16,0.08);
+    flex: 1;
+  }
+  .pub-name { font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+  /* Rejection loop */
+  .reject-card {
+    background: #FDEDED;
+    border: 2px solid #D83B01;
+    border-radius: 12px;
+    padding: 16px 24px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(216,59,1,0.10);
+  }
+  .reject-name { font-size: 14px; font-weight: 600; color: #D83B01; margin-bottom: 4px; }
+  .reject-desc { font-size: 12px; color: #8B4444; }
+  .loop-arrow {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #D83B01;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  /* Audit sidebar */
+  .audit-box {
+    position: absolute;
+    right: -280px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 240px;
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    border-radius: 14px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 12px rgba(107,47,160,0.10);
+  }
+  .audit-title { font-size: 13px; font-weight: 700; color: #6B2FA0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .audit-item { font-size: 12px; color: #555; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+
+  .source-link {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #EBF3FD;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px dashed #0078D4;
+  }
+  .source-link .sl-text { font-size: 11px; color: #0078D4; }
+</style>
+</head>
+<body>
+  <div class="title">Human-in-the-Loop Approval Gates</div>
+  <div class="subtitle">Issue #005 — Pattern: Generate → Stage → Approve → Publish with Immutable Source Preservation</div>
+
+  <div class="flow" style="position: relative;">
+    <!-- Stage 1: Generate -->
+    <div class="stage stage-generate">
+      <div class="stage-label">🤖 Stage 1 — Generate</div>
+      <div class="stage-content">
+        <div class="sc-name"><div class="icon icon-purple">🤖</div> AI Agent Output</div>
+        <div class="sc-desc">Agent generates content: meeting summary, status report, customer email, knowledge article, regulatory filing. Any AI-produced artifact enters this pipeline.</div>
+      </div>
+    </div>
+
+    <div class="arrow-down"><div class="shaft"></div><div class="label">Generated content</div><div class="head"></div></div>
+
+    <!-- Stage 2: Stage -->
+    <div class="stage stage-draft">
+      <div class="stage-label">📝 Stage 2 — Stage (Draft Zone)</div>
+      <div class="stage-content">
+        <div class="sc-name"><div class="icon icon-blue">📄</div> Staged Artifact</div>
+        <div class="sc-desc">Versioned draft with full metadata. Each revision tracked. Nothing is overwritten — append-only history.</div>
+        <div class="source-link">
+          <span style="font-size: 14px;">🔗</span>
+          <span class="sl-text"><strong>Immutable Source Reference</strong> — Original meeting transcript, raw data, or source documents are preserved and linked. Reviewers can always verify against the source.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-down"><div class="shaft"></div><div class="label">Submitted for review</div><div class="head"></div></div>
+
+    <!-- Stage 3: Review (Hero) -->
+    <div class="stage stage-review" style="position: relative;">
+      <div class="stage-label">👤 Stage 3 — Human Review Gate <span style="font-size: 11px; font-weight: 400; color: #8B6914; margin-left: 8px;">(THE TRUST LAYER)</span></div>
+      <div class="stage-content" style="border-color: #CA5010;">
+        <div class="sc-name"><div class="icon icon-orange">👤</div> Review Queue</div>
+        <div class="sc-desc">Pending items with full context: generated content, source material, confidence scores, and previous versions. Reviewer sees everything needed to make an informed decision.</div>
+      </div>
+
+      <!-- Audit box -->
+      <div class="audit-box">
+        <div class="audit-title">📊 Audit Trail</div>
+        <div class="audit-item">📝 Who generated</div>
+        <div class="audit-item">👁️ Who reviewed</div>
+        <div class="audit-item">✅ Who approved / rejected</div>
+        <div class="audit-item">⏱️ Timestamp</div>
+        <div class="audit-item">💬 Reason / feedback</div>
+        <div style="margin-top: 8px; font-size: 11px; color: #6B2FA0; font-style: italic;">Every action logged. Full compliance trail.</div>
+      </div>
+    </div>
+
+    <div class="arrow-down" style="height: 20px;"><div class="shaft" style="height: 10px;"></div><div class="head"></div></div>
+
+    <!-- Decision + Paths -->
+    <div class="paths">
+      <!-- Approved path -->
+      <div class="path-approved">
+        <div class="path-label-approved">✅ APPROVED</div>
+        <div class="stage stage-publish" style="width: 100%;">
+          <div class="stage-label">🚀 Stage 4 — Publish</div>
+          <div class="publish-targets">
+            <div class="pub-target">
+              <div class="pub-name">📄 SharePoint KB</div>
+            </div>
+            <div class="pub-target">
+              <div class="pub-name">📧 Email Distribution</div>
+            </div>
+            <div class="pub-target">
+              <div class="pub-name">📚 Internal Wiki</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rejected path -->
+      <div class="path-rejected">
+        <div class="path-label-rejected">❌ REJECTED</div>
+        <div class="reject-card">
+          <div class="reject-name">🔄 Revision Loop</div>
+          <div class="reject-desc">Feedback captured → sent back to agent → content regenerated with corrections → re-staged for review</div>
+          <div class="loop-arrow">↩️ Returns to Stage 1: Generate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

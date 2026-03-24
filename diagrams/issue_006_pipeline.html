@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1680px;
+    min-height: 900px;
+    background: #FFFFFF;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 40px 40px;
+    color: #1B1B3A;
+  }
+  .title { text-align: center; margin-bottom: 8px; font-size: 28px; font-weight: 700; }
+  .subtitle { text-align: center; margin-bottom: 44px; font-size: 16px; color: #6B6B8D; }
+
+  .pipeline {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+  }
+
+  .zone {
+    border-radius: 16px;
+    padding: 24px 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .zone-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .zone-input {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 2px solid #0078D4;
+    box-shadow: 0 4px 16px rgba(0,120,212,0.10);
+    width: 160px;
+    flex-shrink: 0;
+    justify-content: center;
+  }
+  .zone-input .zone-label { color: #0078D4; }
+
+  .zone-scribe {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.10);
+    flex: 1.2;
+  }
+  .zone-scribe .zone-label { color: #6B2FA0; }
+
+  .zone-gate {
+    background: linear-gradient(135deg, #FFF8E1, #FFF0CC);
+    border: 3px solid #CA5010;
+    box-shadow: 0 6px 20px rgba(202,80,16,0.15);
+    width: 200px;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+  }
+  .zone-gate .zone-label { color: #CA5010; justify-content: center; }
+
+  .zone-library {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 2px solid #0078D4;
+    box-shadow: 0 4px 16px rgba(0,120,212,0.10);
+    flex: 1.2;
+  }
+  .zone-library .zone-label { color: #0078D4; }
+
+  .zone-output {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 2px solid #107C10;
+    box-shadow: 0 4px 16px rgba(16,124,16,0.10);
+    width: 200px;
+    flex-shrink: 0;
+    justify-content: center;
+  }
+  .zone-output .zone-label { color: #107C10; }
+
+  .component {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .component:last-child { margin-bottom: 0; }
+  .comp-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .comp-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+  .comp-outputs { margin-top: 8px; }
+  .comp-outputs li { font-size: 11px; color: #555; margin-bottom: 3px; list-style: none; display: flex; align-items: center; gap: 4px; }
+
+  .icon { width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 15px; color: white; flex-shrink: 0; }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-orange { background: #CA5010; }
+  .icon-green { background: #107C10; }
+  .icon-teal { background: #008272; }
+
+  /* Arrows between zones */
+  .arrow-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    flex-shrink: 0;
+    gap: 4px;
+  }
+  .arrow-right .arrow-h { display: flex; align-items: center; }
+  .arrow-right .shaft { width: 28px; height: 2px; background: #333; }
+  .arrow-right .head { width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-left: 10px solid #333; }
+  .arrow-right .alabel { font-size: 10px; color: #6B6B8D; font-style: italic; max-width: 90px; text-align: center; line-height: 1.3; }
+
+  /* Decision elements in gate */
+  .gate-diamond {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 12px auto;
+  }
+  .diamond-shape {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, #FFF8E1, #FFE0B2);
+    border: 2.5px solid #CA5010;
+    transform: rotate(45deg);
+    position: absolute;
+    border-radius: 6px;
+    box-shadow: 0 3px 12px rgba(202,80,16,0.18);
+  }
+  .diamond-text {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #CA5010;
+    line-height: 1.2;
+  }
+  .gate-labels { text-align: center; margin-top: 8px; }
+  .gate-approve { font-size: 11px; color: #107C10; font-weight: 600; }
+  .gate-reject { font-size: 11px; color: #D83B01; font-weight: 600; }
+
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 4px; }
+  .badge-purple { background: #6B2FA0; color: white; }
+  .badge-blue { background: #0078D4; color: white; }
+
+  .handoff-note {
+    margin-top: 28px;
+    text-align: center;
+    background: #F8F8FC;
+    border: 1.5px solid #E0E0F0;
+    border-radius: 12px;
+    padding: 16px 28px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .handoff-note .hn-label { font-size: 12px; font-weight: 700; color: #6B2FA0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .handoff-note .hn-text { font-size: 13px; color: #555; line-height: 1.5; }
+</style>
+</head>
+<body>
+  <div class="title">Meeting-to-Knowledge Pipeline</div>
+  <div class="subtitle">Issue #006 — Pattern: Two-Agent Architecture — Scribe Agent → Approval Gate → Library Agent</div>
+
+  <div class="pipeline">
+    <!-- Input -->
+    <div class="zone zone-input">
+      <div class="zone-label">📅 Source</div>
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">📹</div> Teams Meeting</div>
+        <div class="comp-desc">Recording + transcript via Microsoft Graph API</div>
+      </div>
+    </div>
+
+    <div class="arrow-right">
+      <div class="alabel">Graph API transcript</div>
+      <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+    </div>
+
+    <!-- Agent 1: Scribe -->
+    <div class="zone zone-scribe">
+      <div class="zone-label">🤖 Agent 1: Meeting Scribe <span class="badge badge-purple">Capture + Summarize</span></div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-purple">🎙️</div> Transcript Processing</div>
+        <div class="comp-desc">Speaker identification, topic segmentation, noise filtering. Converts raw transcript into clean, structured dialogue.</div>
+      </div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-purple">📋</div> Structured Extraction</div>
+        <div class="comp-desc">AI extracts structured elements from the processed transcript:</div>
+        <ul class="comp-outputs">
+          <li>📌 <strong>Key decisions</strong> — what was agreed</li>
+          <li>✅ <strong>Action items</strong> — who does what by when</li>
+          <li>❓ <strong>Open questions</strong> — unresolved topics</li>
+          <li>🔄 <strong>Follow-ups</strong> — next meeting agenda items</li>
+        </ul>
+      </div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-purple">📄</div> Meeting Summary</div>
+        <div class="comp-desc">Formatted output with sections, metadata, attendee list, and confidence scores. Ready for human review.</div>
+      </div>
+    </div>
+
+    <div class="arrow-right">
+      <div class="alabel">Summary submitted for review</div>
+      <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+    </div>
+
+    <!-- Approval Gate -->
+    <div class="zone zone-gate">
+      <div class="zone-label">👤 Approval Gate</div>
+      <div class="gate-diamond">
+        <div class="diamond-shape"></div>
+        <div class="diamond-text">Human<br>Review</div>
+      </div>
+      <div class="gate-labels">
+        <div class="gate-approve">✅ Approved →</div>
+        <div class="gate-reject">❌ Corrections ↩</div>
+      </div>
+    </div>
+
+    <div class="arrow-right">
+      <div class="alabel">Approved summary</div>
+      <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+    </div>
+
+    <!-- Agent 2: Library -->
+    <div class="zone zone-library">
+      <div class="zone-label">🤖 Agent 2: Library Agent <span class="badge badge-blue">Index + Serve</span></div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">🏷️</div> Knowledge Indexer</div>
+        <div class="comp-desc">Tags, categorizes, and links to projects. Auto-detects related meetings and builds knowledge graph connections.</div>
+      </div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">📚</div> SharePoint Library</div>
+        <div class="comp-desc">Structured knowledge base with rich metadata, full-text search indexes, and version history. Single source of truth.</div>
+      </div>
+
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-blue">🔍</div> Query Interface</div>
+        <div class="comp-desc">Semantic search across all meeting knowledge. Natural language queries grounded in verified, approved content.</div>
+      </div>
+    </div>
+
+    <div class="arrow-right">
+      <div class="alabel">Query results</div>
+      <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+    </div>
+
+    <!-- Output -->
+    <div class="zone zone-output">
+      <div class="zone-label">💬 Consumption</div>
+      <div class="component">
+        <div class="comp-name"><div class="icon icon-green">💬</div> Copilot Chat</div>
+        <div class="comp-desc">"What did we decide about X in last sprint?"</div>
+      </div>
+      <div class="component" style="margin-top: 12px;">
+        <div class="comp-name"><div class="icon icon-green">🔎</div> SharePoint Search</div>
+        <div class="comp-desc">Direct document discovery</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Handoff note -->
+  <div class="handoff-note">
+    <div class="hn-label">🔑 Architectural Insight</div>
+    <div class="hn-text">These are <strong>two separate, independently deployable agents</strong> connected through an approval gate and shared SharePoint storage. The Scribe Agent can run without the Library Agent (just summaries). The Library Agent can index content from any source — not just meetings. <strong>Build this as a 2.5-day hackathon with the customer.</strong></div>
+  </div>
+</body>
+</html>

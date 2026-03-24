@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>The Ch(e)at Code — Issue #016: Agent Evaluation &amp; Trust Signals</title>
+<!--[if mso]>
+<style type="text/css">
+  body, table, td, p, h1, h2, h3 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
+  .mono { font-family: Consolas, 'Courier New', monospace !important; }
+</style>
+<![endif]-->
+<style type="text/css">
+  body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+  table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+  img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+  body { margin: 0; padding: 0; width: 100% !important; -webkit-font-smoothing: antialiased; }
+  @media only screen and (max-width: 620px) {
+    .wrapper { width: 100% !important; padding: 8px !important; }
+    .content-block { padding: 16px !important; }
+    .header-title { font-size: 22px !important; }
+    .konami { font-size: 7px !important; letter-spacing: 1px !important; }
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;color:#333333;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f4f4;">
+<tr><td align="center" style="padding:24px 10px;">
+<table role="presentation" class="wrapper" width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-radius:8px;max-width:600px;width:100%;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+
+<!-- HEADER -->
+<tr><td style="padding:0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="background:#6B2FA0;height:6px;border-radius:8px 8px 0 0;font-size:1px;">&nbsp;</td></tr>
+    <tr><td align="center" style="background:#1B1B3A;padding:32px 24px 12px 24px;">
+      <h1 class="header-title" style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:28px;font-weight:700;color:#ffffff;line-height:1.3;letter-spacing:0.5px;">The Ch(e)at Code</h1>
+      <p style="margin:8px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#B8A9C9;letter-spacing:0.3px;">Agent Patterns for Copilot Chat</p>
+    </td></tr>
+    <tr><td align="center" style="background:#1B1B3A;padding:0 24px 8px 24px;">
+      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#9653; &#9653; &#9663; &#9663; &#9667; &#9657; &#9667; &#9657; B A START</p>
+    </td></tr>
+    <tr><td align="center" style="background:#F0ECF5;padding:12px 24px;">
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #016 &nbsp;&bull;&nbsp; JULY 14, 2026 &nbsp;&bull;&nbsp; &#129504; CONCEPTUAL PATTERN</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- INTRO -->
+<tr><td class="content-block" style="padding:24px 32px 16px 32px;">
+  <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
+    You&#8217;ve heard this one before: &#8220;How do I know the agent is actually working?&#8221; The pilot shipped three weeks ago. Leadership wants ROI numbers. The agent owner wants quality metrics. Users want confidence that the answers are trustworthy. Nobody has any of these things &#8212; and nobody built the infrastructure to get them.
+  </p>
+  <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
+    <strong>This issue&#8217;s pattern:</strong> Agent Evaluation &#38; Trust Signals &#8212; a three-layer framework for measuring whether your agent is adopted, accurate, and worth the investment, plus the user-facing signals that build confidence in every response.
+  </p>
+</td></tr>
+
+<!-- PATTERN BREAKDOWN -->
+<tr><td class="content-block" style="padding:8px 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #0078D4;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#0078D4;letter-spacing:1.5px;text-transform:uppercase;">&#129513; Pattern Breakdown</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Agent Evaluation &#38; Trust Signals</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Three evaluation layers + hallucination detection + regression testing + user trust signals</p>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+
+      <p style="margin:0 0 12px 0;"><strong>Why this matters:</strong> Every agent pilot hits a &#8220;prove it&#8221; moment at 30 days. Without evaluation infrastructure, the conversation becomes anecdotal: &#8220;Some people like it, some don&#8217;t.&#8221; This pattern gives you the toolkit to turn anecdotes into dashboards &#8212; and dashboards into expansion funding.</p>
+
+      <!-- Three Evaluation Layers -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
+        <tr><td style="padding:14px 16px;">
+          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Three Evaluation Layers</p>
+          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
+            <strong>Layer 1: Usage Metrics</strong> &#8212; Is anyone using it?<br>
+            &nbsp;&nbsp;Sessions/day, returning users, topic triggers, drop-off points<br>
+            <strong>Layer 2: Quality Metrics</strong> &#8212; Are the answers good?<br>
+            &nbsp;&nbsp;Confidence scores, source grounding, hallucination rate, thumbs up/down<br>
+            <strong>Layer 3: Business Metrics</strong> &#8212; Is it worth the investment?<br>
+            &nbsp;&nbsp;Tasks automated, escalations avoided, time-to-resolution vs. baseline
+          </p>
+        </td></tr>
+      </table>
+
+      <p style="margin:0 0 10px 0;"><strong>The pattern has three design decisions:</strong></p>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>Layer your metrics, don&#8217;t flatten them.</strong> Usage tells you adoption. Quality tells you accuracy. Business tells you ROI. Each layer answers a different stakeholder&#8217;s question. When you present to leadership, lead with business metrics. When you tune the agent, focus on quality. When you plan rollout, watch usage. Flattening these into a single &#8220;agent score&#8221; loses the signal you need to act.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>Detect hallucinations with layered signals, not a single check.</strong> No single method catches all hallucinations. Stack them: confidence scoring (agent self-reports certainty &#8212; unreliable alone, useful as a signal), source grounding (did the answer cite a real document?), citation verification (does the cited passage actually support the claim?), and human spot-checks (random samples reviewed by SMEs). This is the <a href="the_cheat_code_issue_005.html" style="color:#0078D4;text-decoration:underline;">Issue #005 Approval Gates</a> pattern applied to quality assurance &#8212; human-in-the-loop as a quality layer, not just an approval layer.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>Build regression detection from day one.</strong> Adding new documents to the knowledge source can silently degrade existing answers &#8212; the &#8220;new knowledge&#8221; trap. The pattern: maintain a <em>golden test set</em> of 20 known-good question-answer pairs. Run them weekly. Compare response similarity against your baseline. Alert when answers drift. This catches the problem that nobody notices until a user complains &#8212; and by then, trust is already eroded.
+        </td></tr>
+      </table>
+
+      <!-- Regression Detection Flow -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
+        <tr><td style="padding:14px 16px;">
+          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Golden Test Set Flow</p>
+          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
+            20 known-good Q&#38;A pairs (stored in SharePoint list)<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Weekly Power Automate flow</strong> &#8594; sends each question to the agent<br>
+            &nbsp;&nbsp;&#8595;<br>
+            Compare response to expected answer (Azure OpenAI similarity)<br>
+            &nbsp;&nbsp;&#8595;<br>
+            Similarity drops below threshold?<br>
+            &nbsp;&nbsp;&#8595;<br>
+            &#9888; Teams alert: &#8220;3 of 20 golden answers degraded &#8212; review changes&#8221;
+          </p>
+        </td></tr>
+      </table>
+
+      <!-- Trust Signals Section -->
+      <p style="margin:0 0 12px 0;"><strong>Trust signals for end users:</strong> Evaluation metrics help <em>you</em> know the agent works. Trust signals help <em>users</em> believe it. These aren&#8217;t cosmetic &#8212; they&#8217;re the difference between users trusting the agent and users Googling instead.</p>
+
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr><td style="padding:4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Show confidence:</strong> &#8220;I&#8217;m 85% confident based on 3 sources&#8221; &#8212; give the user a reason to trust the answer
+        </td></tr>
+        <tr><td style="padding:4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Cite sources:</strong> Link to the actual document, not just name it &#8212; verifiable citations change behavior
+        </td></tr>
+        <tr><td style="padding:4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Flag uncertainty:</strong> &#8220;I found partial information but couldn&#8217;t fully answer &#8212; here&#8217;s what I know and what&#8217;s missing&#8221;
+        </td></tr>
+        <tr><td style="padding:4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Enable feedback:</strong> Thumbs up/down on every response &#8212; this closes the loop between user experience and quality metrics
+        </td></tr>
+      </table>
+
+      <!-- Key Insight Callout -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 14px 0;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
+          <strong style="color:#6B2FA0;">Key insight:</strong> The golden test set is your <em>canary in the coal mine</em>. Most teams don&#8217;t discover quality regressions until a user complains on Teams. By then, trust is already damaged. A weekly automated check on 20 known-good answers catches drift before users do &#8212; and gives the agent owner a concrete action: &#8220;Review the knowledge changes from this week.&#8221;
+        </td></tr>
+      </table>
+
+      <!-- Hallucination Detection Callout -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 14px 0;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
+          <strong style="color:#6B2FA0;">On hallucination detection:</strong> Confidence scoring alone is unreliable &#8212; the model can be confidently wrong. Source grounding alone misses cases where the citation exists but doesn&#8217;t support the claim. Citation verification alone is expensive at scale. <strong>Stack all three plus human spot-checks</strong> and you get a detection system where each layer covers the others&#8217; blind spots. This is defense-in-depth applied to accuracy.
+        </td></tr>
+      </table>
+
+      <!-- Warning Callout -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF8E1;border-radius:4px;border:1px solid #FFE082;">
+        <tr><td style="padding:10px 14px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#795548;line-height:1.5;">
+          <strong>&#9888; The &#8220;new knowledge&#8221; trap:</strong> Adding documents to your knowledge source feels like improvement, but it can degrade existing answers. A new HR policy doc might cause the agent to blend old and new guidance. A duplicate document might split the agent&#8217;s confidence. Without regression testing, you won&#8217;t know until someone gets a wrong answer in production. Build the golden test set before you add new knowledge sources &#8212; not after.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- WHERE THIS PATTERN LANDS -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #CA5010;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#CA5010;letter-spacing:1.5px;text-transform:uppercase;">&#127942; Where This Pattern Lands</h2>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Any team 30 days post-pilot</strong> &#8212; the &#8220;prove it&#8221; moment when leadership asks for ROI and the agent owner has nothing but anecdotes
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Regulated industries (healthcare, finance, legal)</strong> &#8212; where answer accuracy isn&#8217;t a nice-to-have but a compliance requirement with real consequences
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Multi-agent environments</strong> &#8212; organizations running several agents where quality varies and there&#8217;s no consistent way to compare performance across agents
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Customer-facing agents</strong> &#8212; where a hallucinated answer doesn&#8217;t just waste time but damages brand trust and could create legal exposure
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Expansion conversations</strong> &#8212; when a successful pilot needs data to justify scaling from one team to the whole organization
+        </td></tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF3E0;border-radius:6px;border:1px solid #FFCC80;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#5D4037;line-height:1.6;">
+          <strong>Positioning tip:</strong> Don&#8217;t lead with &#8220;you need monitoring.&#8221; Lead with the question: &#8220;Right now, can you tell me how many people used your agent yesterday and whether the answers were good?&#8221; When the answer is no &#8212; and it almost always is &#8212; the conversation shifts from &#8220;why do I need this&#8221; to &#8220;how fast can we build it.&#8221; Next issue (#017) builds the dashboard.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- QUICK TIPS -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #107C10;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#107C10;letter-spacing:1.5px;text-transform:uppercase;">&#9889; Quick Tips</h2>
+    </td></tr>
+    <tr><td style="padding:4px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Start with usage, not quality.</strong> Usage metrics are free &#8212; Copilot Studio provides them out of the box. If nobody&#8217;s using the agent, quality metrics are academic. Check session counts and returning user rates first. If adoption is low, fix the experience before you instrument quality.
+        </td></tr>
+        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>20 golden questions is enough.</strong> Don&#8217;t over-engineer the test set. Pick the 20 most common or most critical questions users ask. Write the expected answers. Run them weekly. If your quality holds on 20 representative questions, it holds broadly. If it doesn&#8217;t, you&#8217;ve caught the regression early.
+        </td></tr>
+        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Trust signals change user behavior.</strong> Internal testing shows that agents displaying confidence scores and source links get 40&#8211;60% more repeat usage than agents that just show a bare answer. Users don&#8217;t need perfect answers &#8212; they need to know <em>how much</em> to trust the answer they got.
+        </td></tr>
+        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Pair with <a href="the_cheat_code_issue_005.html" style="color:#107C10;text-decoration:underline;">Issue #005 (Approval Gates)</a></strong> for human-in-the-loop quality checks. The Approval Gates pattern handles <em>pre-action</em> review. This pattern handles <em>post-deployment</em> evaluation. Together, they give you quality assurance at both ends of the agent lifecycle.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- NEXT ISSUE CTA -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
+    <tr><td align="center" style="padding:20px 24px;">
+      <p style="margin:0 0 6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;font-weight:700;color:#6B2FA0;">Next issue: We build the dashboard.</p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#666666;line-height:1.5;">Issue #017 turns this framework into a working analytics stack &#8212; Copilot Studio + App Insights + Power BI + Power Automate.</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- FOOTER -->
+<tr><td style="padding:0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="padding:0 32px;"><hr style="border:none;border-top:1px solid #E0E0E0;margin:0;"></td></tr>
+    <tr><td align="center" style="padding:20px 32px 24px 32px;">
+      <p style="margin:0 0 4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;font-weight:600;color:#1B1B3A;">The Ch(e)at Code</p>
+      <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;line-height:1.5;">AIWF Team &bull; AI Business Solutions<br>Questions or ideas for the next issue? Reply to this email.</p>
+      <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;"><a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/" style="color:#6B2FA0;text-decoration:underline;">Browse the full archive</a></p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:10px;color:#BBBBBB;">Microsoft Internal &bull; Not for external distribution</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>

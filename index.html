@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Ch(e)at Code — Archive</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f4f4;
+    color: #333;
+    padding: 24px 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .accent { background: #6B2FA0; height: 6px; }
+  .header {
+    background: #1B1B3A;
+    padding: 40px 32px 20px;
+    text-align: center;
+  }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    color: #B8A9C9;
+    letter-spacing: 0.3px;
+  }
+  .header .konami {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 8px;
+    color: #6B2FA0;
+    letter-spacing: 3px;
+    margin-top: 12px;
+  }
+  .info-bar {
+    background: #F0ECF5;
+    padding: 12px 32px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6B2FA0;
+    letter-spacing: 0.5px;
+  }
+  .content { padding: 32px; }
+  .content p {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  /* Issue table */
+  .arc-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #6B2FA0;
+    margin: 28px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #F0ECF5;
+  }
+  .arc-label:first-child { margin-top: 0; }
+  .issue-list { list-style: none; }
+  .issue-item {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .issue-item:last-child { border-bottom: none; }
+  .issue-num {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #6B2FA0;
+    min-width: 36px;
+  }
+  .issue-type {
+    font-size: 14px;
+    min-width: 24px;
+    text-align: center;
+  }
+  .issue-link {
+    font-size: 15px;
+    color: #1B1B3A;
+    text-decoration: none;
+    font-weight: 600;
+    flex: 1;
+  }
+  .issue-link:hover { color: #6B2FA0; text-decoration: underline; }
+  .issue-date {
+    font-size: 12px;
+    color: #999;
+    font-family: Consolas, monospace;
+    min-width: 80px;
+    text-align: right;
+  }
+  .issue-stack {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  .footer {
+    padding: 20px 32px;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+  }
+  .footer p { font-size: 12px; color: #888; line-height: 1.5; margin: 0; }
+  .footer .team { font-size: 13px; font-weight: 600; color: #1B1B3A; margin-bottom: 4px; }
+  .footer .internal { font-size: 10px; color: #bbb; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="accent"></div>
+
+  <div class="header">
+    <h1>The Ch(e)at Code</h1>
+    <div class="subtitle">Agent Patterns for Copilot Chat</div>
+    <div class="konami">&#9650; &#9650; &#9660; &#9660; &#9664; &#9654; &#9664; &#9654; B A START</div>
+  </div>
+
+  <div class="info-bar">ISSUE ARCHIVE &nbsp;&bull;&nbsp; AIWF TEAM &nbsp;&bull;&nbsp; AI BUSINESS SOLUTIONS</div>
+
+  <div class="content">
+    <p>
+      Every issue features one reusable pattern for landing agents in Copilot Chat, extracted from real customer engagements. Starting with Issue #008, the series alternates between <strong>🧠&nbsp;Conceptual Patterns</strong> (why the pattern exists) and <strong>🔧&nbsp;Practical Builds</strong> (how to build it in Copilot Studio).
+    </p>
+
+    <!-- SEASON 1: FOUNDATIONS -->
+    <div class="arc-label">Season 1 — Foundations</div>
+    <ul class="issue-list">
+      <li class="issue-item">
+        <span class="issue-num">#001</span>
+        <span class="issue-type">🔧</span>
+        <a class="issue-link" href="the_cheat_code_issue_001.html">Code-First Agent Delivery<span class="issue-stack">VS Code + Azure deployment</span></a>
+        <span class="issue-date">Mar 23</span>
+      </li>
+      <li class="issue-item">
+        <span class="issue-num">#002</span>
+        <span class="issue-type">🧠</span>
+        <a class="issue-link" href="the_cheat_code_issue_002.html">Scoped Multi-Source Search<span class="issue-stack">Architecture pattern</span></a>
+        <span class="issue-date">Mar 31</span>
+      </li>
+      <li class="issue-item">
+        <span class="issue-num">#003</span>
+        <span class="issue-type">🔧</span>
+        <a class="issue-link" href="the_cheat_code_issue_003.html">Prompt-Chained Triage + Playbooks<span class="issue-stack">Orchestration pattern</span></a>
+        <span class="issue-date">Apr 7</span>
+      </li>
+      <li class="issue-item">
+        <span class="issue-num">#004</span>
+        <span class="issue-type">🧠</span>
+        <a class="issue-link" href="the_cheat_code_issue_004.html">Secure In-Boundary Processing<span class="issue-stack">Security/compliance pattern</span></a>
+        <span class="issue-date">Apr 14</span>
+      </li>
+      <li class="issue-item">
+        <span class="issue-num">#005</span>
+        <span class="issue-type">🧠</span>
+        <a class="issue-link" href="the_cheat_code_issue_005.html">Human-in-the-Loop Approval Gates<span class="issue-stack">Trust pattern</span></a>
+        <span class="issue-date">Apr 21</span>
+      </li>
+      <li class="issue-item">
+        <span class="issue-num">#006</span>
+        <span class="issue-type">🔧</span>
+        <a class="issue-link" href="the_cheat_code_issue_006.html">Meeting-to-Knowledge Pipeline<span class="issue-stack">Copilot Studio + Power Automate + Azure AI Search</span></a>
+        <span class="issue-date">Apr 28</span>
+      </li>
+      <li class="issue-item">
+        <span class="issue-num">#007</span>
+        <span class="issue-type">🧠</span>
+        <a class="issue-link" href="the_cheat_code_issue_007.html">Holographic Memory<span class="issue-stack">Knowledge architecture pattern</span></a>
+        <span class="issue-date">May 5</span>
+      </li>
+      <li class="issue-item">
+        <span class="issue-num">#007<small>alt</small></span>
+        <span class="issue-type">🔧</span>
+        <a class="issue-link" href="the_cheat_code_issue_007_alt.html">Cross-Project Knowledge Agent<span class="issue-stack">Copilot Studio + Azure AI Search + Power Automate</span></a>
+        <span class="issue-date">May 12</span>
+      </li>
+    </ul>
+
+    <!-- SEASON 2: CONCEPTUAL / PRACTICAL ARCS -->
+    <div class="arc-label">Arc 1 — Adaptive Guardrails</div>
+    <ul class="issue-list">
+      <li class="issue-item">
+        <span class="issue-num">#008</span>
+        <span class="issue-type">🧠</span>
+        <a class="issue-link" href="the_cheat_code_issue_008.html">Adaptive Guardrails<span class="issue-stack">Three-layer safety architecture</span></a>
+        <span class="issue-date">May 19</span>
+      </li>
+      <li class="issue-item">
+        <span class="issue-num">#009</span>
+        <span class="issue-type">🔧</span>
+        <a class="issue-link" href="the_cheat_code_issue_009.html">Building Adaptive Guardrails in Copilot Studio<span class="issue-stack">Copilot Studio + AI Builder + Power Automate</span></a>
+        <span class="issue-date">May 26</span>
+      </li>
+    </ul>
+
+    <div class="arc-label">Arc 2 — Multi-Agent Handoff</div>
+    <ul class="issue-list">
+      <li class="issue-item">
+        <span class="issue-num">#010</span>
+        <span class="issue-type">🧠</span>
+        <a class="issue-link" href="the_cheat_code_issue_010.html">Multi-Agent Handoff<span class="issue-stack">Cold, warm, and hot transfer patterns</span></a>
+        <span class="issue-date">Jun 2</span>
+      </li>
+      <li class="issue-item">
+        <span class="issue-num">#011</span>
+        <span class="issue-type">🔧</span>
+        <a class="issue-link" href="the_cheat_code_issue_011.html">Building Multi-Agent Handoff in Copilot Studio<span class="issue-stack">Copilot Studio + Dataverse + Power Automate</span></a>
+        <span class="issue-date">Jun 9</span>
+      </li>
+    </ul>
+
+    <div class="arc-label">Arc 3 — Persistent Agent Memory</div>
+    <ul class="issue-list">
+      <li class="issue-item">
+        <span class="issue-num">#012</span>
+        <span class="issue-type">🧠</span>
+        <a class="issue-link" href="the_cheat_code_issue_012.html">Persistent Agent Memory<span class="issue-stack">Three memory tiers + structured memory types</span></a>
+        <span class="issue-date">Jun 16</span>
+      </li>
+      <li class="issue-item">
+        <span class="issue-num">#013</span>
+        <span class="issue-type">🔧</span>
+        <a class="issue-link" href="the_cheat_code_issue_013.html">Building Persistent Memory in Copilot Studio<span class="issue-stack">Copilot Studio + Dataverse + Power Automate + Azure OpenAI</span></a>
+        <span class="issue-date">Jun 23</span>
+      </li>
+    </ul>
+
+    <div class="arc-label">Arc 4 — Proactive Agent Triggers</div>
+    <ul class="issue-list">
+      <li class="issue-item">
+        <span class="issue-num">#014</span>
+        <span class="issue-type">🧠</span>
+        <a class="issue-link" href="the_cheat_code_issue_014.html">Proactive Agent Triggers<span class="issue-stack">Scheduled, event-driven, and threshold triggers</span></a>
+        <span class="issue-date">Jun 30</span>
+      </li>
+      <li class="issue-item">
+        <span class="issue-num">#015</span>
+        <span class="issue-type">🔧</span>
+        <a class="issue-link" href="the_cheat_code_issue_015.html">Building Proactive Agents with Copilot Studio<span class="issue-stack">Copilot Studio + Power Automate + Teams Adaptive Cards</span></a>
+        <span class="issue-date">Jul 7</span>
+      </li>
+    </ul>
+
+    <div class="arc-label">Arc 5 — Agent Evaluation &amp; Trust</div>
+    <ul class="issue-list">
+      <li class="issue-item">
+        <span class="issue-num">#016</span>
+        <span class="issue-type">🧠</span>
+        <a class="issue-link" href="the_cheat_code_issue_016.html">Agent Evaluation &amp; Trust Signals<span class="issue-stack">Usage, quality, and business metrics</span></a>
+        <span class="issue-date">Jul 14</span>
+      </li>
+      <li class="issue-item">
+        <span class="issue-num">#017</span>
+        <span class="issue-type">🔧</span>
+        <a class="issue-link" href="the_cheat_code_issue_017.html">Building Agent Analytics in Copilot Studio<span class="issue-stack">Copilot Studio + App Insights + Power BI</span></a>
+        <span class="issue-date">Jul 21</span>
+      </li>
+    </ul>
+
+    <div class="arc-label">Arc 6 — Custom Connectors</div>
+    <ul class="issue-list">
+      <li class="issue-item">
+        <span class="issue-num">#018</span>
+        <span class="issue-type">🧠</span>
+        <a class="issue-link" href="the_cheat_code_issue_018.html">Custom Connector Patterns<span class="issue-stack">OpenAPI, auth patterns, error handling</span></a>
+        <span class="issue-date">Jul 28</span>
+      </li>
+      <li class="issue-item">
+        <span class="issue-num">#019</span>
+        <span class="issue-type">🔧</span>
+        <a class="issue-link" href="the_cheat_code_issue_019.html">Building Custom Connectors for Copilot Studio<span class="issue-stack">Copilot Studio + Power Platform + Azure APIM</span></a>
+        <span class="issue-date">Aug 4</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    <p class="team">The Ch(e)at Code</p>
+    <p>AIWF Team &bull; AI Business Solutions<br>Questions or ideas? Contact the team.</p>
+    <p class="internal">Microsoft Internal &bull; Not for external distribution</p>
+  </div>
+</div>
+
+</body>
+</html>

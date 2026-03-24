@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1680px;
+    min-height: 1500px;
+    background: #FFFFFF;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 40px 60px;
+    color: #1B1B3A;
+  }
+  .title { text-align: center; margin-bottom: 8px; font-size: 28px; font-weight: 700; }
+  .subtitle { text-align: center; margin-bottom: 44px; font-size: 16px; color: #6B6B8D; }
+
+  .boundary {
+    border: 3px dashed #107C10;
+    border-radius: 24px;
+    padding: 36px 40px;
+    position: relative;
+    background: linear-gradient(135deg, rgba(232,245,233,0.3) 0%, rgba(212,237,213,0.15) 100%);
+  }
+  .boundary-label {
+    position: absolute;
+    top: -16px;
+    left: 40px;
+    background: #107C10;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 6px 20px;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .layers {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .layer {
+    border-radius: 16px;
+    padding: 22px 28px;
+    position: relative;
+  }
+  .layer-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .layer-copilot {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 1.5px solid #6B2FA0;
+    box-shadow: 0 2px 12px rgba(107,47,160,0.08);
+  }
+  .layer-copilot .layer-label { color: #6B2FA0; }
+
+  .layer-mcp {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 1.5px solid #0078D4;
+    box-shadow: 0 2px 12px rgba(0,120,212,0.08);
+  }
+  .layer-mcp .layer-label { color: #0078D4; }
+
+  .layer-process {
+    background: linear-gradient(135deg, #FFF8E1, #FFF0CC);
+    border: 1.5px solid #CA5010;
+    box-shadow: 0 2px 12px rgba(202,80,16,0.08);
+  }
+  .layer-process .layer-label { color: #CA5010; }
+
+  .layer-ai {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 1.5px solid #107C10;
+    box-shadow: 0 2px 12px rgba(16,124,16,0.08);
+  }
+  .layer-ai .layer-label { color: #107C10; }
+
+  .component-row {
+    display: flex;
+    gap: 16px;
+  }
+  .component {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+    flex: 1;
+  }
+  .comp-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .comp-desc { font-size: 12px; color: #6B6B8D; line-height: 1.4; }
+  .icon { width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; color: white; flex-shrink: 0; }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-orange { background: #CA5010; }
+  .icon-green { background: #107C10; }
+  .icon-teal { background: #008272; }
+
+  .lock-badge {
+    font-size: 10px;
+    font-weight: 600;
+    background: #0078D4;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+  }
+
+  /* Flow arrows between layers */
+  .flow-arrow {
+    display: flex;
+    justify-content: center;
+    padding: 8px 0;
+  }
+  .flow-arrow .varrow { display: flex; flex-direction: column; align-items: center; }
+  .flow-arrow .shaft { width: 2px; height: 14px; background: #555; }
+  .flow-arrow .head { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid #555; }
+  .flow-arrow .label { font-size: 10px; color: #6B6B8D; font-style: italic; }
+
+  /* Blocked external panel */
+  .blocked-panel {
+    margin-top: 32px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+  .blocked-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #FDEDED;
+    border: 2px solid #D13438;
+    border-radius: 12px;
+    padding: 14px 24px;
+    box-shadow: 0 2px 8px rgba(209,52,56,0.10);
+  }
+  .blocked-x {
+    width: 36px;
+    height: 36px;
+    background: #D13438;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .blocked-text { font-size: 14px; font-weight: 600; color: #D13438; }
+  .blocked-desc { font-size: 11px; color: #8B4444; }
+
+  .guarantee {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 14px;
+    color: #107C10;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+</style>
+</head>
+<body>
+  <div class="title">Secure In-Boundary Processing</div>
+  <div class="subtitle">Issue #004 — Pattern: All Data Processing Within Customer Tenant Boundary</div>
+
+  <div class="boundary">
+    <div class="boundary-label">🔒 CUSTOMER TENANT BOUNDARY</div>
+
+    <div class="layers">
+      <!-- Layer 1: Copilot Platform -->
+      <div class="layer layer-copilot">
+        <div class="layer-label">🟣 M365 Copilot Platform</div>
+        <div class="component-row">
+          <div class="component">
+            <div class="comp-name"><div class="icon icon-teal">💬</div> Copilot Chat</div>
+            <div class="comp-desc">User-facing interface. All interactions authenticated via Entra ID.</div>
+          </div>
+          <div class="component">
+            <div class="comp-name"><div class="icon icon-purple">📋</div> Declarative Agent <span class="lock-badge">🔒 Tenant-Scoped</span></div>
+            <div class="comp-desc">Agent configuration bound to customer's M365 tenant. Cannot access other orgs.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Scoped API requests</div><div class="head"></div></div></div>
+
+      <!-- Layer 2: MCP Connectors -->
+      <div class="layer layer-mcp">
+        <div class="layer-label">🔌 MCP Connectors — Scoped to Tenant</div>
+        <div class="component-row">
+          <div class="component">
+            <div class="comp-name"><div class="icon icon-blue">🔧</div> ADO Connector <span class="lock-badge">🔒 Org-Scoped</span></div>
+            <div class="comp-desc">Reads work items, repos, pipelines. Scoped to customer's Azure DevOps organization only.</div>
+          </div>
+          <div class="component">
+            <div class="comp-name"><div class="icon icon-blue">📧</div> Graph Connector <span class="lock-badge">🔒 Tenant-Scoped</span></div>
+            <div class="comp-desc">Accesses mail, calendar, files, people. Scoped to customer's M365 tenant via delegated permissions.</div>
+          </div>
+          <div class="component">
+            <div class="comp-name"><div class="icon icon-blue">📄</div> SharePoint Connector <span class="lock-badge">🔒 Site-Scoped</span></div>
+            <div class="comp-desc">Searches documents, lists, pages. Scoped to authorized sites and libraries only.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Results aggregated in-session</div><div class="head"></div></div></div>
+
+      <!-- Layer 3: In-Memory Processing -->
+      <div class="layer layer-process">
+        <div class="layer-label">⚙️ In-Memory Processing</div>
+        <div class="component-row">
+          <div class="component" style="text-align: center;">
+            <div class="comp-name" style="justify-content: center;"><div class="icon icon-orange">🧮</div> In-Memory Aggregation Layer</div>
+            <div class="comp-desc" style="text-align: center;">No persistent external store. Data lives <strong>only in session memory</strong>. Results discarded when session ends. Zero data residue.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Grounding data → model</div><div class="head"></div></div></div>
+
+      <!-- Layer 4: Tenant-Scoped AI -->
+      <div class="layer layer-ai">
+        <div class="layer-label">🧠 Tenant-Scoped AI</div>
+        <div class="component-row">
+          <div class="component" style="text-align: center;">
+            <div class="comp-name" style="justify-content: center;"><div class="icon icon-green">🧠</div> Azure OpenAI — Customer's Own Instance <span class="lock-badge" style="background: #107C10;">🔒 Tenant-Provisioned</span></div>
+            <div class="comp-desc" style="text-align: center;">Customer-provisioned Azure OpenAI deployment. Data processed in their selected Azure region. Model weights and prompts isolated per tenant. <strong>Data never leaves the tenant boundary.</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blocked external paths -->
+  <div class="blocked-panel">
+    <div class="blocked-item">
+      <div class="blocked-x">✕</div>
+      <div>
+        <div class="blocked-text">No External API Calls</div>
+        <div class="blocked-desc">Agent never calls services outside the tenant</div>
+      </div>
+    </div>
+    <div class="blocked-item">
+      <div class="blocked-x">✕</div>
+      <div>
+        <div class="blocked-text">No Cross-Tenant Data Flow</div>
+        <div class="blocked-desc">Zero visibility into other organizations' data</div>
+      </div>
+    </div>
+    <div class="blocked-item">
+      <div class="blocked-x">✕</div>
+      <div>
+        <div class="blocked-text">No Public LLM Endpoints</div>
+        <div class="blocked-desc">Uses customer's private Azure OpenAI only</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="guarantee">🛡️ "Our data can't leave" → "Show me how" — This pattern removes the #1 blocker for regulated industries.</div>
+</body>
+</html>
