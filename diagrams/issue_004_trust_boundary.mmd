@@ -1,0 +1,59 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#E8E0F0', 'primaryBorderColor': '#6B2FA0', 'secondaryColor': '#DEEAF6', 'secondaryBorderColor': '#0078D4', 'tertiaryColor': '#E2F0E2', 'tertiaryBorderColor': '#107C10', 'lineColor': '#333333', 'fontFamily': 'Segoe UI, sans-serif'}}}%%
+flowchart TD
+    subgraph TENANT["🔒 Customer Tenant Boundary"]
+        direction TB
+
+        subgraph COPILOT["🟣 M365 Copilot Platform"]
+            CC["Copilot Chat<br/><i>User Interface</i>"]
+            DA["Declarative Agent<br/><i>Tenant-Scoped</i>"]
+            CC --> DA
+        end
+
+        subgraph MCP["🔌 MCP Connectors <i>(Scoped to Tenant)</i>"]
+            direction LR
+            MCP_ADO["ADO Connector<br/><i>Work Items, Repos</i>"]
+            MCP_GRAPH["Graph Connector<br/><i>Mail, Calendar, Files</i>"]
+            MCP_SPO["SharePoint Connector<br/><i>Sites, Lists, Docs</i>"]
+        end
+
+        subgraph PROCESSING["⚙️ In-Memory Processing"]
+            AGG["In-Memory Aggregation<br/><i>No persistent external store<br/>Data lives only in session</i>"]
+        end
+
+        subgraph AI["🧠 Tenant-Scoped AI"]
+            AOAI["Azure OpenAI<br/><i>Customer's own instance<br/>Data never leaves tenant</i>"]
+        end
+
+        DA --> MCP_ADO
+        DA --> MCP_GRAPH
+        DA --> MCP_SPO
+        MCP_ADO --> AGG
+        MCP_GRAPH --> AGG
+        MCP_SPO --> AGG
+        AGG --> AOAI
+        AOAI --> DA
+    end
+
+    EXT1["❌ External APIs"]
+    EXT2["❌ Cross-Tenant Data"]
+    EXT3["❌ Public LLM Endpoints"]
+
+    TENANT -.-x EXT1
+    TENANT -.-x EXT2
+    TENANT -.-x EXT3
+
+    style TENANT fill:#E8F5E9,stroke:#107C10,stroke-width:3px,stroke-dasharray: 10 5
+    style COPILOT fill:#F5F0FA,stroke:#6B2FA0,stroke-width:2px
+    style MCP fill:#EBF3FD,stroke:#0078D4,stroke-width:2px
+    style PROCESSING fill:#FFF8E1,stroke:#CA5010,stroke-width:2px
+    style AI fill:#E2F0E2,stroke:#107C10,stroke-width:2px
+    style CC fill:#FFFFFF,stroke:#6B2FA0
+    style DA fill:#FFFFFF,stroke:#6B2FA0
+    style MCP_ADO fill:#FFFFFF,stroke:#0078D4
+    style MCP_GRAPH fill:#FFFFFF,stroke:#0078D4
+    style MCP_SPO fill:#FFFFFF,stroke:#0078D4
+    style AGG fill:#FFFFFF,stroke:#CA5010
+    style AOAI fill:#FFFFFF,stroke:#107C10
+    style EXT1 fill:#FDEDED,stroke:#D13438,stroke-width:2px,color:#D13438
+    style EXT2 fill:#FDEDED,stroke:#D13438,stroke-width:2px,color:#D13438
+    style EXT3 fill:#FDEDED,stroke:#D13438,stroke-width:2px,color:#D13438

@@ -1,0 +1,48 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#E8E0F0', 'primaryBorderColor': '#6B2FA0', 'secondaryColor': '#DEEAF6', 'secondaryBorderColor': '#0078D4', 'tertiaryColor': '#E2F0E2', 'tertiaryBorderColor': '#107C10', 'lineColor': '#333333', 'fontFamily': 'Segoe UI, sans-serif'}}}%%
+flowchart LR
+    subgraph DEV["🖥️ Developer Workstation"]
+        direction TB
+        VSC["VS Code<br/>+ GitHub Copilot Chat"]
+        TTK["Teams Toolkit<br/>Extension"]
+        BIC["Bicep / IaC<br/>Templates"]
+    end
+
+    subgraph AZURE["☁️ Azure Resource Group"]
+        direction TB
+        AF["Azure Functions<br/><i>Agent Runtime</i>"]
+        AOAI["Azure OpenAI<br/><i>GPT-4o / GPT-4</i>"]
+        AIS["Azure AI Search<br/><i>Document Index</i>"]
+        BLOB["Azure Blob Storage<br/><i>PDF / Documents</i>"]
+        AF <--> AOAI
+        AF <--> AIS
+        AIS <--> BLOB
+    end
+
+    subgraph M365["🟣 M365 Copilot Platform"]
+        direction TB
+        DA["Declarative Agent<br/><i>Teams Manifest</i>"]
+        CC["Copilot Chat<br/><i>User Interface</i>"]
+        CS["Copilot Studio<br/><i>Optional: ZIP Import</i>"]
+        CC --> DA
+    end
+
+    VSC -->|"Copilot generates<br/>agent code"| TTK
+    TTK -->|"azd up<br/><i>Deploy infrastructure</i>"| AF
+    BIC -->|"Provision resources<br/><i>Bicep templates</i>"| AZURE
+    AF <-->|"API Plugin<br/><i>OpenAPI spec</i>"| DA
+    TTK -.->|"Export ZIP<br/><i>Optional path</i>"| CS
+    CS -.-> DA
+
+    style DEV fill:#F5F0FA,stroke:#6B2FA0,stroke-width:2px,color:#1B1B3A
+    style AZURE fill:#EBF3FD,stroke:#0078D4,stroke-width:2px,color:#1B1B3A
+    style M365 fill:#F0EBF5,stroke:#6B2FA0,stroke-width:2px,color:#1B1B3A
+    style VSC fill:#FFFFFF,stroke:#6B2FA0,color:#1B1B3A
+    style TTK fill:#FFFFFF,stroke:#6B2FA0,color:#1B1B3A
+    style BIC fill:#FFFFFF,stroke:#6B2FA0,color:#1B1B3A
+    style AF fill:#FFFFFF,stroke:#0078D4,color:#1B1B3A
+    style AOAI fill:#FFFFFF,stroke:#0078D4,color:#1B1B3A
+    style AIS fill:#FFFFFF,stroke:#0078D4,color:#1B1B3A
+    style BLOB fill:#FFFFFF,stroke:#0078D4,color:#1B1B3A
+    style DA fill:#FFFFFF,stroke:#6B2FA0,color:#1B1B3A
+    style CC fill:#FFFFFF,stroke:#6B2FA0,color:#1B1B3A
+    style CS fill:#FFFFFF,stroke:#999999,color:#666666

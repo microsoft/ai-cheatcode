@@ -1,0 +1,38 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#E8E0F0', 'primaryBorderColor': '#6B2FA0', 'secondaryColor': '#DEEAF6', 'secondaryBorderColor': '#0078D4', 'tertiaryColor': '#E2F0E2', 'tertiaryBorderColor': '#107C10', 'lineColor': '#333333', 'fontFamily': 'Segoe UI, sans-serif'}}}%%
+flowchart TD
+    subgraph AGENT_CODE["🤖 Agent Code <i>(Developer-Owned)</i>"]
+        direction TB
+        CHAIN["Prompt Chain Engine<br/><i>Extract → Classify → Recommend</i>"]
+        LOADER["Playbook Loader<br/><i>Runtime YAML Parser</i>"]
+        EXEC["Action Executor<br/><i>API Calls Based on<br/>Playbook Instructions</i>"]
+        CHAIN --> LOADER
+        LOADER --> EXEC
+    end
+
+    subgraph PLAYBOOKS["📋 Playbook Registry <i>(Customer-Owned)</i>"]
+        direction TB
+        PB1["database-errors.yaml<br/><i>Severity mapping, escalation<br/>paths, required fields</i>"]
+        PB2["ui-bugs.yaml<br/><i>Browser info required,<br/>screenshot attachment</i>"]
+        PB3["feature-requests.yaml<br/><i>Product area routing,<br/>priority scoring</i>"]
+        PB4["security-incidents.yaml<br/><i>Immediate P0 escalation,<br/>compliance notification</i>"]
+        PBCUSTOM["+ custom-playbook.yaml<br/><i>Customer adds new playbooks<br/>without code changes</i>"]
+    end
+
+    LOADER -->|"Load at runtime<br/><i>by classification match</i>"| PLAYBOOKS
+
+    subgraph DECOUPLING["🔑 Key Insight: Decoupling Point"]
+        NOTE["Agent logic stays constant<br/>Playbooks change per customer<br/><b>No redeployment needed</b>"]
+    end
+
+    style AGENT_CODE fill:#F5F0FA,stroke:#6B2FA0,stroke-width:2px
+    style PLAYBOOKS fill:#EBF3FD,stroke:#0078D4,stroke-width:2px
+    style DECOUPLING fill:#FFF8E1,stroke:#CA5010,stroke-width:2px
+    style CHAIN fill:#FFFFFF,stroke:#6B2FA0
+    style LOADER fill:#FFFFFF,stroke:#6B2FA0
+    style EXEC fill:#FFFFFF,stroke:#6B2FA0
+    style PB1 fill:#FFFFFF,stroke:#0078D4
+    style PB2 fill:#FFFFFF,stroke:#0078D4
+    style PB3 fill:#FFFFFF,stroke:#0078D4
+    style PB4 fill:#FFFFFF,stroke:#0078D4
+    style PBCUSTOM fill:#E2F0E2,stroke:#107C10,stroke-width:2px,stroke-dasharray: 5 5
+    style NOTE fill:#FFFFFF,stroke:#CA5010

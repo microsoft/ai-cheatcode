@@ -1,0 +1,55 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#E8E0F0', 'primaryBorderColor': '#6B2FA0', 'secondaryColor': '#DEEAF6', 'secondaryBorderColor': '#0078D4', 'tertiaryColor': '#E2F0E2', 'tertiaryBorderColor': '#107C10', 'lineColor': '#333333', 'fontFamily': 'Segoe UI, sans-serif'}}}%%
+flowchart TD
+    USER["👤 User Query<br/><i>via Copilot Chat</i>"]
+
+    subgraph AGENT["🤖 Declarative Agent"]
+        QA["Query Analyzer<br/><i>Intent Classification +<br/>Source Selection</i>"]
+    end
+
+    subgraph SOURCES["📊 Scoped Data Sources"]
+        direction LR
+        subgraph ADO_SRC["Azure DevOps"]
+            ADO_API["ADO REST API<br/><i>Work Items, Repos,<br/>Pipelines</i>"]
+        end
+        subgraph GRAPH_SRC["Microsoft Graph"]
+            GRAPH_API["Graph API<br/><i>Email, Calendar,<br/>People, Files</i>"]
+        end
+        subgraph SPO_SRC["SharePoint"]
+            SPO_API["Search API<br/><i>Documents, Lists,<br/>Sites</i>"]
+        end
+    end
+
+    subgraph PROCESS["⚙️ Response Assembly"]
+        MERGE["Merge Results<br/><i>Deduplicate +<br/>Normalize</i>"]
+        RANK["Relevance Ranking<br/><i>Score + Filter<br/>by Query Intent</i>"]
+        SYNTH["Synthesize Response<br/><i>Azure OpenAI<br/>Grounded Answer</i>"]
+    end
+
+    RESP["💬 Grounded Response<br/><i>with Source Citations</i>"]
+
+    USER --> QA
+    QA -->|"Work item intent<br/><i>Scoped: project + type</i>"| ADO_API
+    QA -->|"People/email intent<br/><i>Scoped: user + date range</i>"| GRAPH_API
+    QA -->|"Document intent<br/><i>Scoped: site + library</i>"| SPO_API
+    ADO_API --> MERGE
+    GRAPH_API --> MERGE
+    SPO_API --> MERGE
+    MERGE --> RANK
+    RANK --> SYNTH
+    SYNTH --> RESP
+
+    style AGENT fill:#F5F0FA,stroke:#6B2FA0,stroke-width:2px
+    style SOURCES fill:#EBF3FD,stroke:#0078D4,stroke-width:2px
+    style PROCESS fill:#E2F0E2,stroke:#107C10,stroke-width:2px
+    style ADO_SRC fill:#FFFFFF,stroke:#0078D4,stroke-width:1px
+    style GRAPH_SRC fill:#FFFFFF,stroke:#0078D4,stroke-width:1px
+    style SPO_SRC fill:#FFFFFF,stroke:#0078D4,stroke-width:1px
+    style USER fill:#F5F0FA,stroke:#6B2FA0,stroke-width:2px
+    style RESP fill:#E2F0E2,stroke:#107C10,stroke-width:2px
+    style QA fill:#FFFFFF,stroke:#6B2FA0
+    style ADO_API fill:#FFFFFF,stroke:#0078D4
+    style GRAPH_API fill:#FFFFFF,stroke:#0078D4
+    style SPO_API fill:#FFFFFF,stroke:#0078D4
+    style MERGE fill:#FFFFFF,stroke:#107C10
+    style RANK fill:#FFFFFF,stroke:#107C10
+    style SYNTH fill:#FFFFFF,stroke:#107C10

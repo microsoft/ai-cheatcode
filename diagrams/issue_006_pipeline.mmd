@@ -1,0 +1,55 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#E8E0F0', 'primaryBorderColor': '#6B2FA0', 'secondaryColor': '#DEEAF6', 'secondaryBorderColor': '#0078D4', 'tertiaryColor': '#E2F0E2', 'tertiaryBorderColor': '#107C10', 'lineColor': '#333333', 'fontFamily': 'Segoe UI, sans-serif'}}}%%
+flowchart TD
+    subgraph INPUT["📅 Meeting Source"]
+        MEETING["Teams Meeting<br/><i>Recording + Transcript<br/>via Graph API</i>"]
+    end
+
+    subgraph SCRIBE["🤖 Agent 1: Meeting Scribe"]
+        direction TB
+        TRANS["Transcript Processing<br/><i>Speaker identification<br/>Topic segmentation</i>"]
+        EXTRACT["Structured Extraction<br/><i>• Key decisions<br/>• Action items (who/when)<br/>• Open questions<br/>• Follow-ups</i>"]
+        SUMMARY["Meeting Summary<br/><i>Formatted output with<br/>sections + metadata</i>"]
+        TRANS --> EXTRACT
+        EXTRACT --> SUMMARY
+    end
+
+    subgraph GATE["👤 Approval Gate"]
+        REVIEW{{"Human Review<br/><i>Verify accuracy<br/>before publishing</i>"}}
+    end
+
+    subgraph LIBRARY["🤖 Agent 2: Library Agent"]
+        direction TB
+        INDEX["Knowledge Indexer<br/><i>Tag, categorize,<br/>link to projects</i>"]
+        STORE["SharePoint Library<br/><i>Structured knowledge base<br/>with metadata + search</i>"]
+        QUERY["Query Interface<br/><i>Semantic search across<br/>all meeting knowledge</i>"]
+        INDEX --> STORE
+        STORE --> QUERY
+    end
+
+    subgraph ACCESS["💬 Consumption Layer"]
+        COPILOT["Copilot Chat<br/><i>'What did we decide<br/>about X in last sprint?'</i>"]
+        SEARCH["SharePoint Search<br/><i>Direct document<br/>discovery</i>"]
+    end
+
+    MEETING -->|"Graph API<br/><i>Transcript + recording</i>"| TRANS
+    SUMMARY -->|"Submit for review"| REVIEW
+    REVIEW -->|"✅ Approved"| INDEX
+    REVIEW -->|"❌ Corrections needed"| EXTRACT
+    QUERY --> COPILOT
+    QUERY --> SEARCH
+
+    style INPUT fill:#EBF3FD,stroke:#0078D4,stroke-width:2px
+    style SCRIBE fill:#F5F0FA,stroke:#6B2FA0,stroke-width:2px
+    style GATE fill:#FFF8E1,stroke:#CA5010,stroke-width:2px
+    style LIBRARY fill:#EBF3FD,stroke:#0078D4,stroke-width:2px
+    style ACCESS fill:#E2F0E2,stroke:#107C10,stroke-width:2px
+    style MEETING fill:#FFFFFF,stroke:#0078D4
+    style TRANS fill:#FFFFFF,stroke:#6B2FA0
+    style EXTRACT fill:#FFFFFF,stroke:#6B2FA0
+    style SUMMARY fill:#FFFFFF,stroke:#6B2FA0
+    style REVIEW fill:#FFF3E0,stroke:#CA5010,stroke-width:2px
+    style INDEX fill:#FFFFFF,stroke:#0078D4
+    style STORE fill:#FFFFFF,stroke:#0078D4
+    style QUERY fill:#FFFFFF,stroke:#0078D4
+    style COPILOT fill:#FFFFFF,stroke:#107C10
+    style SEARCH fill:#FFFFFF,stroke:#107C10

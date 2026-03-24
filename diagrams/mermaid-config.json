@@ -1,0 +1,42 @@
+{
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#E8E0F0",
+    "primaryTextColor": "#1B1B3A",
+    "primaryBorderColor": "#6B2FA0",
+    "secondaryColor": "#DEEAF6",
+    "secondaryTextColor": "#1B1B3A",
+    "secondaryBorderColor": "#0078D4",
+    "tertiaryColor": "#E2F0E2",
+    "tertiaryTextColor": "#1B1B3A",
+    "tertiaryBorderColor": "#107C10",
+    "lineColor": "#333333",
+    "textColor": "#1B1B3A",
+    "mainBkg": "#FFFFFF",
+    "nodeBorder": "#0078D4",
+    "clusterBkg": "#F8F8FC",
+    "clusterBorder": "#6B2FA0",
+    "titleColor": "#1B1B3A",
+    "edgeLabelBackground": "#FFFFFF",
+    "nodeTextColor": "#1B1B3A",
+    "fontFamily": "Segoe UI, -apple-system, sans-serif",
+    "fontSize": "14px"
+  },
+  "flowchart": {
+    "curve": "basis",
+    "padding": 20,
+    "nodeSpacing": 50,
+    "rankSpacing": 60,
+    "htmlLabels": true,
+    "useMaxWidth": false
+  },
+  "sequence": {
+    "useMaxWidth": false,
+    "actorFontFamily": "Segoe UI, -apple-system, sans-serif",
+    "actorFontSize": 14,
+    "noteFontFamily": "Segoe UI, -apple-system, sans-serif",
+    "noteFontSize": 12,
+    "messageFontFamily": "Segoe UI, -apple-system, sans-serif",
+    "messageFontSize": 13
+  }
+}

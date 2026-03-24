@@ -1,0 +1,32 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#E8E0F0', 'primaryBorderColor': '#6B2FA0', 'secondaryColor': '#DEEAF6', 'secondaryBorderColor': '#0078D4', 'tertiaryColor': '#E2F0E2', 'tertiaryBorderColor': '#107C10', 'lineColor': '#333333', 'fontFamily': 'Segoe UI, sans-serif'}, 'sequence': {'useMaxWidth': false}}}%%
+sequenceDiagram
+    participant U as 👤 User<br/>Copilot Chat
+    participant A as 🤖 Triage Agent<br/>Declarative Agent
+    participant S1 as Step 1<br/>EXTRACT
+    participant S2 as Step 2<br/>CLASSIFY
+    participant S3 as Step 3<br/>RECOMMEND
+    participant PB as 📋 Playbook<br/>Registry<br/>(YAML Files)
+    participant ADO as 🔧 Azure DevOps<br/>REST API
+
+    U->>A: New work item / bug report
+    Note over A: Prompt Chain begins<br/>Each step has its own<br/>system prompt
+
+    A->>S1: Raw input text
+    Note over S1: Extract structured fields:<br/>• Title, Description<br/>• Affected component<br/>• Error signatures<br/>• Reproduction steps
+    S1->>A: Structured JSON
+
+    A->>S2: Structured fields
+    Note over S2: Classify:<br/>• Severity (P0-P4)<br/>• Category (Bug/Feature/Task)<br/>• Team assignment<br/>• SLA tier
+    S2->>A: Classification result
+
+    A->>PB: Lookup: category + severity
+    PB-->>A: Matching playbook YAML
+
+    A->>S3: Classification + Playbook
+    Note over S3: Recommend actions:<br/>• Suggested assignee<br/>• Required fields<br/>• Escalation path<br/>• Related work items
+    S3->>A: Action recommendations
+
+    A->>ADO: Update work item<br/>(fields + tags + assignment)
+    ADO-->>A: Confirmation
+
+    A->>U: ✅ Triaged: P2 Bug → Team X<br/>Playbook: "database-errors"<br/>Assigned: @engineer

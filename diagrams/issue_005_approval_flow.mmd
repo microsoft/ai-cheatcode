@@ -1,0 +1,53 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#E8E0F0', 'primaryBorderColor': '#6B2FA0', 'secondaryColor': '#DEEAF6', 'secondaryBorderColor': '#0078D4', 'tertiaryColor': '#E2F0E2', 'tertiaryBorderColor': '#107C10', 'lineColor': '#333333', 'fontFamily': 'Segoe UI, sans-serif'}}}%%
+flowchart TD
+    INPUT["🤖 AI Agent Output<br/><i>Generated content:<br/>summary, report, email, etc.</i>"]
+
+    subgraph STAGE["📝 Stage <i>(Draft Zone)</i>"]
+        direction TB
+        DRAFT["Staged Artifact<br/><i>Versioned draft with<br/>immutable source reference</i>"]
+        SOURCE["🔗 Immutable Source<br/><i>Original meeting transcript,<br/>raw data, source docs</i>"]
+        DRAFT -.->|"Linked to"| SOURCE
+    end
+
+    subgraph REVIEW["👤 Human Review Gate"]
+        direction TB
+        QUEUE["Review Queue<br/><i>Pending items with<br/>context + source</i>"]
+        DECISION{{"Approve<br/>or<br/>Reject?"}}
+        QUEUE --> DECISION
+    end
+
+    subgraph PUBLISH["✅ Publish <i>(Production)</i>"]
+        direction LR
+        SPO["SharePoint<br/><i>Knowledge Base</i>"]
+        EMAIL["Email<br/><i>Distribution</i>"]
+        KB["Internal Wiki<br/><i>Documentation</i>"]
+    end
+
+    REJECT["🔄 Revision Loop<br/><i>Feedback → Regenerate<br/>→ Re-stage</i>"]
+
+    subgraph AUDIT["📊 Audit Trail"]
+        LOG["Every action logged:<br/><i>• Who generated<br/>• Who reviewed<br/>• Who approved/rejected<br/>• Timestamp + reason</i>"]
+    end
+
+    INPUT -->|"Generate"| DRAFT
+    DRAFT -->|"Submit for review"| QUEUE
+    DECISION -->|"✅ Approved"| PUBLISH
+    DECISION -->|"❌ Rejected<br/><i>with feedback</i>"| REJECT
+    REJECT -->|"Regenerate<br/>with corrections"| INPUT
+    DECISION -->|"Log decision"| LOG
+    INPUT -->|"Log generation"| LOG
+
+    style STAGE fill:#EBF3FD,stroke:#0078D4,stroke-width:2px
+    style REVIEW fill:#FFF8E1,stroke:#CA5010,stroke-width:2px
+    style PUBLISH fill:#E2F0E2,stroke:#107C10,stroke-width:2px
+    style AUDIT fill:#F5F0FA,stroke:#6B2FA0,stroke-width:2px
+    style INPUT fill:#F5F0FA,stroke:#6B2FA0,stroke-width:2px
+    style DRAFT fill:#FFFFFF,stroke:#0078D4
+    style SOURCE fill:#FFFFFF,stroke:#0078D4,stroke-dasharray: 5 5
+    style QUEUE fill:#FFFFFF,stroke:#CA5010
+    style DECISION fill:#FFF3E0,stroke:#CA5010,stroke-width:2px
+    style SPO fill:#FFFFFF,stroke:#107C10
+    style EMAIL fill:#FFFFFF,stroke:#107C10
+    style KB fill:#FFFFFF,stroke:#107C10
+    style REJECT fill:#FDEDED,stroke:#D83B01,stroke-width:2px
+    style LOG fill:#FFFFFF,stroke:#6B2FA0

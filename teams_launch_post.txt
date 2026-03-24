@@ -1,0 +1,25 @@
+📬 Introducing: The Ch(e)at Code
+
+Starting Monday, you'll get a weekly drop called The Ch(e)at Code — a pattern library for landing agents in Copilot Chat.
+
+Each issue gives you one proven pattern, the customer scenario it solves, and step-by-step guidance to land it with a customer that week. No theory. No slide decks. Just patterns you can use immediately.
+
+What to expect:
+• Agent spotlights from solutions our team has actually built and validated
+• Pattern breakdowns you can apply to any customer scenario
+• "Try This Now" — specific steps to land the pattern with a customer this week
+• Vertical positioning so you know where each pattern hits hardest
+
+First 6 issues are queued and ready:
+#001 — Code-First Agent Delivery (Cristiano Almeida Gonçalves)
+#002 — Scoped Multi-Source Search (Raghav BN)
+#003 — Prompt-Chained Triage + Playbooks (Raghav BN)
+#004 — Secure In-Boundary Processing (Raghav BN)
+#005 — Human-in-the-Loop Approval Gates (Pete Puustinen)
+#006 — Meeting-to-Knowledge Pipeline (Pete Puustinen)
+
+Issue #001 drops Monday. Keep an eye on your inbox.
+
+Got an agent or pattern you want featured? Reply here or DM me.
+
+↑ ↑ ↓ ↓ ← → ← → B A START
