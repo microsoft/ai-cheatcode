@@ -1,0 +1,76 @@
+name: Legal Intake Triage
+category: legal-intake
+description: Handles contract review, NDA requests, compliance questions, and regulatory inquiries
+version: "1.0"
+
+steps:
+  - id: extract
+    action: prompt
+    prompt_ref: prompts/classify-prompt.md
+    description: Extract entities and classify the legal request
+    extracts: [request_type, counterparty, urgency, deadline, document_type]
+
+  - id: route
+    action: route
+    description: Route to the appropriate legal sub-workflow
+    rules:
+      - condition: "request_type == 'contract_review'"
+        next: contract_flow
+      - condition: "request_type == 'nda'"
+        next: nda_flow
+      - condition: "request_type == 'compliance'"
+        next: compliance_flow
+      - condition: "request_type == 'regulatory'"
+        next: regulatory_flow
+      - condition: "default"
+        next: general_legal
+
+  - id: contract_flow
+    action: prompt
+    prompt_ref: prompts/recommend-prompt.md
+    context: "Contract review request with {counterparty}: {user_description}"
+    output: recommendation
+    actions:
+      - create_intake: "Legal intake form with deadline and priority"
+      - request_documents: "Request contract draft and supporting materials"
+      - assign_reviewer: "Route to appropriate legal team member based on contract type"
+
+  - id: nda_flow
+    action: prompt
+    prompt_ref: prompts/recommend-prompt.md
+    context: "NDA request for {counterparty}: {user_description}"
+    output: recommendation
+    actions:
+      - check_template: "Standard NDA template available — use template if possible"
+      - create_intake: "NDA intake with counterparty details and timeline"
+      - fast_track: "Standard NDAs can be processed in 24-48 hours"
+
+  - id: compliance_flow
+    action: prompt
+    prompt_ref: prompts/recommend-prompt.md
+    context: "Compliance question: {user_description}"
+    output: recommendation
+    actions:
+      - search_policies: "Search compliance knowledge base"
+      - assess_risk: "Initial risk assessment based on query"
+      - escalate_if_critical: "Escalate to compliance officer if risk is material"
+
+  - id: regulatory_flow
+    action: prompt
+    prompt_ref: prompts/recommend-prompt.md
+    context: "Regulatory inquiry: {user_description}"
+    output: recommendation
+    actions:
+      - identify_jurisdiction: "Determine relevant regulatory framework"
+      - search_guidance: "Search regulatory guidance database"
+      - assign_specialist: "Route to regulatory specialist for the identified jurisdiction"
+
+  - id: general_legal
+    action: escalate
+    target: "Legal Operations"
+    message: "Unclassified legal request — needs human triage"
+    priority: normal
+
+# IMPORTANT: This agent does NOT provide legal advice.
+# All legal category requests are routed to the legal team for human review.
+# The agent's role is intake, classification, and routing — not counsel.

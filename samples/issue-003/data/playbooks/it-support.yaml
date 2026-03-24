@@ -1,0 +1,68 @@
+name: IT Support Triage
+category: it-support
+description: Handles device issues, software problems, access requests, and network issues
+version: "1.0"
+
+steps:
+  - id: extract
+    action: prompt
+    prompt_ref: prompts/classify-prompt.md
+    description: Extract entities and classify the IT request
+    extracts: [device_type, issue_category, urgency, affected_systems]
+
+  - id: route
+    action: route
+    description: Route to the appropriate IT sub-workflow
+    rules:
+      - condition: "issue_category == 'hardware'"
+        next: hardware_flow
+      - condition: "issue_category == 'access'"
+        next: access_flow
+      - condition: "issue_category == 'software'"
+        next: software_flow
+      - condition: "issue_category == 'network'"
+        next: network_flow
+      - condition: "default"
+        next: general_it
+
+  - id: hardware_flow
+    action: prompt
+    prompt_ref: prompts/recommend-prompt.md
+    context: "Hardware issue for {device_type}: {user_description}"
+    output: recommendation
+    actions:
+      - create_ticket: "Hardware Support — Priority based on urgency"
+      - suggest_workaround: "Interim solution while hardware is being addressed"
+
+  - id: access_flow
+    action: prompt
+    prompt_ref: prompts/recommend-prompt.md
+    context: "Access request: {user_description}"
+    output: recommendation
+    actions:
+      - check_permissions: "Verify user's current access level"
+      - create_request: "Access provisioning request"
+
+  - id: software_flow
+    action: prompt
+    prompt_ref: prompts/recommend-prompt.md
+    context: "Software issue: {user_description}"
+    output: recommendation
+    actions:
+      - check_known_issues: "Search KB for matching software issues"
+      - suggest_fix: "Known resolution or workaround"
+
+  - id: network_flow
+    action: prompt
+    prompt_ref: prompts/recommend-prompt.md
+    context: "Network issue: {user_description}"
+    output: recommendation
+    actions:
+      - check_status: "Current network/service status"
+      - escalate_if_widespread: "Escalate if multiple users affected"
+
+  - id: general_it
+    action: escalate
+    target: "IT Help Desk"
+    message: "Unclassified IT request — needs human triage"
+    priority: normal

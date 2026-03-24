@@ -1,0 +1,51 @@
+query_id,query_text,expected_category,expected_urgency,notes
+1,"My laptop screen is flickering and I can't present in meetings",it-support,high,Hardware issue blocking work
+2,"How many PTO days do I have left this year?",hr-requests,low,Simple balance inquiry
+3,"We need an NDA reviewed for the Contoso partnership by Friday",legal-intake,high,Time-sensitive legal request
+4,"The coffee machine on floor 3 is broken again",other,low,Facilities issue — outside agent scope
+5,"I need to onboard a new contractor starting Monday who needs a laptop and building access",hr-requests,high,"Multi-category (HR+IT) — primary is HR onboarding"
+6,"Can't connect to the VPN from home — tried restarting",it-support,high,Network issue blocking remote work
+7,"What's the company policy on working from another country?",hr-requests,low,Policy question
+8,"My manager hasn't approved my PTO request from two weeks ago",hr-requests,medium,Escalation needed — manager action required
+9,"We're getting a data subject access request from a customer in the EU",legal-intake,high,"GDPR/regulatory — time-sensitive, compliance critical"
+10,"I need access to the finance SharePoint site for the Q3 audit",it-support,medium,Access request
+11,"The printer on the 5th floor keeps jamming",it-support,low,Hardware — not work-blocking
+12,"When is open enrollment for health benefits?",hr-requests,low,Benefits inquiry
+13,"A vendor wants to modify the payment terms in our existing contract",legal-intake,medium,Contract modification
+14,"My Teams app crashes every time I try to share my screen",it-support,high,Software issue blocking collaboration
+15,"I'm transferring to the London office — what do I need to do?",hr-requests,medium,"Relocation — involves HR, IT, and possibly legal"
+16,"Can we use this open-source library in our commercial product?",legal-intake,medium,IP/licensing question
+17,"New hire starts next week — need email, laptop, and badge",hr-requests,high,"Onboarding — time-sensitive, multi-department"
+18,"The conference room AV system isn't working for tomorrow's board meeting",it-support,high,"Hardware — high urgency due to executive meeting"
+19,"I think I accidentally shared a confidential document externally",legal-intake,high,"Potential data breach — immediate escalation needed"
+20,"Where can I find the employee handbook?",hr-requests,low,Simple policy/document request
+21,"My corporate credit card was declined at a business dinner",other,medium,Finance issue — outside agent scope
+22,"Need to set up a shared mailbox for the new project team",it-support,medium,Email/access provisioning
+23,"Is there a non-compete clause in my employment agreement?",legal-intake,low,Employment contract question
+24,"The Wi-Fi in Building B has been slow all week",it-support,medium,Network — affects multiple users
+25,"I want to take parental leave starting in March",hr-requests,medium,Leave request — planning ahead
+26,"A competitor is using our trademarked logo on their website",legal-intake,high,IP infringement — needs immediate attention
+27,"How do I reset my password for the expense reporting system?",it-support,low,Simple password reset
+28,"Can I get reimbursed for my home office setup?",hr-requests,low,Benefits/policy question
+29,"We need to review the terms of service before launching the new product",legal-intake,high,Pre-launch legal review — time-sensitive
+30,"My monitor won't connect to my docking station",it-support,medium,Hardware — peripheral issue
+31,"What's the process for requesting a sabbatical?",hr-requests,low,Policy question
+32,"I got a phishing email that looks like it came from our CEO",it-support,high,Security incident — immediate escalation
+33,"Need to terminate a vendor contract early",legal-intake,medium,Contract termination
+34,"The air conditioning in our office hasn't worked for three days",other,medium,Facilities — outside agent scope
+35,"I want to nominate someone for the employee recognition program",hr-requests,low,HR program inquiry
+36,"My development environment keeps timing out when I deploy",it-support,medium,Software/infrastructure issue
+37,"Are there any restrictions on hiring in California?",legal-intake,low,Employment law question
+38,"I accidentally deleted a shared team folder on OneDrive",it-support,high,Data recovery — time-sensitive
+39,"What's the deadline for submitting my performance review?",hr-requests,medium,HR process deadline
+40,"We received a cease and desist letter from a competitor",legal-intake,high,Legal threat — immediate escalation
+41,"Can I get a second monitor for my desk?",it-support,low,Hardware request — not urgent
+42,"How do I change my tax withholding information?",hr-requests,low,Payroll/benefits question
+43,"The API rate limits on our Azure subscription need to be increased",it-support,medium,Infrastructure capacity planning
+44,"I need to report a workplace safety concern anonymously",hr-requests,high,Safety — confidential reporting needed
+45,"Our contract with Fabrikam expires next month — need to start renewal",legal-intake,medium,Contract renewal — planning ahead
+46,"My badge doesn't work at the parking garage",other,low,Facilities/security — outside agent scope
+47,"I'm having trouble installing the required security updates",it-support,medium,Compliance-related software issue
+48,"What volunteer days are available to employees?",hr-requests,low,Benefits/perks inquiry
+49,"A client is threatening to sue over the delayed project delivery",legal-intake,high,Litigation risk — immediate escalation
+50,"Can someone help me set up my new phone with corporate email?",it-support,low,Mobile device setup

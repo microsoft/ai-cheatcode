@@ -1,0 +1,82 @@
+name: HR Requests Triage
+category: hr-requests
+description: Handles PTO, benefits, onboarding, offboarding, and policy questions
+version: "1.0"
+
+steps:
+  - id: extract
+    action: prompt
+    prompt_ref: prompts/classify-prompt.md
+    description: Extract entities and classify the HR request
+    extracts: [request_type, employee_name, urgency, date_relevant]
+
+  - id: route
+    action: route
+    description: Route to the appropriate HR sub-workflow
+    rules:
+      - condition: "request_type == 'pto' or request_type == 'leave'"
+        next: pto_flow
+      - condition: "request_type == 'benefits'"
+        next: benefits_flow
+      - condition: "request_type == 'onboarding'"
+        next: onboarding_flow
+      - condition: "request_type == 'offboarding'"
+        next: offboarding_flow
+      - condition: "request_type == 'policy'"
+        next: policy_flow
+      - condition: "default"
+        next: general_hr
+
+  - id: pto_flow
+    action: prompt
+    prompt_ref: prompts/recommend-prompt.md
+    context: "PTO/Leave request: {user_description}"
+    output: recommendation
+    actions:
+      - check_balance: "Look up remaining PTO balance"
+      - direct_to_portal: "Link to PTO submission portal"
+      - notify_manager: "If approval needed, notify direct manager"
+
+  - id: benefits_flow
+    action: prompt
+    prompt_ref: prompts/recommend-prompt.md
+    context: "Benefits inquiry: {user_description}"
+    output: recommendation
+    actions:
+      - check_enrollment: "Current enrollment status and options"
+      - direct_to_portal: "Benefits portal link + enrollment deadlines"
+
+  - id: onboarding_flow
+    action: prompt
+    prompt_ref: prompts/recommend-prompt.md
+    context: "Onboarding request: {user_description}"
+    output: recommendation
+    actions:
+      - create_checklist: "Generate onboarding checklist for new hire"
+      - notify_it: "Trigger IT provisioning for devices and access"
+      - notify_facilities: "Badge and workspace setup"
+
+  - id: offboarding_flow
+    action: prompt
+    prompt_ref: prompts/recommend-prompt.md
+    context: "Offboarding request: {user_description}"
+    output: recommendation
+    actions:
+      - create_checklist: "Offboarding checklist (access revocation, equipment return)"
+      - notify_it: "Trigger access revocation"
+      - notify_manager: "Final review and knowledge transfer"
+
+  - id: policy_flow
+    action: prompt
+    prompt_ref: prompts/recommend-prompt.md
+    context: "HR policy question: {user_description}"
+    output: recommendation
+    actions:
+      - search_policies: "Search HR knowledge base for relevant policies"
+      - provide_summary: "Policy summary with link to full document"
+
+  - id: general_hr
+    action: escalate
+    target: "HR Business Partner"
+    message: "Unclassified HR request — needs human review"
+    priority: normal
