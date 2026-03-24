@@ -31,6 +31,10 @@ Each newsletter issue has a companion code sample in `samples/issue-NNN/`. Sampl
 
 See [ENVIRONMENT_GUIDE.md](ENVIRONMENT_GUIDE.md) for details on CDX demo tenants, personal Azure subscriptions, and which environment to use for each pattern type.
 
+## Provenance
+
+Every issue is tracked back to its source: who built the pattern, what customer engagement it came from, and how the content was developed. See [PROVENANCE.md](PROVENANCE.md) for the full registry.
+
 ## Validation
 
 Every code sample passes the [VALIDATION_CHECKLIST.md](VALIDATION_CHECKLIST.md) before it's considered ready. If you find an issue, file it in this repo.
