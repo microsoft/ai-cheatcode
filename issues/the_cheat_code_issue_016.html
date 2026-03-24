@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>The Ch(e)at Code — Issue #016: Agent Evaluation &amp; Trust Signals</title>
+<title>The Ch(e)at Code — Issue #017: Building Proactive Agents with Copilot Studio</title>
 <!--[if mso]>
 <style type="text/css">
   body, table, td, p, h1, h2, h3 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
@@ -38,10 +38,10 @@
       <p style="margin:8px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#B8A9C9;letter-spacing:0.3px;">Agent Patterns for Copilot Chat</p>
     </td></tr>
     <tr><td align="center" style="background:#1B1B3A;padding:0 24px 8px 24px;">
-      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#9653; &#9653; &#9663; &#9663; &#9667; &#9657; &#9667; &#9657; B A START</p>
+      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#42779; &#42779; &#42780; &#42780; &#8249; &#8250; &#8249; &#8250; B A START</p>
     </td></tr>
     <tr><td align="center" style="background:#F0ECF5;padding:12px 24px;">
-      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #016 &nbsp;&bull;&nbsp; JULY 14, 2026 &nbsp;&bull;&nbsp; &#129504; CONCEPTUAL PATTERN</p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #016 &nbsp;&bull;&nbsp; JULY 7, 2026 &nbsp;&bull;&nbsp; &#128295; PRACTICAL BUILD</p>
     </td></tr>
   </table>
 </td></tr>
@@ -49,179 +49,160 @@
 <!-- INTRO -->
 <tr><td class="content-block" style="padding:24px 32px 16px 32px;">
   <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
-    You&#8217;ve heard this one before: &#8220;How do I know the agent is actually working?&#8221; The pilot shipped three weeks ago. Leadership wants ROI numbers. The agent owner wants quality metrics. Users want confidence that the answers are trustworthy. Nobody has any of these things &#8212; and nobody built the infrastructure to get them.
+    Last issue (#014), we named the Proactive Triggers pattern &#8212; the framework for inverting the agent interaction model from "user asks" to "agent alerts." We covered the three trigger types, the notification problem, and the channel strategy. This issue, we build it.
   </p>
   <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
-    <strong>This issue&#8217;s pattern:</strong> Agent Evaluation &#38; Trust Signals &#8212; a three-layer framework for measuring whether your agent is adopted, accurate, and worth the investment, plus the user-facing signals that build confidence in every response.
+    <strong>This issue's build:</strong> A working proactive agent using Copilot Studio, Power Automate scheduled flows, Teams Adaptive Cards, and Dataverse &#8212; five components that turn any reactive agent into one that reaches out before anyone asks.
   </p>
 </td></tr>
 
-<!-- PATTERN BREAKDOWN -->
+<!-- AGENT SPOTLIGHT -->
 <tr><td class="content-block" style="padding:8px 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #6B2FA0;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#6B2FA0;letter-spacing:1.5px;text-transform:uppercase;">&#127918; Agent Spotlight</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">The Proactive Health Check Agent</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Pattern from Arc 4 &#8212; Proactive Agent Triggers series</p>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <p style="margin:0 0 14px 0;">
+        <strong>The scenario:</strong> A project manager runs a team of 12 across three workstreams. Tasks live in SharePoint lists, deadlines in Planner, and compliance records in Dataverse. Every Monday morning, she spends 45 minutes manually checking each system to build a status picture. By the time she's done, the standup is half over and the information is already stale.
+      </p>
+      <p style="margin:0 0 14px 0;">
+        <strong>The solution:</strong> A proactive agent that runs a daily scan at 8 AM, queries all three systems, classifies findings by severity using Azure OpenAI, and delivers an Adaptive Card to Teams with action buttons. Critical items get an immediate ping. Warnings get batched into a daily digest. The PM opens Teams and the health check is already waiting.
+      </p>
+      <p style="margin:0;">
+        <strong>The stack:</strong> Copilot Studio (conversational layer &#38; plugin) + Power Automate (scheduled scan &#38; delivery) + Azure OpenAI (alert classification) + Teams Adaptive Cards (delivery) + Dataverse (alert log &#38; feedback tracking).
+      </p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- PATTERN BREAKDOWN -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #0078D4;background:#FAFAFA;border-radius:0 6px 6px 0;">
     <tr><td style="padding:20px 24px 12px 24px;">
       <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#0078D4;letter-spacing:1.5px;text-transform:uppercase;">&#129513; Pattern Breakdown</h2>
     </td></tr>
     <tr><td style="padding:0 24px 4px 24px;">
-      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Agent Evaluation &#38; Trust Signals</h3>
-      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Three evaluation layers + hallucination detection + regression testing + user trust signals</p>
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Building the Proactive Agent</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Copilot Studio + Power Automate + Azure OpenAI + Teams Adaptive Cards + Dataverse</p>
     </td></tr>
     <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
 
-      <p style="margin:0 0 12px 0;"><strong>Why this matters:</strong> Every agent pilot hits a &#8220;prove it&#8221; moment at 30 days. Without evaluation infrastructure, the conversation becomes anecdotal: &#8220;Some people like it, some don&#8217;t.&#8221; This pattern gives you the toolkit to turn anecdotes into dashboards &#8212; and dashboards into expansion funding.</p>
+      <p style="margin:0 0 12px 0;"><strong>Why this matters:</strong> The conceptual framework from <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_015.html" style="color:#6B2FA0;text-decoration:underline;">Issue #015</a> gives you the "what" and "why." This breakdown gives you the "how" &#8212; five components that connect into a working proactive agent. Each component is independently useful, but together they create an agent that watches, classifies, delivers, and learns.</p>
 
-      <!-- Three Evaluation Layers -->
+      <!-- End-to-End Flow -->
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
         <tr><td style="padding:14px 16px;">
-          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Three Evaluation Layers</p>
+          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">End-to-End Flow</p>
           <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
-            <strong>Layer 1: Usage Metrics</strong> &#8212; Is anyone using it?<br>
-            &nbsp;&nbsp;Sessions/day, returning users, topic triggers, drop-off points<br>
-            <strong>Layer 2: Quality Metrics</strong> &#8212; Are the answers good?<br>
-            &nbsp;&nbsp;Confidence scores, source grounding, hallucination rate, thumbs up/down<br>
-            <strong>Layer 3: Business Metrics</strong> &#8212; Is it worth the investment?<br>
-            &nbsp;&nbsp;Tasks automated, escalations avoided, time-to-resolution vs. baseline
+            <strong>Power Automate</strong> recurrence trigger (daily, 8 AM)<br>
+            &nbsp;&nbsp;&#8595;<br>
+            Query SharePoint lists + Planner + Dataverse for actionable items<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Azure OpenAI</strong> classifies each finding: &#128308; Critical / &#128992; Warning / &#128994; Info<br>
+            &nbsp;&nbsp;&#8595;<br>
+            Write all findings to <strong>Dataverse</strong> <span style="background:#E8E0F0;padding:1px 4px;border-radius:3px;">ProactiveAlerts</span> table<br>
+            &nbsp;&nbsp;&#8595;<br>
+            &#128308; Critical &#8594; immediate Teams Adaptive Card<br>
+            &#128992; Warning &#8594; batched into daily digest card<br>
+            &#128994; Info &#8594; surfaced in next Copilot Studio conversation<br>
+            &nbsp;&nbsp;&#8595;<br>
+            User actions (Open / Snooze / Dismiss) &#8594; write back to Dataverse
           </p>
         </td></tr>
       </table>
 
-      <p style="margin:0 0 10px 0;"><strong>The pattern has three design decisions:</strong></p>
+      <p style="margin:0 0 10px 0;"><strong>Five components, in build order:</strong></p>
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
         <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>Layer your metrics, don&#8217;t flatten them.</strong> Usage tells you adoption. Quality tells you accuracy. Business tells you ROI. Each layer answers a different stakeholder&#8217;s question. When you present to leadership, lead with business metrics. When you tune the agent, focus on quality. When you plan rollout, watch usage. Flattening these into a single &#8220;agent score&#8221; loses the signal you need to act.
+          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>Scheduled Scan Flow (Power Automate).</strong> Recurrence trigger set to daily at 8 AM in the user's local time zone. The flow queries three data sources: SharePoint for overdue tasks (where <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">DueDate</span> &lt; today), Dataverse for stale records (where <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">ModifiedOn</span> &gt; 7 days ago), and Planner for upcoming deadlines (due within 48 hours). All findings are collected into a single JSON array and passed to the next step. Keep the query scope narrow &#8212; one list, one table, one plan &#8212; to keep flow execution under 30 seconds.
         </td></tr>
         <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>Detect hallucinations with layered signals, not a single check.</strong> No single method catches all hallucinations. Stack them: confidence scoring (agent self-reports certainty &#8212; unreliable alone, useful as a signal), source grounding (did the answer cite a real document?), citation verification (does the cited passage actually support the claim?), and human spot-checks (random samples reviewed by SMEs). This is the <a href="the_cheat_code_issue_005.html" style="color:#0078D4;text-decoration:underline;">Issue #005 Approval Gates</a> pattern applied to quality assurance &#8212; human-in-the-loop as a quality layer, not just an approval layer.
+          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>Alert Classification (Azure OpenAI).</strong> The JSON array of findings is sent to Azure OpenAI with a classification prompt: <em>"Rate each item as critical, warning, or info based on time sensitivity and business impact."</em> The model returns structured JSON with a severity tag per item. &#128308; Critical: "Compliance certificate expires tomorrow" &#8594; immediate Teams message. &#128992; Warning: "3 items overdue by 2+ days" &#8594; include in daily digest. &#128994; Info: "New document uploaded to Project X" &#8594; mention in next conversation. Use a structured output schema to ensure consistent classification.
         </td></tr>
         <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>Build regression detection from day one.</strong> Adding new documents to the knowledge source can silently degrade existing answers &#8212; the &#8220;new knowledge&#8221; trap. The pattern: maintain a <em>golden test set</em> of 20 known-good question-answer pairs. Run them weekly. Compare response similarity against your baseline. Alert when answers drift. This catches the problem that nobody notices until a user complains &#8212; and by then, trust is already eroded.
+          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>Teams Adaptive Card Delivery.</strong> Power Automate sends Adaptive Cards to Teams via the "Post adaptive card in a chat or channel" action. Each card includes: alert title, severity badge (colored circle emoji), a one-sentence AI-generated summary, and three action buttons: <strong>"Open in SharePoint"</strong> (deep-link to the source item), <strong>"Snooze 24h"</strong> (triggers a callback flow), and <strong>"Ask the Agent"</strong> (deep-links to the Copilot Studio agent with context). Critical alerts are sent immediately as individual cards. Warnings are batched into a single daily digest card at 8 AM.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">4.</span>&nbsp; <strong>"Show My Alerts" Plugin Action (Copilot Studio).</strong> A plugin action in Copilot Studio that queries the <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">ProactiveAlerts</span> table in Dataverse, filtered to the current user and status = "pending" or "snoozed." When the user opens the agent, it proactively says: <em>"You have 2 unacknowledged alerts from yesterday. Want me to walk through them?"</em> This bridges the gap between push notifications and the conversational interface &#8212; alerts that were delivered to Teams can be discussed in depth through the agent.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">5.</span>&nbsp; <strong>Snooze &#38; Feedback Loop (Dataverse).</strong> The Dataverse table <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">ProactiveAlerts</span> stores: alert_id, user_id, severity, content, status (pending / acknowledged / snoozed / dismissed), and created_at. The "Snooze" button on the Adaptive Card triggers a Power Automate flow that updates the status and schedules a follow-up check in 24 hours. "Dismissed" items feed back into classification tuning: if a user dismisses 5 "info" alerts in a week, the flow automatically reduces info alert frequency for that user. This is the learning loop that prevents notification fatigue.
         </td></tr>
       </table>
 
-      <!-- Regression Detection Flow -->
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
-        <tr><td style="padding:14px 16px;">
-          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Golden Test Set Flow</p>
-          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
-            20 known-good Q&#38;A pairs (stored in SharePoint list)<br>
-            &nbsp;&nbsp;&#8595;<br>
-            <strong>Weekly Power Automate flow</strong> &#8594; sends each question to the agent<br>
-            &nbsp;&nbsp;&#8595;<br>
-            Compare response to expected answer (Azure OpenAI similarity)<br>
-            &nbsp;&nbsp;&#8595;<br>
-            Similarity drops below threshold?<br>
-            &nbsp;&nbsp;&#8595;<br>
-            &#9888; Teams alert: &#8220;3 of 20 golden answers degraded &#8212; review changes&#8221;
-          </p>
-        </td></tr>
-      </table>
-
-      <!-- Trust Signals Section -->
-      <p style="margin:0 0 12px 0;"><strong>Trust signals for end users:</strong> Evaluation metrics help <em>you</em> know the agent works. Trust signals help <em>users</em> believe it. These aren&#8217;t cosmetic &#8212; they&#8217;re the difference between users trusting the agent and users Googling instead.</p>
-
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
-        <tr><td style="padding:4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Show confidence:</strong> &#8220;I&#8217;m 85% confident based on 3 sources&#8221; &#8212; give the user a reason to trust the answer
-        </td></tr>
-        <tr><td style="padding:4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Cite sources:</strong> Link to the actual document, not just name it &#8212; verifiable citations change behavior
-        </td></tr>
-        <tr><td style="padding:4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Flag uncertainty:</strong> &#8220;I found partial information but couldn&#8217;t fully answer &#8212; here&#8217;s what I know and what&#8217;s missing&#8221;
-        </td></tr>
-        <tr><td style="padding:4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Enable feedback:</strong> Thumbs up/down on every response &#8212; this closes the loop between user experience and quality metrics
-        </td></tr>
-      </table>
-
-      <!-- Key Insight Callout -->
+      <!-- Key Insight -->
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 14px 0;">
         <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
-          <strong style="color:#6B2FA0;">Key insight:</strong> The golden test set is your <em>canary in the coal mine</em>. Most teams don&#8217;t discover quality regressions until a user complains on Teams. By then, trust is already damaged. A weekly automated check on 20 known-good answers catches drift before users do &#8212; and gives the agent owner a concrete action: &#8220;Review the knowledge changes from this week.&#8221;
+          <strong style="color:#6B2FA0;">Key insight:</strong> The Copilot Studio agent itself is the simplest part of this build. The intelligence lives in the <strong>Power Automate scan flow</strong> (what to watch) and the <strong>Azure OpenAI classification</strong> (how urgent it is). Copilot Studio provides the conversational layer for follow-up &#8212; but the proactive value is delivered before anyone opens the chat.
         </td></tr>
       </table>
 
-      <!-- Hallucination Detection Callout -->
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 14px 0;">
-        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
-          <strong style="color:#6B2FA0;">On hallucination detection:</strong> Confidence scoring alone is unreliable &#8212; the model can be confidently wrong. Source grounding alone misses cases where the citation exists but doesn&#8217;t support the claim. Citation verification alone is expensive at scale. <strong>Stack all three plus human spot-checks</strong> and you get a detection system where each layer covers the others&#8217; blind spots. This is defense-in-depth applied to accuracy.
-        </td></tr>
-      </table>
-
-      <!-- Warning Callout -->
+      <!-- Warning -->
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF8E1;border-radius:4px;border:1px solid #FFE082;">
         <tr><td style="padding:10px 14px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#795548;line-height:1.5;">
-          <strong>&#9888; The &#8220;new knowledge&#8221; trap:</strong> Adding documents to your knowledge source feels like improvement, but it can degrade existing answers. A new HR policy doc might cause the agent to blend old and new guidance. A duplicate document might split the agent&#8217;s confidence. Without regression testing, you won&#8217;t know until someone gets a wrong answer in production. Build the golden test set before you add new knowledge sources &#8212; not after.
+          <strong>&#9888; Build warning:</strong> Adaptive Card actions in Teams have a 60-second timeout for Action.Execute callbacks. If your "Snooze" flow takes longer than that, the user sees an error. Keep the snooze flow lightweight: update one Dataverse row and return. Do any heavy processing (rescheduling, recalculating) in a separate async flow triggered by the Dataverse update.
         </td></tr>
       </table>
     </td></tr>
   </table>
 </td></tr>
 
-<!-- WHERE THIS PATTERN LANDS -->
+<!-- TRY THIS NOW -->
 <tr><td class="content-block" style="padding:0 32px 24px 32px;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #CA5010;background:#FAFAFA;border-radius:0 6px 6px 0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #D83B01;background:#FAFAFA;border-radius:0 6px 6px 0;">
     <tr><td style="padding:20px 24px 12px 24px;">
-      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#CA5010;letter-spacing:1.5px;text-transform:uppercase;">&#127942; Where This Pattern Lands</h2>
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#D83B01;letter-spacing:1.5px;text-transform:uppercase;">&#128736; Try This Now</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:18px;font-weight:700;color:#1B1B3A;line-height:1.4;">Build a Weekly Health Check That Sends Itself</h3>
     </td></tr>
     <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Any team 30 days post-pilot</strong> &#8212; the &#8220;prove it&#8221; moment when leadership asks for ROI and the agent owner has nothing but anecdotes
-        </td></tr>
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Regulated industries (healthcare, finance, legal)</strong> &#8212; where answer accuracy isn&#8217;t a nice-to-have but a compliance requirement with real consequences
-        </td></tr>
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Multi-agent environments</strong> &#8212; organizations running several agents where quality varies and there&#8217;s no consistent way to compare performance across agents
-        </td></tr>
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Customer-facing agents</strong> &#8212; where a hallucinated answer doesn&#8217;t just waste time but damages brand trust and could create legal exposure
-        </td></tr>
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Expansion conversations</strong> &#8212; when a successful pilot needs data to justify scaling from one team to the whole organization
-        </td></tr>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">1</span></td>
+          <td style="padding-left:8px;"><strong>Pick one SharePoint list with a due date column.</strong> Tasks, issues, action items &#8212; anything with dates. You need at least a few overdue items to make the demo compelling. If the list is clean, add some test rows with past-due dates. This is your minimum viable data source.</td>
+        </tr>
       </table>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF3E0;border-radius:6px;border:1px solid #FFCC80;">
-        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#5D4037;line-height:1.6;">
-          <strong>Positioning tip:</strong> Don&#8217;t lead with &#8220;you need monitoring.&#8221; Lead with the question: &#8220;Right now, can you tell me how many people used your agent yesterday and whether the answers were good?&#8221; When the answer is no &#8212; and it almost always is &#8212; the conversation shifts from &#8220;why do I need this&#8221; to &#8220;how fast can we build it.&#8221; Next issue (#017) builds the dashboard.
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">2</span></td>
+          <td style="padding-left:8px;"><strong>Build the Power Automate scan flow.</strong> Recurrence trigger (weekly, Monday 8 AM). "Get items" from SharePoint filtered to <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">DueDate lt '@{utcNow()}'</span>. Compose the results into a JSON array. Add an HTTP action calling Azure OpenAI to generate a natural-language summary of the overdue items. This is your scan + classification in two steps.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">3</span></td>
+          <td style="padding-left:8px;"><strong>Send an Adaptive Card to a Teams channel.</strong> Use the "Post adaptive card in a chat or channel" action. Include the AI-generated summary, a count of overdue items by severity, and two buttons: "Open List" (link to the SharePoint list) and "Ask the Agent" (deep-link to your Copilot Studio agent). Keep the card simple for the first iteration &#8212; a title, the summary, and the buttons.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">4</span></td>
+          <td style="padding-left:8px;"><strong>Add a "Show my alerts" topic in your Copilot Studio agent.</strong> Create a topic triggered by "show my alerts" or "what did I miss" that calls a Power Automate flow to query the same overdue items. The agent summarizes them conversationally: "You have 3 overdue items this week. The most urgent is the compliance review, which was due Friday. Want me to open it?" Now your proactive card and reactive agent are connected.</td>
+        </tr>
+      </table>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#444444;line-height:1.6;">
+          <strong style="color:#6B2FA0;">&#128161; The line that opens doors:</strong> "What if your team got a personalized project health check every Monday morning &#8212; without anyone having to ask for it?"
         </td></tr>
       </table>
     </td></tr>
   </table>
 </td></tr>
 
-<!-- QUICK TIPS -->
-<tr><td class="content-block" style="padding:0 32px 24px 32px;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #107C10;background:#FAFAFA;border-radius:0 6px 6px 0;">
-    <tr><td style="padding:20px 24px 12px 24px;">
-      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#107C10;letter-spacing:1.5px;text-transform:uppercase;">&#9889; Quick Tips</h2>
-    </td></tr>
-    <tr><td style="padding:4px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Start with usage, not quality.</strong> Usage metrics are free &#8212; Copilot Studio provides them out of the box. If nobody&#8217;s using the agent, quality metrics are academic. Check session counts and returning user rates first. If adoption is low, fix the experience before you instrument quality.
-        </td></tr>
-        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>20 golden questions is enough.</strong> Don&#8217;t over-engineer the test set. Pick the 20 most common or most critical questions users ask. Write the expected answers. Run them weekly. If your quality holds on 20 representative questions, it holds broadly. If it doesn&#8217;t, you&#8217;ve caught the regression early.
-        </td></tr>
-        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Trust signals change user behavior.</strong> Internal testing shows that agents displaying confidence scores and source links get 40&#8211;60% more repeat usage than agents that just show a bare answer. Users don&#8217;t need perfect answers &#8212; they need to know <em>how much</em> to trust the answer they got.
-        </td></tr>
-        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Pair with <a href="the_cheat_code_issue_005.html" style="color:#107C10;text-decoration:underline;">Issue #005 (Approval Gates)</a></strong> for human-in-the-loop quality checks. The Approval Gates pattern handles <em>pre-action</em> review. This pattern handles <em>post-deployment</em> evaluation. Together, they give you quality assurance at both ends of the agent lifecycle.
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
-</td></tr>
-
-<!-- NEXT ISSUE CTA -->
+<!-- CTA -->
 <tr><td class="content-block" style="padding:0 32px 24px 32px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
     <tr><td align="center" style="padding:20px 24px;">
-      <p style="margin:0 0 6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;font-weight:700;color:#6B2FA0;">Next issue: We build the dashboard.</p>
-      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#666666;line-height:1.5;">Issue #017 turns this framework into a working analytics stack &#8212; Copilot Studio + App Insights + Power BI + Power Automate.</p>
+      <p style="margin:0 0 6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;font-weight:700;color:#6B2FA0;">Got an agent or pattern to share?</p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#666666;line-height:1.5;">Reply to this email and you might be featured in a future issue.</p>
     </td></tr>
   </table>
 </td></tr>

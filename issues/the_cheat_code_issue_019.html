@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>The Ch(e)at Code — Issue #019: Building Custom Connectors for Copilot Studio</title>
+<title>The Ch(e)at Code — Issue #020: Custom Connector Patterns</title>
 <!--[if mso]>
 <style type="text/css">
   body, table, td, p, h1, h2, h3 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
@@ -38,10 +38,10 @@
       <p style="margin:8px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#B8A9C9;letter-spacing:0.3px;">Agent Patterns for Copilot Chat</p>
     </td></tr>
     <tr><td align="center" style="background:#1B1B3A;padding:0 24px 8px 24px;">
-      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#10595; &#10595; &#10597; &#10597; &#10594; &#10596; &#10594; &#10596; B A START</p>
+      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#8673; &#8673; &#8675; &#8675; &#8672; &#8674; &#8672; &#8674; B A START</p>
     </td></tr>
     <tr><td align="center" style="background:#F0ECF5;padding:12px 24px;">
-      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #019 &nbsp;&bull;&nbsp; AUGUST 4, 2026 &nbsp;&bull;&nbsp; &#128295; PRACTICAL BUILD</p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #019 &nbsp;&bull;&nbsp; JULY 28, 2026 &nbsp;&bull;&nbsp; &#129504; CONCEPTUAL PATTERN</p>
     </td></tr>
   </table>
 </td></tr>
@@ -49,161 +49,146 @@
 <!-- INTRO -->
 <tr><td class="content-block" style="padding:24px 32px 16px 32px;">
   <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
-    Last issue, we named the Custom Connector pattern. This issue, we build one. The customer scenario is the same: an internal API that no pre-built connector reaches &#8212; a legacy employee directory, a proprietary case management system, a custom compliance engine. The agent can&#8217;t do its job because it can&#8217;t reach the data. Today we fix that, end to end.
+    The agent needs to call an internal API &#8212; a legacy ERP, a custom CRM, a proprietary compliance system. No pre-built connector exists. Graph API doesn&#8217;t cover it. The project stalls at &#8220;we can&#8217;t reach our data.&#8221; This is the wall that stops 20% of enterprise Copilot deployments &#8212; and it&#8217;s the 20% where the highest-value, most differentiated use cases live.
   </p>
   <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
-    <strong>This issue&#8217;s build:</strong> A complete custom connector pipeline &#8212; from OpenAPI spec to Copilot Studio plugin action to Azure API Management gateway &#8212; that wraps any REST API and exposes it to your agent. Five components, one afternoon. (For the architectural decisions behind these choices, see <strong><a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_018.html" style="color:#6B2FA0;text-decoration:underline;">Issue #018</a></strong>.)
+    <strong>This issue&#8217;s pattern:</strong> Custom Connector Patterns &#8212; the architectural decisions that determine when, why, and how to build a custom connector that lets your Copilot Studio agent reach data no pre-built connector can touch.
   </p>
-</td></tr>
-
-<!-- AGENT SPOTLIGHT -->
-<tr><td class="content-block" style="padding:8px 32px 24px 32px;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #6B2FA0;background:#FAFAFA;border-radius:0 6px 6px 0;">
-    <tr><td style="padding:20px 24px 12px 24px;">
-      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#6B2FA0;letter-spacing:1.5px;text-transform:uppercase;">&#127918; Agent Spotlight</h2>
-    </td></tr>
-    <tr><td style="padding:0 24px 4px 24px;">
-      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">The Custom Connector Build</h3>
-      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Copilot Studio + Custom Connectors + Power Automate + Azure API Management</p>
-    </td></tr>
-    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
-      <p style="margin:0 0 14px 0;">
-        <strong>The scenario:</strong> A customer has an internal Employee Directory API &#8212; a REST service that returns employee profiles, team assignments, and current project data. No pre-built connector exists. The Copilot Studio agent they&#8217;re building needs to look up employees by name and pull their details into conversational responses. Today, users have to leave Copilot, open the internal portal, search manually, and copy-paste the results. The agent should do this in one turn.
-      </p>
-      <p style="margin:0 0 14px 0;">
-        <strong>The solution:</strong> Wrap the internal API with a custom connector, expose it as a plugin action in Copilot Studio, front it with Azure API Management for production resilience, and add an error handling topic so failures degrade gracefully instead of crashing the conversation.
-      </p>
-      <p style="margin:0;">
-        <strong>Why this stack:</strong> Copilot Studio provides the conversational layer. The custom connector provides reusable, governed API access across the Power Platform. APIM provides the production-grade gateway (rate limiting, caching, retry). Power Automate handles error logging and ops visibility. Each layer does one thing well.
-      </p>
-    </td></tr>
-  </table>
 </td></tr>
 
 <!-- PATTERN BREAKDOWN -->
-<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+<tr><td class="content-block" style="padding:8px 32px 24px 32px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #0078D4;background:#FAFAFA;border-radius:0 6px 6px 0;">
     <tr><td style="padding:20px 24px 12px 24px;">
       <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#0078D4;letter-spacing:1.5px;text-transform:uppercase;">&#129513; Pattern Breakdown</h2>
     </td></tr>
     <tr><td style="padding:0 24px 4px 24px;">
-      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Five Components, Build Order</h3>
-      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">OpenAPI spec &#8594; Power Platform connector &#8594; Copilot Studio action &#8594; APIM gateway &#8594; error handling</p>
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Custom Connector Patterns</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Copilot Studio + Custom Connectors + Power Platform + Azure API Management</p>
     </td></tr>
     <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
 
-      <p style="margin:0 0 10px 0;"><strong>Five components, in build order:</strong></p>
+      <p style="margin:0 0 12px 0;"><strong>Why this matters:</strong> Pre-built connectors cover 80% of M365 scenarios. The other 20% &#8212; where the highest-value, most differentiated use cases live &#8212; require custom connectors. CSAs who can architect these own the enterprise expansion conversation. If a customer says &#8220;Copilot can&#8217;t reach our data,&#8221; the custom connector pattern is how you unblock them. (See also: <strong><a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_006.html" style="color:#6B2FA0;text-decoration:underline;">Issue #006</a></strong>, where Pete Bonds built a custom connector for Teams transcript access via Graph API &#8212; the canonical example of this pattern in action.)</p>
+
+      <p style="margin:0 0 10px 0;"><strong>The pattern has four design decisions:</strong></p>
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
         <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>Write the OpenAPI spec.</strong> Start from your existing API documentation (or even example curl commands) and use Copilot Chat to generate the OpenAPI 3.0 spec. Minimum required sections: <span style="font-family:Consolas,'Courier New',monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">info</span>, <span style="font-family:Consolas,'Courier New',monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">servers</span>, <span style="font-family:Consolas,'Courier New',monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">paths</span> with one GET and one POST, <span style="font-family:Consolas,'Courier New',monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">components/schemas</span> for request/response. The critical detail: write <span style="font-family:Consolas,'Courier New',monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">summary</span> and <span style="font-family:Consolas,'Courier New',monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">description</span> on every operation for the LLM, not for developers.
+          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>When custom connector vs. plugin action (Power Automate).</strong> Use a custom connector when the API will be reused across multiple agents or flows, it has a stable OpenAPI spec, and it needs to be governed as a platform asset. Use a plugin action with Power Automate HTTP when it&#8217;s a one-off integration, the API is unstable or undocumented, or you need complex pre/post-processing logic. The rule of thumb: if a second team would benefit from the same integration, make it a connector.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>The OpenAPI specification is the foundation.</strong> The connector is only as good as its OpenAPI spec. Minimum viable spec: one GET (read), one POST (write), clear parameter descriptions, and &#8212; critically &#8212; <em>scenario-specific operation descriptions</em>. Why? Copilot Studio&#8217;s LLM reads the <span style="font-family:Consolas,'Courier New',monospace;font-size:13px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">summary</span> and <span style="font-family:Consolas,'Courier New',monospace;font-size:13px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">description</span> fields on every operation to decide when to call the connector. Write for the LLM, not just for developers.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>Authentication patterns define your security boundary.</strong> Four options, each with distinct trade-offs:
         </td></tr>
       </table>
 
-      <!-- OpenAPI description example -->
+      <!-- Auth patterns detail -->
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
         <tr><td style="padding:14px 16px;">
-          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Operation Description &#8212; Before &#38; After</p>
+          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Authentication Decision Matrix</p>
           <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
-            <span style="color:#999;">&#10007;</span> &quot;GET /api/employees/{id}&quot;<br>
-            <span style="color:#107C10;">&#10003;</span> &quot;Look up an employee&#8217;s profile, team,<br>
-            &nbsp;&nbsp;&nbsp;and current project assignments by<br>
-            &nbsp;&nbsp;&nbsp;their employee ID&quot;
+            <strong>API Key</strong> &#8212; simplest; internal APIs with low security needs<br>
+            <strong>OAuth 2.0 (auth code)</strong> &#8212; user-delegated access to SaaS APIs<br>
+            <strong>OAuth 2.0 (client creds)</strong> &#8212; service-to-service, no user context<br>
+            <strong>Entra ID</strong> &#8212; Microsoft-ecosystem APIs; managed identity where possible
           </p>
         </td></tr>
       </table>
 
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
-        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>Create the custom connector in Power Platform.</strong> In the Maker Portal: Custom Connectors &#8594; Import from OpenAPI. Configure authentication to match the API&#8217;s auth model (see <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_018.html" style="color:#6B2FA0;text-decoration:underline;">Issue #018</a> for the decision matrix). Test each operation directly in the connector editor before proceeding. Key gotcha: the response schema must match exactly &#8212; if the API returns extra fields, they&#8217;re silently dropped unless declared in the spec.
-        </td></tr>
-        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>Expose as a Copilot Studio plugin action.</strong> In Copilot Studio: Actions &#8594; Add a connector action. Map input parameters to conversational entities (e.g., &#8220;employee name&#8221; &#8594; <span style="font-family:Consolas,'Courier New',monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">employee_id</span> lookup). Map output fields to the agent&#8217;s response template. Add a natural-language description: &#8220;Use this action when the user asks about an employee&#8217;s details, team, or current project.&#8221; This description is what the LLM reads to decide when to invoke the action.
-        </td></tr>
-        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">4.</span>&nbsp; <strong>Azure API Management gateway (production).</strong> For production deployments: front the internal API with Azure APIM. The connector points to APIM, not directly to the backend. This adds rate limiting (protect the backend from agent-generated traffic spikes), caching (reduce latency for repeated lookups), retry policies (handle transient failures automatically), and request/response logging (ops visibility without changing the API).
-        </td></tr>
-        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">5.</span>&nbsp; <strong>Error handling topic in Copilot Studio.</strong> When the connector returns an error (timeout, 500, auth failure), don&#8217;t show the raw error to the user. Build a topic that catches the failure and responds: &#8220;I wasn&#8217;t able to reach the employee directory right now. Here&#8217;s what I can tell you from cached data, or I can try again in a moment.&#8221; Power Automate logs the error for ops visibility. Graceful degradation beats cryptic failure every time.
-        </td></tr>
-      </table>
-
-      <!-- End-to-end pipeline flow -->
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
-        <tr><td style="padding:14px 16px;">
-          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">End-to-End Pipeline</p>
-          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
-            User asks: &#8220;What team is Sarah on?&#8221;<br>
-            &nbsp;&nbsp;&#8595;<br>
-            <strong>Copilot Studio</strong> &#8594; LLM reads action description, invokes connector<br>
-            &nbsp;&nbsp;&#8595;<br>
-            <strong>Custom connector</strong> &#8594; calls APIM endpoint<br>
-            &nbsp;&nbsp;&#8595;<br>
-            <strong>Azure APIM</strong> &#8594; rate limit &#8594; cache check &#8594; forward to backend<br>
-            &nbsp;&nbsp;&#8595;<br>
-            <strong>Internal API</strong> &#8594; returns employee profile<br>
-            &nbsp;&nbsp;&#8595;<br>
-            <strong>Copilot Studio</strong> &#8594; formats response: &#8220;Sarah is on the Platform<br>
-            &nbsp;&nbsp;Engineering team, working on Project Atlas.&#8221;
-          </p>
-        </td></tr>
-      </table>
-
-      <!-- Key Insight -->
+      <!-- Key Insight: per-user vs service account -->
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 14px 0;">
         <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
-          <strong style="color:#6B2FA0;">Key insight:</strong> The connector is a platform asset, not a one-off integration. Once built, any agent or flow in the Power Platform environment can reuse it. Build one connector for the employee directory, and every team that builds an agent gets employee lookup for free. This is how custom connectors compound &#8212; each one you build makes the next agent cheaper to create.
+          <strong style="color:#6B2FA0;">Key design decision:</strong> Per-user auth (the connector sees only the calling user&#8217;s data) vs. service account (the connector sees everything, and the agent filters). Per-user is more secure and simpler to govern. Service account is faster to build but creates a data leakage risk if the agent&#8217;s filtering logic isn&#8217;t airtight. Default to per-user unless the API doesn&#8217;t support it. (See <strong><a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_004.html" style="color:#6B2FA0;text-decoration:underline;">Issue #004</a>: In-Boundary Processing</strong> &#8212; custom connectors inherit the security boundary of the Power Platform environment.)
+        </td></tr>
+      </table>
+
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">4.</span>&nbsp; <strong>Error handling and resilience aren&#8217;t optional.</strong> What happens when the API is slow? Down? Returns garbage? You need a three-tier response strategy: <strong>retry</strong> (transient errors like 429s and 503s) &#8594; <strong>fallback</strong> (cached data or a degraded response) &#8594; <strong>escalate</strong> (tell the user what happened and offer alternatives). The critical constraint: the agent has roughly 10 seconds before the user thinks it&#8217;s broken.
+        </td></tr>
+      </table>
+
+      <!-- Timeout Budget Flow -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
+        <tr><td style="padding:14px 16px;">
+          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Error Handling Flow</p>
+          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
+            API call initiated (~10s budget)<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Transient error?</strong> &#8594; Retry with backoff (1 attempt)<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Still failing?</strong> &#8594; Return cached/degraded response<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>No cache available?</strong> &#8594; Escalate to user with alternatives<br>
+            &nbsp;&nbsp;&#8595;<br>
+            Log error for ops visibility (Power Automate)
+          </p>
         </td></tr>
       </table>
 
       <!-- Warning -->
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF8E1;border-radius:4px;border:1px solid #FFE082;">
         <tr><td style="padding:10px 14px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#795548;line-height:1.5;">
-          <strong>&#9888; Build warning:</strong> Don&#8217;t skip the APIM layer for production deployments. Without it, your agent can hammer the backend API with unbounded requests &#8212; especially during demos when multiple users hit it simultaneously. APIM&#8217;s rate limiting and caching protect both the backend and the user experience. For demos, pointing directly at the API is fine. For production, always go through APIM.
+          <strong>&#9888; Design warning:</strong> Copilot Studio&#8217;s LLM decides when to invoke a connector based entirely on the operation&#8217;s <span style="font-family:Consolas,'Courier New',monospace;font-size:12px;">description</span> field in the OpenAPI spec. A technically accurate but vaguely worded description (&#8220;GET /api/employees/{id}&#8221;) will be invoked inconsistently. A scenario-specific description (&#8220;Look up an employee&#8217;s profile, team, and current project assignments by their employee ID&#8221;) will be invoked reliably. Write your OpenAPI descriptions for the LLM, not for Swagger UI.
         </td></tr>
       </table>
     </td></tr>
   </table>
 </td></tr>
 
-<!-- TRY THIS NOW -->
+<!-- WHERE THIS PATTERN LANDS -->
 <tr><td class="content-block" style="padding:0 32px 24px 32px;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #D83B01;background:#FAFAFA;border-radius:0 6px 6px 0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #CA5010;background:#FAFAFA;border-radius:0 6px 6px 0;">
     <tr><td style="padding:20px 24px 12px 24px;">
-      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#D83B01;letter-spacing:1.5px;text-transform:uppercase;">&#128736; Try This Now</h2>
-    </td></tr>
-    <tr><td style="padding:0 24px 4px 24px;">
-      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:18px;font-weight:700;color:#1B1B3A;line-height:1.4;">Wrap Any REST API and Expose It to Your Agent</h3>
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#CA5010;letter-spacing:1.5px;text-transform:uppercase;">&#127942; Where This Pattern Lands</h2>
     </td></tr>
     <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Manufacturing &#38; supply chain</strong> &#8212; connecting Copilot to legacy ERP systems (SAP, Oracle) that have REST APIs but no pre-built Power Platform connector
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Financial services &#38; insurance</strong> &#8212; proprietary compliance and risk APIs that must stay within the organization&#8217;s security boundary
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Healthcare &#38; life sciences</strong> &#8212; internal clinical trial management systems, patient scheduling APIs, and HIPAA-compliant data sources
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Government &#38; public sector</strong> &#8212; internal case management and citizen services systems with custom APIs behind strict network boundaries
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Any enterprise</strong> where the most valuable data lives behind APIs that Copilot can&#8217;t reach today &#8212; and one custom connector changes that
+        </td></tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF3E0;border-radius:6px;border:1px solid #FFCC80;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#5D4037;line-height:1.6;">
+          <strong>Positioning tip:</strong> Custom connectors unlock the long tail of enterprise use cases. When a customer says &#8220;Copilot is great for M365 data, but what about our internal systems?&#8221; &#8212; that&#8217;s your opening. The connector pattern turns a Copilot limitation into an expansion opportunity. CSAs who can build these own the conversation.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
 
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
-        <tr>
-          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">1</span></td>
-          <td style="padding-left:8px;"><strong>Find an internal REST API with documentation.</strong> Even a Swagger page works. If the customer has an existing API portal, start there. If not, any REST endpoint with predictable request/response formats will do. The goal is a real API, not a mock &#8212; you want to demo with live data.</td>
-        </tr>
-      </table>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
-        <tr>
-          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">2</span></td>
-          <td style="padding-left:8px;"><strong>Use Copilot Chat to generate an OpenAPI spec from the docs.</strong> Paste the API documentation into Copilot Chat and ask: &#8220;Generate an OpenAPI 3.0 specification for this API. Include clear, scenario-specific descriptions on every operation.&#8221; Review and adjust the output &#8212; pay special attention to the <span style="font-family:Consolas,'Courier New',monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">description</span> fields.</td>
-        </tr>
-      </table>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
-        <tr>
-          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">3</span></td>
-          <td style="padding-left:8px;"><strong>Import into Power Platform as a custom connector, configure auth, test.</strong> Maker Portal &#8594; Custom Connectors &#8594; Import from OpenAPI file. Set up the authentication method that matches your API. Test every operation in the connector editor. Don&#8217;t proceed until every test call returns expected data.</td>
-        </tr>
-      </table>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
-        <tr>
-          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">4</span></td>
-          <td style="padding-left:8px;"><strong>Add as a plugin action in your Copilot Studio agent with clear operation descriptions.</strong> Map inputs to conversational entities, map outputs to response fields, and add natural-language descriptions that tell the LLM exactly when to invoke this action. Test with real questions: &#8220;What team is Sarah on?&#8221; &#8212; the agent should invoke the connector and return a formatted answer.</td>
-        </tr>
-      </table>
-
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
-        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#444444;line-height:1.6;">
-          <strong style="color:#6B2FA0;">&#128161; The line that opens doors:</strong> &#8220;Your customer&#8217;s most valuable data lives behind APIs that Copilot can&#8217;t reach today. One custom connector changes that &#8212; and you can build it in an afternoon.&#8221;
+<!-- QUICK TIPS -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #107C10;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#107C10;letter-spacing:1.5px;text-transform:uppercase;">&#9889; Quick Tips</h2>
+    </td></tr>
+    <tr><td style="padding:4px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Use Copilot Chat to generate the OpenAPI spec.</strong> Paste the API documentation (or even example curl commands) into Copilot Chat and ask it to generate an OpenAPI 3.0 spec. It gets you 80% of the way there in minutes instead of hours.
+        </td></tr>
+        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Response schema must match exactly.</strong> If the API returns fields not declared in your OpenAPI spec, they&#8217;re silently dropped by the connector. Declare every field you need in the response schema &#8212; don&#8217;t assume the connector will pass through undeclared data.
+        </td></tr>
+        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Front production APIs with Azure API Management.</strong> Point your connector at APIM, not directly at the backend. APIM adds rate limiting, caching, retry policies, and request/response logging &#8212; all without changing the underlying API. This is the production-readiness layer that separates a demo from a deployment.
+        </td></tr>
+        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Cross-reference: <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_006.html" style="color:#6B2FA0;text-decoration:underline;">Issue #006</a> (Pete Bonds&#8217; transcript connector)</strong> is the canonical example of this pattern &#8212; a custom connector for Teams transcript access via Graph API. <strong><a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_004.html" style="color:#6B2FA0;text-decoration:underline;">Issue #004</a> (In-Boundary Processing)</strong> explains how custom connectors inherit the security boundary of the Power Platform environment.
         </td></tr>
       </table>
     </td></tr>
@@ -214,8 +199,8 @@
 <tr><td class="content-block" style="padding:0 32px 24px 32px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
     <tr><td align="center" style="padding:20px 24px;">
-      <p style="margin:0 0 6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;font-weight:700;color:#6B2FA0;">Got an agent or pattern to share?</p>
-      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#666666;line-height:1.5;">Reply to this email and you might be featured in a future issue.</p>
+      <p style="margin:0 0 6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;font-weight:700;color:#6B2FA0;">Next issue: we build one.</p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#666666;line-height:1.5;">Issue #020 takes these patterns and walks through a complete custom connector build, step by step.</p>
     </td></tr>
   </table>
 </td></tr>

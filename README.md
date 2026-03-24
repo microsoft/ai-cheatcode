@@ -59,6 +59,7 @@ Starting with Issue #008, the series alternates between:
 | 005 | Human-in-the-Loop Approval Gates | 🧠 | Pete Puustinen |
 | 006 | Meeting-to-Knowledge Pipeline | 🔧 | Pete Puustinen |
 | 007 | Holographic Memory | 🧠 | Tyson Dowd |
+| 008 | Cross-Project Knowledge Agent | 🔧 | Tyson Dowd |
 
 ## How to Publish a New Issue
 

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>The Ch(e)at Code — Issue #014: Proactive Agent Triggers</title>
+<title>The Ch(e)at Code — Issue #015: Building Persistent Memory in Copilot Studio</title>
 <!--[if mso]>
 <style type="text/css">
   body, table, td, p, h1, h2, h3 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
@@ -38,10 +38,10 @@
       <p style="margin:8px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#B8A9C9;letter-spacing:0.3px;">Agent Patterns for Copilot Chat</p>
     </td></tr>
     <tr><td align="center" style="background:#1B1B3A;padding:0 24px 8px 24px;">
-      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#11205; &#11205; &#11206; &#11206; &#11207; &#11208; &#11207; &#11208; B A START</p>
+      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#10378; &#10378; &#10379; &#10379; &#11185; &#8827; &#11185; &#8827; B A START</p>
     </td></tr>
     <tr><td align="center" style="background:#F0ECF5;padding:12px 24px;">
-      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #014 &nbsp;&bull;&nbsp; JUNE 30, 2026 &nbsp;&bull;&nbsp; &#129504; CONCEPTUAL PATTERN</p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #014 &nbsp;&bull;&nbsp; JUNE 23, 2026 &nbsp;&bull;&nbsp; &#128295; PRACTICAL BUILD</p>
     </td></tr>
   </table>
 </td></tr>
@@ -49,155 +49,155 @@
 <!-- INTRO -->
 <tr><td class="content-block" style="padding:24px 32px 16px 32px;">
   <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
-    Every agent your customer has built waits for someone to open a chat window and type a question. The project health bot sits idle until a PM remembers to ask. The compliance checker gathers dust until audit season. The knowledge agent has perfect answers &#8212; but nobody thinks to ask. Your customers have invested in AI tools that only work when humans remember to use them.
+    Last issue, we named the Persistent Memory pattern. We laid out the three memory tiers, explained why raw transcripts fail, and defined the memory types that matter: facts, preferences, and episodes. This issue, we build it.
   </p>
   <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
-    <strong>This issue's pattern:</strong> Proactive Agent Triggers &#8212; a design framework that inverts the agent interaction model from "user asks, agent answers" to "agent watches, agent alerts." The most valuable agent behavior isn't responding faster. It's reaching out before anyone thinks to ask.
+    <strong>This issue&#8217;s build:</strong> A complete Persistent Memory system in Copilot Studio &#8212; backed by Dataverse for storage, Power Automate for the remember/recall plumbing, and Azure OpenAI for intelligent fact extraction. Five components, one afternoon. The result: an agent that greets users with context, learns preferences over time, and never asks the same question twice.
   </p>
 </td></tr>
 
-<!-- PATTERN BREAKDOWN -->
+<!-- AGENT SPOTLIGHT -->
 <tr><td class="content-block" style="padding:8px 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #6B2FA0;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#6B2FA0;letter-spacing:1.5px;text-transform:uppercase;">&#127918; Agent Spotlight</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">The Memory-Enabled Agent</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Copilot Studio + Dataverse + Power Automate + Azure OpenAI</p>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <p style="margin:0 0 14px 0;">
+        <strong>The scenario:</strong> A customer&#8217;s IT help desk agent handles hundreds of conversations per week. Every session starts cold &#8212; &#8220;What&#8217;s your department? What project are you on? What did we discuss last time?&#8221; Users are frustrated. They told the agent their context yesterday. The agent forgot overnight. It feels like calling a support line and getting a different person every time &#8212; one who never reads the notes.
+      </p>
+      <p style="margin:0 0 14px 0;">
+        <strong>The solution:</strong> A Copilot Studio agent with a Dataverse-backed memory layer. When a user states a preference or shares a fact, the agent calls a &#8220;Remember&#8221; plugin to save it. On every new conversation, a &#8220;Recall&#8221; topic loads the user&#8217;s stored memories into the system prompt. The agent greets with context: &#8220;Welcome back! Last time we were working on Project Falcon &#8212; want to pick up where we left off?&#8221;
+      </p>
+      <p style="margin:0;">
+        <strong>Why this stack:</strong> Dataverse gives you row-level security, tenant data policies, and zero infrastructure management. Power Automate provides the plugin actions without custom code. Azure OpenAI handles intelligent fact extraction so the agent knows <em>what</em> to remember without explicit user instructions.
+      </p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- PATTERN BREAKDOWN -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #0078D4;background:#FAFAFA;border-radius:0 6px 6px 0;">
     <tr><td style="padding:20px 24px 12px 24px;">
       <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#0078D4;letter-spacing:1.5px;text-transform:uppercase;">&#129513; Pattern Breakdown</h2>
     </td></tr>
     <tr><td style="padding:0 24px 4px 24px;">
-      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Proactive Agent Triggers</h3>
-      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Scheduled scans + event-driven triggers + threshold monitoring + severity-based routing</p>
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Building Persistent Memory</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Copilot Studio + Dataverse + Power Automate + Azure OpenAI</p>
     </td></tr>
     <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
 
-      <!-- The Value Inversion -->
-      <p style="margin:0 0 12px 0;"><strong>The value inversion:</strong> Reactive agents save time when users ask. Proactive agents save time because users <em>don't have to ask</em>. This is a 10x difference. Catching a missed deadline before it's missed, flagging a budget overrun before month-end, surfacing a compliance gap before the auditor finds it &#8212; these are the moments that turn an "AI experiment" into an indispensable team member. The most valuable thing an agent can do is make itself impossible to ignore.</p>
+      <p style="margin:0 0 12px 0;"><strong>Why this matters:</strong> <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_013.html" style="color:#6B2FA0;text-decoration:underline;">Issue #013</a> explained the pattern conceptually. Now we wire it up. The build has five components, each self-contained and independently testable. You can ship Component 1&#8211;3 in an afternoon and add 4&#8211;5 in a follow-up sprint.</p>
 
-      <!-- Insight Callout -->
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 16px 0;">
+      <!-- Pipeline Flow -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
+        <tr><td style="padding:14px 16px;">
+          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">End-to-End Memory Flow</p>
+          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
+            User says something worth remembering<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Agent</strong> detects preference/fact via system prompt instruction<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Remember plugin</strong> (Power Automate) &#8594; upserts to Dataverse<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <span style="background:#E8E0F0;padding:1px 4px;border-radius:3px;">AgentMemory</span> table stores key-value with type &#38; confidence<br>
+            &nbsp;&nbsp;&#8595;<br>
+            Next session: <strong>Recall topic</strong> queries Dataverse for user&#8217;s memories<br>
+            &nbsp;&nbsp;&#8595;<br>
+            Top memories injected into system prompt as context<br>
+            &nbsp;&nbsp;&#8595;<br>
+            Agent greets with personalized context &#38; tailored responses
+          </p>
+        </td></tr>
+      </table>
+
+      <p style="margin:0 0 10px 0;"><strong>Five components, in build order:</strong></p>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>Dataverse Memory Table.</strong> Create a custom table called <span style="font-family:Consolas,'Courier New',monospace;font-size:13px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">AgentMemory</span> with these columns: <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">user_id</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">memory_type</span> (fact / preference / episode), <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">key</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">value</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">confidence</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">created_at</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">updated_at</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">expires_at</span>. Add a composite index on <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">user_id</span> + <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">memory_type</span> for fast retrieval. Enable row-level security so users can only see their own memories. This takes about 5 minutes in the Dataverse maker portal.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>&#8220;Remember This&#8221; Plugin Action.</strong> Build a Power Automate cloud flow exposed as a Copilot Studio plugin action. Input: an extracted fact as a key-value pair (e.g., <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">key: "preferred_format"</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">value: "bullet points"</span>). The flow performs an upsert: if a row with that key already exists for the user, it updates the value and timestamp; if not, it inserts a new row. Add this system prompt instruction to your agent: <em>&#8220;When the user states a preference or shares a fact about their work, call the Remember action to save it for future conversations.&#8221;</em> Build time: ~20 minutes.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>&#8220;Recall&#8221; Greeting Topic.</strong> Create a Copilot Studio topic that fires on every conversation start. It triggers a Power Automate flow that queries Dataverse for the user&#8217;s stored memories &#8212; filtered to the top 10 most recent, highest-confidence facts. The flow returns a JSON array that gets injected into the system prompt as context: <em>&#8220;Known facts about this user: [list].&#8221;</em> The agent uses this to greet with context and avoid re-asking known information. Build time: ~15 minutes.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">4.</span>&nbsp; <strong>Memory Hygiene.</strong> Build a scheduled Power Automate flow that runs weekly: (a)&nbsp;delete all memories past their <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">expires_at</span> date, (b)&nbsp;summarize episodes older than 30 days into single-sentence summaries to save token budget, (c)&nbsp;flag memories with low confidence for review. Also add a user-facing agent action: &#8220;Forget everything about me&#8221; &#8594; deletes all rows matching the user&#8217;s <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">user_id</span>. This is your GDPR compliance layer.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">5.</span>&nbsp; <strong>Memory-Aware Responses.</strong> The final piece is prompt engineering. Add this instruction to your agent&#8217;s system prompt: <em>&#8220;Use the known facts to tailor your response. Do not ask the user to repeat information you already know. If you know their preferred format, use it. If you know their project, reference it.&#8221;</em> The agent now uses recalled memories to personalize format preferences, project context, and role-based content &#8212; without the user lifting a finger.
+        </td></tr>
+      </table>
+
+      <!-- Key Insight -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 14px 0;">
         <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
-          <strong style="color:#6B2FA0;">Key insight:</strong> Proactive agents are the strongest expansion play. The customer already has a reactive agent. This pattern turns it into an always-on assistant that delivers value even when no one is in the chat window. It's the difference between a search bar and a co-worker.
+          <strong style="color:#6B2FA0;">Key insight:</strong> The intelligence is in the <em>extraction</em>, not the storage. The Remember plugin works best when paired with Azure OpenAI to intelligently parse what&#8217;s worth saving from a conversation turn. Without AI extraction, you&#8217;re relying on the user to explicitly say &#8220;remember this&#8221; &#8212; and they won&#8217;t. The system prompt instruction tells the agent to proactively detect facts and preferences, then call the Remember action autonomously.
         </td></tr>
       </table>
 
-      <p style="margin:0 0 10px 0;"><strong>The pattern has four design decisions:</strong></p>
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
-        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>Choose your trigger type.</strong> Not all proactive behaviors are created equal. Each trigger type serves a different use case:
-        </td></tr>
-      </table>
-
-      <!-- Three Trigger Types Diagram -->
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
-        <tr><td style="padding:14px 16px;">
-          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Three Trigger Types</p>
-          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
-            <strong>&#128345; Scheduled</strong> &#8212; runs on a cadence<br>
-            &nbsp;&nbsp;Daily standup summary, weekly health check, monthly compliance scan<br>
-            <strong>&#9889; Event-Driven</strong> &#8212; fires when data changes<br>
-            &nbsp;&nbsp;New document uploaded, status field changed, approval completed<br>
-            &nbsp;&nbsp;(See <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_006.html" style="color:#6B2FA0;text-decoration:underline;">Issue #006</a>: Meeting-to-Knowledge Pipeline for a working example)<br>
-            <strong>&#128200; Threshold</strong> &#8212; activates when a metric crosses a boundary<br>
-            &nbsp;&nbsp;Spend &gt; 80% of budget, overdue items &gt; 5, SLA response &gt; 24 hours
-          </p>
-        </td></tr>
-      </table>
-
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
-        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>Solve the notification problem before you build.</strong> This is where most proactive agent projects fail. Too many alerts and users develop notification fatigue &#8212; they ignore everything. Too few alerts and users don't see value &#8212; the agent gets turned off. The design principle: <em>severity-based routing, user-controlled frequency, and snooze/dismiss capability</em>. Every proactive alert must have an escape hatch. If users can't control the volume, they'll kill the channel.
-        </td></tr>
-        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>Match the channel to the urgency.</strong> Not every alert deserves a Teams ping. Route by severity:
-        </td></tr>
-      </table>
-
-      <!-- Channel Strategy Diagram -->
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
-        <tr><td style="padding:14px 16px;">
-          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Channel Strategy</p>
-          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
-            &#128680; <strong>Push</strong> (Teams message) &#8212; high urgency, needs immediate attention<br>
-            &#128231; <strong>Digest</strong> (email summary) &#8212; informational, weekly cadence<br>
-            &#128161; <strong>Ambient</strong> (Viva Insights card) &#8212; awareness, no action required<br>
-            &#128172; <strong>Conversational</strong> (next chat) &#8212; low priority, surfaced when user engages
-          </p>
-        </td></tr>
-      </table>
-
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
-        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">4.</span>&nbsp; <strong>Build the feedback loop from Day 1.</strong> Track what users snooze, dismiss, and act on. If a user dismisses five "info" alerts in a row, reduce info alert frequency automatically. If they always act on "warning" items within an hour, consider promoting those to "push" channel. The proactive agent that learns user preferences is the one that survives past the pilot.
-        </td></tr>
-      </table>
-
-      <!-- Warning Callout -->
+      <!-- Warning -->
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF8E1;border-radius:4px;border:1px solid #FFE082;">
         <tr><td style="padding:10px 14px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#795548;line-height:1.5;">
-          <strong>&#9888; Design warning:</strong> The biggest failure mode isn't building the wrong triggers &#8212; it's building too many. Start with exactly one trigger type (scheduled is the easiest). Prove that users engage with the alerts before adding event-driven or threshold triggers. A proactive agent that sends one useful alert per day beats one that sends ten alerts nobody reads.
+          <strong>&#9888; Watch for memory conflicts:</strong> If a user says &#8220;I prefer bullet points&#8221; on Monday and &#8220;use numbered lists&#8221; on Wednesday, the upsert handles it &#8212; the latest value wins. But if the agent extracts <em>two different keys</em> for the same concept (<span style="font-family:Consolas,monospace;font-size:12px;">preferred_format</span> vs. <span style="font-family:Consolas,monospace;font-size:12px;">output_style</span>), you get conflicting memories. Normalize your key names in the extraction prompt to prevent this. Provide example keys in the system prompt.
         </td></tr>
       </table>
     </td></tr>
   </table>
 </td></tr>
 
-<!-- WHERE THIS LANDS -->
+<!-- TRY THIS NOW -->
 <tr><td class="content-block" style="padding:0 32px 24px 32px;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #CA5010;background:#FAFAFA;border-radius:0 6px 6px 0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #D83B01;background:#FAFAFA;border-radius:0 6px 6px 0;">
     <tr><td style="padding:20px 24px 12px 24px;">
-      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#CA5010;letter-spacing:1.5px;text-transform:uppercase;">&#127942; Where This Pattern Lands</h2>
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#D83B01;letter-spacing:1.5px;text-transform:uppercase;">&#128736; Try This Now</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:18px;font-weight:700;color:#1B1B3A;line-height:1.4;">Give Your Agent a Memory in One Afternoon</h3>
     </td></tr>
     <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Project management &#38; PMOs</strong> &#8212; weekly health checks that surface overdue items, at-risk milestones, and resource conflicts before the Monday standup
-        </td></tr>
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Compliance &#38; audit</strong> &#8212; threshold triggers on certificate expirations, policy violations, and regulatory deadlines that fire before the audit team arrives
-        </td></tr>
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Finance &#38; procurement</strong> &#8212; budget burn rate alerts when spend crosses 80%, 90%, and 95% thresholds with escalating urgency
-        </td></tr>
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>IT operations &#38; support</strong> &#8212; SLA breach warnings when ticket response times approach the threshold, sent to the on-call engineer via Teams
-        </td></tr>
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Any organization</strong> where the most expensive failures are the ones nobody noticed until it was too late
-        </td></tr>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">1</span></td>
+          <td style="padding-left:8px;"><strong>Create the Dataverse table.</strong> Open the Power Apps maker portal, create a new table called <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">AgentMemory</span>, and add the columns: <span style="font-family:Consolas,monospace;font-size:12px;">user_id</span>, <span style="font-family:Consolas,monospace;font-size:12px;">memory_type</span>, <span style="font-family:Consolas,monospace;font-size:12px;">key</span>, <span style="font-family:Consolas,monospace;font-size:12px;">value</span>, <span style="font-family:Consolas,monospace;font-size:12px;">confidence</span>, <span style="font-family:Consolas,monospace;font-size:12px;">created_at</span>, <span style="font-family:Consolas,monospace;font-size:12px;">updated_at</span>, <span style="font-family:Consolas,monospace;font-size:12px;">expires_at</span>. Enable row-level security. Five minutes with the template.</td>
+        </tr>
       </table>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF3E0;border-radius:6px;border:1px solid #FFCC80;">
-        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#5D4037;line-height:1.6;">
-          <strong>Positioning tip:</strong> Frame this as the difference between a search bar and a co-worker. A search bar waits for you to ask. A co-worker taps you on the shoulder and says "hey, you should look at this." Proactive agents are the shoulder tap. Customers who already have reactive agents are the perfect audience &#8212; this is their natural next step.
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">2</span></td>
+          <td style="padding-left:8px;"><strong>Build the &#8220;Remember&#8221; plugin action.</strong> Create a Power Automate cloud flow: input is a key-value pair from the agent, action is an upsert to the <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">AgentMemory</span> table. Expose it as a plugin in Copilot Studio. Add the system prompt instruction telling the agent when to call it. Twenty minutes.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">3</span></td>
+          <td style="padding-left:8px;"><strong>Build the &#8220;Recall&#8221; greeting topic.</strong> Create a topic triggered on conversation start. It calls a Power Automate flow that queries Dataverse for the user&#8217;s top 10 memories and returns them as JSON. Inject into the system prompt. Fifteen minutes.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">4</span></td>
+          <td style="padding-left:8px;"><strong>Test the memory loop.</strong> Tell the agent your name and your project. Close the conversation. Reopen it. Does the agent greet you by name and reference your project? If yes &#8212; you&#8217;ve built persistent memory. If not, check that the Recall topic is firing on conversation start and that the Remember plugin is writing to Dataverse.</td>
+        </tr>
+      </table>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#444444;line-height:1.6;">
+          <strong style="color:#6B2FA0;">&#128161; The line that opens doors:</strong> &#8220;What if your agent remembered every user&#8217;s preferences, project context, and past decisions &#8212; so no one ever had to repeat themselves?&#8221;
         </td></tr>
       </table>
     </td></tr>
   </table>
 </td></tr>
 
-<!-- QUICK TIPS -->
-<tr><td class="content-block" style="padding:0 32px 24px 32px;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #107C10;background:#FAFAFA;border-radius:0 6px 6px 0;">
-    <tr><td style="padding:20px 24px 12px 24px;">
-      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#107C10;letter-spacing:1.5px;text-transform:uppercase;">&#9889; Quick Tips</h2>
-    </td></tr>
-    <tr><td style="padding:4px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Scheduled triggers are the on-ramp.</strong> Event-driven and threshold triggers require connector setup and monitoring infrastructure. A scheduled Power Automate flow that runs daily at 8 AM requires nothing but a recurrence trigger and a data query. Start there. Always.
-        </td></tr>
-        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong><a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_006.html" style="color:#6B2FA0;text-decoration:underline;">Issue #006</a>'s Meeting-to-Knowledge Pipeline is already event-driven.</strong> If your customer built that pipeline, they already have the pattern &#8212; a new transcript triggers enrichment and indexing. Point this out as proof of concept: "You've already built a proactive trigger. Let's apply the same model to deadlines, budgets, and compliance."
-        </td></tr>
-        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Adaptive Cards are the delivery mechanism.</strong> Don't send plain text Teams messages. Adaptive Cards give you action buttons (Open, Snooze, Dismiss), severity badges, and structured layouts. They're the difference between an alert users glance at and one they act on.
-        </td></tr>
-        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Next issue (#015) builds this pattern end-to-end.</strong> We'll walk through Copilot Studio + Power Automate + Teams Adaptive Cards + Dataverse to build a working proactive agent. If you want to get ahead, pick one SharePoint list with a due date column &#8212; you'll need it.
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
-</td></tr>
-
-<!-- NEXT ISSUE CTA -->
+<!-- CTA -->
 <tr><td class="content-block" style="padding:0 32px 24px 32px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
     <tr><td align="center" style="padding:20px 24px;">

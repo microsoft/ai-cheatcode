@@ -208,18 +208,19 @@ Future issues: pick new Unicode arrow/triangle variants. Plenty available: â¬†â¬
 | #005 | Human-in-the-Loop Approval Gates | Pete Puustinen | AIWF Team Meeting 3/3 |
 | #006 | Meeting-to-Knowledge Pipeline | Pete Puustinen | AIWF Team Meeting 3/3 |
 | #007 | Holographic Memory | Tyson Dowd | 1:1 with Justin 3/24 |
+| #008 | Cross-Project Knowledge Agent (Copilot Studio) | Tyson Dowd | 1:1 with Justin 3/24 |
 | #008 | Adaptive Guardrails | TBD | Series Plan |
-| #009 | Building Adaptive Guardrails (Copilot Studio) | TBD | Series Plan |
-| #010 | Multi-Agent Handoff | TBD | Series Plan |
-| #011 | Building Multi-Agent Handoff (Copilot Studio) | TBD | Series Plan |
-| #012 | Persistent Agent Memory | TBD | Series Plan |
-| #013 | Building Persistent Memory (Copilot Studio) | TBD | Series Plan |
-| #014 | Proactive Agent Triggers | TBD | Series Plan |
-| #015 | Building Proactive Agents (Copilot Studio) | TBD | Series Plan |
-| #016 | Agent Evaluation & Trust Signals | TBD | Series Plan |
-| #017 | Building Agent Analytics (Copilot Studio) | TBD | Series Plan |
-| #018 | Custom Connector Patterns | TBD | Series Plan |
-| #019 | Building Custom Connectors (Copilot Studio) | TBD | Series Plan |
+| #010 | Building Adaptive Guardrails (Copilot Studio) | TBD | Series Plan |
+| #011 | Multi-Agent Handoff | TBD | Series Plan |
+| #012 | Building Multi-Agent Handoff (Copilot Studio) | TBD | Series Plan |
+| #013 | Persistent Agent Memory | TBD | Series Plan |
+| #014 | Building Persistent Memory (Copilot Studio) | TBD | Series Plan |
+| #015 | Proactive Agent Triggers | TBD | Series Plan |
+| #016 | Building Proactive Agents (Copilot Studio) | TBD | Series Plan |
+| #017 | Agent Evaluation & Trust Signals | TBD | Series Plan |
+| #018 | Building Agent Analytics (Copilot Studio) | TBD | Series Plan |
+| #019 | Custom Connector Patterns | TBD | Series Plan |
+| #020 | Building Custom Connectors (Copilot Studio) | TBD | Series Plan |
 
 ---
 

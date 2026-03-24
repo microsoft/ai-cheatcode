@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>The Ch(e)at Code — Issue #012: Persistent Agent Memory</title>
+<title>The Ch(e)at Code — Issue #013: Building Multi-Agent Handoff in Copilot Studio</title>
 <!--[if mso]>
 <style type="text/css">
   body, table, td, p, h1, h2, h3 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
@@ -38,10 +38,10 @@
       <p style="margin:8px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#B8A9C9;letter-spacing:0.3px;">Agent Patterns for Copilot Chat</p>
     </td></tr>
     <tr><td align="center" style="background:#1B1B3A;padding:0 24px 8px 24px;">
-      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#8679; &#8679; &#8681; &#8681; &#8678; &#8680; &#8678; &#8680; B A START</p>
+      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#8607; &#8607; &#8609; &#8609; &#8606; &#8608; &#8606; &#8608; B A START</p>
     </td></tr>
     <tr><td align="center" style="background:#F0ECF5;padding:12px 24px;">
-      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #012 &nbsp;&bull;&nbsp; JUNE 16, 2026 &nbsp;&bull;&nbsp; &#129504; CONCEPTUAL PATTERN</p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #012 &nbsp;&bull;&nbsp; JUNE 9, 2026 &nbsp;&bull;&nbsp; &#128295; PRACTICAL BUILD</p>
     </td></tr>
   </table>
 </td></tr>
@@ -49,151 +49,148 @@
 <!-- INTRO -->
 <tr><td class="content-block" style="padding:24px 32px 16px 32px;">
   <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
-    Every conversation starts from zero. Your customer built a capable Copilot Studio agent that helped a user configure their project last Tuesday &#8212; but today, the agent has no memory of it. Users repeat themselves constantly. The agent can&#8217;t learn preferences, track ongoing issues, or build on past interactions. It&#8217;s helpful in the moment and amnesiac the next.
+    Last issue, we named the Multi-Agent Handoff pattern. We mapped three transfer models &#8212; cold, warm, and hot &#8212; and drew the trust boundaries that keep a multi-agent system coherent. This issue, we build it. One session, two agents, context that carries across.
   </p>
   <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
-    <strong>This issue&#8217;s pattern:</strong> Persistent Agent Memory &#8212; a structured approach to giving your agent durable recall across sessions, so it can remember user preferences, track ongoing work, and build on past interactions without users repeating themselves. Memory is the gap between &#8220;chatbot&#8221; and &#8220;assistant.&#8221; Land this and the agent becomes sticky.
+    <strong>This issue's build:</strong> A warm-transfer handoff between an HR agent and an IT Support agent in Copilot Studio, with Dataverse session state for analytics and Power Automate for out-of-scope detection &#8212; the practical implementation of <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_011.html" style="color:#6B2FA0;text-decoration:underline;">Issue #011</a>'s conceptual framework.
   </p>
 </td></tr>
 
-<!-- PATTERN BREAKDOWN -->
+<!-- AGENT SPOTLIGHT -->
 <tr><td class="content-block" style="padding:8px 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #6B2FA0;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#6B2FA0;letter-spacing:1.5px;text-transform:uppercase;">&#127918; Agent Spotlight</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">The Two-Agent Handoff</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">HR Knowledge Agent &#8596; IT Support Agent &nbsp;&bull;&nbsp; Copilot Studio + Dataverse + Power Automate</p>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <p style="margin:0 0 14px 0;">
+        <strong>The scenario:</strong> An enterprise has two Copilot Studio agents &#8212; one for HR (PTO, benefits, onboarding) and one for IT Support (devices, access, software). An employee asks the HR agent: "I'm onboarding a new hire next week &#8212; how do I get them a laptop?" The HR agent knows about onboarding checklists, but laptop provisioning is IT's domain. Today, the agent either hallucinates an answer or says "contact IT." Neither is acceptable.
+      </p>
+      <p style="margin:0 0 14px 0;">
+        <strong>The solution:</strong> When the HR agent detects an out-of-scope query, it generates a conversation summary via Azure OpenAI, writes a handoff record to Dataverse, and transfers the user to the IT agent using Copilot Studio's agent transfer topic. The IT agent reads the Dataverse record, injects the context, and picks up mid-conversation. The user never repeats themselves.
+      </p>
+      <p style="margin:0;">
+        <strong>The stack:</strong> Copilot Studio agent transfer + Dataverse <span style="font-family:Consolas,'Courier New',monospace;font-size:13px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">AgentSession</span> table + Power Automate for classification &#38; logging. Five components, all buildable in a single session.
+      </p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- PATTERN BREAKDOWN -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #0078D4;background:#FAFAFA;border-radius:0 6px 6px 0;">
     <tr><td style="padding:20px 24px 12px 24px;">
       <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#0078D4;letter-spacing:1.5px;text-transform:uppercase;">&#129513; Pattern Breakdown</h2>
     </td></tr>
     <tr><td style="padding:0 24px 4px 24px;">
-      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Persistent Agent Memory</h3>
-      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Three memory tiers + structured fact extraction + privacy-first retention</p>
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Warm Handoff Build: Five Components</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Copilot Studio agent transfer + Dataverse session state + Power Automate classification &#38; analytics</p>
     </td></tr>
     <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
 
-      <p style="margin:0 0 12px 0;"><strong>Why this matters:</strong> Without memory, agents are stateless tools. With it, they become personal. This is the feature that makes users say &#8220;I can&#8217;t go back.&#8221; Today&#8217;s Copilot Studio agents handle <em>conversation memory</em> natively &#8212; they remember what was said in this session. But when the session ends, so does the context. The Persistent Memory pattern adds two more tiers that transform your agent from a per-session tool into a long-term assistant.</p>
+      <p style="margin:0 0 12px 0;"><strong>Why this matters:</strong> The warm transfer is the right default for most multi-agent deployments (see <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_011.html" style="color:#6B2FA0;text-decoration:underline;">Issue #011</a>). It gives users a seamless experience without the architectural complexity of shared session state. This build shows you every piece in order &#8212; so you can demo it to a customer and hand them a repeatable implementation pattern.</p>
 
-      <!-- Three Memory Tiers -->
+      <!-- Build Flow Diagram -->
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
         <tr><td style="padding:14px 16px;">
-          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Three Memory Tiers</p>
+          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">End-to-End Build</p>
           <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
-            <strong>Tier 3: Long-Term Memory</strong> (cross-session)<br>
-            &nbsp;&nbsp;&#8593; &nbsp;Preferences, past decisions, recurring requests<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>&#8220;This user always wants bullet points and prefers PowerShell&#8221;</em><br>
-            <strong>Tier 2: Session Memory</strong> (cross-turn)<br>
-            &nbsp;&nbsp;&#8593; &nbsp;Facts established during a conversation<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>&#8220;The user is configuring Project Falcon&#8221;</em><br>
-            <strong>Tier 1: Conversation Memory</strong> (built-in)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;What was said in this session &#8212; Copilot Studio handles natively
+            User asks HR Agent an IT question<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Fallback topic</strong> &#8594; low confidence &#8594; triggers classification<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Power Automate</strong> &#8594; calls Azure OpenAI: "Is this HR or IT?"<br>
+            &nbsp;&nbsp;&#8595;<br>
+            If IT: generate conversation summary &#8594; write to <span style="background:#E8E0F0;padding:1px 4px;border-radius:3px;">AgentSession</span><br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Agent Transfer</strong> topic &#8594; transfer to IT Agent<br>
+            &nbsp;&nbsp;&#8595;<br>
+            IT Agent greeting topic &#8594; reads <span style="background:#E8E0F0;padding:1px 4px;border-radius:3px;">AgentSession</span> &#8594; injects context<br>
+            &nbsp;&nbsp;&#8595;<br>
+            Seamless continuation with full context
           </p>
         </td></tr>
       </table>
 
-      <p style="margin:0 0 12px 0;">Tier 1 is free &#8212; it&#8217;s how chat works. Tier 2 requires you to extract and hold facts within a session so the agent doesn&#8217;t lose context mid-task. Tier 3 is the real unlock: durable memory that persists across sessions, enabling the agent to greet users with context, skip redundant questions, and tailor responses based on history.</p>
-
-      <p style="margin:0 0 10px 0;"><strong>The pattern has three design decisions:</strong></p>
+      <p style="margin:0 0 10px 0;"><strong>Five components, in build order:</strong></p>
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
         <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>Extract structured facts, not raw transcripts.</strong> The naive approach is to save the full conversation transcript and retrieve it next time. This fails. Transcripts are noisy, token-heavy, and full of irrelevant turns (&#8220;hello,&#8221; &#8220;thanks,&#8221; &#8220;never mind&#8221;). The better approach: extract structured key-value pairs. Memory should be <span style="font-family:Consolas,'Courier New',monospace;font-size:13px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">{"key": "preferred_format", "value": "bullet points"}</span>, not four paragraphs of conversation.
+          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>Two agents with distinct scopes.</strong> Agent A: HR Knowledge Agent (PTO, benefits, onboarding). Agent B: IT Support Agent (devices, access, software). Each has its own knowledge sources, topics, and system prompt. The critical line in each system prompt: <em>"If the user asks about [other domain], do not attempt to answer &#8212; trigger the handoff topic."</em> This prevents hallucination across domain boundaries and is the foundation everything else builds on.
         </td></tr>
         <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>Classify memories by type.</strong> Not all memories are equal. <strong>Facts</strong> are stable and rarely change (&#8220;User&#8217;s project is Falcon&#8221;). <strong>Preferences</strong> evolve over time (&#8220;Summarize in bullets&#8221; &#8594; &#8220;Actually, use numbered lists&#8221;). <strong>Episodes</strong> are historical and may expire (&#8220;On March 12 we debugged the auth timeout together&#8221;). Classifying memories by type lets you handle updates, conflicts, and expiration differently for each.
+          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>Out-of-scope detection topic.</strong> In each agent, build a fallback topic that fires when generative answers return low confidence. This topic calls a Power Automate flow that classifies the query: <em>"Is this question about HR or IT?"</em> If the query belongs to the other agent, the flow returns a signal to trigger the handoff. Don't rely on keyword matching &#8212; use Azure OpenAI for classification so it handles ambiguous queries like "new hire laptop" that span both domains.
         </td></tr>
         <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>Design for forgetting, not just remembering.</strong> What should agents remember? What should they forget? An agent that remembers everything becomes a liability &#8212; stale facts mislead, outdated preferences annoy, and retained data raises compliance questions. Build explicit retention policies: episodes expire after 30 days, preferences can be overwritten, and users can say &#8220;forget everything about me&#8221; at any time.
+          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>Copilot Studio agent transfer with summary.</strong> Use the "Transfer to agent" system topic. Before the transfer fires, generate a conversation summary via Azure OpenAI: <em>"Summarize this conversation in 3 sentences, including the user's original question and what's been discussed so far."</em> Pass the summary as a context variable to the receiving agent. This is the warm transfer &#8212; Agent B starts with context instead of "How can I help you?"
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">4.</span>&nbsp; <strong>Dataverse session state.</strong> Create an <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">AgentSession</span> table with columns: <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">session_id</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">user_id</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">source_agent</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">target_agent</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">summary</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">handoff_reason</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">timestamp</span>. On handoff, write the session record. On receive, the greeting topic queries Dataverse for the session and injects the summary as context. This is what turns a one-off transfer into a system &#8212; every handoff is logged, queryable, and analyzable.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">5.</span>&nbsp; <strong>Handoff analytics.</strong> Power Automate logs every transfer. Build a Power BI dashboard tracking: handoff volume by direction (HR&#8594;IT vs IT&#8594;HR), round-trip rate (user bounced back to original agent), and resolution rate per agent. Set an alert: <em>"HR&#8594;IT handoff rate spiked 40% this week"</em> &#8212; that signals a knowledge gap in the HR agent that needs fixing. Analytics close the loop and tell you where to invest in each agent's knowledge base.
         </td></tr>
       </table>
 
-      <!-- The Summarization Trap -->
+      <!-- Key Insight -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 14px 0;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
+          <strong style="color:#6B2FA0;">Key insight:</strong> The handoff analytics are the most valuable component long-term. They tell you which agents need broader knowledge, which handoff paths are friction points, and where misroutes are happening. Without analytics, you're flying blind &#8212; you built a multi-agent system but can't tell if it's working. With analytics, every handoff becomes a data point that improves the system.
+        </td></tr>
+      </table>
+
+      <!-- Warning -->
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF8E1;border-radius:4px;border:1px solid #FFE082;">
         <tr><td style="padding:10px 14px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#795548;line-height:1.5;">
-          <strong>&#9888; The Summarization Trap:</strong> Many teams try to &#8220;give the agent memory&#8221; by summarizing past conversations into a system prompt. This sounds logical but fails at scale. Summaries lose precision, accumulate hallucination risk with each compression cycle, and consume growing token budgets. Structured key-value memories are cheaper, more precise, and independently verifiable. Save the facts, not the narrative.
+          <strong>&#9888; Watch for circular handoffs:</strong> If both agents have weak coverage in an overlapping area (e.g., "software licenses for new hires"), users can get bounced between agents indefinitely. Add a <span style="font-family:Consolas,monospace;font-size:12px;">handoff_count</span> variable that increments on each transfer. If it exceeds 1 in a session, escalate to a human instead of transferring again. The Dataverse <span style="font-family:Consolas,monospace;font-size:12px;">AgentSession</span> table makes this trivial to detect and alert on.
         </td></tr>
       </table>
-
-      <!-- Memory Types Detail -->
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:16px 0 16px 0;">
-        <tr><td style="padding:14px 16px;">
-          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Memory Types &#38; Lifecycle</p>
-          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
-            <strong>Facts</strong> &#8212; stable, rarely change, no expiry<br>
-            &nbsp;&nbsp;&#8220;User&#8217;s project is Falcon&#8221; / &#8220;User&#8217;s role is PM&#8221;<br>
-            <strong>Preferences</strong> &#8212; evolve over time, upsert on conflict<br>
-            &nbsp;&nbsp;&#8220;Summarize in bullets&#8221; / &#8220;Skip the intro&#8221;<br>
-            <strong>Episodes</strong> &#8212; historical, expire after 30 days<br>
-            &nbsp;&nbsp;&#8220;On March 12, we debugged the auth timeout&#8221;
-          </p>
-        </td></tr>
-      </table>
-
-      <!-- Privacy Callout -->
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 14px 0;">
-        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
-          <strong style="color:#6B2FA0;">Privacy &#38; retention:</strong> Memory stored in Dataverse inherits the tenant&#8217;s data policies &#8212; GDPR, data residency, and retention rules all apply automatically. Row-level security ensures users can only access their own memories. And the &#8220;forget everything about me&#8221; action isn&#8217;t optional &#8212; it&#8217;s a first-class agent capability that deletes all rows for a user on demand. Design this in from Day 1, not as a compliance afterthought.
-        </td></tr>
-      </table>
-
-      <!-- Cross-reference -->
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 14px 0;">
-        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
-          <strong style="color:#6B2FA0;">&#128161; Connection to <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_007.html" style="color:#6B2FA0;text-decoration:underline;">Issue #007</a> (Holographic Memory):</strong> Holographic Memory (<a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_007.html" style="color:#6B2FA0;text-decoration:underline;">Issue #007</a>) gives agents <em>organizational</em> recall &#8212; cross-project knowledge with redundant context nodes. Persistent Memory gives agents <em>personal</em> recall &#8212; per-user preferences, facts, and history. They&#8217;re complementary layers. An agent with both knows who you are <em>and</em> what the organization knows. Together, they close the gap between &#8220;chatbot&#8221; and &#8220;colleague.&#8221;
-        </td></tr>
-      </table>
-
     </td></tr>
   </table>
 </td></tr>
 
-<!-- WHERE THIS PATTERN LANDS -->
+<!-- TRY THIS NOW -->
 <tr><td class="content-block" style="padding:0 32px 24px 32px;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #CA5010;background:#FAFAFA;border-radius:0 6px 6px 0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #D83B01;background:#FAFAFA;border-radius:0 6px 6px 0;">
     <tr><td style="padding:20px 24px 12px 24px;">
-      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#CA5010;letter-spacing:1.5px;text-transform:uppercase;">&#127942; Where This Pattern Lands</h2>
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#D83B01;letter-spacing:1.5px;text-transform:uppercase;">&#128736; Try This Now</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:18px;font-weight:700;color:#1B1B3A;line-height:1.4;">Build a Two-Agent Handoff in One Session</h3>
     </td></tr>
     <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>IT help desks &#38; internal support</strong> &#8212; the agent remembers your device, your role, your recurring issues. No more &#8220;What OS are you on?&#8221; every single time. Ticket resolution drops from 8 minutes to 3 when the agent already knows the context.
-        </td></tr>
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Project management &#38; PMO</strong> &#8212; &#8220;Welcome back! Last time we were working on Project Falcon&#8217;s timeline &#8212; want to pick up where we left off?&#8221; The agent tracks project context across sessions so PMs don&#8217;t re-explain their world every Monday.
-        </td></tr>
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Customer-facing agents</strong> &#8212; external support bots that remember past interactions, case history, and product preferences. The difference between &#8220;How can I help you?&#8221; and &#8220;I see you opened a case about the billing API last week &#8212; is this related?&#8221;
-        </td></tr>
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Onboarding &#38; HR</strong> &#8212; new hire agents that track progress through multi-day onboarding flows. The agent remembers what the user already completed, what questions they asked, and what they still need to do &#8212; across days and weeks.
-        </td></tr>
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Any scenario</strong> where users say &#8220;I already told the bot this yesterday&#8221; &#8212; that frustration is the signal that Persistent Memory is the missing layer
-        </td></tr>
-      </table>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF3E0;border-radius:6px;border:1px solid #FFCC80;">
-        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#5D4037;line-height:1.6;">
-          <strong>Positioning tip:</strong> Frame this as &#8220;the feature that makes users stop comparing your agent to ChatGPT.&#8221; ChatGPT remembers preferences. Siri remembers your name. Users expect this now. When your enterprise agent can&#8217;t remember a conversation from yesterday, it feels broken &#8212; not limited, <em>broken</em>. Persistent Memory isn&#8217;t a nice-to-have; it&#8217;s table stakes for agent adoption.
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
-</td></tr>
 
-<!-- QUICK TIPS -->
-<tr><td class="content-block" style="padding:0 32px 24px 32px;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #107C10;background:#FAFAFA;border-radius:0 6px 6px 0;">
-    <tr><td style="padding:20px 24px 12px 24px;">
-      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#107C10;letter-spacing:1.5px;text-transform:uppercase;">&#9889; Quick Tips</h2>
-    </td></tr>
-    <tr><td style="padding:4px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Start with preferences, not episodes.</strong> Preferences (format, tone, tool choices) are high-value and low-risk. Episodes (&#8220;last Tuesday we discussed X&#8221;) are harder to get right and easier to get wrong. Ship preferences first, add episode memory in v2.
-        </td></tr>
-        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Confidence scores prevent hallucinated memories.</strong> When the agent extracts a fact from conversation, assign a confidence score. &#8220;The user said they prefer PowerShell&#8221; is high confidence. &#8220;The user might be working on Project Falcon&#8221; (inferred from context) is low confidence. Only inject high-confidence memories into the system prompt.
-        </td></tr>
-        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Cap recalled memories at 10&#8211;15 per session.</strong> Don&#8217;t dump the user&#8217;s entire memory store into the system prompt. Retrieve the most recent and most relevant facts. More isn&#8217;t better &#8212; it&#8217;s noise. Use recency and frequency as ranking signals.
-        </td></tr>
-        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Next issue builds this.</strong> <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_013.html" style="color:#6B2FA0;text-decoration:underline;">Issue #013</a> is the practical companion &#8212; we build the full Persistent Memory system in Copilot Studio with Dataverse, Power Automate, and Azure OpenAI. Read this issue for the &#8220;why&#8221;; read the next one for the &#8220;how.&#8221;
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">1</span></td>
+          <td style="padding-left:8px;"><strong>Clone an existing agent and split the knowledge.</strong> Take one of your customer's working Copilot Studio agents and duplicate it. Strip the knowledge sources: give Agent A the HR docs, give Agent B the IT docs. Update each system prompt with the boundary instruction: <em>"If the user asks about [other domain], do not answer &#8212; trigger the handoff topic."</em> Two agents, ten minutes.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">2</span></td>
+          <td style="padding-left:8px;"><strong>Add a fallback topic that detects out-of-scope queries.</strong> In each agent, create a topic triggered by the system's low-confidence fallback event. Wire it to a Power Automate flow that classifies the query using Azure OpenAI. If the query belongs to the other domain, set a variable that triggers the transfer. Test with: <em>"How do I get a laptop for my new hire?"</em> in the HR agent.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">3</span></td>
+          <td style="padding-left:8px;"><strong>Configure agent transfer with conversation summary passing.</strong> In the handoff topic, add an Azure OpenAI action that summarizes the conversation. Store the summary in a context variable and configure the "Transfer to agent" node pointing at Agent B. On the receiving side, build a greeting topic that reads the context variable and starts with: <em>"I see you were asking about [summary]. Let me help with that."</em></td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">4</span></td>
+          <td style="padding-left:8px;"><strong>Test the full loop.</strong> Ask Agent A a question that belongs to Agent B. Verify: (a)&nbsp;the fallback fires, (b)&nbsp;the classification is correct, (c)&nbsp;the summary is generated, and (d)&nbsp;Agent B picks up with full context. Then try the reverse &#8212; ask Agent B an HR question. Both directions should work identically.</td>
+        </tr>
+      </table>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#444444;line-height:1.6;">
+          <strong style="color:#6B2FA0;">&#128161; The line that opens doors:</strong> "What if your employees could ask any agent any question and always get routed to the right one &#8212; without restarting the conversation?"
         </td></tr>
       </table>
     </td></tr>

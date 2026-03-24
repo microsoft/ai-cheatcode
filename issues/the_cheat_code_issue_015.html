@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>The Ch(e)at Code — Issue #015: Building Proactive Agents with Copilot Studio</title>
+<title>The Ch(e)at Code — Issue #016: Proactive Agent Triggers</title>
 <!--[if mso]>
 <style type="text/css">
   body, table, td, p, h1, h2, h3 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
@@ -38,10 +38,10 @@
       <p style="margin:8px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#B8A9C9;letter-spacing:0.3px;">Agent Patterns for Copilot Chat</p>
     </td></tr>
     <tr><td align="center" style="background:#1B1B3A;padding:0 24px 8px 24px;">
-      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#42779; &#42779; &#42780; &#42780; &#8249; &#8250; &#8249; &#8250; B A START</p>
+      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#11205; &#11205; &#11206; &#11206; &#11207; &#11208; &#11207; &#11208; B A START</p>
     </td></tr>
     <tr><td align="center" style="background:#F0ECF5;padding:12px 24px;">
-      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #015 &nbsp;&bull;&nbsp; JULY 7, 2026 &nbsp;&bull;&nbsp; &#128295; PRACTICAL BUILD</p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #015 &nbsp;&bull;&nbsp; JUNE 30, 2026 &nbsp;&bull;&nbsp; &#129504; CONCEPTUAL PATTERN</p>
     </td></tr>
   </table>
 </td></tr>
@@ -49,155 +49,155 @@
 <!-- INTRO -->
 <tr><td class="content-block" style="padding:24px 32px 16px 32px;">
   <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
-    Last issue (#014), we named the Proactive Triggers pattern &#8212; the framework for inverting the agent interaction model from "user asks" to "agent alerts." We covered the three trigger types, the notification problem, and the channel strategy. This issue, we build it.
+    Every agent your customer has built waits for someone to open a chat window and type a question. The project health bot sits idle until a PM remembers to ask. The compliance checker gathers dust until audit season. The knowledge agent has perfect answers &#8212; but nobody thinks to ask. Your customers have invested in AI tools that only work when humans remember to use them.
   </p>
   <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
-    <strong>This issue's build:</strong> A working proactive agent using Copilot Studio, Power Automate scheduled flows, Teams Adaptive Cards, and Dataverse &#8212; five components that turn any reactive agent into one that reaches out before anyone asks.
+    <strong>This issue's pattern:</strong> Proactive Agent Triggers &#8212; a design framework that inverts the agent interaction model from "user asks, agent answers" to "agent watches, agent alerts." The most valuable agent behavior isn't responding faster. It's reaching out before anyone thinks to ask.
   </p>
-</td></tr>
-
-<!-- AGENT SPOTLIGHT -->
-<tr><td class="content-block" style="padding:8px 32px 24px 32px;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #6B2FA0;background:#FAFAFA;border-radius:0 6px 6px 0;">
-    <tr><td style="padding:20px 24px 12px 24px;">
-      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#6B2FA0;letter-spacing:1.5px;text-transform:uppercase;">&#127918; Agent Spotlight</h2>
-    </td></tr>
-    <tr><td style="padding:0 24px 4px 24px;">
-      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">The Proactive Health Check Agent</h3>
-      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Pattern from Arc 4 &#8212; Proactive Agent Triggers series</p>
-    </td></tr>
-    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
-      <p style="margin:0 0 14px 0;">
-        <strong>The scenario:</strong> A project manager runs a team of 12 across three workstreams. Tasks live in SharePoint lists, deadlines in Planner, and compliance records in Dataverse. Every Monday morning, she spends 45 minutes manually checking each system to build a status picture. By the time she's done, the standup is half over and the information is already stale.
-      </p>
-      <p style="margin:0 0 14px 0;">
-        <strong>The solution:</strong> A proactive agent that runs a daily scan at 8 AM, queries all three systems, classifies findings by severity using Azure OpenAI, and delivers an Adaptive Card to Teams with action buttons. Critical items get an immediate ping. Warnings get batched into a daily digest. The PM opens Teams and the health check is already waiting.
-      </p>
-      <p style="margin:0;">
-        <strong>The stack:</strong> Copilot Studio (conversational layer &#38; plugin) + Power Automate (scheduled scan &#38; delivery) + Azure OpenAI (alert classification) + Teams Adaptive Cards (delivery) + Dataverse (alert log &#38; feedback tracking).
-      </p>
-    </td></tr>
-  </table>
 </td></tr>
 
 <!-- PATTERN BREAKDOWN -->
-<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+<tr><td class="content-block" style="padding:8px 32px 24px 32px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #0078D4;background:#FAFAFA;border-radius:0 6px 6px 0;">
     <tr><td style="padding:20px 24px 12px 24px;">
       <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#0078D4;letter-spacing:1.5px;text-transform:uppercase;">&#129513; Pattern Breakdown</h2>
     </td></tr>
     <tr><td style="padding:0 24px 4px 24px;">
-      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Building the Proactive Agent</h3>
-      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Copilot Studio + Power Automate + Azure OpenAI + Teams Adaptive Cards + Dataverse</p>
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Proactive Agent Triggers</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Scheduled scans + event-driven triggers + threshold monitoring + severity-based routing</p>
     </td></tr>
     <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
 
-      <p style="margin:0 0 12px 0;"><strong>Why this matters:</strong> The conceptual framework from <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_014.html" style="color:#6B2FA0;text-decoration:underline;">Issue #014</a> gives you the "what" and "why." This breakdown gives you the "how" &#8212; five components that connect into a working proactive agent. Each component is independently useful, but together they create an agent that watches, classifies, delivers, and learns.</p>
+      <!-- The Value Inversion -->
+      <p style="margin:0 0 12px 0;"><strong>The value inversion:</strong> Reactive agents save time when users ask. Proactive agents save time because users <em>don't have to ask</em>. This is a 10x difference. Catching a missed deadline before it's missed, flagging a budget overrun before month-end, surfacing a compliance gap before the auditor finds it &#8212; these are the moments that turn an "AI experiment" into an indispensable team member. The most valuable thing an agent can do is make itself impossible to ignore.</p>
 
-      <!-- End-to-End Flow -->
+      <!-- Insight Callout -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 16px 0;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
+          <strong style="color:#6B2FA0;">Key insight:</strong> Proactive agents are the strongest expansion play. The customer already has a reactive agent. This pattern turns it into an always-on assistant that delivers value even when no one is in the chat window. It's the difference between a search bar and a co-worker.
+        </td></tr>
+      </table>
+
+      <p style="margin:0 0 10px 0;"><strong>The pattern has four design decisions:</strong></p>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>Choose your trigger type.</strong> Not all proactive behaviors are created equal. Each trigger type serves a different use case:
+        </td></tr>
+      </table>
+
+      <!-- Three Trigger Types Diagram -->
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
         <tr><td style="padding:14px 16px;">
-          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">End-to-End Flow</p>
+          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Three Trigger Types</p>
           <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
-            <strong>Power Automate</strong> recurrence trigger (daily, 8 AM)<br>
-            &nbsp;&nbsp;&#8595;<br>
-            Query SharePoint lists + Planner + Dataverse for actionable items<br>
-            &nbsp;&nbsp;&#8595;<br>
-            <strong>Azure OpenAI</strong> classifies each finding: &#128308; Critical / &#128992; Warning / &#128994; Info<br>
-            &nbsp;&nbsp;&#8595;<br>
-            Write all findings to <strong>Dataverse</strong> <span style="background:#E8E0F0;padding:1px 4px;border-radius:3px;">ProactiveAlerts</span> table<br>
-            &nbsp;&nbsp;&#8595;<br>
-            &#128308; Critical &#8594; immediate Teams Adaptive Card<br>
-            &#128992; Warning &#8594; batched into daily digest card<br>
-            &#128994; Info &#8594; surfaced in next Copilot Studio conversation<br>
-            &nbsp;&nbsp;&#8595;<br>
-            User actions (Open / Snooze / Dismiss) &#8594; write back to Dataverse
+            <strong>&#128345; Scheduled</strong> &#8212; runs on a cadence<br>
+            &nbsp;&nbsp;Daily standup summary, weekly health check, monthly compliance scan<br>
+            <strong>&#9889; Event-Driven</strong> &#8212; fires when data changes<br>
+            &nbsp;&nbsp;New document uploaded, status field changed, approval completed<br>
+            &nbsp;&nbsp;(See <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_006.html" style="color:#6B2FA0;text-decoration:underline;">Issue #006</a>: Meeting-to-Knowledge Pipeline for a working example)<br>
+            <strong>&#128200; Threshold</strong> &#8212; activates when a metric crosses a boundary<br>
+            &nbsp;&nbsp;Spend &gt; 80% of budget, overdue items &gt; 5, SLA response &gt; 24 hours
           </p>
         </td></tr>
       </table>
 
-      <p style="margin:0 0 10px 0;"><strong>Five components, in build order:</strong></p>
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
         <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>Scheduled Scan Flow (Power Automate).</strong> Recurrence trigger set to daily at 8 AM in the user's local time zone. The flow queries three data sources: SharePoint for overdue tasks (where <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">DueDate</span> &lt; today), Dataverse for stale records (where <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">ModifiedOn</span> &gt; 7 days ago), and Planner for upcoming deadlines (due within 48 hours). All findings are collected into a single JSON array and passed to the next step. Keep the query scope narrow &#8212; one list, one table, one plan &#8212; to keep flow execution under 30 seconds.
+          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>Solve the notification problem before you build.</strong> This is where most proactive agent projects fail. Too many alerts and users develop notification fatigue &#8212; they ignore everything. Too few alerts and users don't see value &#8212; the agent gets turned off. The design principle: <em>severity-based routing, user-controlled frequency, and snooze/dismiss capability</em>. Every proactive alert must have an escape hatch. If users can't control the volume, they'll kill the channel.
         </td></tr>
         <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>Alert Classification (Azure OpenAI).</strong> The JSON array of findings is sent to Azure OpenAI with a classification prompt: <em>"Rate each item as critical, warning, or info based on time sensitivity and business impact."</em> The model returns structured JSON with a severity tag per item. &#128308; Critical: "Compliance certificate expires tomorrow" &#8594; immediate Teams message. &#128992; Warning: "3 items overdue by 2+ days" &#8594; include in daily digest. &#128994; Info: "New document uploaded to Project X" &#8594; mention in next conversation. Use a structured output schema to ensure consistent classification.
-        </td></tr>
-        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>Teams Adaptive Card Delivery.</strong> Power Automate sends Adaptive Cards to Teams via the "Post adaptive card in a chat or channel" action. Each card includes: alert title, severity badge (colored circle emoji), a one-sentence AI-generated summary, and three action buttons: <strong>"Open in SharePoint"</strong> (deep-link to the source item), <strong>"Snooze 24h"</strong> (triggers a callback flow), and <strong>"Ask the Agent"</strong> (deep-links to the Copilot Studio agent with context). Critical alerts are sent immediately as individual cards. Warnings are batched into a single daily digest card at 8 AM.
-        </td></tr>
-        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">4.</span>&nbsp; <strong>"Show My Alerts" Plugin Action (Copilot Studio).</strong> A plugin action in Copilot Studio that queries the <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">ProactiveAlerts</span> table in Dataverse, filtered to the current user and status = "pending" or "snoozed." When the user opens the agent, it proactively says: <em>"You have 2 unacknowledged alerts from yesterday. Want me to walk through them?"</em> This bridges the gap between push notifications and the conversational interface &#8212; alerts that were delivered to Teams can be discussed in depth through the agent.
-        </td></tr>
-        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">5.</span>&nbsp; <strong>Snooze &#38; Feedback Loop (Dataverse).</strong> The Dataverse table <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">ProactiveAlerts</span> stores: alert_id, user_id, severity, content, status (pending / acknowledged / snoozed / dismissed), and created_at. The "Snooze" button on the Adaptive Card triggers a Power Automate flow that updates the status and schedules a follow-up check in 24 hours. "Dismissed" items feed back into classification tuning: if a user dismisses 5 "info" alerts in a week, the flow automatically reduces info alert frequency for that user. This is the learning loop that prevents notification fatigue.
+          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>Match the channel to the urgency.</strong> Not every alert deserves a Teams ping. Route by severity:
         </td></tr>
       </table>
 
-      <!-- Key Insight -->
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 14px 0;">
-        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
-          <strong style="color:#6B2FA0;">Key insight:</strong> The Copilot Studio agent itself is the simplest part of this build. The intelligence lives in the <strong>Power Automate scan flow</strong> (what to watch) and the <strong>Azure OpenAI classification</strong> (how urgent it is). Copilot Studio provides the conversational layer for follow-up &#8212; but the proactive value is delivered before anyone opens the chat.
+      <!-- Channel Strategy Diagram -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
+        <tr><td style="padding:14px 16px;">
+          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Channel Strategy</p>
+          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
+            &#128680; <strong>Push</strong> (Teams message) &#8212; high urgency, needs immediate attention<br>
+            &#128231; <strong>Digest</strong> (email summary) &#8212; informational, weekly cadence<br>
+            &#128161; <strong>Ambient</strong> (Viva Insights card) &#8212; awareness, no action required<br>
+            &#128172; <strong>Conversational</strong> (next chat) &#8212; low priority, surfaced when user engages
+          </p>
         </td></tr>
       </table>
 
-      <!-- Warning -->
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">4.</span>&nbsp; <strong>Build the feedback loop from Day 1.</strong> Track what users snooze, dismiss, and act on. If a user dismisses five "info" alerts in a row, reduce info alert frequency automatically. If they always act on "warning" items within an hour, consider promoting those to "push" channel. The proactive agent that learns user preferences is the one that survives past the pilot.
+        </td></tr>
+      </table>
+
+      <!-- Warning Callout -->
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF8E1;border-radius:4px;border:1px solid #FFE082;">
         <tr><td style="padding:10px 14px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#795548;line-height:1.5;">
-          <strong>&#9888; Build warning:</strong> Adaptive Card actions in Teams have a 60-second timeout for Action.Execute callbacks. If your "Snooze" flow takes longer than that, the user sees an error. Keep the snooze flow lightweight: update one Dataverse row and return. Do any heavy processing (rescheduling, recalculating) in a separate async flow triggered by the Dataverse update.
+          <strong>&#9888; Design warning:</strong> The biggest failure mode isn't building the wrong triggers &#8212; it's building too many. Start with exactly one trigger type (scheduled is the easiest). Prove that users engage with the alerts before adding event-driven or threshold triggers. A proactive agent that sends one useful alert per day beats one that sends ten alerts nobody reads.
         </td></tr>
       </table>
     </td></tr>
   </table>
 </td></tr>
 
-<!-- TRY THIS NOW -->
+<!-- WHERE THIS LANDS -->
 <tr><td class="content-block" style="padding:0 32px 24px 32px;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #D83B01;background:#FAFAFA;border-radius:0 6px 6px 0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #CA5010;background:#FAFAFA;border-radius:0 6px 6px 0;">
     <tr><td style="padding:20px 24px 12px 24px;">
-      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#D83B01;letter-spacing:1.5px;text-transform:uppercase;">&#128736; Try This Now</h2>
-    </td></tr>
-    <tr><td style="padding:0 24px 4px 24px;">
-      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:18px;font-weight:700;color:#1B1B3A;line-height:1.4;">Build a Weekly Health Check That Sends Itself</h3>
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#CA5010;letter-spacing:1.5px;text-transform:uppercase;">&#127942; Where This Pattern Lands</h2>
     </td></tr>
     <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
-
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
-        <tr>
-          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">1</span></td>
-          <td style="padding-left:8px;"><strong>Pick one SharePoint list with a due date column.</strong> Tasks, issues, action items &#8212; anything with dates. You need at least a few overdue items to make the demo compelling. If the list is clean, add some test rows with past-due dates. This is your minimum viable data source.</td>
-        </tr>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Project management &#38; PMOs</strong> &#8212; weekly health checks that surface overdue items, at-risk milestones, and resource conflicts before the Monday standup
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Compliance &#38; audit</strong> &#8212; threshold triggers on certificate expirations, policy violations, and regulatory deadlines that fire before the audit team arrives
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Finance &#38; procurement</strong> &#8212; budget burn rate alerts when spend crosses 80%, 90%, and 95% thresholds with escalating urgency
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>IT operations &#38; support</strong> &#8212; SLA breach warnings when ticket response times approach the threshold, sent to the on-call engineer via Teams
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Any organization</strong> where the most expensive failures are the ones nobody noticed until it was too late
+        </td></tr>
       </table>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
-        <tr>
-          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">2</span></td>
-          <td style="padding-left:8px;"><strong>Build the Power Automate scan flow.</strong> Recurrence trigger (weekly, Monday 8 AM). "Get items" from SharePoint filtered to <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">DueDate lt '@{utcNow()}'</span>. Compose the results into a JSON array. Add an HTTP action calling Azure OpenAI to generate a natural-language summary of the overdue items. This is your scan + classification in two steps.</td>
-        </tr>
-      </table>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
-        <tr>
-          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">3</span></td>
-          <td style="padding-left:8px;"><strong>Send an Adaptive Card to a Teams channel.</strong> Use the "Post adaptive card in a chat or channel" action. Include the AI-generated summary, a count of overdue items by severity, and two buttons: "Open List" (link to the SharePoint list) and "Ask the Agent" (deep-link to your Copilot Studio agent). Keep the card simple for the first iteration &#8212; a title, the summary, and the buttons.</td>
-        </tr>
-      </table>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
-        <tr>
-          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">4</span></td>
-          <td style="padding-left:8px;"><strong>Add a "Show my alerts" topic in your Copilot Studio agent.</strong> Create a topic triggered by "show my alerts" or "what did I miss" that calls a Power Automate flow to query the same overdue items. The agent summarizes them conversationally: "You have 3 overdue items this week. The most urgent is the compliance review, which was due Friday. Want me to open it?" Now your proactive card and reactive agent are connected.</td>
-        </tr>
-      </table>
-
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
-        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#444444;line-height:1.6;">
-          <strong style="color:#6B2FA0;">&#128161; The line that opens doors:</strong> "What if your team got a personalized project health check every Monday morning &#8212; without anyone having to ask for it?"
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF3E0;border-radius:6px;border:1px solid #FFCC80;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#5D4037;line-height:1.6;">
+          <strong>Positioning tip:</strong> Frame this as the difference between a search bar and a co-worker. A search bar waits for you to ask. A co-worker taps you on the shoulder and says "hey, you should look at this." Proactive agents are the shoulder tap. Customers who already have reactive agents are the perfect audience &#8212; this is their natural next step.
         </td></tr>
       </table>
     </td></tr>
   </table>
 </td></tr>
 
-<!-- CTA -->
+<!-- QUICK TIPS -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #107C10;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#107C10;letter-spacing:1.5px;text-transform:uppercase;">&#9889; Quick Tips</h2>
+    </td></tr>
+    <tr><td style="padding:4px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Scheduled triggers are the on-ramp.</strong> Event-driven and threshold triggers require connector setup and monitoring infrastructure. A scheduled Power Automate flow that runs daily at 8 AM requires nothing but a recurrence trigger and a data query. Start there. Always.
+        </td></tr>
+        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong><a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_006.html" style="color:#6B2FA0;text-decoration:underline;">Issue #006</a>'s Meeting-to-Knowledge Pipeline is already event-driven.</strong> If your customer built that pipeline, they already have the pattern &#8212; a new transcript triggers enrichment and indexing. Point this out as proof of concept: "You've already built a proactive trigger. Let's apply the same model to deadlines, budgets, and compliance."
+        </td></tr>
+        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Adaptive Cards are the delivery mechanism.</strong> Don't send plain text Teams messages. Adaptive Cards give you action buttons (Open, Snooze, Dismiss), severity badges, and structured layouts. They're the difference between an alert users glance at and one they act on.
+        </td></tr>
+        <tr><td style="padding:6px 0 3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#107C10;font-weight:bold;">&#10003;</span>&nbsp; <strong>Next issue (#015) builds this pattern end-to-end.</strong> We'll walk through Copilot Studio + Power Automate + Teams Adaptive Cards + Dataverse to build a working proactive agent. If you want to get ahead, pick one SharePoint list with a due date column &#8212; you'll need it.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- NEXT ISSUE CTA -->
 <tr><td class="content-block" style="padding:0 32px 24px 32px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
     <tr><td align="center" style="padding:20px 24px;">
