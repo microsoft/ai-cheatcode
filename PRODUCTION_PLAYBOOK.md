@@ -65,7 +65,7 @@ Starting with Issue #007, the series follows a two-issue arc model:
 **Rules for the cadence:**
 - Conceptual issue always drops first. Practical issue references it and links back.
 - Each pair is self-contained — either issue works standalone, but together they're a complete playbook.
-- The issue info bar gets a type tag: `ISSUE #008 · MAY 19 · 🧠 CONCEPTUAL PATTERN` or `🔧 PRACTICAL BUILD`
+- The issue info bar gets a type tag: `ISSUE #007 · MAY 5 · 🧠 CONCEPTUAL PATTERN` or `ISSUE #008 · MAY 12 · 🔧 PRACTICAL BUILD`
 - Practical issues intro paragraph links to the conceptual pair: *"Last issue, we named the pattern. This issue, we build it."*
 - Conceptual issues use sections: Pattern Breakdown + Where This Lands + Quick Tips
 - Practical issues use sections: Agent Spotlight (the build) + Pattern Breakdown (components in build order) + Try This Now
@@ -171,8 +171,9 @@ Same sequence every issue (↑↑↓↓←→←→ B A START), different glyphs
 | #005 | ^v<> | `^ v &lt; &gt;` |
 | #006 | ▴▾◂▸ | `&#9652; &#9662; &#9666; &#9656;` |
 | #007 | ⬆⬇⬅➡ | `&#11014; &#11015; &#11013; &#10145;` |
+| #008 | ⏶⏷⏴⏵ | `&#9206; &#9207; &#9204; &#9205;` |
 
-Future issues: pick new Unicode arrow/triangle variants. Plenty available: ⬆⬇⬅➡, ⏶⏷⏴⏵, ◀▶, ꜛꜜ, etc.
+Future issues: pick new Unicode arrow/triangle variants. Plenty available: ◀▶, ꜛꜜ, 🔼🔽, ⮝⮟⮜⮞, etc.
 
 ### Email Compatibility
 - All CSS must be inline (email clients strip `<head>` styles)
@@ -234,28 +235,28 @@ Email versions are 380–740 KB (vs 20–32 KB archive). This is well within int
 
 ## Issue History & Attribution
 
-| Issue | Pattern | Builder | Source |
-|-------|---------|---------|--------|
-| #001 | Code-First Agent Delivery | Cristiano Almeida Gonçalves | AIWF Team Meeting 3/18 |
-| #002 | Scoped Multi-Source Search | Raghav BN | 1:1 with Justin |
-| #003 | Prompt-Chained Triage + Playbooks | Raghav BN | 1:1 with Justin |
-| #004 | Secure In-Boundary Processing | Raghav BN | 1:1 with Justin |
-| #005 | Human-in-the-Loop Approval Gates | Pete Puustinen | AIWF Team Meeting 3/3 |
-| #006 | Meeting-to-Knowledge Pipeline | Pete Puustinen | AIWF Team Meeting 3/3 |
-| #007 | Holographic Memory | Tyson Dowd | 1:1 with Justin 3/24 |
-| #008 | Cross-Project Knowledge Agent (Copilot Studio) | Tyson Dowd | 1:1 with Justin 3/24 |
-| #008 | Adaptive Guardrails | TBD | Series Plan |
-| #010 | Building Adaptive Guardrails (Copilot Studio) | TBD | Series Plan |
-| #011 | Multi-Agent Handoff | TBD | Series Plan |
-| #012 | Building Multi-Agent Handoff (Copilot Studio) | TBD | Series Plan |
-| #013 | Persistent Agent Memory | TBD | Series Plan |
-| #014 | Building Persistent Memory (Copilot Studio) | TBD | Series Plan |
-| #015 | Proactive Agent Triggers | TBD | Series Plan |
-| #016 | Building Proactive Agents (Copilot Studio) | TBD | Series Plan |
-| #017 | Agent Evaluation & Trust Signals | TBD | Series Plan |
-| #018 | Building Agent Analytics (Copilot Studio) | TBD | Series Plan |
-| #019 | Custom Connector Patterns | TBD | Series Plan |
-| #020 | Building Custom Connectors (Copilot Studio) | TBD | Series Plan |
+| Issue | Type | Pattern | Builder | Source |
+|-------|------|---------|---------|--------|
+| #001 | — | Code-First Agent Delivery | Cristiano Almeida Gonçalves | AIWF Team Meeting 3/18 |
+| #002 | — | Scoped Multi-Source Search | Raghav BN | 1:1 with Justin |
+| #003 | — | Prompt-Chained Triage + Playbooks | Raghav BN | 1:1 with Justin |
+| #004 | — | Secure In-Boundary Processing | Raghav BN | 1:1 with Justin |
+| #005 | — | Human-in-the-Loop Approval Gates | Pete Puustinen | AIWF Team Meeting 3/3 |
+| #006 | — | Meeting-to-Knowledge Pipeline | Pete Puustinen | AIWF Team Meeting 3/3 |
+| #007 | 🧠 | Holographic Memory | Tyson Dowd | 1:1 with Justin 3/24 |
+| #008 | 🔧 | Cross-Project Knowledge Agent (Copilot Studio) | Tyson Dowd | 1:1 with Justin 3/24 |
+| #009 | 🧠 | Adaptive Guardrails | TBD | Series Plan |
+| #010 | 🔧 | Building Adaptive Guardrails (Copilot Studio) | TBD | Series Plan |
+| #011 | 🧠 | Multi-Agent Handoff | TBD | Series Plan |
+| #012 | 🔧 | Building Multi-Agent Handoff (Copilot Studio) | TBD | Series Plan |
+| #013 | 🧠 | Persistent Agent Memory | TBD | Series Plan |
+| #014 | 🔧 | Building Persistent Memory (Copilot Studio) | TBD | Series Plan |
+| #015 | 🧠 | Proactive Agent Triggers | TBD | Series Plan |
+| #016 | 🔧 | Building Proactive Agents (Copilot Studio) | TBD | Series Plan |
+| #017 | 🧠 | Agent Evaluation & Trust Signals | TBD | Series Plan |
+| #018 | 🔧 | Building Agent Analytics (Copilot Studio) | TBD | Series Plan |
+| #019 | 🧠 | Custom Connector Patterns | TBD | Series Plan |
+| #020 | 🔧 | Building Custom Connectors (Copilot Studio) | TBD | Series Plan |
 
 ---
 
@@ -277,10 +278,13 @@ The newsletter is distributed via email (Outlook). The 600px max-width, inline C
 Pete's meeting agent demo contained a universal pattern (approval gates) that applies far beyond meetings. Rather than burying it inside a meeting-specific issue, it was extracted as a standalone pattern-first issue (#005) with the meeting agent as just one example. The full agent walkthrough became #006.
 
 ### Why alternating Conceptual → Practical cadence
-Issue #007 produced two equally strong versions: an architectural pattern (Holographic Memory) and a Copilot Studio implementation (Cross-Project Knowledge Agent). Rather than choosing, we realized the series naturally alternates between "why this pattern exists" and "how to build it." Formalizing this as a two-issue arc gives readers the strategic framing one week and the tactical build the next. This also maps cleanly to Copilot Studio as the default implementation platform for practical issues — giving the series a consistent landing zone for CSAs.
+Starting with Issue #007, the series follows a two-issue arc model. Odd issues (🧠 Conceptual Pattern) name the pattern and explain the architecture; even issues (🔧 Practical Build) show how to build it step-by-step in Copilot Studio. This maps cleanly to Copilot Studio as the default implementation platform — giving the series a consistent landing zone for CSAs who want to act on what they learn immediately.
 
-### Why not rebrand Issues #001–007
-The alternating cadence starts at #008. Issues #001–007 are already published, distributed, and in recipients' inboxes. Retroactively adding "🧠 CONCEPTUAL" or "🔧 PRACTICAL" tags would break existing references, confuse readers, and imply a structure that wasn't there when they first read them. The retroactive classification in `series_plan/SERIES_ROADMAP.md` exists for internal planning only — it's not reader-facing. Issue #008's intro naturally introduces the cadence going forward.
+### Why not rebrand Issues #001–006
+The alternating cadence starts at #007. Issues #001–006 are already published, distributed, and in recipients' inboxes. Retroactively adding "🧠 CONCEPTUAL" or "🔧 PRACTICAL" tags would break existing references, confuse readers, and imply a structure that wasn't there when they first read them. The retroactive classification in `series_plan/SERIES_ROADMAP.md` exists for internal planning only — it's not reader-facing. Issue #007's intro naturally introduces the cadence going forward.
+
+### Why Issue #007 spawned the alternating cadence
+Issue #007 (Holographic Memory) produced two equally strong versions from a single 1:1 with Tyson Dowd: an architectural pattern and a Copilot Studio implementation. The conceptual version became #007 (🧠 Holographic Memory), the practical version became #008 (🔧 Cross-Project Knowledge Agent). This revealed that the series naturally alternates between "why this pattern exists" and "how to build it." Formalizing this as a two-issue arc gives readers the strategic framing one week and the tactical build the next.
 
 ### Why Copilot Studio as the default practical stack
 Copilot Studio + Power Automate + Azure AI Search covers the widest CSA audience. Most CSAs can build in this stack today without waiting for dev team engagement. Code-first patterns (Issue #001) remain valid but are positioned as the "advanced" path, not the default. This makes the practical issues immediately actionable for the broadest audience.
