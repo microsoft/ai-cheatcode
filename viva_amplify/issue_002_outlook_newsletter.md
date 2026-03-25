@@ -1,19 +1,26 @@
-# Issue #002 — Outlook Newsletter Version
+# Issue #002 — Outlook Newsletter Edition
 ## Scoped Multi-Source Search
 
 > **Edition title:** Scoped Multi-Source Search
+> **Series:** The Ch(e)at Code
 > **Schedule date:** March 30, 2026
-> **Header banner:** Use branded banner (704×396px) with Konami glyphs: ↑ ↑ ↓ ↓ ← → ← → B A START
 
 ---
 
-### BLOCK 1 — Text block (bold, centered)
+## Series Header Image
+
+Upload the branded banner (704px wide, 16:9 ratio) with:
+- Title: The Ch(e)at Code
+- Subtitle: Agent Patterns for Copilot Chat
+- Konami glyphs: ↑ ↑ ↓ ↓ ← → ← → B A START
+
+---
+
+## Section 1: Introduction
+
+### Component: Text & Image (text only)
 
 **ISSUE #002 · MARCH 30, 2026 · WEEKLY**
-
----
-
-### BLOCK 2 — Text block (Intro)
 
 If your customer has deployed Copilot or any RAG-based agent and the results feel shallow or noisy, this issue is for you. The problem isn't usually the model — it's that the search is too broad.
 
@@ -21,17 +28,18 @@ If your customer has deployed Copilot or any RAG-based agent and the results fee
 
 ---
 
-### BLOCK 3 — Section heading
+## Section 2: Agent Spotlight
 
-🎮 Agent Spotlight
+### Component 1: People
 
----
+| Field | Value |
+|---|---|
+| **Name** | Raghav BN |
+| **Title/Role** | CSA · Validated on live ADO work items |
 
-### BLOCK 4 — Text block
+### Component 2: Text & Image (text only)
 
-**The Work Item Triage Agent**
-
-*Built by Raghav BN · Validated on live ADO work items*
+### 🎮 Agent Spotlight: The Work Item Triage Agent
 
 **The scenario:** Your team receives work items that need to be classified, cross-referenced against historical context, and routed. The triage person spends most of their time not on the item itself but on searching for related information — digging through Teams channels, past tickets, office hours notes, field readiness threads. That search step is where scoped search changes everything.
 
@@ -39,25 +47,17 @@ Raghav built an agent that reads an ADO work item and automatically searches acr
 
 ---
 
-### BLOCK 5 — Section heading
+## Section 3: Pattern Breakdown
 
-🧩 Pattern Breakdown
+### Component 1: Text & Image
 
----
-
-### BLOCK 6 — Text block
-
-**Scoped Multi-Source Search**
+### 🧩 Pattern Breakdown: Scoped Multi-Source Search
 
 *Stop searching everything. Search the right things.*
 
 **Why broad search fails:** When an agent searches "everything for anything related," it returns hundreds of results, most irrelevant. The model wastes tokens processing noise, and the output quality drops. This is the #1 complaint CSAs hear about RAG implementations: "Copilot found the wrong stuff."
 
 **The fix is a two-step process:** First, analyze the input to understand what you're looking for. Then generate targeted search queries aimed at specific, known-relevant sources. The search is narrow by design.
-
----
-
-### BLOCK 7 — Text block (comparison)
 
 **❌ BROAD RAG:**
 "Search all documents for anything about Excel Copilot accuracy"
@@ -67,28 +67,21 @@ Raghav built an agent that reads an ADO work item and automatically searches acr
 "Search #copilot-feedback for Excel calculation errors after March 2026"
 → 12 highly relevant threads
 
----
-
-### BLOCK 8 — Text block (two-step approach)
-
 **The two-step approach:**
 
 1. Analyze the input → extract key entities + intent
 2. Generate scoped queries → target specific sources
 3. Search only those sources → high-relevance results
 
----
+### Component 2: Images
 
-### BLOCK 9 — Image block
+Upload: `diagrams/issue_002_query_routing_rich.png`
 
 | Field | Value |
 |---|---|
-| **Image file** | `diagrams/issue_002_query_routing_rich.png` |
 | **Alt text** | Scoped Multi-Source Search architecture: Query Analyzer routes intent to ADO, Graph API, and SharePoint with targeted queries, then merges and ranks results for Copilot Chat |
 
----
-
-### BLOCK 10 — Text block (scoping types)
+### Component 3: Text & Image (text only)
 
 **What "scoping" actually means:**
 
@@ -97,23 +90,17 @@ Raghav built an agent that reads an ADO work item and automatically searches acr
 - **Entity scoping** — search for the specific product, feature, or error type mentioned in the input
 - **Role scoping** — search conversations from people who would know about this topic
 
----
-
-### BLOCK 11 — Quote block (key insight)
+### Component 4: Styled Quote
 
 💜 **Key insight:** The first step in better search isn't improving the search engine. It's improving the *query*. When the agent analyzes the input before searching, the queries it generates are dramatically more precise than anything a human would type.
 
 ---
 
-### BLOCK 12 — Section heading
+## Section 4: Try This Now
 
-🔧 Try This Now
+### Component 1: Text & Image (text only)
 
----
-
-### BLOCK 13 — Text block
-
-**Fix a Customer's Noisy Search in One Conversation**
+### 🔧 Try This Now: Fix a Customer's Noisy Search in One Conversation
 
 1. **Identify the complaint.** "Copilot isn't finding the right information" or "search results aren't relevant" — these are scoped search problems in disguise.
 
@@ -123,21 +110,17 @@ Raghav built an agent that reads an ADO work item and automatically searches acr
 
 4. **Test the difference.** Run the same question through broad search and scoped search side by side. The quality gap is immediately obvious — and it's the best demo you can give.
 
----
-
-### BLOCK 14 — Quote block (positioning line)
+### Component 2: Styled Quote
 
 💡 **Positioning:** "The model isn't the problem — the search is. Let me show you what happens when we point the agent at the right sources instead of everything."
 
 ---
 
-### BLOCK 15 — Section heading
+## Section 5: Where This Pattern Lands
 
-🏆 Where This Pattern Lands
+### Component: Text & Image (text only)
 
----
-
-### BLOCK 16 — Text block
+### 🏆 Where This Pattern Lands
 
 - **Any Copilot deployment** where users say "it doesn't find the right stuff"
 - **Customer support** — search known KB articles and past tickets, not the whole SharePoint
@@ -149,32 +132,31 @@ Raghav built an agent that reads an ADO work item and automatically searches acr
 
 ---
 
-### BLOCK 17 — Text block (CTA + footer)
+## Section 6: Footer / CTA
+
+### Component: Text & Image (text only)
 
 **Next issue:** Prompt-Chained Triage + Playbook Orchestration — How to automate any read-classify-route workflow with configurable YAML playbooks.
 
-📦 Code sample for this issue: [github.com/microsoft/the-cheat-code/tree/main/samples/issue-002](https://github.com/microsoft/the-cheat-code/tree/main/samples/issue-002)
+📦 Code sample: [github.com/microsoft/the-cheat-code/samples/issue-002](https://github.com/microsoft/the-cheat-code/tree/main/samples/issue-002)
 
-Browse all issues at [aka.ms/the-cheat-code](https://aka.ms/the-cheat-code)
+Browse all issues: [aka.ms/the-cheat-code](https://aka.ms/the-cheat-code)
 
----
-
-### ATTACHMENT
-
-Attach the full PDF for the design-rich version:
-`issues/the_cheat_code_issue_002.pdf`
+*ABS Tech Strategy · AI Business Solutions*
 
 ---
 
 ## Outlook Newsletter Editor Checklist
 
-- [ ] Edition title set to "Scoped Multi-Source Search"
-- [ ] Header banner uploaded (704×396px with Konami glyphs)
-- [ ] Issue info bar is first text block (bold, centered)
-- [ ] All section headings use emoji prefixes (🎮, 🧩, 🔧, 🏆)
-- [ ] Architecture diagram uploaded as Image block
-- [ ] Callouts rendered as Quote blocks
-- [ ] Comparison (Broad vs Scoped) reads well as sequential text (not side-by-side)
-- [ ] PDF attached for full-fidelity version
-- [ ] Previewed in light + dark mode
+- [ ] Edition created under "The Ch(e)at Code" series
+- [ ] Edition title: "Scoped Multi-Source Search"
+- [ ] Header image shows branded banner with Konami glyphs (↑↓←→)
+- [ ] 6 sections added in order (Intro → Spotlight → Pattern → Try This → Lands → Footer)
+- [ ] **People** component used for Raghav BN attribution
+- [ ] Architecture diagram uploaded via Insert → Pictures
+- [ ] **Styled Quote** components for key insight and positioning callouts
+- [ ] Broad vs Scoped comparison reads well as sequential text (no side-by-side columns)
+- [ ] All hyperlinks working (aka.ms/the-cheat-code, code sample link)
+- [ ] Previewed in light mode, dark mode, and mobile
+- [ ] Recipients/subscribers configured
 - [ ] Scheduled for Monday AM, March 30
