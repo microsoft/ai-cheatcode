@@ -71,6 +71,12 @@ Issues are not standalone — patterns build on and reference each other:
 #019/#020 (Custom Connectors) — references #006 (custom Teams connector as example)
 ```
 
+## External Resources
+
+| Resource | Owner | Relevance | Link |
+|----------|-------|-----------|------|
+| Copilot Studio and Azure | Cristiano Almeida Gonçalves (builder of #001) | Labs, accelerators, and best practices for Copilot Studio + Azure AI. Directly complements newsletter patterns for AI Search, monitoring, custom connectors, and more. | [github.com/Azure/Copilot-Studio-and-Azure](https://github.com/Azure/Copilot-Studio-and-Azure) |
+
 ## How to Update This Registry
 
 When a new issue is sourced:

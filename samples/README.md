@@ -8,6 +8,22 @@ Each newsletter issue has a companion code sample in `samples/issue-NNN/`. Sampl
 | **Starter Kit** | Importable Copilot Studio solution + flows + data | ~30 min | CDX tenant or any M365 + Power Platform environment |
 | **Deployable Template** | `azd up` from zero to working demo | ~15 min | Azure subscription (+ M365 for Teams integration) |
 
+## External Reference: Copilot Studio and Azure Labs
+
+The **[Azure/Copilot-Studio-and-Azure](https://github.com/Azure/Copilot-Studio-and-Azure)** repo (by Cristiano Almeida Gonçalves, builder of Issue #001) provides hands-on labs and solution accelerators for Copilot Studio + Azure AI. Several labs directly complement our newsletter patterns:
+
+| Newsletter Issue | Related Lab / Accelerator | Link |
+|------------------|--------------------------|------|
+| #001 Code-First Agent Delivery | Lab 0.0: Create an Agent | [Lab 0.0](https://github.com/Azure/Copilot-Studio-and-Azure/tree/main/labs/0.0-create-an-agent) |
+| #002 Scoped Multi-Source Search | Lab 1.4: AI Search in Copilot Studio | [Lab 1.4](https://github.com/Azure/Copilot-Studio-and-Azure/tree/main/labs/1.4-ai-search) |
+| #003 Prompt-Chained Triage | Lab 1.1: Create Topics | [Lab 1.1](https://github.com/Azure/Copilot-Studio-and-Azure/tree/main/labs/1.1-create-topics) |
+| #007/#008 Holographic Memory | Lab 2.1: Advanced AI Search | [Lab 2.1](https://github.com/Azure/Copilot-Studio-and-Azure/tree/main/labs/2.1-ai-search-advanced) |
+| #007/#008 Holographic Memory | Lab 2.4: Foundry Agentic Retrieval | [Lab 2.4](https://github.com/Azure/Copilot-Studio-and-Azure/tree/main/labs/2.4-microsoft-foundry-agentic-retrieval) |
+| #017/#018 Evaluation & Analytics | Lab 1.7: Monitor with App Insights | [Lab 1.7](https://github.com/Azure/Copilot-Studio-and-Azure/tree/main/labs/1.7-monitoring) |
+| #019/#020 Custom Connectors | SharePoint Connector Accelerator | [Accelerator](https://github.com/Azure/Copilot-Studio-and-Azure/tree/main/accelerators/sharepoint-connector) |
+
+Also includes: [MCP integration](https://github.com/Azure/Copilot-Studio-and-Azure/tree/main/labs/1.3-MCP), [fine-tuned models](https://github.com/Azure/Copilot-Studio-and-Azure/tree/main/labs/2.2-Fine-Tunned-Model), [ALM](https://github.com/Azure/Copilot-Studio-and-Azure/tree/main/labs/1.6-application-lifecycle-management), [Video RAG accelerator](https://github.com/Azure/Copilot-Studio-and-Azure/tree/main/accelerators/Video-RAG), and [project scoping templates](https://github.com/Azure/Copilot-Studio-and-Azure/tree/main/docs).
+
 ## Quick Start
 
 1. Navigate to the issue folder: `samples/issue-NNN/`
