@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive: Code-First Agent Delivery — The Ch(e)at Code #001</title>
+<link rel="stylesheet" href="../shared/interactive.css">
+<style>
+  /* Issue-specific diagram styles (adapted from diagrams/issue_001_deployment.html) */
+  .canvas {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 36px;
+    padding: 0;
+  }
+  .zone {
+    border-radius: 16px;
+    padding: 24px 20px;
+    position: relative;
+    flex: 1;
+    min-width: 0;
+  }
+  .zone-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .zone-dev {
+    background: linear-gradient(135deg, #F5F0FA 0%, #EDE5F5 100%);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 20px rgba(107, 47, 160, 0.12);
+  }
+  .zone-dev .zone-label { color: #6B2FA0; }
+  .zone-azure {
+    background: linear-gradient(135deg, #EBF3FD 0%, #D6E8FA 100%);
+    border: 2px solid #0078D4;
+    box-shadow: 0 4px 20px rgba(0, 120, 212, 0.12);
+    flex: 1.3;
+  }
+  .zone-azure .zone-label { color: #0078D4; }
+  .zone-m365 {
+    background: linear-gradient(135deg, #F0EBF5 0%, #E5DCF0 100%);
+    border: 2px solid #6B2FA0;
+    box-shadow: 0 4px 20px rgba(107, 47, 160, 0.12);
+  }
+  .zone-m365 .zone-label { color: #6B2FA0; }
+  .component {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.08);
+    position: relative;
+  }
+  .component:last-child { margin-bottom: 0; }
+  .component-name {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .component-desc {
+    font-size: 12px;
+    color: #6B6B8D;
+    line-height: 1.4;
+  }
+  .component-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    color: white;
+  }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-green { background: #107C10; }
+  .icon-teal { background: #008272; }
+  .azure-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .azure-grid .component.full-width { grid-column: 1 / -1; }
+  .component.optional {
+    border: 2px dashed #999;
+    opacity: 0.7;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 4px;
+    color: white;
+  }
+  .badge-blue { background: #0078D4; }
+  .badge-green { background: #107C10; }
+  .lifecycle-badge {
+    position: absolute;
+    bottom: -8px;
+    right: 12px;
+    background: #107C10;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Connection rows */
+  .connections {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .conn-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #F8F8FC;
+    border-radius: 10px;
+    border: 1px solid #E8E8F0;
+    transition: opacity var(--transition-speed), transform var(--transition-speed);
+  }
+  .conn-arrow { font-size: 18px; color: #333; flex-shrink: 0; }
+  .conn-from, .conn-to {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .conn-from-purple { background: #F5F0FA; color: #6B2FA0; border: 1px solid #6B2FA0; }
+  .conn-from-blue { background: #EBF3FD; color: #0078D4; border: 1px solid #0078D4; }
+  .conn-label {
+    font-size: 12px;
+    color: #6B6B8D;
+    font-style: italic;
+    flex: 1;
+  }
+  .conn-dashed { border-style: dashed; }
+  .conn-dashed .conn-arrow { color: #999; }
+
+  @media (max-width: 900px) {
+    .canvas { flex-direction: column; gap: 20px; }
+    .azure-grid { grid-template-columns: 1fr; }
+    .conn-row { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="interactive-page">
+  <div class="page-header">
+    <a href="../../issues/the_cheat_code_issue_001.html" class="back-link">← Back to Issue #001</a>
+    <div class="issue-badge">Issue #001</div>
+    <h1>Code-First Agent Delivery</h1>
+    <p class="page-subtitle">VS Code → Azure → M365 Copilot Chat — Explore the deployment pipeline interactively</p>
+  </div>
+
+  <div class="diagram-canvas" id="diagram">
+    <div class="canvas canvas-responsive">
+      <!-- Zone 1: Developer Workstation -->
+      <div class="zone zone-dev" data-step="1"
+           data-tooltip="The developer's local environment — where agent code is authored and scaffolded"
+           data-expand-title="Developer Workstation"
+           data-expand-desc="The starting point for code-first agent delivery. Everything begins in VS Code with GitHub Copilot generating the agent scaffold."
+           data-expand-details='[{"heading":"Key Components","items":["VS Code + GitHub Copilot Chat — generates agent code from natural language","Teams Toolkit Extension — scaffolds, debugs locally, deploys via azd up","Bicep / IaC Templates — provisions Azure resources deterministically"]},{"heading":"Why Code-First?","items":["Full version control and CI/CD integration","Deterministic, repeatable deployments","Enterprise-grade security and compliance from day one"]}]'>
+        <div class="zone-label">
+          <span style="font-size:18px;">🖥</span>
+          Developer Workstation
+        </div>
+        <div class="component">
+          <div class="component-name">
+            <div class="component-icon icon-purple">⌨</div>
+            VS Code + GitHub Copilot Chat
+          </div>
+          <div class="component-desc">Primary development environment. Copilot generates agent code from natural language prompts.</div>
+        </div>
+        <div class="component">
+          <div class="component-name">
+            <div class="component-icon icon-purple">🧰</div>
+            Teams Toolkit Extension
+          </div>
+          <div class="component-desc">Scaffolding, local debug, and deployment via <code>azd up</code>. Manages app registration and manifest.</div>
+        </div>
+        <div class="component" style="position:relative;">
+          <div class="component-name">
+            <div class="component-icon icon-purple">📄</div>
+            Bicep / IaC Templates
+          </div>
+          <div class="component-desc">Infrastructure-as-Code definitions. Provision and tear down Azure resources deterministically.</div>
+          <div class="lifecycle-badge">azd up ↑ &nbsp; azd down ↓</div>
+        </div>
+      </div>
+
+      <!-- Zone 2: Azure Resource Group -->
+      <div class="zone zone-azure" data-step="2"
+           data-tooltip="Azure cloud resources — the agent's runtime infrastructure"
+           data-expand-title="Azure Resource Group"
+           data-expand-desc="The cloud infrastructure that powers the agent. Provisioned automatically via Bicep templates and azd up."
+           data-expand-details='[{"heading":"Core Services","items":["Azure Functions — serverless agent runtime, auto-scaling","Azure OpenAI — GPT-4o for prompt processing and response generation","Azure AI Search — vector + keyword hybrid search for document grounding","Azure Blob Storage — document store feeding the search index"]},{"heading":"Key Design Decisions","items":["All resources in a single resource group for lifecycle management","Managed identity for secure service-to-service auth","Customer-managed OpenAI deployment for data residency"]}]'>
+        <div class="zone-label">
+          <span style="font-size:18px;">☁️</span>
+          Azure Resource Group
+        </div>
+        <div class="azure-grid">
+          <div class="component full-width">
+            <div class="component-name">
+              <div class="component-icon icon-blue">⚡</div>
+              Azure Functions
+              <span class="badge badge-blue">Runtime</span>
+            </div>
+            <div class="component-desc">Agent execution runtime. Hosts the declarative agent's API plugin endpoints. Serverless, auto-scaling.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">
+              <div class="component-icon icon-blue">🧠</div>
+              Azure OpenAI
+            </div>
+            <div class="component-desc">GPT-4o language model. Processes prompts and generates responses.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">
+              <div class="component-icon icon-blue">🔍</div>
+              Azure AI Search
+            </div>
+            <div class="component-desc">Vector + keyword hybrid search. Grounds agent responses in customer documents.</div>
+          </div>
+          <div class="component full-width">
+            <div class="component-name">
+              <div class="component-icon icon-blue">🗄</div>
+              Azure Blob Storage
+            </div>
+            <div class="component-desc">Document store for PDFs, reports, and source materials. Feeds the AI Search index via integrated indexer.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zone 3: M365 Copilot Platform -->
+      <div class="zone zone-m365" data-step="3"
+           data-tooltip="Microsoft 365 Copilot — where end users interact with the agent"
+           data-expand-title="M365 Copilot Platform"
+           data-expand-desc="The user-facing layer. The agent appears in Copilot Chat within Microsoft Teams and M365 apps."
+           data-expand-details='[{"heading":"Components","items":["Copilot Chat — end-user interface in Teams and M365","Declarative Agent — Teams app manifest + OpenAPI plugin spec","Copilot Studio (Optional) — ZIP import path for low-code customization"]},{"heading":"User Experience","items":["Users interact through natural conversation","Agent capabilities defined by OpenAPI spec","No separate app install — lives inside existing Copilot Chat"]}]'>
+        <div class="zone-label">
+          <span style="font-size:18px;">🔮</span>
+          M365 Copilot Platform
+        </div>
+        <div class="component">
+          <div class="component-name">
+            <div class="component-icon icon-teal">💬</div>
+            Copilot Chat
+            <span class="badge badge-green">User-Facing</span>
+          </div>
+          <div class="component-desc">End-user interface in Microsoft Teams and M365. Users interact with the agent through natural conversation.</div>
+        </div>
+        <div class="component">
+          <div class="component-name">
+            <div class="component-icon icon-purple">📋</div>
+            Declarative Agent
+          </div>
+          <div class="component-desc">Teams app manifest + OpenAPI plugin spec. Defines agent capabilities, instructions, and API surface.</div>
+        </div>
+        <div class="component optional">
+          <div class="component-name">
+            <div class="component-icon" style="background:#999;color:white;">📦</div>
+            Copilot Studio
+            <span class="badge" style="background:#999;">Optional</span>
+          </div>
+          <div class="component-desc">ZIP import path. Export from VS Code → import into Studio for low-code teams to customize.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connection Legend -->
+    <div class="connections">
+      <div class="conn-row" data-step="4"
+           data-tooltip="The deployment flow: how code moves from developer machine to production">
+        <span class="conn-from conn-from-purple">VS Code + Copilot</span>
+        <span class="conn-arrow">→</span>
+        <span class="conn-label">Copilot generates full agent project scaffold from natural language</span>
+        <span class="conn-arrow">→</span>
+        <span class="conn-to conn-from-purple">Teams Toolkit</span>
+      </div>
+      <div class="conn-row" data-step="4">
+        <span class="conn-from conn-from-purple">Teams Toolkit</span>
+        <span class="conn-arrow">→</span>
+        <span class="conn-label"><code>azd up</code> — provisions Azure resources via Bicep, deploys Functions code, registers app</span>
+        <span class="conn-arrow">→</span>
+        <span class="conn-to conn-from-blue">Azure Resource Group</span>
+      </div>
+      <div class="conn-row" data-step="5">
+        <span class="conn-from conn-from-blue">Azure Functions</span>
+        <span class="conn-arrow">⇄</span>
+        <span class="conn-label">API Plugin (OpenAPI spec) — bidirectional request/response</span>
+        <span class="conn-arrow">⇄</span>
+        <span class="conn-to conn-from-purple">Declarative Agent</span>
+      </div>
+      <div class="conn-row conn-dashed" data-step="5">
+        <span class="conn-from conn-from-purple">Teams Toolkit</span>
+        <span class="conn-arrow" style="color:#999">⇢</span>
+        <span class="conn-label" style="color:#999">Optional: Export as ZIP → import into Copilot Studio for low-code customization</span>
+        <span class="conn-arrow" style="color:#999">⇢</span>
+        <span class="conn-to" style="background:#f0f0f0;color:#999;border:1px solid #999;font-size:12px;font-weight:600;padding:4px 8px;border-radius:6px;white-space:nowrap;">Copilot Studio</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="interactive-footer">
+  <p>The Ch(e)at Code · ABS Tech Strategy · <a href="https://aka.ms/the-cheat-code">Browse all issues</a></p>
+</div>
+
+<script src="../shared/interactive.js"></script>
+<script>
+  window.interactiveConfig = {
+    container: '#diagram',
+    steps: [
+      {
+        id: 'dev-workstation',
+        title: 'Author Agent Code in VS Code',
+        description: 'The journey starts at the developer workstation. GitHub Copilot Chat generates the full agent scaffold from a natural language prompt — the declarative agent manifest, API plugin spec, and Azure Functions code. Teams Toolkit manages the project structure.',
+        highlight: ['[data-step="1"]']
+      },
+      {
+        id: 'azure-resources',
+        title: 'Provision Azure Infrastructure',
+        description: 'A single "azd up" command provisions the entire Azure resource group — Functions runtime, OpenAI model, AI Search index, and Blob Storage. Everything is defined in Bicep templates, making deployments repeatable and auditable.',
+        highlight: ['[data-step="2"]']
+      },
+      {
+        id: 'm365-platform',
+        title: 'Agent Goes Live in Copilot Chat',
+        description: 'The agent surfaces inside Microsoft Teams and M365 Copilot Chat. Users interact through natural conversation — no separate app to install. The declarative agent manifest defines what the agent can do; the OpenAPI spec connects it to Azure Functions.',
+        highlight: ['[data-step="3"]']
+      },
+      {
+        id: 'deployment-flow',
+        title: 'The Deployment Pipeline',
+        description: 'Code flows from VS Code → Teams Toolkit → Azure. Copilot generates the scaffold, Teams Toolkit runs "azd up" to provision infrastructure and deploy code, and the app registration connects everything. One command, full deployment.',
+        highlight: ['[data-step="4"]']
+      },
+      {
+        id: 'runtime-connections',
+        title: 'Runtime: API Plugin Communication',
+        description: 'At runtime, the Declarative Agent in M365 communicates with Azure Functions through the OpenAPI plugin spec — bidirectional request/response. Optionally, the project can be exported as a ZIP and imported into Copilot Studio for low-code teams to customize.',
+        highlight: ['[data-step="5"]']
+      }
+    ]
+  };
+</script>
+</body>
+</html>

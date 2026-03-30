@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive: Prompt-Chained Triage — The Ch(e)at Code #003</title>
+<link rel="stylesheet" href="../shared/interactive.css">
+<style>
+  /* Issue-specific diagram styles (adapted from diagrams/issue_003_chain_sequence.html) */
+  .pipeline {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+  }
+
+  /* Input/Output blocks */
+  .input-block, .output-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 140px;
+    flex-shrink: 0;
+  }
+  .input-card {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    border-radius: 14px;
+    padding: 16px 12px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.12);
+  }
+  .input-card .label { font-size: 13px; font-weight: 700; color: #6B2FA0; }
+  .input-card .desc { font-size: 11px; color: #6B6B8D; margin-top: 4px; }
+  .output-card {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 2px solid #107C10;
+    border-radius: 14px;
+    padding: 16px 12px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(16,124,16,0.12);
+  }
+  .output-card .label { font-size: 13px; font-weight: 700; color: #107C10; }
+  .output-card .desc { font-size: 11px; color: #6B6B8D; margin-top: 4px; }
+
+  /* Arrows between steps */
+  .arrow-between {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .arrow-between .alabel { font-size: 10px; color: #6B6B8D; font-style: italic; max-width: 80px; text-align: center; line-height: 1.3; }
+  .arrow-between .arrow-h { display: flex; align-items: center; }
+  .arrow-between .arrow-h .shaft { width: 24px; height: 2px; background: #333; }
+  .arrow-between .arrow-h .head { width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 9px solid #333; }
+
+  /* Step zones */
+  .step-zone {
+    flex: 1;
+    border-radius: 16px;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .step-zone .zone-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .step-badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .zone-title { font-size: 16px; font-weight: 700; }
+  .zone-subtitle { font-size: 12px; color: #6B6B8D; margin-bottom: 12px; font-style: italic; }
+
+  .step-purple { background: linear-gradient(135deg, #F5F0FA, #EDE5F5); border: 2px solid #6B2FA0; box-shadow: 0 4px 16px rgba(107,47,160,0.10); }
+  .step-purple .step-badge { background: #6B2FA0; }
+  .step-purple .zone-title { color: #6B2FA0; }
+
+  .step-blue { background: linear-gradient(135deg, #EBF3FD, #D6E8FA); border: 2px solid #0078D4; box-shadow: 0 4px 16px rgba(0,120,212,0.10); }
+  .step-blue .step-badge { background: #0078D4; }
+  .step-blue .zone-title { color: #0078D4; }
+
+  .step-green { background: linear-gradient(135deg, #E8F5E9, #D4EDD5); border: 2px solid #107C10; box-shadow: 0 4px 16px rgba(16,124,16,0.10); }
+  .step-green .step-badge { background: #107C10; }
+  .step-green .zone-title { color: #107C10; }
+
+  .output-fields {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .output-fields li {
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .output-fields li:last-child { margin-bottom: 0; }
+  .field-icon { font-size: 14px; }
+  .field-label { font-weight: 600; }
+  .field-desc { font-size: 11px; color: #6B6B8D; }
+
+  .prompt-indicator {
+    position: absolute;
+    top: -12px;
+    right: 16px;
+    background: white;
+    border: 1px solid;
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .prompt-purple { border-color: #6B2FA0; color: #6B2FA0; }
+  .prompt-blue { border-color: #0078D4; color: #0078D4; }
+  .prompt-green { border-color: #107C10; color: #107C10; }
+
+  /* Playbook branch */
+  .playbook-branch {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+  }
+  .playbook-box {
+    background: linear-gradient(135deg, #FFF8E1, #FFF0CC);
+    border: 2px solid #CA5010;
+    border-radius: 14px;
+    padding: 18px 24px;
+    box-shadow: 0 4px 16px rgba(202,80,16,0.12);
+    max-width: 700px;
+    text-align: center;
+    width: 100%;
+  }
+  .playbook-box .pb-title { font-size: 14px; font-weight: 700; color: #CA5010; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .playbook-files {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .pb-file {
+    background: white;
+    border: 1px solid #E0C080;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Consolas', 'Monaco', monospace;
+    color: #8B6914;
+  }
+  .pb-file.custom { border: 2px dashed #107C10; color: #107C10; }
+
+  @media (max-width: 900px) {
+    .pipeline {
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    .input-block, .output-block { width: 100%; max-width: 300px; }
+    .step-zone { width: 100%; max-width: 400px; }
+    .arrow-between {
+      flex-direction: row;
+      padding: 8px 0;
+    }
+    .arrow-between .arrow-h { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="interactive-page">
+  <div class="page-header">
+    <a href="../../issues/the_cheat_code_issue_003.html" class="back-link">← Back to Issue #003</a>
+    <div class="issue-badge">Issue #003</div>
+    <h1>Prompt-Chained Triage</h1>
+    <p class="page-subtitle">3-Step Reasoning Chain with Runtime Playbook Loading</p>
+  </div>
+
+  <div class="diagram-canvas" id="diagram">
+    <div class="pipeline pipeline-responsive">
+      <!-- Input -->
+      <div class="input-block">
+        <div class="input-card" data-step="1"
+             data-tooltip="A raw bug report or feature request — unstructured text from Azure DevOps"
+             data-expand-title="New Work Item (Input)"
+             data-expand-desc="Raw, unstructured text from a bug report or feature request in Azure DevOps."
+             data-expand-details='[{"heading":"The Problem","items":["Work items arrive as unstructured text","Manual triage takes 15-30 minutes per item","Inconsistent categorization across team members","SLA tracking starts late because routing is slow"]},{"heading":"What the Chain Receives","items":["Title and description text","Any attached error logs or screenshots","Reporter metadata","Creation timestamp"]}]'>
+          <div class="label">📥 New Work Item</div>
+          <div class="desc">Raw bug report or feature request from Azure DevOps</div>
+        </div>
+      </div>
+
+      <div class="arrow-between">
+        <div class="alabel">Raw unstructured text</div>
+        <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+      </div>
+
+      <!-- Step 1: Extract -->
+      <div class="step-zone step-purple" data-step="2"
+           data-tooltip="Step 1: Parse raw text into structured fields using its own system prompt"
+           data-expand-title="Step 1: EXTRACT"
+           data-expand-desc="Parses unstructured bug report text into clean, structured fields using a dedicated system prompt."
+           data-expand-details='[{"heading":"Own System Prompt","items":["Each step in the chain has its OWN system prompt","Extract prompt is tuned for field identification","Does NOT classify or recommend — single responsibility"]},{"heading":"Output Fields","items":["Title — concise issue summary","Description — detailed problem statement","Affected Component — system area identification","Error Signatures — stack traces and error codes","Reproduction Steps — how to recreate the issue"]},{"heading":"Design Decision","items":["Separate extraction from classification","One prompt doing one job = higher accuracy","Structured JSON output for downstream consumption"]}]'>
+        <div class="prompt-indicator prompt-purple">📝 Own System Prompt</div>
+        <div class="zone-header">
+          <span class="step-badge">Step 1</span>
+          <span class="zone-title">EXTRACT</span>
+        </div>
+        <div class="zone-subtitle">Parse raw text into structured fields</div>
+        <ul class="output-fields">
+          <li><span class="field-icon">📌</span><span><span class="field-label">Title</span><br><span class="field-desc">Concise issue summary</span></span></li>
+          <li><span class="field-icon">📝</span><span><span class="field-label">Description</span><br><span class="field-desc">Detailed problem statement</span></span></li>
+          <li><span class="field-icon">🔧</span><span><span class="field-label">Affected Component</span><br><span class="field-desc">System area identification</span></span></li>
+          <li><span class="field-icon">⚠️</span><span><span class="field-label">Error Signatures</span><br><span class="field-desc">Stack traces, error codes</span></span></li>
+          <li><span class="field-icon">🔄</span><span><span class="field-label">Reproduction Steps</span><br><span class="field-desc">How to recreate the issue</span></span></li>
+        </ul>
+      </div>
+
+      <div class="arrow-between">
+        <div class="alabel">Structured JSON</div>
+        <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+      </div>
+
+      <!-- Step 2: Classify -->
+      <div class="step-zone step-blue" data-step="3"
+           data-tooltip="Step 2: Determine severity, category, team assignment, and SLA tier"
+           data-expand-title="Step 2: CLASSIFY"
+           data-expand-desc="Takes structured fields from Extract and applies classification rules to determine routing."
+           data-expand-details='[{"heading":"Own System Prompt","items":["Classification prompt is tuned for routing decisions","Receives structured input, not raw text","Can reference org-specific severity definitions"]},{"heading":"Output Fields","items":["Severity — P0 (critical) through P4 (low)","Category — Bug, Feature, Task, or Question","Team Assignment — owning team based on component","SLA Tier — response time requirement"]},{"heading":"Playbook Matching","items":["Classification output determines which playbook to load","Severity + Category = playbook key","This is where the chain branches to the YAML registry"]}]'>
+        <div class="prompt-indicator prompt-blue">📝 Own System Prompt</div>
+        <div class="zone-header">
+          <span class="step-badge">Step 2</span>
+          <span class="zone-title">CLASSIFY</span>
+        </div>
+        <div class="zone-subtitle">Determine severity, type, and routing</div>
+        <ul class="output-fields">
+          <li><span class="field-icon">🔴</span><span><span class="field-label">Severity</span><br><span class="field-desc">P0 (critical) → P4 (low)</span></span></li>
+          <li><span class="field-icon">🏷️</span><span><span class="field-label">Category</span><br><span class="field-desc">Bug / Feature / Task / Question</span></span></li>
+          <li><span class="field-icon">👥</span><span><span class="field-label">Team Assignment</span><br><span class="field-desc">Owning team based on component</span></span></li>
+          <li><span class="field-icon">⏱️</span><span><span class="field-label">SLA Tier</span><br><span class="field-desc">Response time requirement</span></span></li>
+        </ul>
+      </div>
+
+      <div class="arrow-between">
+        <div class="alabel">Classification + Playbook match</div>
+        <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+      </div>
+
+      <!-- Step 3: Recommend -->
+      <div class="step-zone step-green" data-step="4"
+           data-tooltip="Step 3: Generate actions by combining classification with matched playbook"
+           data-expand-title="Step 3: RECOMMEND"
+           data-expand-desc="Combines classification results with the matched YAML playbook to generate concrete actions."
+           data-expand-details='[{"heading":"Own System Prompt","items":["Recommendation prompt receives classification + playbook content","Generates actionable steps, not just analysis","Maps to real ADO field updates and assignments"]},{"heading":"Output Fields","items":["Suggested Assignee — best engineer based on expertise map","Required Fields — fields to populate per playbook rules","Escalation Path — who to notify if SLA is breached","Related Work Items — linked issues and dependencies"]},{"heading":"Key Insight","items":["Playbook is loaded at RUNTIME, not baked into the prompt","Customer can add, edit, or remove playbooks without touching agent code","No redeployment needed — just update the YAML file"]}]'>
+        <div class="prompt-indicator prompt-green">📝 Own System Prompt</div>
+        <div class="zone-header">
+          <span class="step-badge">Step 3</span>
+          <span class="zone-title">RECOMMEND</span>
+        </div>
+        <div class="zone-subtitle">Generate actions from classification + playbook</div>
+        <ul class="output-fields">
+          <li><span class="field-icon">👤</span><span><span class="field-label">Suggested Assignee</span><br><span class="field-desc">Best engineer based on expertise</span></span></li>
+          <li><span class="field-icon">📋</span><span><span class="field-label">Required Fields</span><br><span class="field-desc">Fields to populate per playbook</span></span></li>
+          <li><span class="field-icon">🔺</span><span><span class="field-label">Escalation Path</span><br><span class="field-desc">Who to notify if SLA breached</span></span></li>
+          <li><span class="field-icon">🔗</span><span><span class="field-label">Related Work Items</span><br><span class="field-desc">Linked issues and dependencies</span></span></li>
+        </ul>
+      </div>
+
+      <div class="arrow-between">
+        <div class="alabel">Actions applied</div>
+        <div class="arrow-h"><div class="shaft"></div><div class="head"></div></div>
+      </div>
+
+      <!-- Output -->
+      <div class="output-block">
+        <div class="output-card" data-step="5"
+             data-tooltip="The triaged work item — fields set, tags applied, assignee routed, SLA tracked"
+             data-expand-title="Triaged Work Item (Output)"
+             data-expand-desc="A fully triaged work item with all fields populated, assignee routed, and SLA clock started."
+             data-expand-details='[{"heading":"What Changed","items":["All structured fields populated from Extract","Severity, category, and team set from Classify","Assignee, escalation path, and related items from Recommend","Tags and SLA tracking applied automatically"]},{"heading":"Time Savings","items":["Manual triage: 15-30 minutes per item","Agent triage: under 30 seconds","Consistency: same rules applied every time","SLA clock starts immediately, not after human review"]}]'>
+          <div class="label">✅ Triaged Work Item</div>
+          <div class="desc">Fields set, tags applied, assignee routed, SLA tracked</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Playbook branch -->
+    <div class="playbook-branch">
+      <div class="playbook-box" data-step="4"
+           data-tooltip="Customer-owned YAML playbooks — add or edit without touching agent code"
+           data-expand-title="YAML Playbook Registry"
+           data-expand-desc="Decoupled playbook files loaded at runtime based on classification match. Customer-owned, no redeployment needed."
+           data-expand-details='[{"heading":"How It Works","items":["Step 2 (Classify) determines the playbook key","Step 3 (Recommend) loads the matching YAML file at runtime","Playbook defines: required fields, routing rules, escalation paths, response templates"]},{"heading":"Example Playbooks","items":["database-errors.yaml — DB-specific triage rules","ui-bugs.yaml — frontend issue routing","security-incidents.yaml — immediate escalation path","feature-requests.yaml — PM routing and backlog rules"]},{"heading":"Why YAML?","items":["Human-readable, no code knowledge needed","Version controlled alongside agent code","Easy to add customer-specific playbooks","No agent redeployment when playbooks change"]}]'>
+        <div class="pb-title">📋 YAML Playbook Registry <span style="font-size:11px;font-weight:400;color:#8B6914;">(loaded at runtime by classification match)</span></div>
+        <div class="playbook-files">
+          <div class="pb-file">database-errors.yaml</div>
+          <div class="pb-file">ui-bugs.yaml</div>
+          <div class="pb-file">feature-requests.yaml</div>
+          <div class="pb-file">security-incidents.yaml</div>
+          <div class="pb-file custom">+ custom-playbook.yaml</div>
+        </div>
+        <div style="margin-top:10px;font-size:12px;color:#8B6914;">
+          <strong>Customer-owned</strong> — add, edit, or remove playbooks without touching agent code.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="interactive-footer">
+  <p>The Ch(e)at Code · ABS Tech Strategy · <a href="https://aka.ms/the-cheat-code">Browse all issues</a></p>
+</div>
+
+<script src="../shared/interactive.js"></script>
+<script>
+  window.interactiveConfig = {
+    container: '#diagram',
+    steps: [
+      {
+        id: 'input',
+        title: 'Raw Work Item Arrives',
+        description: 'A new bug report or feature request lands in Azure DevOps — raw, unstructured text. Manual triage would take 15-30 minutes. The prompt chain will process it in under 30 seconds with consistent results every time.',
+        highlight: ['[data-step="1"]']
+      },
+      {
+        id: 'extract',
+        title: 'Step 1: EXTRACT — Parse Into Structure',
+        description: 'The first prompt in the chain has one job: parse raw text into structured fields. Title, description, affected component, error signatures, and reproduction steps. Each step has its OWN system prompt — single responsibility means higher accuracy.',
+        highlight: ['[data-step="2"]']
+      },
+      {
+        id: 'classify',
+        title: 'Step 2: CLASSIFY — Route and Prioritize',
+        description: 'The second prompt receives structured JSON (not raw text) and applies classification: severity (P0–P4), category (Bug/Feature/Task), team assignment, and SLA tier. This classification also determines which YAML playbook to load.',
+        highlight: ['[data-step="3"]']
+      },
+      {
+        id: 'recommend',
+        title: 'Step 3: RECOMMEND — Generate Actions',
+        description: 'The third prompt combines classification results with the matched YAML playbook to generate concrete actions: suggested assignee, required fields, escalation path, and related work items. The playbook is loaded at RUNTIME — customers can edit it without redeploying the agent.',
+        highlight: ['[data-step="4"]']
+      },
+      {
+        id: 'output',
+        title: 'Fully Triaged Work Item',
+        description: 'The output: a work item with every field populated, assignee routed, tags applied, and SLA clock started. What took a human 15-30 minutes now takes under 30 seconds — with the same rules applied consistently every time.',
+        highlight: ['[data-step="5"]']
+      }
+    ]
+  };
+</script>
+</body>
+</html>

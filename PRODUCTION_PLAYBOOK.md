@@ -619,3 +619,37 @@ HTML newsletter sections → Amplify web parts:
 - Quick Tips / Try This Now → Text web part (numbered lists)
 
 See `AMPLIFY_SETUP_GUIDE.md` for the full setup and authoring guide.
+
+## Interactive Companion Pages
+
+Each published issue can have an interactive companion page on GitHub Pages that brings the architecture diagram to life. These live in `interactive/issue-NNN/index.html`.
+
+### Features
+- **Step-through walkthrough**: Bottom bar with Previous/Next, keyboard arrows, narrative panels
+- **Hover tooltips**: `data-tooltip` attributes on diagram zones
+- **Click-to-expand**: Side panel with detailed component breakdown
+- **Entrance animations**: Zones fade in on scroll with staggered timing
+- **Responsive**: Works on mobile (unlike the 1680px static diagrams)
+- **Konami code**: Easter egg on every interactive page 🎮
+
+### Technology
+Vanilla JS + CSS animations. No npm, no build pipeline, no frameworks. Files are served directly by GitHub Pages.
+
+### File Structure
+```
+interactive/
+├── shared/interactive.css    # Animation + interaction styles
+├── shared/interactive.js     # Step-through engine + tooltips
+├── issue-NNN/index.html      # Per-issue interactive page
+└── README.md                 # Full creation guide
+```
+
+### Creating a New Interactive Page
+1. Copy an existing page: `cp interactive/issue-002/index.html interactive/issue-NNN/index.html`
+2. Replace CSS and HTML from the corresponding `diagrams/issue_NNN_*.html`
+3. Add `data-step`, `data-tooltip`, and `data-expand-*` attributes
+4. Define `window.interactiveConfig` with step narratives
+5. Add CTA link to newsletter HTML: `🔬 Explore this pattern interactively →`
+6. Add `🔬 Interactive` badge to `index.html`
+
+See `interactive/README.md` for the full guide with code examples.
