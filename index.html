@@ -196,6 +196,74 @@
   .footer .team { font-size: 13px; font-weight: 600; color: #1B1B3A; margin-bottom: 4px; }
   .footer .internal { font-size: 10px; color: #bbb; margin-top: 8px; }
 
+  /* Global nav */
+  .global-nav {
+    background: #1B1B3A;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    height: 48px;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 300;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .global-nav .nav-brand {
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    margin-right: 24px;
+    white-space: nowrap;
+  }
+  .global-nav .nav-brand:hover { color: #B8A9C9; }
+  .global-nav .nav-brand .brand-accent { color: #6B2FA0; }
+  .global-nav .nav-divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(255,255,255,0.15);
+    margin: 0 16px;
+    flex-shrink: 0;
+  }
+  .global-nav .nav-issues {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    overflow-x: auto;
+    flex: 1;
+  }
+  .global-nav .nav-issue-link {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+  }
+  .global-nav .nav-issue-link:hover {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.85);
+  }
+  .global-nav .nav-archive {
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: #6B2FA0;
+    white-space: nowrap;
+    margin-left: auto;
+  }
+  @media (max-width: 600px) {
+    .global-nav { padding: 0 12px; height: 44px; }
+    .global-nav .nav-brand { font-size: 13px; margin-right: 12px; }
+    .global-nav .nav-issue-link { font-size: 11px; padding: 5px 8px; }
+  }
+
   @media (max-width: 600px) {
     .content { padding: 20px; }
     .interactive-grid { grid-template-columns: 1fr; }
@@ -203,6 +271,16 @@
 </style>
 </head>
 <body>
+
+<nav class="global-nav" aria-label="Issue navigation">
+  <a class="nav-brand" href="index.html">The Ch<span class="brand-accent">(e)</span>at Code</a>
+  <div class="nav-divider"></div>
+  <div class="nav-issues">
+    <a class="nav-issue-link" href="interactive/issue-001/">#001 Code-First Delivery</a>
+    <a class="nav-issue-link" href="interactive/issue-002/">#002 Multi-Source Search</a>
+  </div>
+  <a class="nav-archive" href="index.html">📚 Archive</a>
+</nav>
 
 <div class="container">
   <div class="accent"></div>
