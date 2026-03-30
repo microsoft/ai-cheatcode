@@ -3,6 +3,102 @@
    Shared CSS for animations, tooltips, step-through bar
    ============================================================ */
 
+/* --- Global Navigation Bar --- */
+.global-nav {
+  background: var(--navy);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  gap: 0;
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.global-nav .nav-brand {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  margin-right: 24px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.global-nav .nav-brand:hover { color: #B8A9C9; }
+
+.global-nav .nav-brand .brand-accent {
+  color: var(--purple);
+}
+
+.global-nav .nav-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255,255,255,0.15);
+  margin: 0 16px;
+  flex-shrink: 0;
+}
+
+.global-nav .nav-issues {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  flex: 1;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.global-nav .nav-issues::-webkit-scrollbar { display: none; }
+
+.global-nav .nav-issue-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+.global-nav .nav-issue-link:hover {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.85);
+}
+.global-nav .nav-issue-link.active {
+  background: var(--purple);
+  color: white;
+}
+
+.global-nav .nav-archive {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  margin-left: auto;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.global-nav .nav-archive:hover {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+@media (max-width: 600px) {
+  .global-nav { padding: 0 12px; height: 44px; }
+  .global-nav .nav-brand { font-size: 13px; margin-right: 12px; }
+  .global-nav .nav-divider { margin: 0 8px; }
+  .global-nav .nav-issue-link { font-size: 11px; padding: 5px 8px; }
+  .global-nav .nav-archive { font-size: 11px; padding: 5px 8px; }
+}
+
 /* --- Reset & Base --- */
 *, *::before, *::after { box-sizing: border-box; }
 

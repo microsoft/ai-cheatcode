@@ -323,10 +323,71 @@
   }
 
   /* ========================================================
+     Global Navigation
+     ======================================================== */
+  const NAV_ISSUES = [
+    { num: '001', short: '#001', title: 'Code-First Delivery', path: '../issue-001/' },
+    { num: '002', short: '#002', title: 'Multi-Source Search', path: '../issue-002/' },
+    { num: '003', short: '#003', title: 'Prompt-Chained Triage', path: '../issue-003/' },
+  ];
+
+  function buildGlobalNav() {
+    // Detect current issue from URL
+    const match = window.location.pathname.match(/issue-(\d{3})/);
+    const currentIssue = match ? match[1] : null;
+
+    const nav = document.createElement('nav');
+    nav.className = 'global-nav';
+    nav.setAttribute('aria-label', 'Issue navigation');
+
+    // Brand
+    const brand = document.createElement('a');
+    brand.className = 'nav-brand';
+    brand.href = '../../index.html';
+    brand.innerHTML = 'The Ch<span class="brand-accent">(e)</span>at Code';
+
+    const divider = document.createElement('div');
+    divider.className = 'nav-divider';
+
+    // Issue links
+    const issueContainer = document.createElement('div');
+    issueContainer.className = 'nav-issues';
+
+    NAV_ISSUES.forEach(issue => {
+      const a = document.createElement('a');
+      a.className = 'nav-issue-link';
+      a.href = issue.path;
+      a.textContent = `${issue.short} ${issue.title}`;
+      a.title = `Issue ${issue.short}: ${issue.title}`;
+      if (issue.num === currentIssue) {
+        a.classList.add('active');
+        a.setAttribute('aria-current', 'page');
+      }
+      issueContainer.appendChild(a);
+    });
+
+    // Archive link
+    const archive = document.createElement('a');
+    archive.className = 'nav-archive';
+    archive.href = '../../index.html';
+    archive.textContent = '📚 All Issues';
+
+    nav.appendChild(brand);
+    nav.appendChild(divider);
+    nav.appendChild(issueContainer);
+    nav.appendChild(archive);
+
+    document.body.insertBefore(nav, document.body.firstChild);
+  }
+
+  /* ========================================================
      Init
      ======================================================== */
   function init() {
-    // Only init if config is defined by the page
+    // Global nav — always render
+    buildGlobalNav();
+
+    // Only init step engine if config is defined by the page
     if (typeof window.interactiveConfig === 'undefined') return;
 
     const config = window.interactiveConfig;
