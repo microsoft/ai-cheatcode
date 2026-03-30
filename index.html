@@ -153,6 +153,15 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(107, 47, 160, 0.15);
   }
+  .interactive-card.coming-soon {
+    opacity: 0.45;
+    pointer-events: none;
+    cursor: default;
+  }
+  .interactive-card.coming-soon:hover {
+    transform: none;
+    box-shadow: none;
+  }
   .interactive-card .card-num {
     font-family: Consolas, monospace;
     font-size: 11px;
@@ -314,6 +323,11 @@
         <div class="card-title">Scoped Multi-Source Search</div>
         <div class="card-cta">Explore →</div>
       </a>
+      <span class="interactive-card coming-soon">
+        <div class="card-num">#003</div>
+        <div class="card-title">Prompt-Chained Triage</div>
+        <div class="card-cta">Coming Apr 7</div>
+      </span>
     </div>
     <div class="feature-list">
       <span class="feature-tag">Step-through walkthrough</span>
