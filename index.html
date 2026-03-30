@@ -56,14 +56,14 @@
     letter-spacing: 0.5px;
   }
   .content { padding: 32px; }
-  .content p {
+  .content > p {
     font-size: 15px;
     color: #555;
     line-height: 1.7;
     margin-bottom: 24px;
   }
 
-  /* Issue table */
+  /* Section labels */
   .arc-label {
     font-size: 11px;
     font-weight: 700;
@@ -75,6 +75,8 @@
     border-bottom: 2px solid #F0ECF5;
   }
   .arc-label:first-child { margin-top: 0; }
+
+  /* Issue list */
   .issue-list { list-style: none; }
   .issue-item {
     display: flex;
@@ -118,15 +120,6 @@
     font-weight: 400;
     margin-top: 2px;
   }
-
-  .footer {
-    padding: 20px 32px;
-    border-top: 1px solid #e0e0e0;
-    text-align: center;
-  }
-  .footer p { font-size: 12px; color: #888; line-height: 1.5; margin: 0; }
-  .footer .team { font-size: 13px; font-weight: 600; color: #1B1B3A; margin-bottom: 4px; }
-  .footer .internal { font-size: 10px; color: #bbb; margin-top: 8px; }
   .issue-interactive {
     font-size: 10px;
     font-weight: 600;
@@ -138,6 +131,75 @@
     white-space: nowrap;
   }
   .issue-interactive:hover { background: #E5DCF0; text-decoration: none; }
+
+  /* Interactive showcase cards */
+  .interactive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .interactive-card {
+    background: linear-gradient(135deg, #F5F0FA 0%, #EDE5F5 100%);
+    border: 1px solid #E0D4EC;
+    border-radius: 10px;
+    padding: 16px;
+    text-decoration: none;
+    color: #1B1B3A;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: block;
+  }
+  .interactive-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(107, 47, 160, 0.15);
+  }
+  .interactive-card .card-num {
+    font-family: Consolas, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #6B2FA0;
+    margin-bottom: 4px;
+  }
+  .interactive-card .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .interactive-card .card-cta {
+    font-size: 11px;
+    color: #6B2FA0;
+    font-weight: 600;
+  }
+  .feature-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .feature-tag {
+    font-size: 10px;
+    font-weight: 600;
+    color: #6B6B8D;
+    background: #F0F0F5;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 20px 32px;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+  }
+  .footer p { font-size: 12px; color: #888; line-height: 1.5; margin: 0; }
+  .footer .team { font-size: 13px; font-weight: 600; color: #1B1B3A; margin-bottom: 4px; }
+  .footer .internal { font-size: 10px; color: #bbb; margin-top: 8px; }
+
+  @media (max-width: 600px) {
+    .content { padding: 20px; }
+    .interactive-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -157,6 +219,35 @@
     <p>
       Every issue features one reusable pattern for landing agents in Copilot Chat, extracted from real customer engagements.
     </p>
+
+    <!-- INTERACTIVE EXPERIENCES -->
+    <div class="arc-label">🔬 Interactive Experiences</div>
+    <p style="font-size:13px;color:#6B6B8D;margin-bottom:12px;line-height:1.5;">
+      Explore architecture patterns with step-by-step walkthroughs, hover tooltips, and click-to-expand details.
+    </p>
+    <div class="interactive-grid">
+      <a class="interactive-card" href="interactive/issue-001/">
+        <div class="card-num">#001</div>
+        <div class="card-title">Code-First Agent Delivery</div>
+        <div class="card-cta">Explore →</div>
+      </a>
+      <a class="interactive-card" href="interactive/issue-002/">
+        <div class="card-num">#002</div>
+        <div class="card-title">Scoped Multi-Source Search</div>
+        <div class="card-cta">Explore →</div>
+      </a>
+      <a class="interactive-card" href="interactive/issue-003/">
+        <div class="card-num">#003</div>
+        <div class="card-title">Prompt-Chained Triage</div>
+        <div class="card-cta">Explore →</div>
+      </a>
+    </div>
+    <div class="feature-list">
+      <span class="feature-tag">Step-through walkthrough</span>
+      <span class="feature-tag">Hover tooltips</span>
+      <span class="feature-tag">Click to expand</span>
+      <span class="feature-tag">Keyboard nav</span>
+    </div>
 
     <!-- PUBLISHED ISSUES -->
     <div class="arc-label">Published</div>
