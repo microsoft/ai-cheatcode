@@ -186,9 +186,9 @@ Future issues: pick new Unicode arrow/triangle variants. Plenty available: ◀�
 
 ## Step 5: Generate Email Version (Embedded Diagrams)
 
-The archive HTML (`issues/the_cheat_code_issue_NNN.html`) uses relative paths for diagrams, which work on GitHub Pages but **break in Outlook email**. Use the build script to create a self-contained email version with the diagram PNG base64-encoded inline.
+The archive HTML (`issues/the_cheat_code_issue_NNN.html`) uses relative paths for diagrams, which work on GitHub Pages but **break in Outlook email**. Use the build script to create email-ready outputs.
 
-### Build the email-ready HTML
+### Build the email files
 
 ```bash
 # Single issue
@@ -198,22 +198,32 @@ python3 scripts/build_email.py 001
 python3 scripts/build_email.py all
 ```
 
-Output goes to `issues/email/the_cheat_code_issue_NNN_email.html`. This file has:
-- Diagram PNG base64-encoded directly in the `<img>` tag (no external dependencies)
-- A "Can't see the diagram? View in archive →" fallback link below each image
+Output goes to `issues/email/` with two files per issue:
+- `the_cheat_code_issue_NNN_email.html` — base64-encoded diagram (browser preview)
+- `the_cheat_code_issue_NNN.eml` — CID inline attachment (open in Outlook)
 
-### Send from the email version
+### Send from the .eml file (recommended)
+
+1. Run `python3 scripts/build_email.py NNN`
+2. Double-click `issues/email/the_cheat_code_issue_NNN.eml` to open in Outlook
+3. Add recipients (To/CC) and your From address
+4. Verify the diagram renders inline
+5. Send
+
+The `.eml` file uses CID (Content-ID) inline attachments, which Outlook handles natively — the diagram travels with the email without relying on external URLs or base64 paste behavior.
+
+### Alternative: paste from HTML preview
 
 1. Open `issues/email/the_cheat_code_issue_NNN_email.html` in Chrome
 2. Verify the diagram renders
 3. Select All → Copy → Paste into Outlook compose
-4. Outlook converts the visible image to a CID inline attachment — the diagram travels with the email
+4. **Note:** Outlook may strip base64 images on paste. If the diagram is missing, use the `.eml` method above.
 
-**Always send from the `_email.html` version, never the archive version.**
+**Always send from the `issues/email/` outputs, never the archive version.**
 
 ### Size reference
 
-Email versions are 380–740 KB (vs 20–32 KB archive). This is well within internal Outlook limits. Each issue contains a single diagram (270–530 KB as PNG, ~33% larger when base64-encoded).
+Email versions are 380–740 KB (vs 20–32 KB archive). This is well within internal Outlook limits. Each issue contains a single diagram (270–530 KB as PNG). The `.eml` file is similar in size to the base64 HTML version.
 
 ---
 
@@ -229,7 +239,7 @@ Email versions are 380–740 KB (vs 20–32 KB archive). This is well within int
 - [ ] All callout boxes have appropriate styling
 - [ ] File size is reasonable (18–26K typical for archive; 380–740K for email version)
 - [ ] **Email version generated** (`python3 scripts/build_email.py NNN`)
-- [ ] **Diagram renders in email preview** (open `_email.html` in browser to verify)
+- [ ] **Diagram renders in .eml preview** (double-click `.eml` to verify in Outlook)
 
 ---
 
@@ -327,8 +337,8 @@ The newsletter goes out through three channels each week. Here's the workflow.
 
 ### Weekly Distribution Checklist
 - [ ] Generate email version (`python3 scripts/build_email.py NNN`)
-- [ ] Verify diagram renders (open `_email.html` in Chrome)
-- [ ] Send email version via Outlook (Monday AM)
+- [ ] Verify diagram renders (double-click `.eml` in Outlook)
+- [ ] Send `.eml` version via Outlook (Monday AM)
 - [ ] Post Viva Engage teaser (Monday PM / Tuesday AM)
 - [ ] Attach PDF to Engage post
 - [ ] Tag the builder (@mention) in Engage post
