@@ -328,6 +328,7 @@
   const NAV_ISSUES = [
     { num: '001', short: '#001', title: 'Code-First Delivery', path: '../issue-001/' },
     { num: '002', short: '#002', title: 'Multi-Source Search', path: '../issue-002/' },
+    { num: '003', short: '#003', title: 'Prompt-Chained Triage', path: '../issue-003/' },
   ];
 
   function buildGlobalNav() {
