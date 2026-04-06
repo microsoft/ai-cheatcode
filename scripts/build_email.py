@@ -100,6 +100,15 @@ def build_eml(padded: str, html: str) -> Path:
 
     cid_html = IMG_PATTERN.sub(_cid_replacer, html)
 
+    # Add signature spacer before </body>
+    sig_spacer = (
+        '\n<!-- SIGNATURE SPACE -->\n'
+        '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">'
+        '<tr><td style="padding:40px 10px 0 10px;">&nbsp;</td></tr>'
+        '</table>\n'
+    )
+    cid_html = cid_html.replace("</body>", sig_spacer + "</body>")
+
     # Extract subject from <title>
     title_match = TITLE_PATTERN.search(html)
     subject = title_match.group(1).strip() if title_match else f"The Ch(e)at Code — Issue #{padded}"
