@@ -326,8 +326,8 @@
      Global Navigation
      ======================================================== */
   const NAV_ISSUES = [
-    { num: '001', short: '#001', title: 'Code-First Delivery', path: '../issue-001/index.html' },
-    { num: '002', short: '#002', title: 'Multi-Source Search', path: '../issue-002/index.html' },
+    { num: '001', short: '#001', title: 'Code-First Agent Delivery', path: '../issue-001/index.html' },
+    { num: '002', short: '#002', title: 'Scoped Multi-Source Search', path: '../issue-002/index.html' },
     { num: '003', short: '#003', title: 'Prompt-Chained Triage', path: '../issue-003/index.html' },
   ];
 
