@@ -1,8 +1,8 @@
-# Copilot Instructions — The Ch(e)at Code
+# Copilot Instructions — The Cheat Code
 
 ## What This Is
 
-"The Ch(e)at Code" is an internal Microsoft newsletter distributed weekly to the ABS Tech Strategy team (AI Business Solutions). Each issue features a reusable agentic pattern for Copilot Chat, extracted from real customer engagements. The name is a play on "chat" (Copilot Chat) and "cheat" (cheat codes) — the Konami code motif appears subtly in every issue.
+"The Cheat Code" is an internal Microsoft newsletter distributed weekly to the ABS Tech Strategy team (AI Business Solutions). Each issue features a reusable agentic pattern for Copilot Chat, extracted from real customer engagements. The name is a play on "chat" (Copilot Chat) and "cheat" (cheat codes) — the Konami code motif appears subtly in every issue.
 
 ## Architecture
 

@@ -1,4 +1,4 @@
-# The Ch(e)at Code — Issue #001: Viva Amplify Version
+# The Cheat Code — Issue #001: Viva Amplify Version
 ## Code-First Agent Delivery
 
 > **Publish date:** March 23, 2026
@@ -10,7 +10,7 @@
 
 | Field | Value |
 |---|---|
-| **Title** | The Ch(e)at Code — Issue #001 |
+| **Title** | The Cheat Code — Issue #001 |
 | **Text above title** | ▲ ▲ ▼ ▼ ◀ ▶ ◀ ▶ B A START |
 | **Author** | Justin Preston |
 | **Show published date** | Yes |
@@ -26,7 +26,7 @@
 
 > **Agent Patterns for Copilot Chat · Issue #001 · Week of March 23, 2026**
 
-Welcome to The Ch(e)at Code — a weekly pattern library for landing agents in Copilot Chat. Each issue gives you one proven pattern, the scenario it solves, and the fastest path to landing it with customers.
+Welcome to The Cheat Code — a weekly pattern library for landing agents in Copilot Chat. Each issue gives you one proven pattern, the scenario it solves, and the fastest path to landing it with customers.
 
 **This issue's pattern:** How to handle large PDF files in agent scenarios. Enterprise customers have massive PDFs — regulatory filings, compliance reports, supply chain documentation — that exceed what standard agent configurations can process. Here's the pattern that solves it and how you can replicate it today.
 
@@ -174,7 +174,7 @@ This pattern was validated against a Coca-Cola scenario: large regulatory and co
 
 **Got an agent or pattern to share?** Reply to this email and you might be featured in Issue #002.
 
-*The Ch(e)at Code · AIWF Team · AI Business Solutions*
+*The Cheat Code · AIWF Team · AI Business Solutions*
 *Questions or ideas for the next issue? Reply to this email.*
 
 *Microsoft Internal · Not for external distribution*

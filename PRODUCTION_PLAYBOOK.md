@@ -1,8 +1,8 @@
-# The Ch(e)at Code — Production Playbook
+# The Cheat Code — Production Playbook
 
 ## How to Produce a New Issue
 
-This is the complete process for creating new issues of The Ch(e)at Code newsletter. Follow this playbook so you don't have to reinvent anything.
+This is the complete process for creating new issues of The Cheat Code newsletter. Follow this playbook so you don't have to reinvent anything.
 
 ---
 
@@ -273,7 +273,7 @@ Email versions are 380–740 KB (vs 20–32 KB archive). This is well within int
 ## Decision Log
 
 ### Why "Agent Patterns for Copilot Chat" (not "Agentic Patterns for CSAs")
-The name "The Ch(e)at Code" is a play on both "chat" (Copilot Chat) and "cheat" (cheat codes). The subtitle should reinforce the Copilot Chat landing goal, not just generically reference CSAs.
+The name "The Cheat Code" is a play on both "chat" (Copilot Chat) and "cheat" (cheat codes). The subtitle should reinforce the Copilot Chat landing goal, not just generically reference CSAs.
 
 ### Why patterns over agents
 The first draft of Issue #002 was a single "Special Edition: 4 Patterns" issue covering Raghav's entire triage agent. Justin's feedback: disaggregate. The patterns are what CSAs reuse — the agent is just one implementation. This led to the 3-issue split and established the principle that one agent demo often yields multiple standalone issues.
@@ -369,7 +369,7 @@ Rather than rebuilding layout block-by-block in the section editor, we render th
 
 1. Open New Outlook → **Newsletters** (or [outlook.office.com/newsletters](https://outlook.office.com/newsletters))
 2. Click **Create newsletter** (creates the series)
-3. Title: **"The Ch(e)at Code"**
+3. Title: **"The Cheat Code"**
 4. Description: "Weekly agent patterns for landing agents in Copilot Chat. Built by ABS Tech Strategy."
 5. Visibility: **My organization**
 6. Upload `viva_amplify/banner_header.png` as the series header image
@@ -392,7 +392,7 @@ cp issues/the_cheat_code_issue_NNN.html issues/the_cheat_code_issue_NNN_content.
 
 Replace CTA copy with: *"Got an agent or pattern to share? Respond back and you may be featured in the next issue!"* (no issue-specific links)
 
-Add a no-link team attribution footer (HR divider + "The Ch(e)at Code" / "ABS Tech Strategy · AI Business Solutions" / "Microsoft Internal · Not for external distribution").
+Add a no-link team attribution footer (HR divider + "The Cheat Code" / "ABS Tech Strategy · AI Business Solutions" / "Microsoft Internal · Not for external distribution").
 
 **Step 3: Render hi-def images**
 
@@ -414,12 +414,12 @@ Auto-crop both to content using Python (PIL) — scan from bottom for last non-b
 
 ### Per-Issue Assembly in Outlook Newsletters
 
-1. Click **Create edition** under "The Ch(e)at Code" series
+1. Click **Create edition** under "The Cheat Code" series
 2. Title: the pattern name (e.g., "Chat-First Agent Delivery")
 3. **Section 1 — Body:** Insert `_content.png` as an **Images** component
 4. **Section 2 — Interactive link:** Insert `_interactive_link.png` as an **Images** component → set image hyperlink to the interactive page or repo URL
 5. **Section 3 — Footer** (type directly in editor, no images):
-   - **The Ch(e)at Code**
+   - **The Cheat Code**
    - ABS Tech Strategy · AI Business Solutions
    - *Microsoft Internal · Not for external distribution*
    - Platform auto-appends unsubscribe and subscriber management links
@@ -442,7 +442,7 @@ Auto-crop both to content using Python (PIL) — scan from bottom for last non-b
 Each Engage post is a **teaser** — not the full newsletter. Structure:
 
 ```
-🎮 The Ch(e)at Code — Issue #[NNN]: [Pattern Name]
+🎮 The Cheat Code — Issue #[NNN]: [Pattern Name]
 
 [One-sentence customer problem hook]
 

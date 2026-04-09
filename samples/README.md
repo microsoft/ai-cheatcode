@@ -1,4 +1,4 @@
-# Code Samples for The Ch(e)at Code
+# Code Samples for The Cheat Code
 
 Each newsletter issue has a companion code sample in `samples/issue-NNN/`. Samples come in three tiers based on what the pattern requires:
 

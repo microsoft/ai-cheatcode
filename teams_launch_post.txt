@@ -1,6 +1,6 @@
-📬 Introducing: The Ch(e)at Code
+📬 Introducing: The Cheat Code
 
-Starting Monday, you'll get a weekly drop called The Ch(e)at Code — a pattern library for landing agents in Copilot Chat.
+Starting Monday, you'll get a weekly drop called The Cheat Code — a pattern library for landing agents in Copilot Chat.
 
 Each issue gives you one proven pattern, the customer scenario it solves, and step-by-step guidance to land it with a customer that week. No theory. No slide decks. Just patterns you can use immediately.
 

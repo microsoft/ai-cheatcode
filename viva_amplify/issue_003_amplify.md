@@ -1,4 +1,4 @@
-# The Ch(e)at Code — Issue #003: Viva Amplify Version
+# The Cheat Code — Issue #003: Viva Amplify Version
 ## Prompt-Chained Triage + Playbook Orchestration
 
 > **Publish date:** April 6, 2026
@@ -10,7 +10,7 @@
 
 | Field | Value |
 |---|---|
-| **Title** | The Ch(e)at Code — Issue #003 |
+| **Title** | The Cheat Code — Issue #003 |
 | **Text above title** | ⇑ ⇑ ⇓ ⇓ ⇐ ⇒ ⇐ ⇒ B A START |
 | **Author** | Justin Preston |
 | **Show published date** | Yes |
@@ -190,7 +190,7 @@ Executes steps, chains context, handles errors
 
 **Next issue:** Secure In-Boundary Processing — The architecture for customers who say "our data can't leave our tenant."
 
-*The Ch(e)at Code · AIWF Team · AI Business Solutions*
+*The Cheat Code · AIWF Team · AI Business Solutions*
 *Questions or ideas for the next issue? Reply to this email.*
 
 *Microsoft Internal · Not for external distribution*

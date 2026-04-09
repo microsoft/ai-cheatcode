@@ -13,7 +13,7 @@ Tag the builder so they can engage in comments.
 ISSUE #001 — MARCH 23, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #001: Code-First Agent Delivery
+🎮 The Cheat Code — Issue #001: Code-First Agent Delivery
 
 Your customer stores hundreds of large PDFs in SharePoint — regulatory filings, compliance docs, vendor contracts. Standard Copilot handles short docs well, but large PDFs need a different approach.
 
@@ -24,7 +24,7 @@ Built by: @Cristiano Almeida Gonçalves · Validated with Coca-Cola
 🔑 "Once you've built this for one customer, the next one takes minutes. The agent is a configurable asset — the only thing that changes between customers is the system prompt."
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ▲▲▼▼◄►◄► B A START
 
@@ -34,7 +34,7 @@ Built by: @Cristiano Almeida Gonçalves · Validated with Coca-Cola
 ISSUE #002 — MARCH 30, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #002: Scoped Multi-Source Search
+🎮 The Cheat Code — Issue #002: Scoped Multi-Source Search
 
 Your customer deployed Copilot and the results feel shallow or noisy. The problem isn't the model — it's that the search is too broad.
 
@@ -45,7 +45,7 @@ Built by: @Raghav BN · Validated on live ADO work items
 🔑 "The first step in better search isn't improving the search engine. It's improving the query. When the agent analyzes the input before searching, the queries it generates are dramatically more precise than anything a human would type."
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ↑↑↓↓←→←→ B A START
 
@@ -55,7 +55,7 @@ Built by: @Raghav BN · Validated on live ADO work items
 ISSUE #003 — APRIL 6, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #003: Prompt-Chained Triage + Playbook Orchestration
+🎮 The Cheat Code — Issue #003: Prompt-Chained Triage + Playbook Orchestration
 
 Last issue we fixed noisy search. This week: getting an agent to reason through a multi-step process instead of trying to do everything in a single prompt.
 
@@ -66,7 +66,7 @@ Built by: @Raghav BN · Part 2 of 3 from the Work Item Triage Agent
 🔑 "Each step narrows the problem space for the next. The search in step 2 is more precise because step 1 extracted structured fields. The classification in step 4 is more accurate because step 3 found relevant history."
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ⇑⇑⇓⇓⇐⇒⇐⇒ B A START
 
@@ -76,7 +76,7 @@ Built by: @Raghav BN · Part 2 of 3 from the Work Item Triage Agent
 ISSUE #004 — APRIL 13, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #004: Secure In-Boundary Processing
+🎮 The Cheat Code — Issue #004: Secure In-Boundary Processing
 
 "We can't use AI — our data can't leave our tenant." Legal, healthcare, financial services, government — you've heard this objection. It kills deals.
 
@@ -87,7 +87,7 @@ Built by: @Raghav BN · Part 3 of 3 from the Work Item Triage Agent
 🔑 "This isn't just about security — it's about removing the biggest objection to AI adoption in regulated industries. When you can demonstrate that zero data leaves the tenant, the conversation shifts from 'can we?' to 'where do we start?'"
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 △△▽▽◁▷◁▷ B A START
 
@@ -97,7 +97,7 @@ Built by: @Raghav BN · Part 3 of 3 from the Work Item Triage Agent
 ISSUE #005 — APRIL 20, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #005: Human-in-the-Loop Approval Gates
+🎮 The Cheat Code — Issue #005: Human-in-the-Loop Approval Gates
 
 Your customer loves the AI demo. Then someone asks: "But who checks what the AI produces before it goes out?" And the conversation stalls.
 
@@ -108,7 +108,7 @@ From: Pete Puustinen's Eggis Pharma engagement (Budapest Hackathon)
 🔑 "The AI does the work in seconds. A human confirms it in one click. Nothing goes live without that confirmation. That's how you get speed and trust."
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ^^vv<><> B A START
 
@@ -118,7 +118,7 @@ From: Pete Puustinen's Eggis Pharma engagement (Budapest Hackathon)
 ISSUE #006 — APRIL 27, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #006: Meeting-to-Knowledge Pipeline
+🎮 The Cheat Code — Issue #006: Meeting-to-Knowledge Pipeline
 
 A pharma customer had 20 project managers running multiple meetings per day — every single one required manual meeting minutes. Two agents. 2.5 days to build. Full pipeline from transcript to searchable knowledge base.
 
@@ -129,7 +129,7 @@ Built by: @Pete Puustinen · Validated with Eggis Pharma (Budapest Hackathon)
 🔑 "What if every meeting your team runs this week was automatically documented, approved by the project owner, and searchable by leadership by end of day — and we could build that together in two days?"
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ▴▴▾▾◂▸◂▸ B A START
 
@@ -139,7 +139,7 @@ Built by: @Pete Puustinen · Validated with Eggis Pharma (Budapest Hackathon)
 ISSUE #007 — MARCH 31, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #007: Holographic Memory
+🎮 The Cheat Code — Issue #007: Holographic Memory
 
 "We have AI tools everywhere now, but none of them remember what the others did." Your customer's knowledge is scattered across chats, repos, docs, and meetings — and no single agent can connect them.
 
@@ -150,7 +150,7 @@ Concept by: @Tyson Dowd · Discussed in 1:1 (March 24, 2026)
 🔑 "What if your team could ask one question and get an answer that connects decisions across every project — even when those projects were never explicitly linked?"
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ⬆⬆⬇⬇⬅➡⬅➡ B A START
 
@@ -160,7 +160,7 @@ Concept by: @Tyson Dowd · Discussed in 1:1 (March 24, 2026)
 ISSUE #008 — MAY 19, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #008: Adaptive Guardrails 🧠
+🎮 The Cheat Code — Issue #008: Adaptive Guardrails 🧠
 
 Your customer deployed an agent, and within a week security wanted it shut down. The guardrails were too rigid — blocking legitimate queries — or too loose — letting sensitive data through. Static rules don't scale.
 
@@ -169,7 +169,7 @@ This week's pattern: Adaptive Guardrails — a three-layer system (input filteri
 🔑 "The best guardrail is invisible when it's not needed and unmissable when it is."
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ⏶⏶⏷⏷⏴⏵⏴⏵ B A START
 
@@ -179,7 +179,7 @@ This week's pattern: Adaptive Guardrails — a three-layer system (input filteri
 ISSUE #009 — MAY 26, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #009: Building Adaptive Guardrails in Copilot Studio 🔧
+🎮 The Cheat Code — Issue #009: Building Adaptive Guardrails in Copilot Studio 🔧
 
 Last week we named the pattern. This week we build it — AI Builder classifier + conditional topics + Power Automate escalation, all in Copilot Studio.
 
@@ -188,7 +188,7 @@ This week's build: A three-tier safety layer that classifies every query as gene
 🔑 "What if your agent could tell the difference between 'What's the PTO policy?' and 'What's John's salary?' — and handle each one appropriately, automatically?"
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ◀◀▶▶▲▼▲▼ B A START
 
@@ -198,7 +198,7 @@ This week's build: A three-tier safety layer that classifies every query as gene
 ISSUE #010 — JUNE 2, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #010: Multi-Agent Handoff 🧠
+🎮 The Cheat Code — Issue #010: Multi-Agent Handoff 🧠
 
 Your customer has an HR agent and an IT agent. An employee asks the HR agent about laptop provisioning for a new hire. The agent says "I can't help with that." The employee gives up. Sound familiar?
 
@@ -207,7 +207,7 @@ This week's pattern: Multi-Agent Handoff — three patterns (cold, warm, hot tra
 🔑 "The moment your customer has two agents, they have the handoff problem. Solve it and you own the expansion conversation."
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ⮝⮝⮟⮟⮜⮞⮜⮞ B A START
 
@@ -217,7 +217,7 @@ This week's pattern: Multi-Agent Handoff — three patterns (cold, warm, hot tra
 ISSUE #011 — JUNE 9, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #011: Building Multi-Agent Handoff in Copilot Studio 🔧
+🎮 The Cheat Code — Issue #011: Building Multi-Agent Handoff in Copilot Studio 🔧
 
 Last week we named the handoff patterns. This week we build a two-agent HR/IT handoff with Dataverse session state and conversation summary passing.
 
@@ -226,7 +226,7 @@ This week's build: Out-of-scope detection + agent transfer + shared session cont
 🔑 "What if your employees could ask any agent any question and always get routed to the right one — without restarting the conversation?"
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ↟↟↡↡↞↠↞↠ B A START
 
@@ -236,7 +236,7 @@ This week's build: Out-of-scope detection + agent transfer + shared session cont
 ISSUE #012 — JUNE 16, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #012: Persistent Agent Memory 🧠
+🎮 The Cheat Code — Issue #012: Persistent Agent Memory 🧠
 
 Every conversation starts from zero. The agent helped configure Project Falcon last Tuesday — but today it has no memory of that interaction. Users repeat themselves constantly. This is the gap between "chatbot" and "assistant."
 
@@ -245,7 +245,7 @@ This week's pattern: Persistent Agent Memory — three memory tiers (conversatio
 🔑 "Memory is the feature that makes users say 'I can't go back.' Land this and the agent becomes sticky."
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ⇧⇧⇩⇩⇦⇨⇦⇨ B A START
 
@@ -255,7 +255,7 @@ This week's pattern: Persistent Agent Memory — three memory tiers (conversatio
 ISSUE #013 — JUNE 23, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #013: Building Persistent Memory in Copilot Studio 🔧
+🎮 The Cheat Code — Issue #013: Building Persistent Memory in Copilot Studio 🔧
 
 Last week we named the memory pattern. This week we build it — Dataverse memory table, "Remember" plugin action, "Recall" greeting topic, and memory hygiene flows.
 
@@ -264,7 +264,7 @@ This week's build: An agent that greets returning users with "Welcome back! Last
 🔑 "What if your agent remembered every user's preferences, project context, and past decisions — so no one ever had to repeat themselves?"
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ⤊⤊⤋⤋⬱⇻⬱⇻ B A START
 
@@ -274,7 +274,7 @@ This week's build: An agent that greets returning users with "Welcome back! Last
 ISSUE #014 — JUNE 30, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #014: Proactive Agent Triggers 🧠
+🎮 The Cheat Code — Issue #014: Proactive Agent Triggers 🧠
 
 Every agent today is reactive — it waits for the user to ask. But the most valuable behavior is proactive: "Your compliance cert expires in 14 days." "Three items from last week's meeting are still open." Users don't have to remember to ask.
 
@@ -283,7 +283,7 @@ This week's pattern: Proactive Agent Triggers — scheduled, event-driven, and t
 🔑 "Proactive agents save 10x the time of reactive agents — because users don't have to remember to ask."
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ⏶⏶⏷⏷⏴⏵⏴⏵ B A START
 
@@ -293,7 +293,7 @@ This week's pattern: Proactive Agent Triggers — scheduled, event-driven, and t
 ISSUE #015 — JULY 7, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #015: Building Proactive Agents with Copilot Studio 🔧
+🎮 The Cheat Code — Issue #015: Building Proactive Agents with Copilot Studio 🔧
 
 Last week we named the proactive trigger patterns. This week we build a weekly health check that sends itself — Power Automate scheduled flow, Azure OpenAI summarization, Teams Adaptive Cards with action buttons.
 
@@ -302,7 +302,7 @@ This week's build: A project health check that scans SharePoint for overdue item
 🔑 "What if your team got a personalized project health check every Monday morning — without anyone having to ask for it?"
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ꜛꜛꜜꜜ‹›‹› B A START
 
@@ -312,7 +312,7 @@ This week's build: A project health check that scans SharePoint for overdue item
 ISSUE #016 — JULY 14, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #016: Agent Evaluation & Trust Signals 🧠
+🎮 The Cheat Code — Issue #016: Agent Evaluation & Trust Signals 🧠
 
 "How do I know the agent is actually working?" The pilot shipped three weeks ago. Leadership wants ROI. The agent owner wants quality metrics. Users want confidence signals. Nobody has any of these.
 
@@ -321,7 +321,7 @@ This week's pattern: Agent Evaluation & Trust Signals — three evaluation layer
 🔑 "Without evaluation infrastructure, the 30-day conversation becomes anecdotal. This pattern turns anecdotes into dashboards — and dashboards into expansion funding."
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ▵▵▿▿◃▹◃▹ B A START
 
@@ -331,7 +331,7 @@ This week's pattern: Agent Evaluation & Trust Signals — three evaluation layer
 ISSUE #017 — JULY 21, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #017: Building Agent Analytics in Copilot Studio 🔧
+🎮 The Cheat Code — Issue #017: Building Agent Analytics in Copilot Studio 🔧
 
 Last week we named the evaluation pattern. This week we build the dashboard — Application Insights telemetry, Power BI visualizations, regression alerts, and user feedback capture.
 
@@ -340,7 +340,7 @@ This week's build: A 3-chart Power BI dashboard (daily users, confidence distrib
 🔑 "Right now, can you tell me how many people used your agent yesterday and whether the answers were good? This dashboard answers both in real-time."
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ⏫⏫⏬⏬⏪⏩⏪⏩ B A START
 
@@ -350,7 +350,7 @@ This week's build: A 3-chart Power BI dashboard (daily users, confidence distrib
 ISSUE #018 — JULY 28, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #018: Custom Connector Patterns 🧠
+🎮 The Cheat Code — Issue #018: Custom Connector Patterns 🧠
 
 The agent needs to call an internal API — a legacy ERP, a custom CRM, a proprietary compliance system. There's no pre-built connector. Graph API doesn't cover it. The project stalls at "we can't reach our data."
 
@@ -359,7 +359,7 @@ This week's pattern: Custom Connector Patterns — when to build a connector vs.
 🔑 "Custom connectors unlock the long tail of enterprise use cases — the 20% where the highest-value, most differentiated scenarios live."
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ⇑⇑⇓⇓⇐⇒⇐⇒ B A START
 
@@ -369,7 +369,7 @@ This week's pattern: Custom Connector Patterns — when to build a connector vs.
 ISSUE #019 — AUGUST 4, 2026
 ============================================================
 
-🎮 The Ch(e)at Code — Issue #019: Building Custom Connectors for Copilot Studio 🔧
+🎮 The Cheat Code — Issue #019: Building Custom Connectors for Copilot Studio 🔧
 
 Last week we named the connector patterns. This week we build one — OpenAPI spec, Power Platform connector, Copilot Studio plugin action, and Azure API Management gateway.
 
@@ -378,7 +378,7 @@ This week's build: Wrap any internal REST API in a custom connector and expose i
 🔑 "Your customer's most valuable data lives behind APIs that Copilot can't reach today. One custom connector changes that — and you can build it in an afternoon."
 
 📎 Full issue attached as PDF
-📬 Subscribe to The Ch(e)at Code in Outlook Newsletters for weekly delivery
+📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ⥣⥣⥥⥥⥢⥤⥢⥤ B A START
 

@@ -1,6 +1,6 @@
 # Interactive Companion Pages
 
-Each issue of The Ch(e)at Code can have an interactive companion page that brings the architecture diagram to life with animated flows, hover tooltips, click-to-expand detail panels, and a step-through narrative walkthrough.
+Each issue of The Cheat Code can have an interactive companion page that brings the architecture diagram to life with animated flows, hover tooltips, click-to-expand detail panels, and a step-through narrative walkthrough.
 
 ## Structure
 

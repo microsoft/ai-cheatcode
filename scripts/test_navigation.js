@@ -16,7 +16,7 @@ const { chromium } = require('playwright');
     // 1. Load index.html
     await page.goto(BASE + '/index.html', { waitUntil: 'domcontentloaded' });
     const title = await page.title();
-    log(title.includes('Ch(e)at Code') ? 'PASS' : 'FAIL', 'index.html loads: ' + title);
+    log(title.includes('Cheat Code') ? 'PASS' : 'FAIL', 'index.html loads: ' + title);
 
     // 2. Global nav on index
     const navBrand = await page.$('.global-nav .nav-brand');

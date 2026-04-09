@@ -1,6 +1,6 @@
-# Viva Amplify Setup Guide — The Ch(e)at Code
+# Viva Amplify Setup Guide — The Cheat Code
 
-> **Purpose:** Step-by-step instructions to create and manage "The Ch(e)at Code" as a Viva Amplify campaign, enabling one-click publishing to Outlook, SharePoint, Teams, and Viva Engage from a single authoring surface.
+> **Purpose:** Step-by-step instructions to create and manage "The Cheat Code" as a Viva Amplify campaign, enabling one-click publishing to Outlook, SharePoint, Teams, and Viva Engage from a single authoring surface.
 
 ---
 
@@ -22,7 +22,7 @@
 1. Open **Viva Amplify** from the Microsoft 365 app launcher or navigate to `amplify.microsoft.com`
 2. Click **+ New campaign**
 3. Configure:
-   - **Campaign name:** `The Ch(e)at Code — Agent Patterns for Copilot Chat`
+   - **Campaign name:** `The Cheat Code — Agent Patterns for Copilot Chat`
    - **Description:** Weekly newsletter covering agentic patterns that CSAs can quickly land with customers. Each issue highlights a pattern, the agent behind it, and how to reuse it.
    - **Campaign goal:** Enable and inform (select the closest match from Amplify's options)
 4. Click **Create**
@@ -40,7 +40,7 @@ In the campaign settings, add all target channels:
 
 ### SharePoint
 - Click **Add channel** → **SharePoint**
-- Select the target communication site (e.g., AIWF Team Site or a dedicated "The Ch(e)at Code" site)
+- Select the target communication site (e.g., AIWF Team Site or a dedicated "The Cheat Code" site)
 - The publication will appear as a news post on the site
 - Limit: Up to 10 SharePoint sites
 
@@ -62,11 +62,11 @@ In the campaign settings, add all target channels:
 1. In the campaign, click **+ New publication**
 2. Select the **Newsletter** template (built-in)
 3. Configure the **Title Area:**
-   - **Title:** `The Ch(e)at Code — Issue #001`
+   - **Title:** `The Cheat Code — Issue #001`
    - **Text above title:** `▲▲ ▼▼ ◄► ◄► B A START`
    - **Author:** Justin Preston (or the issue author)
    - **Show published date:** Yes
-   - **Title image:** Upload or select a branded header image (dark navy #1B1B3A background with "The Ch(e)at Code" text and Konami code — create as a 1200×300px banner image)
+   - **Title image:** Upload or select a branded header image (dark navy #1B1B3A background with "The Cheat Code" text and Konami code — create as a 1200×300px banner image)
 
 > **Tip:** The header banner image should be pre-created as a 1200×300px PNG with the newsletter branding. This replaces the dark HTML header from the email version.
 
@@ -128,7 +128,7 @@ After building Issue #001:
 
 1. Click the **...** menu in the publication editor
 2. Select **Save as template**
-3. Name it: `The Ch(e)at Code — Weekly Issue`
+3. Name it: `The Cheat Code — Weekly Issue`
 4. This template will be available for all future issues, pre-loaded with:
    - The title area layout and branding
    - Section structure (Agent Spotlight → Pattern Breakdown → rotating sections → Footer)
@@ -203,7 +203,7 @@ To fully brand the Amplify publications, prepare these images:
 | Architecture diagrams | 1680px wide (various heights) | Pattern Breakdown sections | ✅ Already in `diagrams/` |
 | Section accent icons (optional) | 48×48px | Visual markers for Agent Spotlight, Pattern Breakdown, etc. | Optional |
 
-> **Header banner tip:** Create a single reusable banner image with "The Ch(e)at Code" title and tagline on the dark navy (#1B1B3A) background. Update the Konami code glyphs per issue, or use a generic version with the series name only.
+> **Header banner tip:** Create a single reusable banner image with "The Cheat Code" title and tagline on the dark navy (#1B1B3A) background. Update the Konami code glyphs per issue, or use a generic version with the series name only.
 
 ---
 

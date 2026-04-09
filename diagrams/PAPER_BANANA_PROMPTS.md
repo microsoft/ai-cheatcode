@@ -1,5 +1,5 @@
 # Paper Banana Diagram Prompts
-# The Ch(e)at Code — Architecture Diagram Library
+# The Cheat Code — Architecture Diagram Library
 #
 # HOW TO USE:
 # 1. Go to https://paper-banana.org/
@@ -8,7 +8,7 @@
 # 4. Resolution: High
 # 5. Format: PNG
 # 6. Paste each prompt below into the text field
-# 7. Generate → download → save to The Ch(e)at Code/diagrams/
+# 7. Generate → download → save to The Cheat Code/diagrams/
 #
 # BRANDING NOTES FOR ALL DIAGRAMS:
 # - Use Microsoft's Fluent Design color palette: Blue (#0078D4), Purple (#6B2FA0),

@@ -1,4 +1,4 @@
-# The Ch(e)at Code — Issue #005: Viva Amplify Version
+# The Cheat Code — Issue #005: Viva Amplify Version
 ## Human-in-the-Loop Approval Gates
 
 > **Publish date:** April 20, 2026
@@ -10,7 +10,7 @@
 
 | Field | Value |
 |---|---|
-| **Title** | The Ch(e)at Code — Issue #005 |
+| **Title** | The Cheat Code — Issue #005 |
 | **Text above title** | ^ ^ v v < > < > B A START |
 | **Author** | Justin Preston |
 | **Show published date** | Yes |
@@ -148,7 +148,7 @@ This one is simple: **every single agent you build or pitch should have an appro
 
 **Got an agent or pattern to share?** Reply to this email and you might be featured in a future issue.
 
-*The Ch(e)at Code · AIWF Team · AI Business Solutions*
+*The Cheat Code · AIWF Team · AI Business Solutions*
 *Questions or ideas for the next issue? Reply to this email.*
 
 *Microsoft Internal · Not for external distribution*

@@ -1,4 +1,4 @@
-# The Ch(e)at Code
+# The Cheat Code
 
 <div align="center">
 
@@ -26,7 +26,7 @@
 
 ## What Is This?
 
-The Ch(e)at Code is a weekly internal newsletter that extracts **reusable agentic patterns** from real Microsoft customer engagements. The name is a play on "chat" (Copilot Chat) and "cheat" (cheat codes) — every issue is a cheat code for building AI agents faster.
+The Cheat Code is a weekly internal newsletter that extracts **reusable agentic patterns** from real Microsoft customer engagements. The name is a play on "chat" (Copilot Chat) and "cheat" (cheat codes) — every issue is a cheat code for building AI agents faster.
 
 The Konami code (↑ ↑ ↓ ↓ ← → ← → B A START) appears as a subtle easter egg in every issue, rendered in near-invisible 8px monospace — a nod to the original cheat codes that gave you an unfair advantage.
 
@@ -39,7 +39,7 @@ Starting with Issue #008, the series alternates between:
 
 | Element | Value |
 |---------|-------|
-| **Name** | The Ch(e)at Code — parentheses around the "e" are part of the mark |
+| **Name** | The Cheat Code — parentheses around the "e" are part of the mark |
 | **Tagline** | Agent Patterns for Copilot Chat |
 | **Primary color** | Purple `#6B2FA0` — represents AI agents throughout |
 | **Header color** | Dark navy `#1B1B3A` |

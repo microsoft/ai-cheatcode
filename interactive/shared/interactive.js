@@ -1,5 +1,5 @@
 /**
- * The Ch(e)at Code — Interactive Step-Through Engine
+ * The Cheat Code — Interactive Step-Through Engine
  * Vanilla JS, zero dependencies. Progressive enhancement.
  */
 

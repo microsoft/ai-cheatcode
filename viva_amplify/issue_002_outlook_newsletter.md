@@ -2,7 +2,7 @@
 ## Scoped Multi-Source Search
 
 > **Edition title:** Scoped Multi-Source Search
-> **Series:** The Ch(e)at Code
+> **Series:** The Cheat Code
 > **Schedule date:** March 30, 2026
 
 ---
@@ -10,7 +10,7 @@
 ## Series Header Image
 
 Upload the branded banner (704px wide, 16:9 ratio) with:
-- Title: The Ch(e)at Code
+- Title: The Cheat Code
 - Subtitle: Agent Patterns for Copilot Chat
 - Konami glyphs: ↑ ↑ ↓ ↓ ← → ← → B A START
 
@@ -148,7 +148,7 @@ Browse all issues: [aka.ms/the-cheat-code](https://aka.ms/the-cheat-code)
 
 ## Outlook Newsletter Editor Checklist
 
-- [ ] Edition created under "The Ch(e)at Code" series
+- [ ] Edition created under "The Cheat Code" series
 - [ ] Edition title: "Scoped Multi-Source Search"
 - [ ] Header image shows branded banner with Konami glyphs (↑↓←→)
 - [ ] 6 sections added in order (Intro → Spotlight → Pattern → Try This → Lands → Footer)

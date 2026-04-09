@@ -1,4 +1,4 @@
-# The Ch(e)at Code — Issue #006: Viva Amplify Version
+# The Cheat Code — Issue #006: Viva Amplify Version
 ## Meeting-to-Knowledge Pipeline
 
 > **Publish date:** April 27, 2026
@@ -10,7 +10,7 @@
 
 | Field | Value |
 |---|---|
-| **Title** | The Ch(e)at Code — Issue #006 |
+| **Title** | The Cheat Code — Issue #006 |
 | **Text above title** | ▴ ▴ ▾ ▾ ◂ ▸ ◂ ▸ B A START |
 | **Author** | Justin Preston |
 | **Show published date** | Yes |
@@ -175,7 +175,7 @@ Last issue, we covered the approval gate pattern. This issue, we show you the fu
 
 **Got an agent or pattern to share?** Reply to this email and you might be featured in a future issue.
 
-*The Ch(e)at Code · AIWF Team · AI Business Solutions*
+*The Cheat Code · AIWF Team · AI Business Solutions*
 *Questions or ideas for the next issue? Reply to this email.*
 
 *Microsoft Internal · Not for external distribution*

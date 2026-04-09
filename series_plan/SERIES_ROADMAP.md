@@ -1,4 +1,4 @@
-# The Ch(e)at Code — Series Roadmap
+# The Cheat Code — Series Roadmap
 
 ## Cadence: Conceptual → Practical (Alternating Weeks)
 

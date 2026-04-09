@@ -1,4 +1,4 @@
-# The Ch(e)at Code — Issue #002: Viva Amplify Version
+# The Cheat Code — Issue #002: Viva Amplify Version
 ## Scoped Multi-Source Search
 
 > **Publish date:** March 30, 2026
@@ -10,7 +10,7 @@
 
 | Field | Value |
 |---|---|
-| **Title** | The Ch(e)at Code — Issue #002 |
+| **Title** | The Cheat Code — Issue #002 |
 | **Text above title** | ↑ ↑ ↓ ↓ ← → ← → B A START |
 | **Author** | Justin Preston |
 | **Show published date** | Yes |
@@ -169,7 +169,7 @@ Raghav built an agent that reads an ADO work item and automatically searches acr
 
 **Next issue:** Prompt-Chained Triage + Playbook Orchestration — How to automate any read-classify-route workflow with configurable YAML playbooks.
 
-*The Ch(e)at Code · AIWF Team · AI Business Solutions*
+*The Cheat Code · AIWF Team · AI Business Solutions*
 *Questions or ideas for the next issue? Reply to this email.*
 
 *Microsoft Internal · Not for external distribution*

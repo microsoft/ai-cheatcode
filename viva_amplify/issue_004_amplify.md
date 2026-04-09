@@ -1,4 +1,4 @@
-# The Ch(e)at Code — Issue #004: Viva Amplify Version
+# The Cheat Code — Issue #004: Viva Amplify Version
 ## Secure In-Boundary Processing
 
 > **Publish date:** April 13, 2026
@@ -10,7 +10,7 @@
 
 | Field | Value |
 |---|---|
-| **Title** | The Ch(e)at Code — Issue #004 |
+| **Title** | The Cheat Code — Issue #004 |
 | **Text above title** | △ △ ▽ ▽ ◁ ▷ ◁ ▷ B A START |
 | **Author** | Justin Preston |
 | **Show published date** | Yes |
@@ -159,7 +159,7 @@ Raghav's agent solves this by using MCP (Model Context Protocol) connectors to a
 
 **Got an agent or pattern to share?** Reply to this email and you might be featured in Issue #005.
 
-*The Ch(e)at Code · AIWF Team · AI Business Solutions*
+*The Cheat Code · AIWF Team · AI Business Solutions*
 *Questions or ideas for the next issue? Reply to this email.*
 
 *Microsoft Internal · Not for external distribution*
