@@ -346,72 +346,94 @@ The newsletter goes out through three channels each week. Here's the workflow.
 
 ---
 
-## Outlook Newsletter Adaptation Guide
+## Outlook Newsletter Production Workflow
 
-Outlook Newsletters (New Outlook → Newsletters tab, or [outlook.office.com/newsletters](https://outlook.office.com/newsletters)) is a section-based editor — you **cannot** import custom HTML. Content must be rebuilt using sections and components.
+Outlook Newsletters (New Outlook → Newsletters tab, or [outlook.office.com/newsletters](https://outlook.office.com/newsletters)) manages subscriptions, back-issue catalog, and analytics natively. Each edition is assembled from pre-rendered hi-def images plus a live footer added directly in the editor.
 
 **Platform reference:** [learn.microsoft.com/en-us/microsoft-365-apps/outlook/manage/newsletters](https://learn.microsoft.com/en-us/microsoft-365-apps/outlook/manage/newsletters)
 
-### Key Concepts
+### Approach: Image-First
 
-- **Newsletter series** — the recurring publication (create once: "The Ch(e)at Code")
-- **Edition** — a single issue within the series
-- **Section** — a building block of an edition; each section can hold multiple components
-- **Components** — content elements within a section:
-  - **Text & Image** — text with optional inline image
-  - **Images** — standalone image (upload or stock)
-  - **Styled Quote** — callout/emphasis block
-  - **People** — feature a contributor (name, photo, title)
+Rather than rebuilding layout block-by-block in the section editor, we render the newsletter body as a high-definition image (1200px x 144 DPI) and insert it directly. The platform handles the header banner, subscription management, back-issue catalog, and unsubscribe footer natively.
+
+**Assets per issue:**
+
+| File | Description |
+|---|---|
+| `issues/the_cheat_code_issue_NNN_content.html` | Forked HTML — no nav, no header, no footer, interactive link removed |
+| `issues/the_cheat_code_issue_NNN_content.png` | Hi-def body image (1200px @ 144 DPI) |
+| `issues/the_cheat_code_issue_NNN_interactive_link.png` | Standalone interactive link button image |
+| `viva_amplify/banner_header.png` | Series-level header banner (set once, reused every issue) |
 
 ### One-Time Setup
 
-1. Open New Outlook → **Newsletters** in the navigation bar (or [outlook.office.com/newsletters](https://outlook.office.com/newsletters))
-2. Click **Create newsletter** (this creates the *series*)
+1. Open New Outlook → **Newsletters** (or [outlook.office.com/newsletters](https://outlook.office.com/newsletters))
+2. Click **Create newsletter** (creates the series)
 3. Title: **"The Ch(e)at Code"**
 4. Description: "Weekly agent patterns for landing agents in Copilot Chat. Built by ABS Tech Strategy."
-5. Visibility: **My organization** (anyone in org can find and subscribe)
-6. Upload header image (704px wide, 16:9 ratio) — branded banner with title, subtitle, Konami glyphs baked in
-7. Upload logo (1:1 ratio) — purple chat bubble or Konami arrows icon
-8. Enable **Subscriptions** toggle
-9. Add co-owners (at least 2 owners required)
+5. Visibility: **My organization**
+6. Upload `viva_amplify/banner_header.png` as the series header image
+7. Enable **Subscriptions** toggle
+8. Add co-owners (minimum 2 required)
 
-### Section Mapping (HTML → Outlook Newsletter)
+### Generating Per-Issue Assets
 
-| HTML Section | Outlook Section → Component | Notes |
-|---|---|---|
-| Dark header + Konami code | **Header image** (704×396px, set at series level) | Bake title, subtitle, and Konami glyphs into one banner image |
-| Issue info bar | **Section 1** → **Text & Image** (text only) | Bold centered: "ISSUE #NNN · DATE · WEEKLY" |
-| Intro paragraphs | Same section, continue text | Copy directly. Bold "This issue's pattern:" |
-| Agent Spotlight (purple border) | **Section 2** → **Text & Image** | Section heading: "🎮 Agent Spotlight". Use **People** component for builder attribution. Then text with scenario/solution. |
-| Pattern Breakdown (blue border) | **Section 3** → **Text & Image** + **Images** | Section heading: "🧩 Pattern Breakdown". Text for content. Upload architecture diagram PNG via **Images** component or Insert → Pictures. |
-| Callout boxes (insight/warning) | **Styled Quote** component within the relevant section | Closest match to colored callout boxes |
-| Quick Tips (green border) | **Section 4** → **Text & Image** | Section heading: "⚡ Quick Tips". Use bullet list formatting, ✓ prefix on each item |
-| Try This Now (orange border) | **Section 5** → **Text & Image** | Section heading: "🔧 Try This Now". Use numbered list, bold action + explanation |
-| Where This Pattern Lands (amber) | **Section 6** → **Text & Image** | Section heading: "🏆 Where This Pattern Lands". Bullet list of verticals |
-| CTA + Footer | **Section 7** → **Text & Image** | Next issue teaser + archive link. Platform auto-generates unsubscribe footer |
+**Step 1: Fork the HTML**
 
-### What You Lose (No Workaround)
+```bash
+cp issues/the_cheat_code_issue_NNN.html issues/the_cheat_code_issue_NNN_content.html
+```
 
-- Color-coded left borders per section → use emoji section headings instead
-- Monospace flow diagrams → pre-render as PNG images (Insert → Pictures)
-- Inline code styling → use **bold** instead
-- Konami code as near-invisible text → bake into header banner image
-- Custom background colors on callouts → **Styled Quote** component only
-- Side-by-side comparison tables → reformat as sequential text blocks
+**Step 2: Edit the fork — remove:**
+- Global nav bar block
+- Full header block (purple bar, title, Konami, info bar) — replace with a single 6px purple accent bar at top of main container
+- Footer block
+- The interactive link inline (render separately as `_interactive_link.png`)
 
-### Per-Issue Process
+Replace CTA copy with: *"Got an agent or pattern to share? Respond back and you may be featured in the next issue!"* (no issue-specific links)
 
-1. In Newsletters, click **Create edition** → choose blank or your custom template
-2. Title the edition with the pattern name (e.g., "Scoped Multi-Source Search")
-3. Save as type **Edition** under "The Ch(e)at Code" series
-4. Add sections in order: Intro → Agent Spotlight → Pattern Breakdown → rotating sections → CTA
-5. Within each section, add **Text & Image** components for content
-6. Use **Styled Quote** for callouts (key insights, warnings, positioning lines)
-7. Use **People** component for builder attribution (name, photo, role)
-8. Upload diagram PNGs via **Insert → Pictures** within the relevant section
-9. Preview in light mode, dark mode, and mobile
-10. Click **Next** → configure recipients/subscribers → **Send and Publish**
+Add a no-link team attribution footer (HR divider + "The Ch(e)at Code" / "ABS Tech Strategy · AI Business Solutions" / "Microsoft Internal · Not for external distribution").
 
+**Step 3: Render hi-def images**
+
+> **Critical:** Use `--force-device-scale-factor=2` — not `--device-scale-factor`. Chrome 147+ ignores the latter in headless mode. This renders at 600px logical → 1200px physical (144 DPI).
+
+```bash
+CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+
+# Main body
+"$CHROME" --headless --disable-gpu --no-sandbox   --force-device-scale-factor=2   --screenshot="issues/the_cheat_code_issue_NNN_content.png"   --window-size=600,5000   "file://$PWD/issues/the_cheat_code_issue_NNN_content.html"
+
+# Interactive link button
+"$CHROME" --headless --disable-gpu --no-sandbox   --force-device-scale-factor=2   --screenshot="issues/the_cheat_code_issue_NNN_interactive_link.png"   --window-size=600,200   "file://$PWD/issues/the_cheat_code_issue_NNN_interactive_link.html"
+```
+
+Auto-crop both to content using Python (PIL) — scan from bottom for last non-background row, crop with ~40px padding, save at dpi=(144,144).
+
+**Typical output:** body ~1200x7800-8200px, link button ~1200x128px.
+
+### Per-Issue Assembly in Outlook Newsletters
+
+1. Click **Create edition** under "The Ch(e)at Code" series
+2. Title: the pattern name (e.g., "Chat-First Agent Delivery")
+3. **Section 1 — Body:** Insert `_content.png` as an **Images** component
+4. **Section 2 — Interactive link:** Insert `_interactive_link.png` as an **Images** component → set image hyperlink to the interactive page or repo URL
+5. **Section 3 — Footer** (type directly in editor, no images):
+   - **The Ch(e)at Code**
+   - ABS Tech Strategy · AI Business Solutions
+   - *Microsoft Internal · Not for external distribution*
+   - Platform auto-appends unsubscribe and subscriber management links
+6. Preview (light mode, dark mode, mobile)
+7. **Send and Publish**
+
+### What the Platform Handles Natively
+
+- Back-issue catalog (all editions browsable by subscribers)
+- Subscription management and sign-up
+- Unsubscribe footer
+- Delivery analytics (opens, clicks)
+- Mobile-responsive layout
+- Reply routing (readers reply directly to the newsletter)
 ---
 
 ## Viva Engage Post Guide
