@@ -326,10 +326,10 @@
      Global Navigation
      ======================================================== */
   const NAV_ISSUES = [
-    { num: '001', short: '#001', title: 'Code-First Delivery', path: '../issue-001/' },
-    { num: '002', short: '#002', title: 'Multi-Source Search', path: '../issue-002/' },
-    { num: '003', short: '#003', title: 'Prompt-Chained Triage', path: '../issue-003/' },
-    { num: '004', short: '#004', title: 'Secure In-Boundary', path: '../issue-004/' },
+    { num: '001', short: '#001', title: 'Code-First Delivery', path: '../issue-001/index.html' },
+    { num: '002', short: '#002', title: 'Multi-Source Search', path: '../issue-002/index.html' },
+    { num: '003', short: '#003', title: 'Prompt-Chained Triage', path: '../issue-003/index.html' },
+    { num: '004', short: '#004', title: 'Secure In-Boundary', path: '../issue-004/index.html' },
   ];
 
   function buildGlobalNav() {
