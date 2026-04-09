@@ -367,15 +367,9 @@
     });
 
     // Archive link
-    const archive = document.createElement('a');
-    archive.className = 'nav-archive';
-    archive.href = '../../index.html';
-    archive.textContent = '📚 All Issues';
-
     nav.appendChild(brand);
     nav.appendChild(divider);
     nav.appendChild(issueContainer);
-    nav.appendChild(archive);
 
     document.body.insertBefore(nav, document.body.firstChild);
   }
