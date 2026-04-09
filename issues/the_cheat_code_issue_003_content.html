@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>The Cheat Code — Issue #002: Scoped Multi-Source Search</title>
+<title>The Cheat Code — Issue #003: Prompt-Chained Triage + Playbook Orchestration</title>
 <!--[if mso]>
 <style type="text/css">
   body, table, td, p, h1, h2, h3 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
@@ -37,10 +37,10 @@
 <!-- INTRO -->
 <tr><td class="content-block" style="padding:24px 32px 16px 32px;">
   <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
-    If your customer has deployed Copilot or any RAG-based agent and the results feel shallow or noisy, this issue is for you. The problem isn't usually the model &#8212; it's that the search is too broad.
+    Last issue we fixed noisy search. This issue tackles the next problem: getting an agent to <em>reason</em> through a multi-step process instead of trying to do everything in a single prompt.
   </p>
   <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
-    <strong>This issue's pattern:</strong> How to make agent search dramatically better by scoping it to specific, known-relevant sources instead of searching everything.
+    <strong>This issue's patterns:</strong> How to chain prompts so each step improves the next, and how to define those steps in YAML playbooks that anyone on the customer's team can modify without touching code.
   </p>
 </td></tr>
 
@@ -51,91 +51,118 @@
       <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#6B2FA0;letter-spacing:1.5px;text-transform:uppercase;">&#127918; Agent Spotlight</h2>
     </td></tr>
     <tr><td style="padding:0 24px 4px 24px;">
-      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">The Work Item Triage Agent</h3>
-      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Built by Raghav BN &nbsp;&bull;&nbsp; Validated on live ADO work items</p>
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">The Work Item Triage Agent (continued)</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Built by Raghav BN &nbsp;&bull;&nbsp; Part 2 of 3 from this agent</p>
     </td></tr>
     <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
       <p style="margin:0 0 14px 0;">
-        <strong>The scenario:</strong> Your team receives work items that need to be classified, cross-referenced against historical context, and routed. The triage person spends most of their time not on the item itself but on <em>searching for related information</em> &#8212; digging through Teams channels, past tickets, office hours notes, field readiness threads. That search step is where scoped search changes everything.
+        <strong>The scenario:</strong> Your customer has an intake process. Requests come in &#8212; IT tickets, HR inquiries, legal cases, procurement approvals. Someone reads each one, checks if it's complete, looks up related context, classifies it, and decides where to route it. It's 15&#8211;30 minutes of cognitive work per request, and it happens dozens of times a day.
       </p>
       <p style="margin:0;">
-        Raghav built an agent that reads an ADO work item and automatically searches across M365 sources to surface related context. The critical design choice: the agent doesn't search broadly. It first analyzes the work item, then generates <em>targeted queries</em> aimed at specific, known-relevant sources. The result: 80+ precise historical matches on a live Excel Copilot issue &#8212; context that would have taken a human 30 minutes to find manually.
+        The single-prompt approach ("summarize and classify this request") fails here because the task requires <em>sequential reasoning</em>. The agent needs to first understand what the request is about, then search for context, then assess quality, then classify, then recommend. Each step builds on the previous one.
       </p>
     </td></tr>
   </table>
 </td></tr>
 
-<!-- PATTERN BREAKDOWN -->
+<!-- PATTERN BREAKDOWN: PROMPT CHAINING -->
 <tr><td class="content-block" style="padding:0 32px 24px 32px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #0078D4;background:#FAFAFA;border-radius:0 6px 6px 0;">
     <tr><td style="padding:20px 24px 12px 24px;">
-      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#0078D4;letter-spacing:1.5px;text-transform:uppercase;">&#129513; Pattern Breakdown</h2>
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#0078D4;letter-spacing:1.5px;text-transform:uppercase;">&#129513; Pattern Breakdown: Part A</h2>
     </td></tr>
     <tr><td style="padding:0 24px 4px 24px;">
-      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Scoped Multi-Source Search</h3>
-      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Stop searching everything. Search the right things.</p>
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Prompt-Chained Triage</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Step-by-step agent reasoning instead of single-shot prompts</p>
     </td></tr>
     <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
       <p style="margin:0 0 14px 0;">
-        <strong>Why broad search fails:</strong> When an agent searches "everything for anything related," it returns hundreds of results, most irrelevant. The model wastes tokens processing noise, and the output quality drops. This is the #1 complaint CSAs hear about RAG implementations: "Copilot found the wrong stuff."
+        <strong>Why single-shot fails:</strong> When you ask an LLM to "analyze this and tell me what to do," it tries to be helpful all at once. The result is broad but shallow &#8212; it summarizes but doesn't truly classify, it suggests but doesn't cross-reference, it answers but doesn't catch what's missing.
       </p>
       <p style="margin:0 0 14px 0;">
-        <strong>The fix is a two-step process:</strong> First, analyze the input to understand what you're looking for. Then generate targeted search queries aimed at specific, known-relevant sources. The search is narrow by design.
+        <strong>The pattern:</strong> Decompose the task into a chain of discrete prompts. Each step has a single job and produces a structured output that feeds the next step. The agent follows a deliberate reasoning path.
       </p>
 
-      <!-- Comparison -->
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
-        <tr>
-          <td width="50%" valign="top" style="padding:12px;background:#FFF8E1;border-radius:6px 0 0 6px;border:1px solid #FFE082;">
-            <p style="margin:0 0 6px 0;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;color:#E65100;">&#10007; BROAD RAG</p>
-            <p style="margin:0;font-family:'Segoe UI',sans-serif;font-size:13px;color:#795548;line-height:1.5;">"Search all documents for anything about Excel Copilot accuracy"<br><br>&#8594; Hundreds of results, most irrelevant</p>
-          </td>
-          <td width="50%" valign="top" style="padding:12px;background:#E8F5E9;border-radius:0 6px 6px 0;border:1px solid #A5D6A7;">
-            <p style="margin:0 0 6px 0;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;color:#2E7D32;">&#10003; SCOPED SEARCH</p>
-            <p style="margin:0;font-family:'Segoe UI',sans-serif;font-size:13px;color:#33691E;line-height:1.5;">"Search #copilot-feedback for Excel calculation errors after March 2026"<br><br>&#8594; 12 highly relevant threads</p>
-          </td>
-        </tr>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;background:#F0F6FF;border:1px solid #C8DDF5;border-radius:6px;">
+        <tr><td style="padding:16px 20px;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#0078D4;line-height:2.0;text-align:center;">
+          Step 1: Read input &#8594; extract structured fields<br>
+          <span style="color:#999;">&#8595;</span><br>
+          Step 2: Generate scoped search queries<br>
+          <span style="color:#999;">&#8595;</span><br>
+          Step 3: Search sources &#8594; aggregate context<br>
+          <span style="color:#999;">&#8595;</span><br>
+          Step 4: Classify type + assess completeness<br>
+          <span style="color:#999;">&#8595;</span><br>
+          Step 5: Recommend actions with evidence
+        </td></tr>
       </table>
 
-      <p style="margin:0 0 10px 0;"><strong>The two-step approach:</strong></p>
-
-      <!-- Architecture diagram -->
+      <!-- Prompt chaining architecture diagram -->
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
         <tr><td style="padding:0;">
-          <img src="../diagrams/issue_002_query_routing_rich.png" alt="Scoped Multi-Source Search architecture: Query Analyzer routes intent to ADO, Graph API, and SharePoint with targeted queries, then merges and ranks results for Copilot Chat" style="width:100%;max-width:536px;height:auto;display:block;border-radius:6px;border:1px solid #E0E0E0;">
-          <p style="margin:6px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;color:#999999;font-style:italic;">Scoped Multi-Source Search — query analysis routes to the right data, not all data</p>
+          <img src="../diagrams/issue_003_chain_sequence_rich.png" alt="Prompt-Chained Triage and Playbook Orchestration: 3-step chain (Extract → Classify → Recommend) with decoupled YAML playbook registry" style="width:100%;max-width:536px;height:auto;display:block;border-radius:6px;border:1px solid #E0E0E0;">
+          <p style="margin:6px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;color:#999999;font-style:italic;">Prompt chain + playbook orchestration — each step narrows the problem space for the next</p>
           <!-- Interactive link removed — rendered separately as _interactive_link.png -->
         </td></tr>
       </table>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;"> The search in step 2 is more precise <em>because</em> step 1 extracted structured fields. The classification in step 4 is more accurate <em>because</em> step 3 found relevant history. Each step narrows the problem space for the next.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- PATTERN BREAKDOWN: PLAYBOOK ORCHESTRATION -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #0078D4;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#0078D4;letter-spacing:1.5px;text-transform:uppercase;">&#129513; Pattern Breakdown: Part B</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Playbook-Driven Orchestration</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Separate what to do (YAML) from how to execute (agent)</p>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <p style="margin:0 0 14px 0;">
+        <strong>The problem prompt chaining creates:</strong> Once you have a multi-step reasoning chain, someone needs to define and maintain those steps. If the process logic is hardcoded in the agent, only developers can change it. The customer's process owners &#8212; the people who actually know the triage rules &#8212; are locked out.
+      </p>
+      <p style="margin:0 0 14px 0;">
+        <strong>The pattern:</strong> Define the prompt chain in a YAML playbook. The playbook describes <em>what</em> steps to execute and what each step should produce. The agent's orchestration layer handles <em>how</em> &#8212; executing prompts, passing context between steps, managing errors. This separation means:
+      </p>
+
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;background:#F0F6FF;border:1px solid #C8DDF5;border-radius:6px;">
-        <tr><td style="padding:16px 20px;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#0078D4;line-height:2.0;text-align:center;">
-          Analyze the input &#8594; extract key entities + intent<br>
-          <span style="color:#999;">&#8595;</span><br>
-          Generate scoped queries &#8594; target specific sources<br>
-          <span style="color:#999;">&#8595;</span><br>
-          Search only those sources &#8594; high-relevance results
+        <tr><td style="padding:16px 20px;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#0078D4;line-height:1.8;">
+          <strong style="font-family:'Segoe UI',sans-serif;color:#1B1B3A;">Playbook (YAML) &#8212; owned by process team</strong><br>
+          &nbsp;&nbsp;step_1: Read work item, extract fields<br>
+          &nbsp;&nbsp;step_2: Search {sources} for {keywords}<br>
+          &nbsp;&nbsp;step_3: Classify into {categories}<br>
+          &nbsp;&nbsp;step_4: Generate recommendations<br>
+          <br>
+          <strong style="font-family:'Segoe UI',sans-serif;color:#1B1B3A;">Agent orchestrator &#8212; owned by engineering</strong><br>
+          &nbsp;&nbsp;Executes steps, chains context, handles errors
         </td></tr>
       </table>
 
-      <p style="margin:0 0 10px 0;"><strong>What "scoping" actually means:</strong></p>
+      <p style="margin:0 0 10px 0;"><strong>Why CSAs should lead with this:</strong></p>
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
         <tr><td style="padding:4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Source scoping</strong> &#8212; search a specific Teams channel, not all of Teams
+          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>New process?</strong> New playbook. No code changes, no dev sprints.
         </td></tr>
         <tr><td style="padding:4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Time scoping</strong> &#8212; search items from the last 90 days, not all time
+          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Multiple teams?</strong> Each team gets their own playbook. Same agent.
         </td></tr>
         <tr><td style="padding:4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Entity scoping</strong> &#8212; search for the specific product, feature, or error type mentioned in the input
+          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Governance?</strong> Playbooks are versionable, reviewable, auditable &#8212; like any config file.
         </td></tr>
         <tr><td style="padding:4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Role scoping</strong> &#8212; search conversations from people who would know about this topic
+          <span style="color:#0078D4;font-weight:bold;">&#8226;</span>&nbsp; <strong>Demos?</strong> Swap playbooks to show different scenarios without rebuilding anything.
         </td></tr>
       </table>
 
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
         <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
-          <strong style="color:#6B2FA0;">Key insight:</strong> The first step in better search isn't improving the search engine. It's improving the <em>query</em>. When the agent analyzes the input before searching, the queries it generates are dramatically more precise than anything a human would type.
+          <strong style="color:#6B2FA0;">Customer conversation starter:</strong> "What if your process owners could define how the agent handles requests &#8212; without filing a dev ticket every time the rules change?"
         </td></tr>
       </table>
     </td></tr>
@@ -149,38 +176,38 @@
       <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#D83B01;letter-spacing:1.5px;text-transform:uppercase;">&#128736; Try This Now</h2>
     </td></tr>
     <tr><td style="padding:0 24px 4px 24px;">
-      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:18px;font-weight:700;color:#1B1B3A;line-height:1.4;">Fix a Customer's Noisy Search in One Conversation</h3>
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:18px;font-weight:700;color:#1B1B3A;line-height:1.4;">Map Your Customer's Intake Process to a Playbook</h3>
     </td></tr>
     <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
 
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
         <tr>
           <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">1</span></td>
-          <td style="padding-left:8px;"><strong>Identify the complaint.</strong> "Copilot isn't finding the right information" or "search results aren't relevant" &#8212; these are scoped search problems in disguise.</td>
+          <td style="padding-left:8px;"><strong>Pick the intake process.</strong> IT tickets, HR requests, legal case intake, procurement approvals &#8212; find one where someone reads, classifies, and routes 10+ items per day.</td>
         </tr>
       </table>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
         <tr>
           <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">2</span></td>
-          <td style="padding-left:8px;"><strong>Map the sources.</strong> Ask: "When your best person handles this task, where do they actually look?" Write down the 3&#8211;5 specific sources. Those are your scoping targets.</td>
+          <td style="padding-left:8px;"><strong>Shadow the triage person.</strong> Write down every step they take: what they read, where they search, what they check for, how they classify, where they route. That's your prompt chain.</td>
         </tr>
       </table>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
         <tr>
           <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">3</span></td>
-          <td style="padding-left:8px;"><strong>Add the analysis step.</strong> Before the agent searches, it should first read the input and extract key entities, time ranges, and context. This turns a vague user question into a precise, multi-faceted query.</td>
+          <td style="padding-left:8px;"><strong>Translate to a playbook.</strong> Each human step becomes a YAML step with a clear input, instruction, and expected output. Share it with the process owner for validation &#8212; they can read YAML even if they can't write code.</td>
         </tr>
       </table>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
         <tr>
           <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">4</span></td>
-          <td style="padding-left:8px;"><strong>Test the difference.</strong> Run the same question through broad search and scoped search side by side. The quality gap is immediately obvious &#8212; and it's the best demo you can give.</td>
+          <td style="padding-left:8px;"><strong>Show the split.</strong> Demonstrate that the playbook can change without the agent changing. Swap in a different playbook for a different team's process. Same agent, different behavior. This is what gets the customer excited about scalability.</td>
         </tr>
       </table>
 
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
         <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#444444;line-height:1.6;">
-          <strong style="color:#6B2FA0;">&#128161; Positioning:</strong> "The model isn't the problem &#8212; the search is. Let me show you what happens when we point the agent at the right sources instead of everything."
+          <strong style="color:#6B2FA0;">&#128161; Positioning:</strong> "The agent is the engine. The playbook is the steering wheel. Your team decides where it goes &#8212; without calling IT every time the route changes."
         </td></tr>
       </table>
     </td></tr>
@@ -191,29 +218,29 @@
 <tr><td class="content-block" style="padding:0 32px 24px 32px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #CA5010;background:#FAFAFA;border-radius:0 6px 6px 0;">
     <tr><td style="padding:20px 24px 12px 24px;">
-      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#CA5010;letter-spacing:1.5px;text-transform:uppercase;">&#127942; Where This Pattern Lands</h2>
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#CA5010;letter-spacing:1.5px;text-transform:uppercase;">&#127942; Where These Patterns Land</h2>
     </td></tr>
     <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
         <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Any Copilot deployment</strong> where users say "it doesn't find the right stuff"
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>IT service desks</strong> &#8212; ticket classification, priority assignment, SLA routing
         </td></tr>
         <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Customer support</strong> &#8212; search known KB articles and past tickets, not the whole SharePoint
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>HR operations</strong> &#8212; employee request intake, benefits routing, policy questions
         </td></tr>
         <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Sales intelligence</strong> &#8212; search CRM notes for a specific account, not all accounts
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Legal intake</strong> &#8212; case classification, document completeness, precedent search
         </td></tr>
         <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Compliance</strong> &#8212; search relevant policy docs for a specific regulation, not the entire library
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Procurement</strong> &#8212; vendor request triage, approval routing, contract review
         </td></tr>
         <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
-          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Engineering</strong> &#8212; search incident history for a specific service, not all incidents
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Any team with a queue</strong> &#8212; if humans read, classify, and route, this pattern applies
         </td></tr>
       </table>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF3E0;border-radius:6px;border:1px solid #FFCC80;">
         <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#5D4037;line-height:1.6;">
-          <strong>Bottom line:</strong> This pattern applies to every RAG-based agent you'll encounter. If the customer is unhappy with search quality, this is your first move. It's also the foundation for the more advanced triage patterns we'll cover in <a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/issues/the_cheat_code_issue_003.html" style="color:#6B2FA0;text-decoration:underline;">Issue #003</a>.
+          <strong>The pitch that lands:</strong> "Show me your highest-volume intake process. I'll map it to a playbook this week, and you'll have an agent handling triage by next week. When the process changes, your team updates the playbook &#8212; no engineering required."
         </td></tr>
       </table>
     </td></tr>
