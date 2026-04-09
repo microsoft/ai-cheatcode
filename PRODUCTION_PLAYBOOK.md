@@ -305,10 +305,10 @@ Copilot Studio + Power Automate + Azure AI Search covers the widest CSA audience
 
 All issues are hosted on GitHub Pages for easy browsing and cross-reference linking.
 
-- **Archive URL:** https://ubiquitous-bassoon-k563vzn.pages.github.io/ (requires GitHub login — internal only)
+- **Archive URL:** https://microsoft.github.io/ai-cheatcode/ (requires GitHub login — internal only)
 - **Repo:** https://github.com/microsoft/the-cheat-code (private)
 - **How to publish a new issue:** Copy the HTML + PDF to the repo, `git push`. GitHub Pages deploys automatically.
-- **Cross-references:** All "Issue #NNN" mentions in newsletter HTML are hyperlinked to the archive. When creating new issues, link cross-references using: `<a href="https://ubiquitous-bassoon-k563vzn.pages.github.io/the_cheat_code_issue_NNN.html" style="color:#6B2FA0;text-decoration:underline;">Issue #NNN</a>`
+- **Cross-references:** All "Issue #NNN" mentions in newsletter HTML are hyperlinked to the archive. When creating new issues, link cross-references using: `<a href="https://microsoft.github.io/ai-cheatcode/the_cheat_code_issue_NNN.html" style="color:#6B2FA0;text-decoration:underline;">Issue #NNN</a>`
 - **Index page:** `index.html` at the root lists all issues with type tags, arc groupings, and dates. Update it when adding new issues.
 
 ---

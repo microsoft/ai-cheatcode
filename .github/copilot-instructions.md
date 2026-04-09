@@ -17,7 +17,7 @@ The **PRODUCTION_PLAYBOOK.md** is the authoritative reference for all production
 
 ## Hosting & Distribution
 
-- **GitHub Pages archive:** https://aka.ms/the-cheat-code (resolves to `ubiquitous-bassoon-k563vzn.pages.github.io`)
+- **GitHub Pages archive:** https://aka.ms/the-cheat-code (resolves to `microsoft.github.io/ai-cheatcode`)
 - **Repo:** `microsoft/the-cheat-code` (private, GitHub Enterprise)
 - **Pages source:** `main` branch, root `/`
 - **Workflow:** Edit files → `git push` → GitHub Pages auto-deploys
