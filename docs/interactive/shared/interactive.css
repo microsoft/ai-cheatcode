@@ -1,0 +1,659 @@
+/* ============================================================
+   The Cheat Code — Interactive Diagram Framework
+   Shared CSS for animations, tooltips, step-through bar
+   ============================================================ */
+
+/* --- Global Navigation Bar --- */
+.global-nav {
+  background: var(--navy);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  gap: 0;
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.global-nav .nav-brand {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  margin-right: 24px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.global-nav .nav-brand:hover { color: #B8A9C9; }
+
+.global-nav .nav-brand .brand-accent {
+  color: var(--purple);
+}
+
+.global-nav .nav-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255,255,255,0.15);
+  margin: 0 16px;
+  flex-shrink: 0;
+}
+
+.global-nav .nav-issues {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  flex: 1;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.global-nav .nav-issues::-webkit-scrollbar { display: none; }
+
+.global-nav .nav-issue-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+.global-nav .nav-issue-link:hover {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.85);
+}
+.global-nav .nav-issue-link.active {
+  background: var(--purple);
+  color: white;
+}
+
+.global-nav .nav-archive {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  margin-left: auto;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.global-nav .nav-archive:hover {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+@media (max-width: 600px) {
+  .global-nav { padding: 0 12px; height: 44px; }
+  .global-nav .nav-brand { font-size: 13px; margin-right: 12px; }
+  .global-nav .nav-divider { margin: 0 8px; }
+  .global-nav .nav-issue-link { font-size: 11px; padding: 5px 8px; }
+  .global-nav .nav-archive { font-size: 11px; padding: 5px 8px; }
+}
+
+/* --- Reset & Base --- */
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --purple: #6B2FA0;
+  --blue: #0078D4;
+  --green: #107C10;
+  --orange: #D83B01;
+  --amber: #CA5010;
+  --navy: #1B1B3A;
+  --muted: #6B6B8D;
+  --bg: #F8F8FC;
+  --card: #FFFFFF;
+  --shadow: rgba(0,0,0,0.08);
+  --transition-speed: 0.4s;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--navy);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Page Shell --- */
+.interactive-page {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 24px 120px;
+  flex: 1;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.page-header .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--purple);
+  text-decoration: none;
+  margin-bottom: 16px;
+  transition: opacity var(--transition-speed);
+}
+.page-header .back-link:hover { opacity: 0.7; }
+
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--navy);
+}
+
+.page-header .page-subtitle {
+  font-size: 16px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.page-header .issue-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: var(--purple);
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+/* --- Diagram Canvas --- */
+.diagram-canvas {
+  position: relative;
+  padding: 32px 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px var(--shadow);
+  overflow: visible;
+}
+
+/* --- Zone & Component Interactivity --- */
+[data-step] {
+  transition: opacity var(--transition-speed) ease,
+              transform var(--transition-speed) ease,
+              box-shadow var(--transition-speed) ease,
+              filter var(--transition-speed) ease;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Dimmed state when a step is active */
+.step-active [data-step] {
+  opacity: 0.25;
+  filter: grayscale(0.5);
+  transform: scale(0.98);
+}
+
+/* Highlighted step element */
+.step-active [data-step].step-highlight {
+  opacity: 1;
+  filter: none;
+  transform: scale(1.02);
+  z-index: 10;
+}
+
+/* Glow effect on highlighted zone */
+.step-active [data-step].step-highlight.zone,
+.step-active [data-step].step-highlight.step-zone,
+.step-active [data-step].step-highlight.source-lane,
+.step-active [data-step].step-highlight.input-node,
+.step-active [data-step].step-highlight.output-node,
+.step-active [data-step].step-highlight.input-card,
+.step-active [data-step].step-highlight.output-card,
+.step-active [data-step].step-highlight.analyzer-zone,
+.step-active [data-step].step-highlight.process-zone,
+.step-active [data-step].step-highlight.playbook-box,
+.step-active [data-step].step-highlight.conn-row {
+  box-shadow: 0 0 0 4px rgba(107, 47, 160, 0.2),
+              0 8px 32px rgba(107, 47, 160, 0.15);
+}
+
+/* Keep arrows visible during steps */
+.step-active .arrow-down,
+.step-active .arrow-right,
+.step-active .arrow-between,
+.step-active .fan-arrows {
+  opacity: 0.4;
+  transition: opacity var(--transition-speed);
+}
+.step-active .arrow-highlight {
+  opacity: 1;
+}
+
+/* --- Hover Tooltips --- */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: var(--navy);
+  color: white;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  padding: 10px 14px;
+  border-radius: 8px;
+  white-space: normal;
+  width: max-content;
+  max-width: 280px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 100;
+}
+
+[data-tooltip]::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--navy);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 100;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Override tooltip arrow transform */
+[data-tooltip]:hover::before {
+  transform: translateX(-50%);
+}
+
+/* --- Narrative Panel --- */
+.narrative-panel {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+  padding: 20px 28px;
+  max-width: 600px;
+  width: calc(100% - 48px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 50;
+  border-top: 4px solid var(--purple);
+}
+
+.narrative-panel.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.narrative-panel .narrative-step-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--purple);
+  margin-bottom: 6px;
+}
+
+.narrative-panel .narrative-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+.narrative-panel .narrative-text {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* --- Step-Through Bottom Bar --- */
+.step-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  z-index: 200;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  padding: 0 24px;
+}
+
+.step-bar .step-counter {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  min-width: 100px;
+  text-align: center;
+}
+
+.step-bar button {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.step-bar button:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.step-bar button:active {
+  transform: scale(0.97);
+}
+
+.step-bar button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.step-bar button.btn-primary {
+  background: var(--purple);
+  border-color: var(--purple);
+}
+
+.step-bar button.btn-primary:hover {
+  background: #7D3CB5;
+}
+
+.step-bar .btn-reset {
+  position: absolute;
+  right: 24px;
+  font-size: 12px;
+  padding: 6px 14px;
+  opacity: 0.6;
+}
+.step-bar .btn-reset:hover { opacity: 1; }
+
+/* Step dots */
+.step-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  transition: background 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+
+.step-dot.active {
+  background: var(--purple);
+  border-color: var(--purple);
+  transform: scale(1.3);
+}
+
+.step-dot.visited {
+  background: rgba(255,255,255,0.5);
+}
+
+/* --- Flow Animations --- */
+@keyframes flowPulse {
+  0% { transform: translateY(-100%); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+@keyframes flowPulseH {
+  0% { transform: translateX(-100%); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+@keyframes fadeSlideUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideRight {
+  0% { opacity: 0; transform: translateX(-20px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(107, 47, 160, 0); }
+  50% { box-shadow: 0 0 0 8px rgba(107, 47, 160, 0.12); }
+}
+
+@keyframes dotFlow {
+  0% { top: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Entrance animations (triggered by class) */
+.animate-in {
+  animation: fadeSlideUp 0.5s ease forwards;
+}
+
+.animate-in-right {
+  animation: fadeSlideRight 0.5s ease forwards;
+}
+
+/* Staggered entrance for zones */
+[data-step="1"].animate-in { animation-delay: 0.1s; }
+[data-step="2"].animate-in { animation-delay: 0.3s; }
+[data-step="3"].animate-in { animation-delay: 0.5s; }
+[data-step="4"].animate-in { animation-delay: 0.7s; }
+[data-step="5"].animate-in { animation-delay: 0.9s; }
+
+/* Arrow flow dot */
+.arrow-down .shaft,
+.arrow-between .arrow-h .shaft {
+  position: relative;
+  overflow: hidden;
+}
+
+.flow-active .arrow-down .shaft::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--purple);
+  animation: dotFlow 1.2s ease-in-out infinite;
+}
+
+/* --- Click-to-Expand Detail --- */
+.expand-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(27, 27, 58, 0.4);
+  z-index: 80;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.expand-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.expand-panel {
+  position: fixed;
+  right: -420px;
+  top: 0;
+  bottom: 64px;
+  width: 400px;
+  background: white;
+  box-shadow: -8px 0 40px rgba(0,0,0,0.15);
+  z-index: 90;
+  transition: right 0.3s ease;
+  overflow-y: auto;
+  padding: 32px 24px;
+}
+
+.expand-panel.visible {
+  right: 0;
+}
+
+.expand-panel .expand-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+.expand-panel .expand-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.expand-panel .expand-details h3 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--purple);
+  margin-bottom: 8px;
+}
+
+.expand-panel .expand-details ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+}
+
+.expand-panel .expand-details li {
+  font-size: 14px;
+  padding: 8px 0;
+  border-bottom: 1px solid #F0F0F0;
+  color: var(--navy);
+}
+
+.expand-panel .expand-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--muted);
+  padding: 4px;
+  line-height: 1;
+}
+.expand-panel .expand-close:hover { color: var(--navy); }
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .interactive-page { padding: 16px 12px 120px; }
+  .page-header h1 { font-size: 24px; }
+  .diagram-canvas { padding: 20px 12px; }
+  .narrative-panel { max-width: calc(100% - 24px); padding: 16px 20px; }
+
+  /* Stack horizontal layouts vertically */
+  .canvas-responsive { flex-direction: column !important; gap: 24px !important; }
+  .pipeline-responsive { flex-direction: column !important; align-items: center !important; gap: 16px !important; }
+
+  .expand-panel { width: 100%; right: -100%; }
+
+  .step-bar { height: 56px; gap: 12px; }
+  .step-bar button { padding: 6px 14px; font-size: 13px; }
+}
+
+@media (max-width: 600px) {
+  .page-header h1 { font-size: 20px; }
+  .step-dots { display: none; }
+}
+
+/* --- Footer Branding --- */
+.interactive-footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.interactive-footer a {
+  color: var(--purple);
+  text-decoration: none;
+}
+.interactive-footer a:hover { text-decoration: underline; }
+
+/* --- Konami Easter Egg --- */
+.konami-flash {
+  position: fixed;
+  inset: 0;
+  background: var(--purple);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  color: white;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.konami-flash.active {
+  opacity: 1;
+  animation: konamiFlash 1.5s ease forwards;
+}
+@keyframes konamiFlash {
+  0% { opacity: 1; }
+  15% { opacity: 1; }
+  100% { opacity: 0; }
+}

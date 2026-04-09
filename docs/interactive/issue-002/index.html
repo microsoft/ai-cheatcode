@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive: Scoped Multi-Source Search — The Cheat Code #002</title>
+<link rel="stylesheet" href="../shared/interactive.css">
+<style>
+  /* Issue-specific diagram styles (adapted from diagrams/issue_002_query_routing.html) */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .icon { width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; color: white; flex-shrink: 0; }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-green { background: #107C10; }
+
+  .node-name { font-size: 16px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .node-desc { font-size: 12px; color: #6B6B8D; line-height: 1.4; }
+
+  /* Input node */
+  .input-node {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 2px solid #6B2FA0;
+    border-radius: 14px;
+    padding: 18px 32px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.15);
+  }
+  .input-node .node-name { font-size: 17px; color: #6B2FA0; }
+
+  /* Arrows */
+  .arrow-down { display: flex; flex-direction: column; align-items: center; padding: 6px 0; }
+  .arrow-down .shaft { width: 2px; height: 20px; background: #333; position: relative; overflow: hidden; }
+  .arrow-down .head { width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 10px solid #333; }
+  .arrow-down .label { font-size: 11px; color: #6B6B8D; font-style: italic; margin-top: 2px; margin-bottom: 2px; }
+
+  /* Analyzer zone */
+  .analyzer-zone {
+    background: linear-gradient(135deg, #F5F0FA 0%, #EDE5F5 100%);
+    border: 2px solid #6B2FA0;
+    border-radius: 16px;
+    padding: 20px 32px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(107,47,160,0.12);
+    max-width: 500px;
+    width: 100%;
+  }
+  .analyzer-zone .zone-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #6B2FA0; margin-bottom: 12px; }
+  .analyzer-node { background: white; border-radius: 10px; padding: 14px 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .analyzer-node .node-desc { margin-top: 4px; }
+
+  /* Fan-out section */
+  .fanout {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    width: 100%;
+  }
+  .source-lane {
+    flex: 1;
+    max-width: 340px;
+    border-radius: 16px;
+    padding: 20px 16px;
+    text-align: center;
+    border: 2px solid #0078D4;
+    background: linear-gradient(135deg, #EBF3FD 0%, #D6E8FA 100%);
+    box-shadow: 0 4px 16px rgba(0,120,212,0.10);
+  }
+  .source-lane .lane-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0078D4;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .source-lane .component {
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,120,212,0.15);
+    text-align: left;
+  }
+  .comp-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .comp-scope { font-size: 11px; color: #0078D4; font-weight: 600; margin-bottom: 2px; }
+  .comp-returns { font-size: 11px; color: #6B6B8D; }
+
+  /* Fan-in arrows */
+  .fan-arrows {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
+  }
+  .fan-arrow-item {
+    flex: 1;
+    max-width: 340px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Processing zone */
+  .process-zone {
+    background: linear-gradient(135deg, #E8F5E9 0%, #D4EDD5 100%);
+    border: 2px solid #107C10;
+    border-radius: 16px;
+    padding: 20px 28px;
+    box-shadow: 0 4px 16px rgba(16,124,16,0.10);
+    width: 100%;
+    max-width: 900px;
+  }
+  .process-zone .zone-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #107C10; margin-bottom: 14px; text-align: center; }
+  .process-steps {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: stretch;
+  }
+  .process-step {
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 14px 16px;
+    flex: 1;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border: 1px solid rgba(16,124,16,0.15);
+    text-align: center;
+  }
+  .step-num { font-size: 11px; font-weight: 700; color: #107C10; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .step-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .step-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+  .step-arrow { display: flex; align-items: center; font-size: 20px; color: #107C10; padding: 0 4px; }
+
+  /* Output node */
+  .output-node {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 2px solid #107C10;
+    border-radius: 14px;
+    padding: 18px 32px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(16,124,16,0.15);
+  }
+  .output-node .node-name { font-size: 17px; color: #107C10; }
+
+  /* Key insight */
+  .key-insight {
+    margin-top: 24px;
+    background: #FFF8E1;
+    border: 2px solid #CA5010;
+    border-radius: 12px;
+    padding: 14px 24px;
+    text-align: center;
+    max-width: 650px;
+  }
+  .key-insight .ki-label { font-size: 12px; font-weight: 700; color: #CA5010; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .key-insight .ki-text { font-size: 13px; color: #333; line-height: 1.5; }
+
+  @media (max-width: 900px) {
+    .fanout { flex-direction: column; align-items: center; }
+    .fan-arrows { flex-direction: column; align-items: center; }
+    .process-steps { flex-direction: column; }
+    .step-arrow { transform: rotate(90deg); }
+    .source-lane { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="interactive-page">
+  <div class="page-header">
+    <a href="../../index.html" class="back-link">← All Patterns</a>
+    <h1>Scoped Multi-Source Search</h1>
+    <p class="page-subtitle">Query Analysis → Targeted Source Routing → Grounded Response</p>
+  </div>
+
+  <div class="diagram-canvas" id="diagram">
+    <div class="flow">
+      <!-- Input -->
+      <div class="input-node" data-step="1"
+           data-tooltip="The user asks a natural language question that spans multiple data sources"
+           data-expand-title="User Query"
+           data-expand-desc="A natural language question that could touch work items, emails, and documents simultaneously."
+           data-expand-details='[{"heading":"Why This Matters","items":["Most RAG implementations query a single index","Real questions span multiple systems","Without scoping, results are noisy and unreliable"]},{"heading":"Example Queries","items":["What is the status of the auth refactor and who discussed it last week?","Show me all P0 bugs assigned to my team with related design docs","What decisions were made about the API migration in recent meetings?"]}]'>
+        <div class="node-name"><div class="icon icon-purple">💬</div> User Query via Copilot Chat</div>
+        <div class="node-desc">Natural language question spanning work items, email, documents</div>
+      </div>
+
+      <div class="arrow-down"><div class="shaft"></div><div class="label">Raw user intent</div><div class="head"></div></div>
+
+      <!-- Query Analyzer -->
+      <div class="analyzer-zone" data-step="2"
+           data-tooltip="The intelligence layer — classifies intent and determines which sources to query"
+           data-expand-title="Query Analyzer (Intelligence Layer)"
+           data-expand-desc="Intent classification engine that determines which data sources are relevant and how to scope each query."
+           data-expand-details='[{"heading":"How It Works","items":["Analyzes the user query for entity types (people, projects, dates, artifacts)","Maps entities to relevant data sources","Generates scoped sub-queries per source — not broad, noisy retrieval"]},{"heading":"Key Design Decision","items":["Analyze intent BEFORE querying — not after","Each source gets a tailored, filtered query","Avoids the #1 RAG failure: dumping everything into one search"]}]'>
+        <div class="zone-label">🧠 Intelligence Layer</div>
+        <div class="analyzer-node">
+          <div class="node-name"><div class="icon icon-purple">🎯</div> Query Analyzer</div>
+          <div class="node-desc">Intent classification — determines which data sources to query and how to scope each request. Avoids broad, noisy RAG retrieval.</div>
+        </div>
+      </div>
+
+      <div class="arrow-down"><div class="shaft"></div><div class="label">Scoped queries dispatched per source</div><div class="head"></div></div>
+
+      <!-- Three source lanes -->
+      <div class="fanout">
+        <div class="source-lane" data-step="3"
+             data-tooltip="Azure DevOps — scoped to specific project and work item types"
+             data-expand-title="Azure DevOps Source"
+             data-expand-desc="Queries ADO REST API with project and work item type filters."
+             data-expand-details='[{"heading":"Scoping Filters","items":["Project name","Work item type (Bug, Feature, Task)","Iteration path","Assigned-to field"]},{"heading":"Returns","items":["Work items with full field data","Repository references","Pipeline run results"]}]'>
+          <div class="lane-title"><div class="icon icon-blue" style="width:26px;height:26px;font-size:13px;">🔧</div> Azure DevOps</div>
+          <div class="component">
+            <div class="comp-name">ADO REST API</div>
+            <div class="comp-scope">🔒 Scoped: Project + Work Item Type</div>
+            <div class="comp-returns">Returns: Work items, repos, pipelines</div>
+          </div>
+        </div>
+
+        <div class="source-lane" data-step="3"
+             data-tooltip="Microsoft Graph — scoped to specific user and date range"
+             data-expand-title="Microsoft Graph Source"
+             data-expand-desc="Queries Graph API for emails, calendar, and files with user and time filters."
+             data-expand-details='[{"heading":"Scoping Filters","items":["User identity","Date range","Content type (email, event, file)","Subject/keyword filter"]},{"heading":"Returns","items":["Email threads with participants","Calendar events with attendees","OneDrive/SharePoint files"]}]'>
+          <div class="lane-title"><div class="icon icon-blue" style="width:26px;height:26px;font-size:13px;">📧</div> Microsoft Graph</div>
+          <div class="component">
+            <div class="comp-name">Graph API</div>
+            <div class="comp-scope">🔒 Scoped: User + Date Range</div>
+            <div class="comp-returns">Returns: Email, calendar, people, files</div>
+          </div>
+        </div>
+
+        <div class="source-lane" data-step="3"
+             data-tooltip="SharePoint — scoped to specific site and document library"
+             data-expand-title="SharePoint Source"
+             data-expand-desc="Queries SharePoint Search API with site and library filters."
+             data-expand-details='[{"heading":"Scoping Filters","items":["Site URL","Document library","Content type","Managed metadata terms"]},{"heading":"Returns","items":["Documents with metadata","List items","SharePoint pages"]}]'>
+          <div class="lane-title"><div class="icon icon-blue" style="width:26px;height:26px;font-size:13px;">📄</div> SharePoint</div>
+          <div class="component">
+            <div class="comp-name">Search API</div>
+            <div class="comp-scope">🔒 Scoped: Site + Library</div>
+            <div class="comp-returns">Returns: Documents, lists, pages</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fan-in arrows -->
+      <div class="fan-arrows">
+        <div class="fan-arrow-item"><div class="arrow-down"><div class="shaft"></div><div class="head"></div></div></div>
+        <div class="fan-arrow-item"><div class="arrow-down"><div class="shaft"></div><div class="head"></div></div></div>
+        <div class="fan-arrow-item"><div class="arrow-down"><div class="shaft"></div><div class="head"></div></div></div>
+      </div>
+
+      <!-- Processing zone -->
+      <div class="process-zone" data-step="4"
+           data-tooltip="Response assembly — merge, rank, and synthesize results from all sources"
+           data-expand-title="Response Assembly Pipeline"
+           data-expand-desc="Three-stage processing: merge results across sources, rank by relevance to original intent, then synthesize a grounded answer."
+           data-expand-details='[{"heading":"Stage 1: Merge","items":["Deduplicate results appearing in multiple sources","Normalize data formats across ADO, Graph, and SharePoint","Preserve source attribution for each result"]},{"heading":"Stage 2: Rank","items":["Score results against the original query intent","Apply relevance thresholds to filter noise","Prioritize recent and directly referenced content"]},{"heading":"Stage 3: Synthesize","items":["Azure OpenAI generates a natural language answer","Each claim is grounded in specific source results","Citations link back to original documents, emails, or work items"]}]'>
+        <div class="zone-label">⚙️ Response Assembly</div>
+        <div class="process-steps">
+          <div class="process-step">
+            <div class="step-num">Step 1</div>
+            <div class="step-name">Merge Results</div>
+            <div class="step-desc">Deduplicate and normalize results across all three sources</div>
+          </div>
+          <div class="step-arrow">→</div>
+          <div class="process-step">
+            <div class="step-num">Step 2</div>
+            <div class="step-name">Relevance Ranking</div>
+            <div class="step-desc">Score and filter by original query intent</div>
+          </div>
+          <div class="step-arrow">→</div>
+          <div class="process-step">
+            <div class="step-num">Step 3</div>
+            <div class="step-name">Synthesize Response</div>
+            <div class="step-desc">Azure OpenAI generates grounded answer from ranked results</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-down"><div class="shaft"></div><div class="head"></div></div>
+
+      <!-- Output -->
+      <div class="output-node" data-step="5"
+           data-tooltip="The final response — grounded, cited, and traceable to source data"
+           data-expand-title="Grounded Response"
+           data-expand-desc="A natural language answer where every claim links back to its source document, email, or work item."
+           data-expand-details='[{"heading":"What Makes It Different","items":["Every claim has a source citation","Users can verify by clicking through to the original","No hallucination — if the data is not in the sources, the agent says so"]},{"heading":"Quality Guarantee","items":["Scoped input = quality output","3-source triangulation increases confidence","Source diversity reduces single-source bias"]}]'>
+        <div class="node-name"><div class="icon icon-green">✅</div> Grounded Response with Source Citations</div>
+        <div class="node-desc">Each claim linked to its source document, email, or work item</div>
+      </div>
+
+      <!-- Key insight -->
+      <div class="key-insight">
+        <div class="ki-label">🔑 Key Insight</div>
+        <div class="ki-text"><strong>Scoped search beats broad retrieval.</strong> By analyzing intent first and querying each source with targeted filters, you eliminate the noise that makes RAG answers unreliable.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="interactive-footer">
+  <p>The Cheat Code · ABS Tech Strategy · <a href="https://aka.ms/the-cheat-code">Browse all issues</a></p>
+</div>
+
+<script src="../shared/interactive.js"></script>
+<script>
+  window.interactiveConfig = {
+    container: '#diagram',
+    steps: [
+      {
+        id: 'user-query',
+        title: 'User Query Arrives',
+        description: 'A user asks a natural language question in Copilot Chat that spans multiple data sources — work items in ADO, recent emails in Outlook, and design docs in SharePoint. Traditional RAG would dump everything into one index. This pattern is smarter.',
+        highlight: ['[data-step="1"]']
+      },
+      {
+        id: 'query-analyzer',
+        title: 'Query Analyzer Classifies Intent',
+        description: 'The intelligence layer analyzes the query BEFORE searching. It identifies which sources are relevant, what filters to apply, and generates scoped sub-queries. This is the key insight — analyze first, then search, not the other way around.',
+        highlight: ['[data-step="2"]']
+      },
+      {
+        id: 'source-fanout',
+        title: 'Parallel Scoped Queries Fan Out',
+        description: 'Three targeted queries fire in parallel — ADO filtered by project and work item type, Graph filtered by user and date range, SharePoint filtered by site and library. Each source gets exactly the query it needs, not a generic keyword search.',
+        highlight: ['[data-step="3"]']
+      },
+      {
+        id: 'response-assembly',
+        title: 'Response Assembly Pipeline',
+        description: 'Results from all three sources merge, deduplicate, and get ranked against the original query intent. Azure OpenAI then synthesizes a grounded answer from the top-ranked results — with citations linking back to each source.',
+        highlight: ['[data-step="4"]']
+      },
+      {
+        id: 'grounded-response',
+        title: 'Grounded Response with Citations',
+        description: 'The final answer arrives in Copilot Chat with every claim linked to its source. Users can click through to the original work item, email, or document. No hallucination — if the data isn\'t in the scoped sources, the agent says so.',
+        highlight: ['[data-step="5"]']
+      }
+    ]
+  };
+</script>
+</body>
+</html>

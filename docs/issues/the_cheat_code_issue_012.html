@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>The Cheat Code — Issue #013: Building Multi-Agent Handoff in Copilot Studio</title>
+<!--[if mso]>
+<style type="text/css">
+  body, table, td, p, h1, h2, h3 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
+  .mono { font-family: Consolas, 'Courier New', monospace !important; }
+</style>
+<![endif]-->
+<style type="text/css">
+  body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+  table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+  img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+  body { margin: 0; padding: 0; width: 100% !important; -webkit-font-smoothing: antialiased; }
+  @media only screen and (max-width: 620px) {
+    .wrapper { width: 100% !important; padding: 8px !important; }
+    .content-block { padding: 16px !important; }
+    .header-title { font-size: 22px !important; }
+    .konami { font-size: 7px !important; letter-spacing: 1px !important; }
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;color:#333333;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f4f4;">
+<tr><td align="center" style="padding:24px 10px;">
+<!-- GLOBAL NAV BAR -->
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;margin-bottom:12px;">
+<tr><td style="background:#1B1B3A;border-radius:8px;padding:10px 20px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td style="font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;font-weight:700;">
+      <a href="../index.html" style="color:#ffffff;text-decoration:none;">The Cheat Code</a>
+    </td>
+    <td style="text-align:center;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;">
+      <a href="../interactive/issue-001/" style="color:rgba(255,255,255,0.5);text-decoration:none;padding:4px 8px;">#001</a>
+      <a href="../interactive/issue-002/" style="color:rgba(255,255,255,0.5);text-decoration:none;padding:4px 8px;">#002</a>
+    </td>
+    <td style="text-align:right;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;">
+      <a href="../index.html" style="color:rgba(255,255,255,0.7);text-decoration:none;">&#128218; All Issues</a>
+    </td>
+  </tr>
+  </table>
+</td></tr>
+</table>
+<table role="presentation" class="wrapper" width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-radius:8px;max-width:600px;width:100%;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+
+<!-- HEADER -->
+<tr><td style="padding:0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="background:#6B2FA0;height:6px;border-radius:8px 8px 0 0;font-size:1px;">&nbsp;</td></tr>
+    <tr><td align="center" style="background:#1B1B3A;padding:32px 24px 12px 24px;">
+      <h1 class="header-title" style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:28px;font-weight:700;color:#ffffff;line-height:1.3;letter-spacing:0.5px;">The Cheat Code</h1>
+      <p style="margin:8px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#B8A9C9;letter-spacing:0.3px;">Agent Patterns for Copilot Chat</p>
+    </td></tr>
+    <tr><td align="center" style="background:#1B1B3A;padding:0 24px 8px 24px;">
+      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#8607; &#8607; &#8609; &#8609; &#8606; &#8608; &#8606; &#8608; B A START</p>
+    </td></tr>
+    <tr><td align="center" style="background:#F0ECF5;padding:12px 24px;">
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #012 &nbsp;&bull;&nbsp; JUNE 9, 2026 &nbsp;&bull;&nbsp; &#128295; PRACTICAL BUILD</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- INTRO -->
+<tr><td class="content-block" style="padding:24px 32px 16px 32px;">
+  <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
+    Last issue, we named the Multi-Agent Handoff pattern. We mapped three transfer models &#8212; cold, warm, and hot &#8212; and drew the trust boundaries that keep a multi-agent system coherent. This issue, we build it. One session, two agents, context that carries across.
+  </p>
+  <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
+    <strong>This issue's build:</strong> A warm-transfer handoff between an HR agent and an IT Support agent in Copilot Studio, with Dataverse session state for analytics and Power Automate for out-of-scope detection &#8212; the practical implementation of <a href="https://microsoft.github.io/ai-cheatcode/issues/the_cheat_code_issue_011.html" style="color:#6B2FA0;text-decoration:underline;">Issue #011</a>'s conceptual framework.
+  </p>
+</td></tr>
+
+<!-- AGENT SPOTLIGHT -->
+<tr><td class="content-block" style="padding:8px 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #6B2FA0;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#6B2FA0;letter-spacing:1.5px;text-transform:uppercase;">&#127918; Agent Spotlight</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">The Two-Agent Handoff</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">HR Knowledge Agent &#8596; IT Support Agent &nbsp;&bull;&nbsp; Copilot Studio + Dataverse + Power Automate</p>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <p style="margin:0 0 14px 0;">
+        <strong>The scenario:</strong> An enterprise has two Copilot Studio agents &#8212; one for HR (PTO, benefits, onboarding) and one for IT Support (devices, access, software). An employee asks the HR agent: "I'm onboarding a new hire next week &#8212; how do I get them a laptop?" The HR agent knows about onboarding checklists, but laptop provisioning is IT's domain. Today, the agent either hallucinates an answer or says "contact IT." Neither is acceptable.
+      </p>
+      <p style="margin:0 0 14px 0;">
+        <strong>The solution:</strong> When the HR agent detects an out-of-scope query, it generates a conversation summary via Azure OpenAI, writes a handoff record to Dataverse, and transfers the user to the IT agent using Copilot Studio's agent transfer topic. The IT agent reads the Dataverse record, injects the context, and picks up mid-conversation. The user never repeats themselves.
+      </p>
+      <p style="margin:0;">
+        <strong>The stack:</strong> Copilot Studio agent transfer + Dataverse <span style="font-family:Consolas,'Courier New',monospace;font-size:13px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">AgentSession</span> table + Power Automate for classification &#38; logging. Five components, all buildable in a single session.
+      </p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- PATTERN BREAKDOWN -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #0078D4;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#0078D4;letter-spacing:1.5px;text-transform:uppercase;">&#129513; Pattern Breakdown</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Warm Handoff Build: Five Components</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Copilot Studio agent transfer + Dataverse session state + Power Automate classification &#38; analytics</p>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+
+      <!-- Architecture Diagram -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr><td style="padding:0;">
+          <img src="../diagrams/issue_012_handoff_build_rich.png" alt="Building Multi-Agent Handoff: Copilot Studio agent transfer, Dataverse session state, Power Automate classification and analytics" style="width:100%;max-width:536px;height:auto;display:block;border-radius:6px;border:1px solid #E0E0E0;">
+          <p style="margin:6px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;color:#999999;font-style:italic;">Multi-Agent Handoff build — five build components</p>
+        </td></tr>
+      </table>
+
+
+
+      <p style="margin:0 0 12px 0;"><strong>Why this matters:</strong> The warm transfer is the right default for most multi-agent deployments (see <a href="https://microsoft.github.io/ai-cheatcode/issues/the_cheat_code_issue_011.html" style="color:#6B2FA0;text-decoration:underline;">Issue #011</a>). It gives users a seamless experience without the architectural complexity of shared session state. This build shows you every piece in order &#8212; so you can demo it to a customer and hand them a repeatable implementation pattern.</p>
+
+      <!-- Build Flow Diagram -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
+        <tr><td style="padding:14px 16px;">
+          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">End-to-End Build</p>
+          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
+            User asks HR Agent an IT question<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Fallback topic</strong> &#8594; low confidence &#8594; triggers classification<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Power Automate</strong> &#8594; calls Azure OpenAI: "Is this HR or IT?"<br>
+            &nbsp;&nbsp;&#8595;<br>
+            If IT: generate conversation summary &#8594; write to <span style="background:#E8E0F0;padding:1px 4px;border-radius:3px;">AgentSession</span><br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Agent Transfer</strong> topic &#8594; transfer to IT Agent<br>
+            &nbsp;&nbsp;&#8595;<br>
+            IT Agent greeting topic &#8594; reads <span style="background:#E8E0F0;padding:1px 4px;border-radius:3px;">AgentSession</span> &#8594; injects context<br>
+            &nbsp;&nbsp;&#8595;<br>
+            Seamless continuation with full context
+          </p>
+        </td></tr>
+      </table>
+
+      <p style="margin:0 0 10px 0;"><strong>Five components, in build order:</strong></p>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>Two agents with distinct scopes.</strong> Agent A: HR Knowledge Agent (PTO, benefits, onboarding). Agent B: IT Support Agent (devices, access, software). Each has its own knowledge sources, topics, and system prompt. The critical line in each system prompt: <em>"If the user asks about [other domain], do not attempt to answer &#8212; trigger the handoff topic."</em> This prevents hallucination across domain boundaries and is the foundation everything else builds on.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>Out-of-scope detection topic.</strong> In each agent, build a fallback topic that fires when generative answers return low confidence. This topic calls a Power Automate flow that classifies the query: <em>"Is this question about HR or IT?"</em> If the query belongs to the other agent, the flow returns a signal to trigger the handoff. Don't rely on keyword matching &#8212; use Azure OpenAI for classification so it handles ambiguous queries like "new hire laptop" that span both domains.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>Copilot Studio agent transfer with summary.</strong> Use the "Transfer to agent" system topic. Before the transfer fires, generate a conversation summary via Azure OpenAI: <em>"Summarize this conversation in 3 sentences, including the user's original question and what's been discussed so far."</em> Pass the summary as a context variable to the receiving agent. This is the warm transfer &#8212; Agent B starts with context instead of "How can I help you?"
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">4.</span>&nbsp; <strong>Dataverse session state.</strong> Create an <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">AgentSession</span> table with columns: <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">session_id</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">user_id</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">source_agent</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">target_agent</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">summary</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">handoff_reason</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">timestamp</span>. On handoff, write the session record. On receive, the greeting topic queries Dataverse for the session and injects the summary as context. This is what turns a one-off transfer into a system &#8212; every handoff is logged, queryable, and analyzable.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">5.</span>&nbsp; <strong>Handoff analytics.</strong> Power Automate logs every transfer. Build a Power BI dashboard tracking: handoff volume by direction (HR&#8594;IT vs IT&#8594;HR), round-trip rate (user bounced back to original agent), and resolution rate per agent. Set an alert: <em>"HR&#8594;IT handoff rate spiked 40% this week"</em> &#8212; that signals a knowledge gap in the HR agent that needs fixing. Analytics close the loop and tell you where to invest in each agent's knowledge base.
+        </td></tr>
+      </table>
+
+      <!-- Key Insight -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 14px 0;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
+          <strong style="color:#6B2FA0;">Key insight:</strong> The handoff analytics are the most valuable component long-term. They tell you which agents need broader knowledge, which handoff paths are friction points, and where misroutes are happening. Without analytics, you're flying blind &#8212; you built a multi-agent system but can't tell if it's working. With analytics, every handoff becomes a data point that improves the system.
+        </td></tr>
+      </table>
+
+      <!-- Warning -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF8E1;border-radius:4px;border:1px solid #FFE082;">
+        <tr><td style="padding:10px 14px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#795548;line-height:1.5;">
+          <strong>&#9888; Watch for circular handoffs:</strong> If both agents have weak coverage in an overlapping area (e.g., "software licenses for new hires"), users can get bounced between agents indefinitely. Add a <span style="font-family:Consolas,monospace;font-size:12px;">handoff_count</span> variable that increments on each transfer. If it exceeds 1 in a session, escalate to a human instead of transferring again. The Dataverse <span style="font-family:Consolas,monospace;font-size:12px;">AgentSession</span> table makes this trivial to detect and alert on.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- TRY THIS NOW -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #D83B01;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#D83B01;letter-spacing:1.5px;text-transform:uppercase;">&#128736; Try This Now</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:18px;font-weight:700;color:#1B1B3A;line-height:1.4;">Build a Two-Agent Handoff in One Session</h3>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">1</span></td>
+          <td style="padding-left:8px;"><strong>Clone an existing agent and split the knowledge.</strong> Take one of your customer's working Copilot Studio agents and duplicate it. Strip the knowledge sources: give Agent A the HR docs, give Agent B the IT docs. Update each system prompt with the boundary instruction: <em>"If the user asks about [other domain], do not answer &#8212; trigger the handoff topic."</em> Two agents, ten minutes.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">2</span></td>
+          <td style="padding-left:8px;"><strong>Add a fallback topic that detects out-of-scope queries.</strong> In each agent, create a topic triggered by the system's low-confidence fallback event. Wire it to a Power Automate flow that classifies the query using Azure OpenAI. If the query belongs to the other domain, set a variable that triggers the transfer. Test with: <em>"How do I get a laptop for my new hire?"</em> in the HR agent.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">3</span></td>
+          <td style="padding-left:8px;"><strong>Configure agent transfer with conversation summary passing.</strong> In the handoff topic, add an Azure OpenAI action that summarizes the conversation. Store the summary in a context variable and configure the "Transfer to agent" node pointing at Agent B. On the receiving side, build a greeting topic that reads the context variable and starts with: <em>"I see you were asking about [summary]. Let me help with that."</em></td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">4</span></td>
+          <td style="padding-left:8px;"><strong>Test the full loop.</strong> Ask Agent A a question that belongs to Agent B. Verify: (a)&nbsp;the fallback fires, (b)&nbsp;the classification is correct, (c)&nbsp;the summary is generated, and (d)&nbsp;Agent B picks up with full context. Then try the reverse &#8212; ask Agent B an HR question. Both directions should work identically.</td>
+        </tr>
+      </table>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#444444;line-height:1.6;">
+          <strong style="color:#6B2FA0;">&#128161; The line that opens doors:</strong> "What if your employees could ask any agent any question and always get routed to the right one &#8212; without restarting the conversation?"
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- NEXT ISSUE CTA -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
+    <tr><td align="center" style="padding:20px 24px;">
+      <p style="margin:0 0 6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;font-weight:700;color:#6B2FA0;">Got an agent or pattern to share?</p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#666666;line-height:1.5;">Reply to this email and you might be featured in a future issue.</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- FOOTER -->
+<tr><td style="padding:0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="padding:0 32px;"><hr style="border:none;border-top:1px solid #E0E0E0;margin:0;"></td></tr>
+    <tr><td align="center" style="padding:20px 32px 24px 32px;">
+      <p style="margin:0 0 4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;font-weight:600;color:#1B1B3A;">The Cheat Code</p>
+      <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;line-height:1.5;">ABS Tech Strategy &bull; AI Business Solutions<br>Questions or ideas for the next issue? Reply to this email.</p>
+      <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;"><a href="https://aka.ms/the-cheat-code" style="color:#6B2FA0;text-decoration:underline;">Browse all issues at aka.ms/the-cheat-code</a></p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:10px;color:#BBBBBB;">Microsoft Internal &bull; Not for external distribution</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>

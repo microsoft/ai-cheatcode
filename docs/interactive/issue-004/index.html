@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive: Secure In-Boundary Processing — The Cheat Code #004</title>
+<link rel="stylesheet" href="../shared/interactive.css">
+<style>
+  /* Issue-specific diagram styles (adapted from diagrams/issue_004_trust_boundary.html) */
+
+  .boundary {
+    border: 3px dashed #107C10;
+    border-radius: 20px;
+    padding: 28px 24px 24px;
+    position: relative;
+    background: linear-gradient(135deg, rgba(232,245,233,0.25) 0%, rgba(212,237,213,0.10) 100%);
+    margin-top: 20px;
+  }
+  .boundary-label {
+    position: absolute;
+    top: -14px;
+    left: 24px;
+    background: #107C10;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 16px;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .layers {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .layer {
+    border-radius: 14px;
+    padding: 16px 18px;
+    position: relative;
+    transition: all 0.4s ease;
+  }
+  .layer.dimmed { opacity: 0.25; transform: scale(0.98); }
+  .layer.highlighted { opacity: 1; transform: scale(1); box-shadow: 0 0 0 3px rgba(107,47,160,0.3); }
+
+  .layer-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .layer-copilot {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 1.5px solid #6B2FA0;
+  }
+  .layer-copilot .layer-label { color: #6B2FA0; }
+
+  .layer-mcp {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 1.5px solid #0078D4;
+  }
+  .layer-mcp .layer-label { color: #0078D4; }
+
+  .layer-process {
+    background: linear-gradient(135deg, #FFF8E1, #FFF0CC);
+    border: 1.5px solid #CA5010;
+  }
+  .layer-process .layer-label { color: #CA5010; }
+
+  .layer-ai {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 1.5px solid #107C10;
+  }
+  .layer-ai .layer-label { color: #107C10; }
+
+  .component-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .component {
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+    flex: 1;
+    min-width: 160px;
+  }
+  .comp-name {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .comp-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+  .icon {
+    width: 26px; height: 26px; border-radius: 6px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px; color: white; flex-shrink: 0;
+  }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-orange { background: #CA5010; }
+  .icon-green { background: #107C10; }
+  .icon-teal { background: #008272; }
+
+  .lock-badge {
+    font-size: 9px;
+    font-weight: 600;
+    background: #0078D4;
+    color: white;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+
+  /* Flow arrows between layers */
+  .flow-arrow {
+    display: flex;
+    justify-content: center;
+    padding: 4px 0;
+  }
+  .varrow { display: flex; flex-direction: column; align-items: center; }
+  .varrow .shaft { width: 2px; height: 10px; background: #555; }
+  .varrow .head { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid #555; }
+  .varrow .label { font-size: 9px; color: #6B6B8D; font-style: italic; }
+
+  /* Blocked panel */
+  .blocked-panel {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    transition: all 0.4s ease;
+  }
+  .blocked-panel.dimmed { opacity: 0.25; }
+  .blocked-panel.highlighted { opacity: 1; }
+
+  .blocked-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #FDEDED;
+    border: 2px solid #D13438;
+    border-radius: 10px;
+    padding: 10px 16px;
+  }
+  .blocked-x {
+    width: 28px; height: 28px;
+    background: #D13438; color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; flex-shrink: 0;
+  }
+  .blocked-text { font-size: 12px; font-weight: 600; color: #D13438; }
+  .blocked-desc { font-size: 10px; color: #8B4444; }
+
+  .guarantee {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 12px;
+    color: #107C10;
+    font-weight: 600;
+    transition: all 0.4s ease;
+  }
+  .guarantee.dimmed { opacity: 0.25; }
+  .guarantee.highlighted { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div id="diagram" class="interactive-diagram">
+  <div class="page-header">
+    <a href="../../index.html" class="back-link">← All Patterns</a>
+    <h1>Secure In-Boundary Processing</h1>
+    <p class="page-subtitle">Every component stays within the customer tenant</p>
+  </div>
+
+  <div class="boundary">
+    <div class="boundary-label">🔒 CUSTOMER TENANT BOUNDARY</div>
+
+    <div class="layers">
+      <!-- Layer 1: Copilot Platform -->
+      <div class="layer layer-copilot" data-layer="copilot">
+        <div class="layer-label">🟣 M365 Copilot Platform</div>
+        <div class="component-row">
+          <div class="component">
+            <div class="comp-name"><div class="icon icon-teal">💬</div> Copilot Chat</div>
+            <div class="comp-desc">User-facing interface. All interactions authenticated via Entra ID.</div>
+          </div>
+          <div class="component">
+            <div class="comp-name"><div class="icon icon-purple">📋</div> Declarative Agent <span class="lock-badge">🔒 Tenant-Scoped</span></div>
+            <div class="comp-desc">Agent config bound to customer's M365 tenant. Cannot access other orgs.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Scoped API requests</div><div class="head"></div></div></div>
+
+      <!-- Layer 2: MCP Connectors -->
+      <div class="layer layer-mcp" data-layer="mcp">
+        <div class="layer-label">🔌 MCP Connectors — Scoped to Tenant</div>
+        <div class="component-row">
+          <div class="component">
+            <div class="comp-name"><div class="icon icon-blue">🔧</div> ADO <span class="lock-badge">🔒 Org</span></div>
+            <div class="comp-desc">Work items, repos, pipelines. Scoped to customer's Azure DevOps org.</div>
+          </div>
+          <div class="component">
+            <div class="comp-name"><div class="icon icon-blue">📧</div> Graph <span class="lock-badge">🔒 Tenant</span></div>
+            <div class="comp-desc">Mail, calendar, files, people. Delegated tenant permissions.</div>
+          </div>
+          <div class="component">
+            <div class="comp-name"><div class="icon icon-blue">📄</div> SharePoint <span class="lock-badge">🔒 Site</span></div>
+            <div class="comp-desc">Documents, lists. Scoped to authorized sites only.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Results aggregated in-session</div><div class="head"></div></div></div>
+
+      <!-- Layer 3: In-Memory Processing -->
+      <div class="layer layer-process" data-layer="process">
+        <div class="layer-label">⚙️ In-Memory Processing</div>
+        <div class="component-row">
+          <div class="component" style="text-align:center;">
+            <div class="comp-name" style="justify-content:center;"><div class="icon icon-orange">🧮</div> In-Memory Aggregation</div>
+            <div class="comp-desc" style="text-align:center;">No persistent external store. Data lives <strong>only in session memory</strong>. Zero data residue.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Grounding data → model</div><div class="head"></div></div></div>
+
+      <!-- Layer 4: Tenant-Scoped AI -->
+      <div class="layer layer-ai" data-layer="ai">
+        <div class="layer-label">🧠 Tenant-Scoped AI</div>
+        <div class="component-row">
+          <div class="component" style="text-align:center;">
+            <div class="comp-name" style="justify-content:center;"><div class="icon icon-green">🧠</div> Azure OpenAI — Customer's Instance <span class="lock-badge" style="background:#107C10;">🔒 Tenant</span></div>
+            <div class="comp-desc" style="text-align:center;">Customer-provisioned deployment. Data processed in their Azure region. <strong>Data never leaves the tenant boundary.</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blocked external paths -->
+  <div class="blocked-panel" data-layer="blocked">
+    <div class="blocked-item">
+      <div class="blocked-x">✕</div>
+      <div>
+        <div class="blocked-text">No External API Calls</div>
+        <div class="blocked-desc">Agent never calls outside the tenant</div>
+      </div>
+    </div>
+    <div class="blocked-item">
+      <div class="blocked-x">✕</div>
+      <div>
+        <div class="blocked-text">No Cross-Tenant Data</div>
+        <div class="blocked-desc">Zero visibility into other orgs</div>
+      </div>
+    </div>
+    <div class="blocked-item">
+      <div class="blocked-x">✕</div>
+      <div>
+        <div class="blocked-text">No Public LLM Endpoints</div>
+        <div class="blocked-desc">Private Azure OpenAI only</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="guarantee" data-layer="guarantee">🛡️ "Our data can't leave" → "Show me how" — This pattern removes the #1 blocker for regulated industries.</div>
+</div>
+
+<div class="interactive-footer">
+  <p>The Cheat Code · ABS Tech Strategy · <a href="https://aka.ms/the-cheat-code">Browse all issues</a></p>
+</div>
+
+<script src="../shared/interactive.js"></script>
+<script>
+  window.interactiveConfig = {
+    container: '#diagram',
+    steps: [
+      {
+        id: 'overview',
+        title: 'The Trust Boundary Architecture',
+        description: 'When customers say "our data can\'t leave our tenant," this is the architecture that turns that objection into a deal. Every component — from the user interface to the AI model — operates within the customer\'s own Microsoft tenant boundary. Click through each layer to see how it works.',
+        highlight: []
+      },
+      {
+        id: 'copilot',
+        title: 'Layer 1: M365 Copilot Platform',
+        description: 'The user interacts through Copilot Chat, authenticated via Entra ID. The Declarative Agent configuration is bound to the customer\'s M365 tenant — it physically cannot access other organizations. This is the entry point, and it\'s already inside the boundary.',
+        highlight: ['[data-layer="copilot"]']
+      },
+      {
+        id: 'mcp',
+        title: 'Layer 2: MCP Connectors — Scoped Access',
+        description: 'Model Context Protocol provides structured, authenticated access to data sources. Each connector is scoped: ADO to the customer\'s org, Graph to their tenant, SharePoint to authorized sites. MCP is built for compliance — unlike raw REST calls that require custom auth and audit logic.',
+        highlight: ['[data-layer="mcp"]']
+      },
+      {
+        id: 'process',
+        title: 'Layer 3: In-Memory Processing',
+        description: 'This is the critical principle: the agent assembles context at runtime but never writes sensitive data to new databases or file systems. When the task completes, the aggregated context is gone. Zero data residue. No new storage surfaces to audit.',
+        highlight: ['[data-layer="process"]']
+      },
+      {
+        id: 'ai',
+        title: 'Layer 4: Tenant-Scoped AI',
+        description: 'The LLM itself is the customer\'s own Azure OpenAI deployment — provisioned in their Azure subscription, running in their selected region. Data is processed in-context, not exported to third-party models. The model weights and prompts are isolated per tenant.',
+        highlight: ['[data-layer="ai"]']
+      },
+      {
+        id: 'blocked',
+        title: 'What\'s Explicitly Blocked',
+        description: 'The architecture doesn\'t just keep data in — it actively prevents data from leaving. No external API calls, no cross-tenant data flow, no public LLM endpoints. Each blocked path maps to a specific compliance concern that regulated industries raise.',
+        highlight: ['[data-layer="blocked"]']
+      },
+      {
+        id: 'guarantee',
+        title: 'The Line That Opens Doors',
+        description: '"What if I showed you an agent that can read your sensitive data, reason over it, and recommend actions — without any of that data ever leaving your Microsoft tenant? No third-party models. No new data stores. No exfiltration surface." This pattern is the foundation that makes all other patterns possible for regulated customers.',
+        highlight: ['[data-layer="guarantee"]']
+      }
+    ]
+  };
+</script>
+</body>
+</html>

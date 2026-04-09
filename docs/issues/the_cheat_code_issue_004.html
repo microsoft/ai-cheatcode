@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>The Cheat Code — Issue #004: Secure In-Boundary Processing</title>
+<!--[if mso]>
+<style type="text/css">
+  body, table, td, p, h1, h2, h3 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
+  .mono { font-family: Consolas, 'Courier New', monospace !important; }
+</style>
+<![endif]-->
+<style type="text/css">
+  body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+  table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+  img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+  body { margin: 0; padding: 0; width: 100% !important; -webkit-font-smoothing: antialiased; }
+  @media only screen and (max-width: 620px) {
+    .wrapper { width: 100% !important; padding: 8px !important; }
+    .content-block { padding: 16px !important; }
+    .header-title { font-size: 22px !important; }
+    .konami { font-size: 7px !important; letter-spacing: 1px !important; }
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;color:#333333;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f4f4;">
+<tr><td align="center" style="padding:24px 10px;">
+<!-- GLOBAL NAV BAR -->
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;margin-bottom:12px;">
+<tr><td style="background:#1B1B3A;border-radius:8px;padding:10px 20px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td style="font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;font-weight:700;">
+      <a href="../index.html" style="color:#ffffff;text-decoration:none;">The Cheat Code</a>
+    </td>
+    <td style="text-align:center;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;">
+      <a href="../interactive/issue-001/" style="color:rgba(255,255,255,0.5);text-decoration:none;padding:4px 8px;">#001</a>
+      <a href="../interactive/issue-002/" style="color:rgba(255,255,255,0.5);text-decoration:none;padding:4px 8px;">#002</a>
+    </td>
+    <td style="text-align:right;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;">
+      <a href="../index.html" style="color:rgba(255,255,255,0.7);text-decoration:none;">&#128218; All Issues</a>
+    </td>
+  </tr>
+  </table>
+</td></tr>
+</table>
+<table role="presentation" class="wrapper" width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-radius:8px;max-width:600px;width:100%;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+
+<!-- HEADER -->
+<tr><td style="padding:0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="background:#6B2FA0;height:6px;border-radius:8px 8px 0 0;font-size:1px;">&nbsp;</td></tr>
+    <tr><td align="center" style="background:#1B1B3A;padding:32px 24px 12px 24px;">
+      <h1 class="header-title" style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:28px;font-weight:700;color:#ffffff;line-height:1.3;letter-spacing:0.5px;">The Cheat Code</h1>
+      <p style="margin:8px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#B8A9C9;letter-spacing:0.3px;">Agent Patterns for Copilot Chat</p>
+    </td></tr>
+    <tr><td align="center" style="background:#1B1B3A;padding:0 24px 8px 24px;">
+      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#9651; &#9651; &#9661; &#9661; &#9665; &#9655; &#9665; &#9655; B A START</p>
+    </td></tr>
+    <tr><td align="center" style="background:#F0ECF5;padding:12px 24px;">
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #004 &nbsp;&bull;&nbsp; APRIL 13, 2026 &nbsp;&bull;&nbsp; WEEKLY</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- INTRO -->
+<tr><td class="content-block" style="padding:24px 32px 16px 32px;">
+  <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
+    You've heard this from a customer: <em>"We can't use AI &#8212; our data can't leave our tenant."</em> Legal, healthcare, financial services, government &#8212; the objection is real, and it kills deals.
+  </p>
+  <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
+    <strong>This issue's pattern:</strong> How to build agents that process sensitive data without any of it leaving the Microsoft boundary. This is the architecture that turns "we can't" into "show me how."
+  </p>
+</td></tr>
+
+<!-- AGENT SPOTLIGHT -->
+<tr><td class="content-block" style="padding:8px 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #6B2FA0;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#6B2FA0;letter-spacing:1.5px;text-transform:uppercase;">&#127918; Agent Spotlight</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">The Work Item Triage Agent (continued)</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Built by Raghav BN &nbsp;&bull;&nbsp; Part 3 of 3 from this agent</p>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <p style="margin:0 0 14px 0;">
+        <strong>The scenario:</strong> Work items often contain sensitive information &#8212; customer names, account details, PII from escalations, internal security incidents. The triage agent needs to read, search, and reason over this data. But it also can't export it to any external service, store it persistently outside authorized systems, or create new data exfiltration surfaces.
+      </p>
+      <p style="margin:0;">
+        Raghav's agent solves this by using MCP (Model Context Protocol) connectors to access Azure DevOps and M365 data within the Microsoft boundary, processing everything in-memory, and using Work IQ as an in-boundary reasoning engine. No data leaves. No new storage surfaces. The agent reads, reasons, and recommends &#8212; all within the tenant.
+      </p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- PATTERN BREAKDOWN -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #0078D4;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#0078D4;letter-spacing:1.5px;text-transform:uppercase;">&#129513; Pattern Breakdown</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Secure In-Boundary Processing</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">MCP connectors + in-memory aggregation + tenant-scoped auth</p>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <p style="margin:0 0 14px 0;">
+        <strong>Why this matters:</strong> Most agent architectures involve moving data somewhere for processing &#8212; an external LLM, a vector database, a processing pipeline. For customers with sensitive data, each hop is a compliance risk. The question isn't "can AI help?" &#8212; it's "can AI help <em>without creating new risk?</em>"
+      </p>
+
+      <p style="margin:0 0 10px 0;"><strong>The architecture has four principles:</strong></p>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>MCP over REST APIs.</strong> Model Context Protocol provides structured, authenticated access to data sources like Azure DevOps. It's built for compliance &#8212; unlike raw REST calls that require custom auth and audit logic.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>In-memory aggregation.</strong> The agent assembles context at runtime &#8212; it doesn't write sensitive data to new databases or file systems. When the task is complete, the aggregated context is gone.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>Tenant-scoped authentication.</strong> The agent authenticates via Azure CLI within the customer's tenant. It can only access what the authenticated user can access &#8212; no privilege escalation.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">4.</span>&nbsp; <strong>In-boundary reasoning.</strong> Work IQ handles search and LLM reasoning within the Microsoft boundary. Data is processed in-context, not exported to third-party models.
+        </td></tr>
+      </table>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF8E1;border-radius:4px;border:1px solid #FFE082;">
+        <tr><td style="padding:10px 14px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#795548;line-height:1.5;">
+          <strong>&#9888; Watch for this:</strong> During development, local logging can inadvertently capture PII from work items or search results. Before any customer-facing deployment, audit logging practices to ensure sensitive data isn't being written to local files or dev consoles.
+        </td></tr>
+      </table>
+
+      <!-- Architecture diagram -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:14px 0 16px 0;">
+        <tr><td style="padding:0;">
+          <img src="../diagrams/issue_004_trust_boundary_rich.png" alt="Secure In-Boundary Processing architecture: Customer tenant boundary containing Copilot Chat, Declarative Agent, MCP Connectors (ADO, Graph, SharePoint), In-Memory Aggregation, and Tenant-Scoped Azure OpenAI — data never leaves the boundary" style="width:100%;max-width:536px;height:auto;display:block;border-radius:6px;border:1px solid #E0E0E0;">
+          <p style="margin:6px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;color:#999999;font-style:italic;">Secure In-Boundary Processing — every component stays within the customer tenant</p>
+        </td></tr>
+      </table>
+
+      <p style="margin:14px 0 0 0;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
+          <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
+            <strong style="color:#6B2FA0;">Key insight:</strong> This isn't just about security &#8212; it's about removing the biggest objection to AI adoption in regulated industries. When you can demonstrate that zero data leaves the tenant, the conversation shifts from "can we?" to "where do we start?"
+          </td></tr>
+        </table>
+      </p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- TRY THIS NOW -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #D83B01;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#D83B01;letter-spacing:1.5px;text-transform:uppercase;">&#128736; Try This Now</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:18px;font-weight:700;color:#1B1B3A;line-height:1.4;">Turn "We Can't Use AI" into a Deal</h3>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">1</span></td>
+          <td style="padding-left:8px;"><strong>Identify the blocked account.</strong> Which customer has said "our data can't leave" or "we're not allowed to use AI for this"? Legal, healthcare, financial services, and government accounts almost always have this objection.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">2</span></td>
+          <td style="padding-left:8px;"><strong>Understand the specific concern.</strong> Is it data residency? Third-party model access? Persistent storage of sensitive data? PII in logs? Each concern maps to a specific architecture principle above.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">3</span></td>
+          <td style="padding-left:8px;"><strong>Walk through the architecture.</strong> Show them the four principles: MCP access, in-memory processing, tenant-scoped auth, in-boundary reasoning. For each one, explain how it addresses their specific concern.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">4</span></td>
+          <td style="padding-left:8px;"><strong>Combine with prior patterns.</strong> Once the security objection is removed, you can layer on scoped search (<a href="https://microsoft.github.io/ai-cheatcode/issues/the_cheat_code_issue_002.html" style="color:#6B2FA0;text-decoration:underline;">Issue #002</a>) and prompt-chained triage (<a href="https://microsoft.github.io/ai-cheatcode/issues/the_cheat_code_issue_003.html" style="color:#6B2FA0;text-decoration:underline;">Issue #003</a>) to build a complete agent solution. The in-boundary architecture is the foundation that makes everything else possible for these customers.</td>
+        </tr>
+      </table>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#444444;line-height:1.6;">
+          <strong style="color:#6B2FA0;">&#128161; The line that opens doors:</strong> "What if I showed you an agent that can read your sensitive data, reason over it, and recommend actions &#8212; without any of that data ever leaving your Microsoft tenant? No third-party models. No new data stores. No exfiltration surface."
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- WHERE THIS LANDS -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #CA5010;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#CA5010;letter-spacing:1.5px;text-transform:uppercase;">&#127942; Where This Pattern Lands</h2>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Financial services</strong> &#8212; trade surveillance, compliance monitoring, client communication review
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Healthcare</strong> &#8212; patient record analysis, clinical documentation, claims processing
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Government</strong> &#8212; citizen services, case management, benefits adjudication
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Legal</strong> &#8212; case data (including sensitive domestic/criminal matters), privileged communications
+        </td></tr>
+        <tr><td style="padding:3px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#CA5010;font-weight:bold;">&#8226;</span>&nbsp; <strong>Any regulated industry</strong> where "data can't leave" has been the blocker to AI adoption
+        </td></tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF3E0;border-radius:6px;border:1px solid #FFCC80;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#5D4037;line-height:1.6;">
+          <strong>Series recap:</strong> Over the last 3 issues, we've covered the full stack from Raghav's triage agent &#8212; scoped search for quality, prompt chaining + playbooks for process automation, and in-boundary architecture for compliance. Together, these patterns let you pitch: "An agent that triages your intake queue, finds the right context, follows your team's process, and keeps all data in your tenant."
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- NEXT ISSUE CTA -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
+    <tr><td align="center" style="padding:20px 24px;">
+      <p style="margin:0 0 6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;font-weight:700;color:#6B2FA0;">Got an agent or pattern to share?</p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#666666;line-height:1.5;">Reply to this email and you might be featured in <a href="https://microsoft.github.io/ai-cheatcode/issues/the_cheat_code_issue_005.html" style="color:#6B2FA0;text-decoration:underline;">Issue #005</a>.</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- FOOTER -->
+<tr><td style="padding:0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="padding:0 32px;"><hr style="border:none;border-top:1px solid #E0E0E0;margin:0;"></td></tr>
+    <tr><td align="center" style="padding:20px 32px 24px 32px;">
+      <p style="margin:0 0 4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;font-weight:600;color:#1B1B3A;">The Cheat Code</p>
+      <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;line-height:1.5;">ABS Tech Strategy &bull; AI Business Solutions<br>Questions or ideas for the next issue? Reply to this email.</p>
+      <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;"><a href="https://aka.ms/the-cheat-code" style="color:#6B2FA0;text-decoration:underline;">Browse all issues at aka.ms/the-cheat-code</a></p>
+      <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">📦 <a href="https://github.com/microsoft/the-cheat-code/tree/main/samples/issue-004" style="color:#6B2FA0;text-decoration:underline;">Code sample for this issue</a></p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:10px;color:#BBBBBB;">Microsoft Internal &bull; Not for external distribution</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>

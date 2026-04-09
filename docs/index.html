@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Cheat Code — Interactive Pattern Library</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f4f4;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Nav */
+  .global-nav {
+    background: #1B1B3A;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    height: 48px;
+    position: sticky;
+    top: 0;
+    z-index: 300;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .global-nav .nav-brand {
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    margin-right: 24px;
+    white-space: nowrap;
+  }
+  .global-nav .nav-brand:hover { color: #B8A9C9; }
+  .global-nav .nav-divider {
+    width: 1px; height: 24px;
+    background: rgba(255,255,255,0.15);
+    margin: 0 16px; flex-shrink: 0;
+  }
+  .global-nav .nav-issues {
+    display: flex; align-items: center; gap: 4px;
+    overflow-x: auto; flex: 1;
+  }
+  .global-nav .nav-issue-link {
+    font-size: 12px; font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none; padding: 6px 12px;
+    border-radius: 6px; white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+  }
+  .global-nav .nav-issue-link:hover {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.85);
+  }
+
+  /* Hero */
+  .hero {
+    background: #1B1B3A;
+    padding: 56px 32px 48px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 36px; font-weight: 700; color: #fff; letter-spacing: 0.5px; margin-bottom: 12px; }
+  .hero .subtitle { font-size: 16px; color: #B8A9C9; line-height: 1.6; max-width: 540px; margin: 0 auto 16px; }
+  .hero .konami {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 8px; color: #6B2FA0; letter-spacing: 3px;
+  }
+  .hero .tagline {
+    margin-top: 20px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.3px;
+  }
+
+  /* Main content */
+  .main { max-width: 800px; margin: 0 auto; padding: 32px 16px 48px; }
+
+  /* Section labels */
+  .section-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.5px; color: #6B2FA0;
+    margin: 0 0 16px; padding-bottom: 6px;
+    border-bottom: 2px solid #F0ECF5;
+  }
+
+  /* Pattern cards — the main attraction */
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .pattern-card {
+    background: #fff;
+    border: 1px solid #E0D4EC;
+    border-radius: 12px;
+    padding: 20px;
+    text-decoration: none;
+    color: #1B1B3A;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+  .pattern-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(107, 47, 160, 0.12);
+    border-color: #6B2FA0;
+  }
+  .pattern-card .card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .pattern-card .card-num {
+    font-family: Consolas, monospace;
+    font-size: 11px; font-weight: 700;
+    color: #fff; background: #6B2FA0;
+    padding: 2px 8px; border-radius: 4px;
+  }
+  .pattern-card .card-builder {
+    font-size: 11px; color: #999;
+  }
+  .pattern-card .card-title {
+    font-size: 17px; font-weight: 700;
+    margin-bottom: 8px; line-height: 1.3;
+  }
+  .pattern-card .card-desc {
+    font-size: 13px; color: #666;
+    line-height: 1.5; flex: 1;
+    margin-bottom: 12px;
+  }
+  .pattern-card .card-cta {
+    font-size: 12px; font-weight: 600;
+    color: #6B2FA0;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .pattern-card .card-tags {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    margin-top: 8px;
+  }
+  .tag {
+    font-size: 10px; font-weight: 600;
+    padding: 2px 7px; border-radius: 3px;
+  }
+  .tag-purple { color: #6B2FA0; background: #F0ECF5; }
+  .tag-blue { color: #0078D4; background: #EBF3FD; }
+  .tag-green { color: #107C10; background: #E8F5E9; }
+  .tag-orange { color: #D83B01; background: #FFF3E0; }
+
+  /* Coming soon cards */
+  .pattern-card.coming-soon {
+    opacity: 0.4;
+    pointer-events: none;
+    border-style: dashed;
+  }
+
+  /* Newsletter note */
+  .newsletter-note {
+    background: #F0ECF5;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .newsletter-note .note-icon { font-size: 20px; flex-shrink: 0; }
+  .newsletter-note .note-text { font-size: 13px; color: #555; line-height: 1.6; }
+  .newsletter-note .note-text strong { color: #1B1B3A; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 24px;
+    border-top: 1px solid #e0e0e0;
+    background: #fff;
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: 0 0 8px 8px;
+  }
+  .footer p { font-size: 12px; color: #888; line-height: 1.5; margin: 0; }
+  .footer .team { font-size: 13px; font-weight: 600; color: #1B1B3A; margin-bottom: 4px; }
+  .footer .internal { font-size: 10px; color: #bbb; margin-top: 8px; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 40px 20px 32px; }
+    .hero h1 { font-size: 28px; }
+    .main { padding: 24px 12px; }
+    .pattern-grid { grid-template-columns: 1fr; }
+    .global-nav { padding: 0 12px; height: 44px; }
+    .global-nav .nav-brand { font-size: 13px; margin-right: 12px; }
+    .global-nav .nav-issue-link { font-size: 11px; padding: 5px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="global-nav" aria-label="Issue navigation">
+  <a class="nav-brand" href="index.html">The Cheat Code</a>
+  <div class="nav-divider"></div>
+  <div class="nav-issues">
+    <a class="nav-issue-link" href="interactive/issue-001/index.html">#001 Code-First Agent Delivery</a>
+    <a class="nav-issue-link" href="interactive/issue-002/index.html">#002 Scoped Multi-Source Search</a>
+    <a class="nav-issue-link" href="interactive/issue-003/index.html">#003 Prompt-Chained Triage</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>The Cheat Code</h1>
+  <div class="subtitle">Double-click into the agent patterns that are landing with real customers. Each card is an interactive walkthrough — architecture, design decisions, and the "why" behind every layer.</div>
+  <div class="konami">&#9650; &#9650; &#9660; &#9660; &#9664; &#9654; &#9664; &#9654; B A START</div>
+  <div class="tagline">ABS Tech Strategy &bull; AI Business Solutions</div>
+</div>
+
+<div class="main">
+
+  <!-- Newsletter callout -->
+  <div class="newsletter-note">
+    <span class="note-icon">📬</span>
+    <div class="note-text">
+      <strong>New issues land weekly in Outlook Newsletters.</strong>
+      Subscribe in New Outlook → Newsletters → search "The Cheat Code" for delivery + back-issue catalog. This site is where you double-click into the patterns.
+    </div>
+  </div>
+
+  <!-- LIVE INTERACTIVE PATTERNS -->
+  <div class="section-label">🔬 Explore the Patterns</div>
+  <div class="pattern-grid">
+
+    <a class="pattern-card" href="interactive/issue-001/index.html">
+      <div class="card-header">
+        <span class="card-num">#001</span>
+        <span class="card-builder">Cristiano Almeida Gonçalves</span>
+      </div>
+      <div class="card-title">Code-First Agent Delivery</div>
+      <div class="card-desc">Build, deploy, and integrate a production agent into Teams in a single working session. VS Code → Azure → Copilot Chat.</div>
+      <div class="card-cta">🔬 Explore interactively →</div>
+      <div class="card-tags">
+        <span class="tag tag-purple">VS Code</span>
+        <span class="tag tag-blue">Azure</span>
+        <span class="tag tag-green">Teams</span>
+      </div>
+    </a>
+
+    <a class="pattern-card" href="interactive/issue-002/index.html">
+      <div class="card-header">
+        <span class="card-num">#002</span>
+        <span class="card-builder">Raghav BN</span>
+      </div>
+      <div class="card-title">Scoped Multi-Source Search</div>
+      <div class="card-desc">Stop searching everything. Analyze the input first, then target specific sources. The fix for "Copilot found the wrong stuff."</div>
+      <div class="card-cta">🔬 Explore interactively →</div>
+      <div class="card-tags">
+        <span class="tag tag-blue">RAG</span>
+        <span class="tag tag-purple">Query Routing</span>
+        <span class="tag tag-orange">ADO + Graph</span>
+      </div>
+    </a>
+
+    <a class="pattern-card" href="interactive/issue-003/index.html">
+      <div class="card-header">
+        <span class="card-num">#003</span>
+        <span class="card-builder">Raghav BN</span>
+      </div>
+      <div class="card-title">Prompt-Chained Triage</div>
+      <div class="card-desc">Extract → Classify → Recommend. One prompt chain with YAML playbooks that replaces a manual triage board.</div>
+      <div class="card-cta">🔬 Explore interactively →</div>
+      <div class="card-tags">
+        <span class="tag tag-purple">Prompt Chaining</span>
+        <span class="tag tag-orange">YAML Playbooks</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- COMING NEXT -->
+  <div class="section-label">Coming Soon</div>
+  <div class="pattern-grid">
+    <div class="pattern-card coming-soon">
+      <div class="card-header">
+        <span class="card-num">#004</span>
+        <span class="card-builder">Raghav BN</span>
+      </div>
+      <div class="card-title">Secure In-Boundary Processing</div>
+      <div class="card-desc">"Our data can't leave our tenant." MCP connectors + in-memory aggregation + tenant-scoped AI. The architecture for regulated industries.</div>
+    </div>
+    <div class="pattern-card coming-soon">
+      <div class="card-header">
+        <span class="card-num">#005</span>
+        <span class="card-builder">Pete Puustinen</span>
+      </div>
+      <div class="card-title">Human-in-the-Loop Approval Gates</div>
+      <div class="card-desc">When the agent needs a human to say "yes" before it acts. Approval flows that don't break the conversation.</div>
+    </div>
+    <div class="pattern-card coming-soon">
+      <div class="card-header">
+        <span class="card-num">#006</span>
+        <span class="card-builder">Pete Puustinen</span>
+      </div>
+      <div class="card-title">Meeting-to-Knowledge Pipeline</div>
+      <div class="card-desc">Turn meeting recordings into structured, searchable knowledge that agents can reason over.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p class="team">The Cheat Code</p>
+  <p>ABS Tech Strategy &bull; AI Business Solutions</p>
+  <p class="internal">Microsoft Internal &bull; Not for external distribution</p>
+</div>
+
+</body>
+</html>

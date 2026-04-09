@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>The Cheat Code — Issue #019: Building Agent Analytics in Copilot Studio</title>
+<!--[if mso]>
+<style type="text/css">
+  body, table, td, p, h1, h2, h3 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
+  .mono { font-family: Consolas, 'Courier New', monospace !important; }
+</style>
+<![endif]-->
+<style type="text/css">
+  body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+  table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+  img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+  body { margin: 0; padding: 0; width: 100% !important; -webkit-font-smoothing: antialiased; }
+  @media only screen and (max-width: 620px) {
+    .wrapper { width: 100% !important; padding: 8px !important; }
+    .content-block { padding: 16px !important; }
+    .header-title { font-size: 22px !important; }
+    .konami { font-size: 7px !important; letter-spacing: 1px !important; }
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;color:#333333;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f4f4;">
+<tr><td align="center" style="padding:24px 10px;">
+<!-- GLOBAL NAV BAR -->
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;margin-bottom:12px;">
+<tr><td style="background:#1B1B3A;border-radius:8px;padding:10px 20px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td style="font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;font-weight:700;">
+      <a href="../index.html" style="color:#ffffff;text-decoration:none;">The Cheat Code</a>
+    </td>
+    <td style="text-align:center;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;">
+      <a href="../interactive/issue-001/" style="color:rgba(255,255,255,0.5);text-decoration:none;padding:4px 8px;">#001</a>
+      <a href="../interactive/issue-002/" style="color:rgba(255,255,255,0.5);text-decoration:none;padding:4px 8px;">#002</a>
+    </td>
+    <td style="text-align:right;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;">
+      <a href="../index.html" style="color:rgba(255,255,255,0.7);text-decoration:none;">&#128218; All Issues</a>
+    </td>
+  </tr>
+  </table>
+</td></tr>
+</table>
+<table role="presentation" class="wrapper" width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-radius:8px;max-width:600px;width:100%;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+
+<!-- HEADER -->
+<tr><td style="padding:0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="background:#6B2FA0;height:6px;border-radius:8px 8px 0 0;font-size:1px;">&nbsp;</td></tr>
+    <tr><td align="center" style="background:#1B1B3A;padding:32px 24px 12px 24px;">
+      <h1 class="header-title" style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:28px;font-weight:700;color:#ffffff;line-height:1.3;letter-spacing:0.5px;">The Cheat Code</h1>
+      <p style="margin:8px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#B8A9C9;letter-spacing:0.3px;">Agent Patterns for Copilot Chat</p>
+    </td></tr>
+    <tr><td align="center" style="background:#1B1B3A;padding:0 24px 8px 24px;">
+      <p class="konami" style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:8px;color:#6B2FA0;letter-spacing:3px;">&#9195; &#9195; &#9196; &#9196; &#9194; &#9193; &#9194; &#9193; B A START</p>
+    </td></tr>
+    <tr><td align="center" style="background:#F0ECF5;padding:12px 24px;">
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:600;color:#6B2FA0;letter-spacing:0.5px;">ISSUE #018 &nbsp;&bull;&nbsp; JULY 21, 2026 &nbsp;&bull;&nbsp; &#128295; PRACTICAL BUILD</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- INTRO -->
+<tr><td class="content-block" style="padding:24px 32px 16px 32px;">
+  <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
+    <a href="the_cheat_code_issue_017.html" style="color:#0078D4;text-decoration:underline;">Last issue</a>, we named the Evaluation &#38; Trust pattern &#8212; three layers of metrics, hallucination detection, regression testing, and user trust signals. This issue, we build the dashboard. By the end, you&#8217;ll have a working analytics stack that answers two questions in real-time: &#8220;How many people used your agent yesterday?&#8221; and &#8220;Were the answers any good?&#8221;
+  </p>
+  <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#555555;line-height:1.7;">
+    <strong>This issue&#8217;s build:</strong> A complete agent analytics stack using Copilot Studio built-in analytics, Application Insights custom telemetry, a Power BI dashboard, an automated regression alert flow, and a user feedback capture system.
+  </p>
+</td></tr>
+
+<!-- AGENT SPOTLIGHT -->
+<tr><td class="content-block" style="padding:8px 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #6B2FA0;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#6B2FA0;letter-spacing:1.5px;text-transform:uppercase;">&#127918; Agent Spotlight</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">The Agent Analytics Dashboard</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Copilot Studio + Application Insights + Power BI + Power Automate</p>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+      <p style="margin:0 0 14px 0;">
+        <strong>The scenario:</strong> A customer shipped their Copilot Studio agent six weeks ago. Leadership is asking for numbers. The agent owner opens the built-in analytics page and sees session counts &#8212; but nothing about answer quality, confidence trends, or user satisfaction. They can tell you the agent was used 200 times last week. They can&#8217;t tell you whether those 200 interactions were helpful.
+      </p>
+      <p style="margin:0 0 14px 0;">
+        <strong>The solution:</strong> Layer five analytics components on top of an existing Copilot Studio agent. The built-in analytics handle adoption. Application Insights captures quality signals. Power BI visualizes both. Power Automate automates regression detection and feedback collection. Total build time: one focused session.
+      </p>
+      <p style="margin:0;">
+        <strong>Why this stack:</strong> Every component is native to the Microsoft ecosystem &#8212; no third-party tools, no custom infrastructure. Copilot Studio has a built-in Application Insights connector. Power BI connects to App Insights via the KQL data source. Power Automate orchestrates the regression tests and feedback flows. The customer likely already has licenses for all of it.
+      </p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- PATTERN BREAKDOWN -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #0078D4;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#0078D4;letter-spacing:1.5px;text-transform:uppercase;">&#129513; Pattern Breakdown</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;font-weight:700;color:#1B1B3A;line-height:1.4;">Building Agent Analytics in Copilot Studio</h3>
+      <p style="margin:4px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;">Five components: built-in analytics + App Insights telemetry + Power BI dashboard + regression alerts + user feedback</p>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+
+      <!-- Architecture Diagram -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr><td style="padding:0;">
+          <img src="../diagrams/issue_018_analytics_build_rich.png" alt="Building Agent Analytics: built-in analytics, App Insights telemetry, Power BI dashboard, regression alerts, and user feedback" style="width:100%;max-width:536px;height:auto;display:block;border-radius:6px;border:1px solid #E0E0E0;">
+          <p style="margin:6px 0 0 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;color:#999999;font-style:italic;">Agent Analytics build — five analytics components</p>
+        </td></tr>
+      </table>
+
+
+
+      <p style="margin:0 0 12px 0;"><strong>Why this matters:</strong> <a href="the_cheat_code_issue_017.html" style="color:#0078D4;text-decoration:underline;">Issue #017</a> defined the three evaluation layers: usage, quality, and business metrics. This build implements all three with tools the customer already has. No excuses, no custom development &#8212; just configuration and flows.</p>
+
+      <!-- End-to-End Pipeline -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 16px 0;">
+        <tr><td style="padding:14px 16px;">
+          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">End-to-End Analytics Stack</p>
+          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
+            <strong>Copilot Studio Agent</strong> (existing)<br>
+            &nbsp;&nbsp;&#8595;<br>
+            Built-in analytics &#8594; sessions, engagement, escalation rates<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Application Insights</strong> &#8594; custom telemetry events<br>
+            &nbsp;&nbsp;&#8595;<br>
+            KQL queries &#8594; confidence trends, feedback ratios, regressions<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Power BI dashboard</strong> &#8594; 3 charts for stakeholders<br>
+            &nbsp;&nbsp;&#8595;<br>
+            <strong>Power Automate</strong> &#8594; golden test alerts + feedback capture
+          </p>
+        </td></tr>
+      </table>
+
+      <p style="margin:0 0 10px 0;"><strong>Five components, in build order:</strong></p>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">1.</span>&nbsp; <strong>Copilot Studio built-in analytics.</strong> This is your Layer 1 (usage) out of the box. Enable it and review: session completion rate, engagement rate, topic triggering heatmap, and escalation rate. The key metric to watch is <em>resolution rate</em> &#8212; sessions that ended without escalation. If this number is high, the agent is answering questions. If it&#8217;s low, users are bailing. No configuration needed &#8212; just open Analytics in Copilot Studio and start reviewing.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">2.</span>&nbsp; <strong>Application Insights custom telemetry.</strong> Connect Copilot Studio to Application Insights (Settings &#8594; Advanced &#8212; built-in integration). Then add custom events via Power Automate flows triggered by agent actions: on every generative answer, log <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">confidence_score</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">sources_used[]</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">response_length</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">topic_triggered</span>. On every user feedback event, log <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">feedback_type</span> (thumbs up/down), <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">session_id</span>, <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">query_text</span>. On every escalation, log <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">escalation_reason</span> and <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">last_agent_response</span>. This is your Layer 2 (quality) data pipeline.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">3.</span>&nbsp; <strong>Power BI dashboard (3 charts).</strong> Connect Power BI to Application Insights via the KQL data source connector. Build three charts: <strong>Chart 1</strong> &#8212; daily active users + sessions (line chart, 30-day trend). <strong>Chart 2</strong> &#8212; confidence score distribution (histogram, bucketed by topic). <strong>Chart 3</strong> &#8212; user satisfaction (thumbs up/down ratio, rolling 7-day average). Set the data refresh to daily automatic. Share the dashboard with the agent owner and their leadership. This is what turns &#8220;some people like it&#8221; into &#8220;here&#8217;s the data.&#8221;
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">4.</span>&nbsp; <strong>Regression alert flow.</strong> Create the golden test set: 20 question-answer pairs stored in a SharePoint list. Build a weekly Power Automate flow that sends each question to the agent via HTTP, captures the response, and compares it to the expected answer using Azure OpenAI similarity scoring. If similarity drops below your threshold (start at 0.8), fire a Teams alert to the agent owner: &#8220;3 of 20 golden test answers degraded this week &#8212; review recent knowledge changes.&#8221; This is the regression canary from <a href="the_cheat_code_issue_017.html" style="color:#0078D4;text-decoration:underline;">Issue #017</a>, fully automated.
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.5;">
+          <span style="color:#0078D4;font-weight:bold;">5.</span>&nbsp; <strong>User feedback capture.</strong> Add an Adaptive Card at the end of each agent response: &#8220;Was this helpful? &#128077; &#128078;&#8221; Build a Power Automate flow that logs feedback to a Dataverse <span style="font-family:Consolas,monospace;font-size:12px;background:#F0F0F0;padding:1px 4px;border-radius:3px;">UserFeedback</span> table. Generate a weekly digest: Top 5 negative-feedback queries &#8594; review and improve. Optional enhancement: on &#128078;, show a &#8220;Tell me more&#8221; follow-up that captures qualitative feedback. This closes the loop between user experience and agent improvement.
+        </td></tr>
+      </table>
+
+      <!-- Key Insight -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;margin:0 0 14px 0;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#444444;line-height:1.6;">
+          <strong style="color:#6B2FA0;">Key insight:</strong> The Power BI dashboard is what gets you the expansion meeting. Leadership doesn&#8217;t read App Insights logs. But a clean three-chart dashboard showing adoption trending up, confidence holding steady, and user satisfaction at 85% &#8212; that&#8217;s the artifact that turns a pilot into a program. Build the dashboard <em>first</em>, then fill it with data as you add each component.
+        </td></tr>
+      </table>
+
+      <!-- KQL Queries Callout -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F6FF;border-radius:6px;margin:0 0 14px 0;">
+        <tr><td style="padding:14px 16px;">
+          <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;font-weight:700;color:#0078D4;letter-spacing:1px;text-transform:uppercase;">Starter KQL Queries for App Insights</p>
+          <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:13px;color:#333333;line-height:2;">
+            <strong>Sessions/day (30-day trend):</strong><br>
+            customEvents | where name == "AgentSession"<br>
+            | summarize count() by bin(timestamp, 1d)<br>
+            | render timechart<br>
+            <br>
+            <strong>Avg confidence by topic:</strong><br>
+            customEvents | where name == "GenerativeAnswer"<br>
+            | extend conf = todouble(customDimensions.confidence_score)<br>
+            | summarize avg(conf) by tostring(customDimensions.topic_triggered)<br>
+            <br>
+            <strong>Feedback ratio (7-day rolling):</strong><br>
+            customEvents | where name == "UserFeedback"<br>
+            | summarize up=countif(customDimensions.feedback_type == "up"),<br>
+            &nbsp;&nbsp;down=countif(customDimensions.feedback_type == "down") by bin(timestamp, 1d)<br>
+            | extend ratio = round(todouble(up) / (up + down) * 100, 1)
+          </p>
+        </td></tr>
+      </table>
+
+      <!-- Warning -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFF8E1;border-radius:4px;border:1px solid #FFE082;">
+        <tr><td style="padding:10px 14px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#795548;line-height:1.5;">
+          <strong>&#9888; Similarity scoring threshold:</strong> Start at 0.8 for the golden test set. Too high (0.95+) and every minor wording change triggers a false alarm. Too low (0.6) and real regressions slip through. Calibrate by running the test set twice against your current agent &#8212; if the same question produces similarity of 0.85&#8211;0.95 across runs, set your alert threshold just below the lowest score. Expect to tune this in the first two weeks.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- TRY THIS NOW -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #D83B01;background:#FAFAFA;border-radius:0 6px 6px 0;">
+    <tr><td style="padding:20px 24px 12px 24px;">
+      <h2 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;color:#D83B01;letter-spacing:1.5px;text-transform:uppercase;">&#128736; Try This Now</h2>
+    </td></tr>
+    <tr><td style="padding:0 24px 4px 24px;">
+      <h3 style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:18px;font-weight:700;color:#1B1B3A;line-height:1.4;">Add Analytics to Any Agent in One Session</h3>
+    </td></tr>
+    <tr><td style="padding:16px 24px 24px 24px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;color:#444444;line-height:1.7;">
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">1</span></td>
+          <td style="padding-left:8px;"><strong>Enable Application Insights in your Copilot Studio agent.</strong> Go to Settings &#8594; Advanced and connect your App Insights instance. If the customer doesn&#8217;t have one, create it in the same resource group as their other Azure resources &#8212; it takes 30 seconds. This immediately starts flowing session telemetry into a queryable data store.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">2</span></td>
+          <td style="padding-left:8px;"><strong>Add a thumbs-up/down Adaptive Card after generative answers.</strong> In the agent&#8217;s generative answers topic, add a &#8220;Send a message&#8221; node after the response with an Adaptive Card containing two buttons: &#128077; and &#128078;. Connect each button to a Power Automate flow that logs the feedback type, session ID, and original query to a Dataverse table. This takes 15 minutes and gives you the user satisfaction signal immediately.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">3</span></td>
+          <td style="padding-left:8px;"><strong>Build 3 KQL queries in Application Insights.</strong> Open the App Insights Logs blade. Write three queries: sessions per day (30-day trend), average confidence score by topic, and feedback up/down ratio. Use the starter KQL from the Pattern Breakdown above. Save each query &#8212; you&#8217;ll pin them to Power BI in the next step.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;">
+        <tr>
+          <td width="32" valign="top" style="padding-top:2px;"><span style="display:inline-block;background:#D83B01;color:#ffffff;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;">4</span></td>
+          <td style="padding-left:8px;"><strong>Pin them to a Power BI dashboard and share with the agent owner.</strong> From each KQL query result, click &#8220;Pin to dashboard&#8221; &#8594; select or create a Power BI dashboard. Set the refresh to daily. Share the dashboard link with the agent owner and their leadership. You now have a live, auto-refreshing answer to: &#8220;How is the agent doing?&#8221;</td>
+        </tr>
+      </table>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
+        <tr><td style="padding:12px 16px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#444444;line-height:1.6;">
+          <strong style="color:#6B2FA0;">&#128161; The line that opens doors:</strong> &#8220;Right now, can you tell me how many people used your agent yesterday and whether the answers were good? This dashboard answers both in real-time.&#8221;
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- NEXT ISSUE CTA -->
+<tr><td class="content-block" style="padding:0 32px 24px 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0ECF5;border-radius:6px;">
+    <tr><td align="center" style="padding:20px 24px;">
+      <p style="margin:0 0 6px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;font-weight:700;color:#6B2FA0;">Got an agent or pattern to share?</p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;color:#666666;line-height:1.5;">Reply to this email and you might be featured in a future issue.</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+<!-- FOOTER -->
+<tr><td style="padding:0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="padding:0 32px;"><hr style="border:none;border-top:1px solid #E0E0E0;margin:0;"></td></tr>
+    <tr><td align="center" style="padding:20px 32px 24px 32px;">
+      <p style="margin:0 0 4px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13px;font-weight:600;color:#1B1B3A;">The Cheat Code</p>
+      <p style="margin:0 0 12px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;line-height:1.5;">ABS Tech Strategy &bull; AI Business Solutions<br>Questions or ideas for the next issue? Reply to this email.</p>
+      <p style="margin:0 0 8px 0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:12px;color:#888888;"><a href="https://aka.ms/the-cheat-code" style="color:#6B2FA0;text-decoration:underline;">Browse all issues at aka.ms/the-cheat-code</a></p>
+      <p style="margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:10px;color:#BBBBBB;">Microsoft Internal &bull; Not for external distribution</p>
+    </td></tr>
+  </table>
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>
