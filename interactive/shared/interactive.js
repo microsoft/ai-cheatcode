@@ -345,7 +345,7 @@
     const brand = document.createElement('a');
     brand.className = 'nav-brand';
     brand.href = '../../index.html';
-    brand.innerHTML = 'The Ch<span class="brand-accent">(e)</span>at Code';
+    brand.innerHTML = 'The Cheat Code';
 
     const divider = document.createElement('div');
     divider.className = 'nav-divider';
