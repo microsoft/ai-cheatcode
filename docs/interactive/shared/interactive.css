@@ -140,6 +140,11 @@
 [data-theme="light"] .expand-overlay { background: rgba(0, 0, 0, 0.2); }
 
 [data-theme="light"] .page-header .back-link { color: var(--purple); }
+[data-theme="light"] .page-header h1 { color: var(--text-primary); }
+
+[data-theme="light"] .expand-panel .expand-title { color: var(--text-primary); }
+[data-theme="light"] .expand-panel .expand-details li { color: var(--text-primary); }
+[data-theme="light"] .expand-panel .expand-close:hover { color: var(--text-secondary); }
 
 html { scroll-behavior: smooth; }
 
@@ -840,6 +845,19 @@ body {
 .context-panel .context-close:hover {
   background: rgba(255,255,255,0.08);
   color: var(--text-primary);
+}
+
+.context-panel .context-header {
+  margin-bottom: 20px;
+}
+
+.context-panel .context-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  padding-right: 40px;
 }
 
 .context-panel .expand-title {

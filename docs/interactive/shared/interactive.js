@@ -340,6 +340,9 @@
 
       const title = element.dataset.expandTitle || element.dataset.contextTitle || ctx.title || '';
 
+      // Remove visible class so stagger animation replays for new content
+      this.contextPanel.classList.remove('visible');
+
       // Set title
       this.contextPanel.querySelector('.context-title').textContent = title;
 
@@ -418,6 +421,8 @@
         ));
       }
 
+      // Force reflow so sections render at opacity: 0 before transition
+      void this.contextPanel.offsetHeight;
       this.contextPanel.classList.add('visible');
 
       // Focus close button for keyboard accessibility
