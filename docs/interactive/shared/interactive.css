@@ -801,7 +801,7 @@ body {
   width: 440px;
   background: var(--navy-light);
   box-shadow: -8px 0 48px rgba(0,0,0,0.35);
-  z-index: 90;
+  z-index: 310;
   transition: right 0.3s ease;
   overflow-y: auto;
   padding: 32px 24px;
@@ -821,7 +821,8 @@ body {
   right: 0;
 }
 
-.context-panel .expand-close {
+.context-panel .expand-close,
+.context-panel .context-close {
   position: absolute;
   top: 16px;
   right: 16px;
@@ -835,7 +836,8 @@ body {
   border-radius: 6px;
   transition: background 0.2s, color 0.2s;
 }
-.context-panel .expand-close:hover {
+.context-panel .expand-close:hover,
+.context-panel .context-close:hover {
   background: rgba(255,255,255,0.08);
   color: var(--text-primary);
 }

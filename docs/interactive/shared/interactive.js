@@ -31,6 +31,9 @@
       // Track last-clicked element for keyboard 'i' shortcut
       this._lastContextEl = null;
 
+      // Track trigger element for focus restoration on panel close
+      this._contextTrigger = null;
+
       this._buildUI();
       this._bindKeys();
       this._bindClicks();
@@ -254,12 +257,13 @@
 
           case 'Escape':
             e.preventDefault();
-            if (this.contextMode) {
+            if (this.contextMode && this.contextPanel && this.contextPanel.classList.contains('visible')) {
               this._closeContext();
-            } else {
+            } else if (!this.contextMode && this.expandOverlay && this.expandOverlay.classList.contains('visible')) {
               this._closeExpand();
+            } else {
+              this.reset();
             }
-            this.reset();
             break;
 
           case 'Home':
@@ -325,7 +329,7 @@
        ------------------------------------------------------- */
 
     _openContext(element) {
-      const title = element.dataset.expandTitle || element.dataset.contextTitle || '';
+      this._contextTrigger = document.activeElement || element;
       let ctx = {};
 
       try {
@@ -333,6 +337,8 @@
       } catch {
         // Malformed JSON — render what we can
       }
+
+      const title = element.dataset.expandTitle || element.dataset.contextTitle || ctx.title || '';
 
       // Set title
       this.contextPanel.querySelector('.context-title').textContent = title;
@@ -413,11 +419,19 @@
       }
 
       this.contextPanel.classList.add('visible');
+
+      // Focus close button for keyboard accessibility
+      const closeBtn = this.contextPanel.querySelector('.context-close');
+      if (closeBtn) closeBtn.focus();
     }
 
     _closeContext() {
       if (this.contextPanel) {
         this.contextPanel.classList.remove('visible');
+        if (this._contextTrigger) {
+          this._contextTrigger.focus();
+          this._contextTrigger = null;
+        }
       }
     }
 
