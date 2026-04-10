@@ -128,8 +128,8 @@
     }
 
     [data-theme="light"] .card-subscribe {
-      background: linear-gradient(145deg, rgba(16, 124, 16, 0.08), rgba(0, 0, 0, 0.02));
-      border-color: rgba(16, 124, 16, 0.2);
+      background: linear-gradient(145deg, rgba(0, 120, 212, 0.08), rgba(0, 0, 0, 0.02));
+      border-color: rgba(0, 120, 212, 0.2);
     }
 
     [data-theme="light"] .card-about {
@@ -295,7 +295,7 @@
 
     /* ─── Hero section ─── */
     .hero-section {
-      margin-bottom: 40px;
+      margin-bottom: 28px;
     }
 
     .hero-kicker {
@@ -321,12 +321,12 @@
 
     .hero-headline {
       font-family: 'Sora', sans-serif;
-      font-size: clamp(38px, 5vw, 68px);
+      font-size: clamp(28px, 3.5vw, 44px);
       font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -2px;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
       color: var(--text-primary);
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .hero-headline .accent {
@@ -703,7 +703,7 @@
     .card-subscribe {
       grid-column: span 4;
       grid-row: span 3;
-      background: linear-gradient(145deg, rgba(16, 124, 16, 0.2) 0%, rgba(27, 27, 58, 0.9) 100%);
+      background: linear-gradient(145deg, rgba(0, 120, 212, 0.2) 0%, rgba(27, 27, 58, 0.9) 100%);
     }
 
     /* Sample code card */
@@ -823,7 +823,7 @@
     }
 
     .subscribe-btn {
-      background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
       border: none;
       border-radius: var(--radius-sm);
       padding: 9px 14px;
@@ -1254,9 +1254,9 @@
   <!-- ─────────────── BENTO GRID ─────────────── -->
   <!--
     12-column layout:
-    Row  1–3 : 001 large (5) + 002 medium (4) + subscribe (3)      = 12
-    Row  4–6 : 003 medium (4) + 004 medium (4) + sample-code (4)   = 12
-    Row  7–8 : about (7) + brand (5)                                = 12
+    Row  1–3 : 001 large (5) + 002 large (7)                        = 12
+    Row  4–6 : 003 medium (6) + 004 medium (6)                      = 12
+    Row  7–8 : about (5) + sample-code (4) + subscribe (3)          = 12
   -->
   <!--
   ISSUE GATING — Issues are published weekly. To un-gate a new interactive:
@@ -1318,8 +1318,8 @@
       <span class="diagram-label">Flow</span>
     </a>
 
-    <!-- Issue 002: Scoped Multi-Source Search — span 4 -->
-    <a class="card card-conceptual card-medium span-4 row-3 arc-pair-b reveal" href="interactive/issue-002/" aria-label="Issue 002: Scoped Multi-Source Search — view interactive walkthrough">
+    <!-- Issue 002: Scoped Multi-Source Search — span 7 -->
+    <a class="card card-conceptual card-large span-7 row-3 arc-pair-b reveal" href="interactive/issue-002/" aria-label="Issue 002: Scoped Multi-Source Search — view interactive walkthrough">
       <div class="hero-visual" aria-hidden="true">
         <svg class="hv-nodes" style="width:180px;height:160px;" viewBox="0 0 180 160" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- Analyzer node top center -->
@@ -1362,22 +1362,10 @@
       <span class="diagram-label">Branch</span>
     </a>
 
-    <!-- Subscribe card — span 3 -->
-    <a class="card card-subscribe span-3 row-3 reveal" href="https://outlook.office.com/newsletters/pages/550aceac3e3c9b4d815f25725e1ab1fd23/read?subscribe=footer" target="_blank" rel="noopener noreferrer" aria-label="Subscribe to The Cheat Code via Outlook Newsletters">
-      <div class="card-glow" style="width:120px;height:120px;top:-20px;left:-20px;background:rgba(16,124,16,0.4);"></div>
-      <div class="card-inner">
-        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;letter-spacing:-0.3px;color:var(--text-primary);">Stay in the loop</div>
-        <p style="font-size:11px;color:var(--text-secondary);margin-top:6px;line-height:1.6;">New patterns drop every two weeks. Subscribe via Outlook Newsletters.</p>
-        <div style="margin-top:auto;padding-top:12px;">
-          <span class="subscribe-btn" style="display:inline-block;border-radius:var(--radius-sm);padding:9px 18px;">Subscribe in Outlook →</span>
-        </div>
-      </div>
-    </a>
+    <!-- ══════════ ROWS 4–6: ISSUE BAND 2 ══════════ -->
 
-    <!-- ══════════ ROWS 8–10: ISSUE BAND 2 ══════════ -->
-
-    <!-- Issue 003: Prompt-Chained Triage — span 4 -->
-    <a class="card card-practical card-medium span-4 row-3 arc-pair-a reveal" href="interactive/issue-003/" aria-label="Issue 003: Prompt-Chained Triage — view interactive walkthrough">
+    <!-- Issue 003: Prompt-Chained Triage — span 6 -->
+    <a class="card card-practical card-medium span-6 row-3 arc-pair-a reveal" href="interactive/issue-003/" aria-label="Issue 003: Prompt-Chained Triage — view interactive walkthrough">
       <div class="hero-visual" aria-hidden="true">
         <svg class="hv-nodes" style="width:190px;height:80px;" viewBox="0 0 190 80" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- Three pipeline stages -->
@@ -1417,8 +1405,8 @@
       <span class="diagram-label">Pipeline</span>
     </a>
 
-    <!-- Issue 004: Secure In-Boundary Processing — span 4 -->
-    <div class="card card-conceptual card-medium span-4 row-3 arc-pair-b reveal" aria-label="Issue 004: Secure In-Boundary Processing">
+    <!-- Issue 004: Secure In-Boundary Processing — span 6 -->
+    <div class="card card-conceptual card-medium span-6 row-3 arc-pair-b reveal" aria-label="Issue 004: Secure In-Boundary Processing">
       <div class="hero-visual" aria-hidden="true">
         <svg class="hv-nodes" style="width:170px;height:160px;" viewBox="0 0 170 160" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- Outer dashed trust boundary -->
@@ -1452,53 +1440,49 @@
       <span class="diagram-label">Boundary</span>
     </div>
 
-    <!-- Sample Code card — span 4, coming soon -->
-    <div class="card card-code span-4 row-3 reveal" aria-label="Sample code coming soon">
-      <div class="card-glow" style="width:120px;height:120px;top:20px;right:20px;background:rgba(107,47,160,0.25);"></div>
-      <div class="card-inner">
+    <!-- ══════════ ROW 7–8: UTILITY BAND ══════════ -->
+    <!-- Narrative flow: Why you're here → What's available → Stay connected -->
+
+    <!-- About the Series — span 5 -->
+    <div class="card card-about span-5 row-2 reveal" aria-label="About The Cheat Code series">
+      <div class="card-glow" style="width:160px;height:160px;bottom:-40px;right:-20px;background:rgba(107,47,160,0.3);"></div>
+      <div class="card-inner" style="padding:18px 22px;">
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:6px;">About the Series</div>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.65;">
+          Each issue pairs a conceptual pattern with a practical build. Frontier architectures documented by the builders who shipped them — an ongoing archive from real customer engagements.
+        </p>
+      </div>
+    </div>
+
+    <!-- Sample Code — span 4 -->
+    <div class="card card-code span-4 row-2 reveal" aria-label="Sample code coming soon">
+      <div class="card-glow" style="width:100px;height:100px;top:10px;right:10px;background:rgba(107,47,160,0.25);"></div>
+      <div class="card-inner" style="padding:18px 22px;">
         <div class="terminal-bar" aria-hidden="true">
           <span class="terminal-dot dot-red"></span>
           <span class="terminal-dot dot-yellow"></span>
           <span class="terminal-dot dot-green"></span>
         </div>
-        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;letter-spacing:-0.3px;">Sample Code</div>
-        <p style="font-size:11px;color:var(--text-secondary);margin-top:4px;">Pattern starters, YAML configs, and reference architectures.</p>
-        <div class="code-preview" aria-hidden="true">
-          <span class="code-line"><span class="cm"># coming soon...</span></span>
-          <span class="code-line">&nbsp;</span>
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;letter-spacing:-0.3px;">Sample Code</div>
+        <div class="code-preview" aria-hidden="true" style="margin-top:8px;">
           <span class="code-line"><span class="kw">from</span> <span class="fn">cheatcode</span> <span class="kw">import</span> <span class="fn">patterns</span></span>
           <span class="code-line"><span class="fn">agent</span> <span class="sym">=</span> <span class="fn">patterns</span><span class="sym">.</span><span class="fn">load</span><span class="sym">(</span><span class="str">"001"</span><span class="sym">)</span></span>
         </div>
-        <div style="margin-top:10px;">
-          <span class="coming-soon-chip">Coming soon</span>
-        </div>
+        <span class="coming-soon-chip" style="margin-top:6px;">Coming soon</span>
       </div>
     </div>
 
-    <!-- ══════════ BOTTOM ROW: ABOUT + BRAND ══════════ -->
-
-    <!-- About the Series card — span 7 (left) -->
-    <div class="card card-about span-7 row-2 reveal" aria-label="About The Cheat Code series">
-      <div class="card-glow" style="width:200px;height:200px;bottom:-60px;right:-30px;background:rgba(107,47,160,0.3);"></div>
-      <div class="card-inner" style="flex-direction:row;align-items:center;gap:40px;">
-        <div style="flex:1;">
-          <div style="font-size:10px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:8px;">About the Series</div>
-          <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;max-width:560px;">
-            Each issue pairs a conceptual pattern with a practical build. Frontier architectures documented by the builders who shipped them — an ongoing archive from real customer engagements.
-          </p>
+    <!-- Subscribe via Outlook — span 3 -->
+    <a class="card card-subscribe span-3 row-2 reveal" href="https://outlook.office.com/newsletters/pages/550aceac3e3c9b4d815f25725e1ab1fd23/read?subscribe=footer" target="_blank" rel="noopener noreferrer" aria-label="Subscribe to The Cheat Code via Outlook Newsletters">
+      <div class="card-glow" style="width:100px;height:100px;top:-15px;left:-15px;background:rgba(0,120,212,0.4);"></div>
+      <div class="card-inner" style="padding:18px 22px;">
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;letter-spacing:-0.3px;color:var(--text-primary);">Stay in the Loop</div>
+        <p style="font-size:11px;color:var(--text-secondary);margin-top:4px;line-height:1.5;">Subscribe to Outlook Newsletters. New patterns every two weeks.</p>
+        <div style="margin-top:auto;padding-top:8px;">
+          <span class="subscribe-btn" style="display:inline-block;border-radius:var(--radius-sm);padding:8px 16px;font-size:11px;">Subscribe in Outlook →</span>
         </div>
       </div>
-    </div>
-
-    <!-- ABS Brand card — span 5 (right) -->
-    <div class="card card-brand span-5 row-2 reveal" aria-label="ABS Tech Strategy branding">
-      <div class="card-inner">
-        <div class="brand-logo-area">
-          <div class="brand-logo-text">ABS Tech Strategy</div>
-          <div class="brand-logo-sub">AI Business Solutions</div>
-        </div>
-      </div>
-    </div>
+    </a>
 
   </main>
   <!-- ─────────────── END BENTO GRID ─────────────── -->
