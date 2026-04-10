@@ -36,6 +36,111 @@
   --glass: rgba(255,255,255,0.04);
 }
 
+/* --- Light Mode Overrides --- */
+[data-theme="light"] {
+  --navy-deep: #F8F8FC;
+  --navy: #FFFFFF;
+  --navy-light: #F0ECF5;
+  --bg: #F8F8FC;
+  --card: #FFFFFF;
+  --text-primary: #1B1B3A;
+  --text-secondary: #6B6B8D;
+  --border-glass: rgba(0, 0, 0, 0.08);
+  --glass: rgba(0, 0, 0, 0.03);
+  --purple-light: #6B2FA0;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] body {
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .global-nav {
+  background: var(--navy);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .step-bar {
+  background: var(--navy);
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .step-bar button {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .step-bar button.btn-primary {
+  background: var(--purple);
+  border-color: var(--purple);
+  color: white;
+}
+
+[data-theme="light"] .step-bar .step-counter {
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .step-dot {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .narrative-panel {
+  background: var(--card);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .narrative-panel .narrative-title {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .expand-panel,
+[data-theme="light"] .context-panel {
+  background: var(--card);
+  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .context-panel .context-label {
+  color: var(--purple);
+}
+
+[data-theme="light"] .context-panel .context-body {
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .context-pill {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .context-prereqs li {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.08);
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .context-code {
+  background: #1B1B3A;
+}
+
+[data-theme="light"] .context-link {
+  color: var(--purple);
+}
+
+[data-theme="light"] .global-nav .nav-brand { color: var(--text-primary); }
+[data-theme="light"] .global-nav .nav-brand:hover { color: var(--purple); }
+[data-theme="light"] .global-nav .nav-issue-link { color: rgba(0,0,0,0.5); }
+[data-theme="light"] .global-nav .nav-issue-link:hover { background: rgba(0,0,0,0.05); color: var(--text-primary); }
+[data-theme="light"] .global-nav .nav-issue-link.active { background: var(--purple); color: white; }
+[data-theme="light"] .global-nav .nav-divider { background: rgba(0,0,0,0.1); }
+
+[data-theme="light"] .expand-overlay { background: rgba(0, 0, 0, 0.2); }
+
+[data-theme="light"] .page-header .back-link { color: var(--purple); }
+
 html { scroll-behavior: smooth; }
 
 body {
@@ -755,6 +860,9 @@ body {
 /* Shared context section elements */
 .context-section {
   margin-bottom: 20px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .context-label {
@@ -776,6 +884,7 @@ body {
 }
 
 .context-link {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -787,7 +896,7 @@ body {
   padding: 6px 0;
   transition: color 0.2s, gap 0.2s;
 }
-.context-link::after { content: '→'; font-size: 14px; }
+.context-link::before { content: '→'; font-size: 14px; order: 999; }
 .context-link:hover {
   color: #B880E8;
   gap: 10px;
@@ -943,6 +1052,69 @@ body {
   border-top: 1px solid var(--border-glass);
 }
 
+/* --- Micro-Interaction Enhancements --- */
+
+/* Step dot ripple on activation */
+.step-dot.active {
+  animation: dotRipple 0.6s ease-out;
+}
+@keyframes dotRipple {
+  0% { box-shadow: 0 0 0 0 rgba(107, 47, 160, 0.5); }
+  100% { box-shadow: 0 0 0 8px rgba(107, 47, 160, 0); }
+}
+
+/* Visited dot subtle pulse */
+.step-dot.visited {
+  animation: visitedPulse 2s ease-in-out infinite;
+}
+@keyframes visitedPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.75; }
+}
+
+/* Link underline draw */
+.context-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--purple-light);
+  transition: width 0.35s ease;
+}
+.context-link:hover::after {
+  width: 100%;
+}
+
+/* Context panel content staggering */
+.context-panel.visible .context-section {
+  opacity: 1;
+  transform: translateY(0);
+}
+.context-panel.visible .context-section:nth-child(1) { transition-delay: 0.05s; }
+.context-panel.visible .context-section:nth-child(2) { transition-delay: 0.13s; }
+.context-panel.visible .context-section:nth-child(3) { transition-delay: 0.18s; }
+.context-panel.visible .context-section:nth-child(4) { transition-delay: 0.23s; }
+.context-panel.visible .context-section:nth-child(5) { transition-delay: 0.28s; }
+
+/* Pill/tag hover lift */
+.context-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Reduced motion — disable all new animations */
+@media (prefers-reduced-motion: reduce) {
+  .step-dot.active { animation: none; }
+  .step-dot.visited { animation: none; }
+  .context-section { transition: none; opacity: 1; transform: none; }
+  .context-link::after { transition: none; }
+  .step-bar button:active { transform: none; }
+  .context-pill:hover { transform: none; }
+}
+
 /* --- Responsive --- */
 @media (max-width: 900px) {
   .interactive-page { padding: 16px 12px 120px; }
@@ -1006,4 +1178,33 @@ body {
   0% { opacity: 1; }
   15% { opacity: 1; }
   100% { opacity: 0; }
+}
+
+/* --- Theme Toggle --- */
+.theme-toggle {
+  position: fixed;
+  top: 60px;
+  right: 16px;
+  z-index: 400;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border-glass);
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text-secondary, #A89DC0);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+}
+.theme-toggle:hover {
+  background: rgba(255,255,255,0.07);
+  transform: scale(1.1);
+}
+[data-theme="light"] .theme-toggle:hover {
+  background: rgba(0,0,0,0.06);
 }

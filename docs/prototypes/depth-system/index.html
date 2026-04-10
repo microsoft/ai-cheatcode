@@ -1,0 +1,2247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Depth System Prototype — The Cheat Code</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DEPTH SYSTEM PROTOTYPE — The Cheat Code
+   Demonstrates the 6-level luminance stacking model
+   and enhanced depth/elevation effects
+   ============================================================ */
+
+/* --- Reset & Token System --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Elevation color tokens */
+  --void:          #0E0E1F;   /* Level 0 — the abyss */
+  --surface:       #1B1B3A;   /* Level 1 — nav, panels */
+  --glass-rest:    rgba(255, 255, 255, 0.04);  /* Level 2 */
+  --glass-hover:   rgba(255, 255, 255, 0.07);  /* Level 3 */
+
+  /* Brand palette */
+  --purple:        #6B2FA0;
+  --purple-mid:    #8B3FC7;
+  --purple-bright: #A855F7;
+  --purple-glow:   rgba(107, 47, 160, 0.35);
+  --purple-soft:   rgba(107, 47, 160, 0.15);
+  --teal:          #0EA5E9;
+  --teal-soft:     rgba(14, 165, 233, 0.2);
+
+  /* Text tokens */
+  --text-primary:   rgba(255, 255, 255, 0.92);
+  --text-secondary: rgba(255, 255, 255, 0.55);
+  --text-muted:     rgba(255, 255, 255, 0.30);
+  --text-accent:    #B8A9C9;
+
+  /* Border tokens */
+  --border-subtle:  rgba(255, 255, 255, 0.06);
+  --border-mid:     rgba(255, 255, 255, 0.10);
+  --border-bright:  rgba(255, 255, 255, 0.18);
+  --border-purple:  rgba(107, 47, 160, 0.5);
+
+  /* Shadow cascade */
+  --shadow-1: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-2: 0 4px 12px rgba(0,0,0,0.35), 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-3: 0 8px 24px rgba(0,0,0,0.4), 0 2px 6px rgba(0,0,0,0.25);
+  --shadow-glow: 0 0 0 1px rgba(107,47,160,0.4), 0 8px 32px rgba(107,47,160,0.25), 0 2px 8px rgba(0,0,0,0.4);
+  --shadow-float: 0 16px 48px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.12);
+
+  /* Blur values */
+  --blur-glass: 20px;
+  --blur-glass-strong: 32px;
+
+  /* Transitions */
+  --t-fast:   0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --t-med:    0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  --t-spring: 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+  background: var(--void);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: rgba(107,47,160,0.4); border-radius: 3px; }
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.global-nav {
+  background: var(--surface);
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  height: 52px;
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+}
+
+.nav-brand {
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: -0.2px;
+}
+.nav-brand span { color: var(--purple-bright); }
+
+.nav-divider {
+  width: 1px; height: 20px;
+  background: var(--border-subtle);
+  margin: 0 20px;
+}
+
+.nav-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.nav-badge {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--purple-bright);
+  background: rgba(107,47,160,0.15);
+  border: 1px solid rgba(107,47,160,0.3);
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.8px;
+}
+
+.nav-back {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color var(--t-fast);
+  margin-right: 16px;
+}
+.nav-back:hover { color: var(--text-primary); }
+
+/* ============================================================
+   PAGE SHELL
+   ============================================================ */
+.page-hero {
+  padding: 60px 32px 48px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-subtle);
+  position: relative;
+  overflow: hidden;
+}
+
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(107,47,160,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--purple-bright);
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+
+.page-hero h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #fff 30%, var(--text-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-hero p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 56px 28px 100px;
+}
+
+.proto-section {
+  margin-bottom: 88px;
+}
+
+.section-header {
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.section-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--purple-bright);
+  opacity: 0.7;
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.section-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   SECTION 1 — LUMINANCE STACKING MODEL
+   ============================================================ */
+
+.elevation-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.level-row {
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: transform var(--t-med);
+  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.level-row:last-child { border-bottom: none; }
+
+.level-row:hover { z-index: 10; }
+
+/* Swatch cell */
+.level-swatch {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  position: relative;
+  flex-shrink: 0;
+  transition: all var(--t-med);
+}
+
+.level-row:hover .level-swatch {
+  padding-left: 32px;
+}
+
+/* Info cell */
+.level-info {
+  padding: 20px 28px;
+  border-left: 1px solid rgba(255,255,255,0.05);
+}
+
+.level-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.level-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.level-use {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+}
+
+/* Preview cell */
+.level-preview {
+  padding: 0 28px;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-left: 1px solid rgba(255,255,255,0.04);
+}
+
+.elevation-indicator {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 40px;
+}
+
+.elev-bar {
+  width: 8px;
+  border-radius: 4px 4px 0 0;
+  background: var(--border-mid);
+  transition: background var(--t-med), height var(--t-med);
+}
+
+/* Level-specific backgrounds */
+.level-0 { background: var(--void); }
+.level-0 .level-swatch { background: var(--void); color: rgba(255,255,255,0.3); }
+
+.level-1 { background: var(--surface); }
+.level-1 .level-swatch { background: var(--surface); color: rgba(255,255,255,0.45); }
+
+.level-2 { background: rgba(27, 27, 58, 0.6); }
+.level-2 .level-swatch {
+  background: rgba(35,35,64,0.85);
+  color: rgba(255,255,255,0.5);
+}
+
+.level-3 {
+  background: rgba(35, 35, 70, 0.65);
+}
+.level-3 .level-swatch {
+  background: rgba(42,42,76,0.9);
+  color: rgba(255,255,255,0.6);
+}
+
+.level-4 { background: rgba(30,28,58,0.85); }
+.level-4 .level-swatch {
+  background: rgba(40,30,66,0.9);
+  color: #B8A9C9;
+}
+
+.level-5 { background: rgba(38,34,70,0.9); }
+.level-5 .level-swatch {
+  background: rgba(48,40,80,0.95);
+  color: rgba(255,255,255,0.75);
+}
+
+/* Level hover transforms — the "lift" */
+.level-row:hover .level-swatch {
+  filter: brightness(1.12);
+}
+
+/* Elevation bar fill per level */
+.level-0 .elev-bar:nth-child(-n+1) { background: var(--purple-bright); height: 4px; }
+.level-1 .elev-bar:nth-child(-n+2) { background: var(--purple-bright); }
+.level-1 .elev-bar:nth-child(1) { height: 8px; }
+.level-1 .elev-bar:nth-child(2) { height: 5px; }
+.level-2 .elev-bar:nth-child(-n+3) { background: var(--purple-bright); }
+.level-2 .elev-bar:nth-child(1) { height: 16px; }
+.level-2 .elev-bar:nth-child(2) { height: 12px; }
+.level-2 .elev-bar:nth-child(3) { height: 8px; }
+.level-3 .elev-bar:nth-child(-n+4) { background: var(--purple-bright); }
+.level-3 .elev-bar:nth-child(1) { height: 22px; }
+.level-3 .elev-bar:nth-child(2) { height: 18px; }
+.level-3 .elev-bar:nth-child(3) { height: 14px; }
+.level-3 .elev-bar:nth-child(4) { height: 10px; }
+.level-4 .elev-bar:nth-child(-n+5) { background: var(--purple-bright); }
+.level-4 .elev-bar:nth-child(1) { height: 30px; }
+.level-4 .elev-bar:nth-child(2) { height: 25px; }
+.level-4 .elev-bar:nth-child(3) { height: 20px; }
+.level-4 .elev-bar:nth-child(4) { height: 15px; }
+.level-4 .elev-bar:nth-child(5) { height: 10px; }
+.level-5 .elev-bar { background: var(--purple-bright); }
+.level-5 .elev-bar:nth-child(1) { height: 40px; }
+.level-5 .elev-bar:nth-child(2) { height: 34px; }
+.level-5 .elev-bar:nth-child(3) { height: 28px; }
+.level-5 .elev-bar:nth-child(4) { height: 22px; }
+.level-5 .elev-bar:nth-child(5) { height: 16px; }
+
+/* level-4 and 5 glow effect */
+.level-4:hover .level-swatch,
+.level-5:hover .level-swatch {
+  box-shadow: inset 0 0 24px rgba(107,47,160,0.25);
+}
+
+/* Active level highlight */
+.level-row.active-level {
+  background: rgba(107, 47, 160, 0.08);
+}
+
+/* Visual depth divider */
+.depth-callout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 0;
+  padding: 14px 20px;
+  background: rgba(107,47,160,0.08);
+  border: 1px solid rgba(107,47,160,0.2);
+  border-radius: 10px;
+}
+
+.depth-callout-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.depth-callout-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.depth-callout-text strong {
+  color: var(--purple-bright);
+}
+
+/* Layered panels visual demo */
+.layer-demo {
+  margin-top: 40px;
+  position: relative;
+  height: 220px;
+  perspective: 800px;
+}
+
+.layer-demo-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.layer-panel {
+  position: absolute;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: transform var(--t-spring);
+  cursor: default;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.layer-panel:nth-child(1) {
+  background: var(--void);
+  border-color: rgba(255,255,255,0.04);
+  color: var(--text-muted);
+  width: 90%; left: 5%; top: 0;
+  box-shadow: none;
+}
+.layer-panel:nth-child(2) {
+  background: var(--surface);
+  border-color: rgba(255,255,255,0.06);
+  color: var(--text-secondary);
+  width: 82%; left: 9%; top: 34px;
+  box-shadow: var(--shadow-1);
+}
+.layer-panel:nth-child(3) {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border-color: var(--border-subtle);
+  color: var(--text-secondary);
+  width: 74%; left: 13%; top: 68px;
+  box-shadow: var(--shadow-2);
+}
+.layer-panel:nth-child(4) {
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border-color: var(--border-mid);
+  color: var(--text-primary);
+  width: 66%; left: 17%; top: 102px;
+  box-shadow: var(--shadow-2);
+}
+.layer-panel:nth-child(5) {
+  background: rgba(30,28,58,0.85);
+  border-color: rgba(107,47,160,0.35);
+  color: var(--purple-bright);
+  width: 58%; left: 21%; top: 136px;
+  box-shadow: var(--shadow-glow);
+}
+.layer-panel:nth-child(6) {
+  background: rgba(44,40,80,0.92);
+  border-color: rgba(255,255,255,0.18);
+  color: #fff;
+  width: 50%; left: 25%; top: 168px;
+  box-shadow: var(--shadow-float);
+}
+
+.layer-panel:hover {
+  transform: scale(1.02) translateY(-2px);
+  z-index: 20;
+}
+
+.layer-level-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--purple-bright);
+  background: rgba(107,47,160,0.15);
+  border: 1px solid rgba(107,47,160,0.25);
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+/* ============================================================
+   SECTION 2 — CARD HOVER EFFECTS
+   ============================================================ */
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 720px) {
+  .comparison-grid { grid-template-columns: 1fr; }
+}
+
+.comparison-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.comparison-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.label-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.label-dot.current { background: var(--text-muted); }
+.label-dot.enhanced { background: var(--purple-bright); box-shadow: 0 0 8px var(--purple-bright); }
+
+/* --- CURRENT Card --- */
+.card-current {
+  background: #fff;
+  border: 1px solid #E0D4EC;
+  border-radius: 12px;
+  padding: 20px;
+  text-decoration: none;
+  color: #1B1B3A;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
+.card-current:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(107, 47, 160, 0.12);
+  border-color: #6B2FA0;
+}
+.card-current .card-num {
+  font-family: Consolas, monospace;
+  font-size: 11px; font-weight: 700;
+  color: #fff; background: #6B2FA0;
+  padding: 2px 8px; border-radius: 4px;
+  display: inline-block; margin-bottom: 12px;
+}
+.card-current .card-title {
+  font-size: 16px; font-weight: 700;
+  margin-bottom: 8px; color: #1B1B3A;
+}
+.card-current .card-desc {
+  font-size: 13px; color: #666; line-height: 1.5; flex: 1;
+}
+.card-current .card-cta {
+  font-size: 12px; font-weight: 600;
+  color: #6B2FA0; margin-top: 12px;
+}
+
+/* --- ENHANCED Card --- */
+.card-enhanced-wrapper {
+  perspective: 800px;
+}
+
+.card-enhanced {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--border-mid);
+  border-radius: 14px;
+  padding: 22px;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition:
+    box-shadow var(--t-med),
+    border-color var(--t-med),
+    background var(--t-med),
+    transform var(--t-med);
+  will-change: transform;
+}
+
+/* Spotlight gradient overlay */
+.card-enhanced::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity var(--t-fast);
+  pointer-events: none;
+  z-index: 1;
+  /* set dynamically via JS */
+  background: radial-gradient(circle 180px at 50% 50%,
+    rgba(255,255,255,0.06) 0%,
+    transparent 70%);
+}
+
+/* Top inner-shadow line */
+.card-enhanced::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.15) 30%,
+    rgba(255,255,255,0.25) 50%,
+    rgba(255,255,255,0.15) 70%,
+    transparent 100%);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity var(--t-med);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.card-enhanced:hover {
+  background: var(--glass-hover);
+  border-color: var(--border-bright);
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.25),
+    0 8px 20px rgba(0,0,0,0.35),
+    0 20px 48px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(255,255,255,0.08);
+}
+
+.card-enhanced:hover::before { opacity: 1; }
+.card-enhanced:hover::after { opacity: 1; }
+
+.card-enhanced .card-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  color: var(--purple-bright);
+  background: rgba(107,47,160,0.18);
+  border: 1px solid rgba(107,47,160,0.3);
+  padding: 2px 8px; border-radius: 4px;
+  display: inline-block; margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.card-enhanced .card-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 16px; font-weight: 700;
+  margin-bottom: 8px; color: var(--text-primary);
+  letter-spacing: -0.1px;
+}
+
+.card-enhanced .card-desc {
+  font-size: 13px; color: var(--text-secondary);
+  line-height: 1.55; flex: 1;
+}
+
+.card-enhanced .card-cta {
+  font-size: 12px; font-weight: 600;
+  color: var(--purple-bright);
+  margin-top: 12px;
+  display: flex; align-items: center; gap: 4px;
+  transition: gap var(--t-fast);
+}
+.card-enhanced:hover .card-cta { gap: 8px; }
+
+.card-enhanced .card-content {
+  position: relative;
+  z-index: 3;
+  transition: transform var(--t-med);
+}
+
+/* Effect pills — describe what's happening */
+.effect-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+
+.pill-purple {
+  color: var(--purple-bright);
+  background: rgba(107,47,160,0.1);
+  border-color: rgba(107,47,160,0.2);
+}
+
+.pill-teal {
+  color: #38BDF8;
+  background: rgba(14,165,233,0.08);
+  border-color: rgba(14,165,233,0.2);
+}
+
+.pill-white {
+  color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+}
+
+/* shadow cascade demo */
+.shadow-cascade-demo {
+  margin-top: 28px;
+  padding: 24px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+}
+
+.shadow-cascade-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.shadow-stages {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .shadow-stages { grid-template-columns: repeat(2, 1fr); }
+}
+
+.shadow-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.shadow-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border-mid);
+  transition: all var(--t-med);
+  cursor: pointer;
+}
+
+.shadow-box:nth-child(1) { box-shadow: none; }
+.shadow-stage:nth-child(2) .shadow-box { box-shadow: var(--shadow-1); }
+.shadow-stage:nth-child(3) .shadow-box { box-shadow: var(--shadow-2); }
+.shadow-stage:nth-child(4) .shadow-box { box-shadow: var(--shadow-3), 0 0 0 1px rgba(107,47,160,0.2); }
+
+.shadow-stage:hover .shadow-box {
+  transform: translateY(-4px);
+  border-color: var(--border-bright);
+}
+
+.shadow-stage-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ============================================================
+   SECTION 3 — CONTEXT PANEL DEPTH
+   ============================================================ */
+
+.panel-demo-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  .panel-demo-container { grid-template-columns: 1fr; }
+}
+
+.panel-trigger-area {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  min-height: 320px;
+  justify-content: center;
+}
+
+.trigger-btn {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: rgba(107,47,160,0.18);
+  border: 1px solid rgba(107,47,160,0.4);
+  padding: 10px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--t-fast);
+  letter-spacing: 0.2px;
+}
+
+.trigger-btn:hover {
+  background: rgba(107,47,160,0.28);
+  border-color: rgba(107,47,160,0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(107,47,160,0.25);
+}
+
+.trigger-btn:active {
+  transform: translateY(0px);
+}
+
+.trigger-info {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* Context panel itself */
+.context-panel-demo {
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: top center;
+}
+
+/* Current context panel */
+.context-panel-current {
+  background: white;
+  box-shadow: -8px 0 40px rgba(0,0,0,0.15);
+  padding: 24px;
+  border: 1px solid #eee;
+}
+
+/* Enhanced context panel */
+.context-panel-enhanced {
+  background: rgba(27, 27, 58, 0.85);
+  backdrop-filter: blur(var(--blur-glass-strong));
+  -webkit-backdrop-filter: blur(var(--blur-glass-strong));
+  border: 1px solid var(--border-mid);
+  box-shadow:
+    -12px 0 48px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  padding: 24px;
+  position: relative;
+}
+
+/* Inner top shadow */
+.context-panel-enhanced::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 40px;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.15) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+  border-radius: 16px 16px 0 0;
+}
+
+.panel-inner-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+}
+
+.panel-inner-header.current {
+  border-bottom: 2px solid #6B2FA0;
+}
+
+.panel-inner-header.enhanced {
+  border-bottom: 1px solid var(--border-mid);
+  position: relative;
+}
+
+.panel-inner-header.enhanced::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0;
+  width: 40%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--purple-bright), transparent);
+}
+
+.panel-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.panel-title-current {
+  font-size: 16px; font-weight: 700;
+  color: #1B1B3A;
+}
+
+.panel-title-enhanced {
+  font-family: 'Sora', sans-serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--text-primary); letter-spacing: -0.1px;
+}
+
+/* Section cards inside panel */
+.panel-section-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.panel-card-current {
+  background: #F8F8FC;
+  border: 1px solid #E0D4EC;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.panel-card-enhanced {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 12px 14px;
+  transition: all var(--t-med);
+  position: relative;
+  overflow: hidden;
+}
+
+.panel-card-enhanced:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: var(--border-mid);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.panel-card-enhanced::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--purple-bright);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform var(--t-med);
+  border-radius: 0 0 0 10px;
+}
+
+.panel-card-enhanced:hover::before {
+  transform: scaleY(1);
+}
+
+.panel-card-label-current {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: #6B2FA0; margin-bottom: 4px;
+}
+
+.panel-card-label-enhanced {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--purple-bright); margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+.panel-card-text-current {
+  font-size: 13px; color: #555; line-height: 1.4;
+}
+
+.panel-card-text-enhanced {
+  font-size: 12px; color: var(--text-secondary); line-height: 1.45;
+}
+
+/* Panel state toggle */
+.panel-toggle-group {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.panel-toggle {
+  font-size: 11px; font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all var(--t-fast);
+  font-family: 'Outfit', sans-serif;
+}
+
+.panel-toggle.closed {
+  background: transparent;
+  border-color: var(--border-mid);
+  color: var(--text-secondary);
+}
+
+.panel-toggle.open {
+  background: rgba(107,47,160,0.2);
+  border-color: rgba(107,47,160,0.5);
+  color: var(--purple-bright);
+}
+
+/* Spring animation states */
+.panel-state-closed {
+  transform: scaleY(0.95) translateY(-8px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.panel-state-open {
+  transform: scaleY(1) translateY(0px);
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ============================================================
+   SECTION 4 — DIAGRAM ELEMENT DEPTH
+   ============================================================ */
+
+.diagram-demo {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 32px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background atmospheric glow */
+.diagram-demo::before {
+  content: '';
+  position: absolute;
+  top: -40px; left: 50%;
+  transform: translateX(-50%);
+  width: 300px; height: 200px;
+  background: radial-gradient(ellipse, rgba(107,47,160,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.diagram-step-nav {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.step-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border-mid);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  background: transparent;
+  font-family: 'Outfit', sans-serif;
+}
+
+.step-pill:hover {
+  border-color: var(--border-bright);
+  color: var(--text-primary);
+}
+
+.step-pill.active {
+  background: rgba(107,47,160,0.2);
+  border-color: rgba(107,47,160,0.5);
+  color: var(--purple-bright);
+  box-shadow: 0 0 12px rgba(107,47,160,0.2);
+}
+
+/* Zone cards */
+.diagram-zones {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 700px) {
+  .diagram-zones { grid-template-columns: 1fr; }
+}
+
+.zone-card {
+  background: rgba(255,255,255,0.035);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Inner glow ring */
+.zone-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 13px;
+  border: 1px solid transparent;
+  transition: border-color var(--t-med);
+  pointer-events: none;
+}
+
+/* Non-active: dim + shrink slightly */
+.zone-card.dim {
+  opacity: 0.28;
+  transform: scale(0.97);
+  filter: grayscale(0.4);
+}
+
+/* Active: lift with full shadow + border glow */
+.zone-card.active {
+  opacity: 1;
+  transform: scale(1.03) translateY(-2px);
+  filter: none;
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(107,47,160,0.4);
+  box-shadow:
+    0 0 0 1px rgba(107,47,160,0.2),
+    0 8px 24px rgba(0,0,0,0.45),
+    0 2px 8px rgba(107,47,160,0.2);
+}
+
+.zone-card.active::after {
+  border-color: rgba(107,47,160,0.25);
+  box-shadow: inset 0 0 20px rgba(107,47,160,0.08);
+}
+
+/* Inner top glow line for active */
+.zone-card.active::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 5%, rgba(107,47,160,0.6) 30%, rgba(168,85,247,0.8) 50%, rgba(107,47,160,0.6) 70%, transparent 95%);
+}
+
+.zone-icon {
+  font-size: 22px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.zone-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  letter-spacing: -0.1px;
+}
+
+.zone-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.zone-badge {
+  position: absolute;
+  top: 12px; right: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(107,47,160,0.15);
+  color: var(--purple-bright);
+  border: 1px solid rgba(107,47,160,0.25);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: all var(--t-med);
+}
+
+.zone-card.active .zone-badge {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Connection rows */
+.conn-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.conn-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+}
+
+.conn-row::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--purple-bright);
+  border-radius: 8px 0 0 8px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t-med);
+}
+
+.conn-row.dim {
+  opacity: 0.25;
+  transform: scale(0.99);
+}
+
+.conn-row.active {
+  opacity: 1;
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(107,47,160,0.3);
+  transform: translateY(-1px) scale(1.005);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35), 0 0 0 1px rgba(107,47,160,0.15);
+  z-index: 5;
+}
+
+.conn-row.active::before {
+  transform: scaleX(1);
+}
+
+.conn-icon {
+  width: 28px; height: 28px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: background var(--t-med), transform var(--t-med);
+}
+
+.conn-row.active .conn-icon {
+  background: rgba(107,47,160,0.2);
+  transform: scale(1.1);
+}
+
+.conn-label {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: color var(--t-med);
+}
+
+.conn-row.active .conn-label {
+  color: var(--text-primary);
+}
+
+.conn-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid;
+  transition: all var(--t-med);
+}
+
+.conn-status.idle {
+  color: var(--text-muted);
+  background: transparent;
+  border-color: var(--border-subtle);
+}
+
+.conn-status.running {
+  color: #4ADE80;
+  background: rgba(74,222,128,0.08);
+  border-color: rgba(74,222,128,0.25);
+  animation: statusPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ============================================================
+   COMPARISON ANNOTATION
+   ============================================================ */
+
+.annotation-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(107,47,160,0.07);
+  border: 1px solid rgba(107,47,160,0.15);
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.annotation-bar span {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.annotation-bar strong {
+  color: var(--purple-bright);
+}
+
+/* ============================================================
+   TOKEN REFERENCE TABLE
+   ============================================================ */
+
+.token-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 4px;
+}
+
+@media (max-width: 700px) {
+  .token-grid { grid-template-columns: 1fr; }
+}
+
+.token-table {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.token-table-header {
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.token-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background var(--t-fast);
+}
+.token-row:last-child { border-bottom: none; }
+.token-row:hover { background: rgba(255,255,255,0.03); }
+
+.token-swatch {
+  width: 24px; height: 24px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+.token-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--purple-bright);
+  flex: 1;
+}
+
+.token-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.proto-footer {
+  text-align: center;
+  padding: 32px 24px 48px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.proto-footer p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+.proto-footer .footer-brand {
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.proto-footer code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--purple-bright);
+  background: rgba(107,47,160,0.12);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   SCROLL-BASED ENTRANCE ANIMATIONS
+   ============================================================ */
+.fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   MICRO-INTERACTIONS — INTERACTIVE HINTS
+   ============================================================ */
+.interact-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+  padding: 4px 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+}
+
+.hint-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--purple-bright);
+  animation: hintPulse 2s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<nav class="global-nav">
+  <a class="nav-back" href="../../">&#8592; Back</a>
+  <a class="nav-brand" href="../../">The Cheat Code <span>//</span></a>
+  <div class="nav-divider"></div>
+  <span class="nav-label">Depth System Prototype</span>
+  <span class="nav-badge">PROTO</span>
+</nav>
+
+<!-- Hero -->
+<div class="page-hero">
+  <div class="hero-eyebrow">Design Prototype · 2026-04-09</div>
+  <h1>Depth &amp; Elevation<br>System</h1>
+  <p>A 6-level luminance stacking model with enhanced glass surfaces, cascade shadows, and dimensional diagram interactions. Hover and click everything — this prototype is interactive.</p>
+</div>
+
+<!-- ============================================================
+     MAIN CONTENT
+     ============================================================ -->
+<div class="content">
+
+  <!-- =========================================================
+       SECTION 1: LUMINANCE STACKING MODEL
+       ========================================================= -->
+  <section class="proto-section fade-up" id="s1">
+    <div class="section-header">
+      <div class="section-number">01 / 04</div>
+      <div class="section-title">Luminance Stacking Model</div>
+      <div class="section-desc">Six elevation levels form a layered lighting system. Lower levels are darker — elements rise toward the viewer by increasing luminance and shadow depth. Hover each row to see the layer react.</div>
+    </div>
+
+    <div class="interact-hint"><span class="hint-dot"></span> Hover rows to activate</div>
+
+    <!-- Elevation rows -->
+    <div class="elevation-stack">
+
+      <div class="level-row level-0" id="elev-0" data-level="0">
+        <div class="level-swatch">L0 · #0E0E1F</div>
+        <div class="level-info">
+          <div class="level-name">Void</div>
+          <div class="level-meta">The abyss — the absolute floor. Nothing sits below this level.</div>
+          <div class="level-use">Use: page background, outer canvas</div>
+        </div>
+        <div class="level-preview">
+          <div class="elevation-indicator">
+            <div class="elev-bar" style="height:4px"></div>
+            <div class="elev-bar" style="height:3px;opacity:.4"></div>
+            <div class="elev-bar" style="height:2px;opacity:.2"></div>
+            <div class="elev-bar" style="height:2px;opacity:.1"></div>
+            <div class="elev-bar" style="height:1px;opacity:.05"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="level-row level-1" id="elev-1" data-level="1">
+        <div class="level-swatch">L1 · #1B1B3A</div>
+        <div class="level-info">
+          <div class="level-name">Surface</div>
+          <div class="level-meta">Nav bars, side panels, and ambient containers. The ambient foundation above the void.</div>
+          <div class="level-use">Use: global-nav, sidebar, hero sections</div>
+        </div>
+        <div class="level-preview">
+          <div class="elevation-indicator">
+            <div class="elev-bar" style="height:8px"></div>
+            <div class="elev-bar" style="height:5px"></div>
+            <div class="elev-bar" style="height:3px;opacity:.4"></div>
+            <div class="elev-bar" style="height:2px;opacity:.2"></div>
+            <div class="elev-bar" style="height:1px;opacity:.1"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="level-row level-2" id="elev-2" data-level="2">
+        <div class="level-swatch">L2 · rgba white 4%</div>
+        <div class="level-info">
+          <div class="level-name">Glass (Rest)</div>
+          <div class="level-meta">Cards and panels at rest. Frosted glass with 20px blur — visible but quiet.</div>
+          <div class="level-use">Use: pattern cards, diagram zones, panel sections</div>
+        </div>
+        <div class="level-preview">
+          <div class="elevation-indicator">
+            <div class="elev-bar" style="height:16px"></div>
+            <div class="elev-bar" style="height:12px"></div>
+            <div class="elev-bar" style="height:8px"></div>
+            <div class="elev-bar" style="height:4px;opacity:.4"></div>
+            <div class="elev-bar" style="height:2px;opacity:.2"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="level-row level-3" id="elev-3" data-level="3">
+        <div class="level-swatch">L3 · rgba white 7%</div>
+        <div class="level-info">
+          <div class="level-name">Glass (Hover)</div>
+          <div class="level-meta">Cards responding to cursor proximity. Slightly brighter glass surface + border brightens.</div>
+          <div class="level-use">Use: card :hover state, focused diagram elements</div>
+        </div>
+        <div class="level-preview">
+          <div class="elevation-indicator">
+            <div class="elev-bar" style="height:22px"></div>
+            <div class="elev-bar" style="height:18px"></div>
+            <div class="elev-bar" style="height:14px"></div>
+            <div class="elev-bar" style="height:10px"></div>
+            <div class="elev-bar" style="height:6px;opacity:.4"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="level-row level-4" id="elev-4" data-level="4">
+        <div class="level-swatch">L4 · Purple Glow</div>
+        <div class="level-info">
+          <div class="level-name">Glow</div>
+          <div class="level-meta">Highlighted / active elements. Purple shadow halo pulls attention without harsh borders.</div>
+          <div class="level-use">Use: active step, selected card, CTA buttons</div>
+        </div>
+        <div class="level-preview">
+          <div class="elevation-indicator">
+            <div class="elev-bar" style="height:30px"></div>
+            <div class="elev-bar" style="height:25px"></div>
+            <div class="elev-bar" style="height:20px"></div>
+            <div class="elev-bar" style="height:15px"></div>
+            <div class="elev-bar" style="height:10px"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="level-row level-5" id="elev-5" data-level="5">
+        <div class="level-swatch">L5 · Float</div>
+        <div class="level-info">
+          <div class="level-name">Float</div>
+          <div class="level-meta">Modals, lifted cards, tooltip surfaces. Strong shadow cascade + bright border = visually closest to viewer.</div>
+          <div class="level-use">Use: context panels, modals, tooltips, active overlays</div>
+        </div>
+        <div class="level-preview">
+          <div class="elevation-indicator">
+            <div class="elev-bar" style="height:40px"></div>
+            <div class="elev-bar" style="height:34px"></div>
+            <div class="elev-bar" style="height:28px"></div>
+            <div class="elev-bar" style="height:22px"></div>
+            <div class="elev-bar" style="height:16px"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /elevation-stack -->
+
+    <!-- Depth callout -->
+    <div class="depth-callout">
+      <div class="depth-callout-icon">&#10022;</div>
+      <div class="depth-callout-text">
+        <strong>The stacking rule:</strong> Each level increases luminance and shadow weight, never color saturation alone. Elevation is felt through <strong>light, not hue</strong> — keeping the palette tight while creating clear spatial hierarchy.
+      </div>
+    </div>
+
+    <!-- Layer panels visual demo -->
+    <div style="margin-top: 36px;">
+      <div class="layer-demo-label">Visual depth demo — 6 layers stacked in 3D space (hover to inspect)</div>
+      <div class="layer-demo">
+        <div class="layer-panel">
+          <span class="layer-level-badge">L0</span> Void — #0E0E1F — page canvas
+        </div>
+        <div class="layer-panel">
+          <span class="layer-level-badge">L1</span> Surface — #1B1B3A — nav &amp; panels
+        </div>
+        <div class="layer-panel">
+          <span class="layer-level-badge">L2</span> Glass Rest — rgba(255,255,255, 4%) + blur
+        </div>
+        <div class="layer-panel">
+          <span class="layer-level-badge">L3</span> Glass Hover — rgba(255,255,255, 7%) + blur
+        </div>
+        <div class="layer-panel">
+          <span class="layer-level-badge">L4</span> Glow — purple halo shadow
+        </div>
+        <div class="layer-panel">
+          <span class="layer-level-badge">L5</span> Float — strong cascade + bright border
+        </div>
+      </div>
+    </div>
+
+    <!-- Token reference -->
+    <div style="margin-top: 36px;">
+      <div class="layer-demo-label">Design token reference</div>
+      <div class="token-grid">
+        <div class="token-table">
+          <div class="token-table-header">Color Tokens</div>
+          <div class="token-row">
+            <div class="token-swatch" style="background:#0E0E1F;border:1px solid rgba(255,255,255,0.12)"></div>
+            <div class="token-name">--void</div>
+            <div class="token-value">#0E0E1F</div>
+          </div>
+          <div class="token-row">
+            <div class="token-swatch" style="background:#1B1B3A"></div>
+            <div class="token-name">--surface</div>
+            <div class="token-value">#1B1B3A</div>
+          </div>
+          <div class="token-row">
+            <div class="token-swatch" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1)"></div>
+            <div class="token-name">--glass-rest</div>
+            <div class="token-value">rgba(255,255,255,.04)</div>
+          </div>
+          <div class="token-row">
+            <div class="token-swatch" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1)"></div>
+            <div class="token-name">--glass-hover</div>
+            <div class="token-value">rgba(255,255,255,.07)</div>
+          </div>
+          <div class="token-row">
+            <div class="token-swatch" style="background:#6B2FA0"></div>
+            <div class="token-name">--purple</div>
+            <div class="token-value">#6B2FA0</div>
+          </div>
+          <div class="token-row">
+            <div class="token-swatch" style="background:#A855F7"></div>
+            <div class="token-name">--purple-bright</div>
+            <div class="token-value">#A855F7</div>
+          </div>
+        </div>
+        <div class="token-table">
+          <div class="token-table-header">Shadow Tokens</div>
+          <div class="token-row">
+            <div class="token-swatch" style="background:rgba(255,255,255,0.04);box-shadow:0 1px 3px rgba(0,0,0,0.3)"></div>
+            <div class="token-name">--shadow-1</div>
+            <div class="token-value">Level 2 · subtle</div>
+          </div>
+          <div class="token-row">
+            <div class="token-swatch" style="background:rgba(255,255,255,0.04);box-shadow:0 4px 12px rgba(0,0,0,0.35)"></div>
+            <div class="token-name">--shadow-2</div>
+            <div class="token-value">Level 3 · card</div>
+          </div>
+          <div class="token-row">
+            <div class="token-swatch" style="background:rgba(255,255,255,0.04);box-shadow:0 8px 24px rgba(0,0,0,0.4)"></div>
+            <div class="token-name">--shadow-3</div>
+            <div class="token-value">Level 4 · lifted</div>
+          </div>
+          <div class="token-row">
+            <div class="token-swatch" style="background:rgba(40,30,66,0.9);box-shadow:0 0 0 1px rgba(107,47,160,0.4),0 8px 32px rgba(107,47,160,0.25)"></div>
+            <div class="token-name">--shadow-glow</div>
+            <div class="token-value">Level 4 · glow</div>
+          </div>
+          <div class="token-row">
+            <div class="token-swatch" style="background:rgba(44,40,80,0.92);box-shadow:0 16px 48px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.12)"></div>
+            <div class="token-name">--shadow-float</div>
+            <div class="token-value">Level 5 · float</div>
+          </div>
+          <div class="token-row">
+            <div class="token-swatch" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)"></div>
+            <div class="token-name">--border-subtle</div>
+            <div class="token-value">rgba(255,255,255,.06)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       SECTION 2: ENHANCED CARD HOVER EFFECTS
+       ========================================================= -->
+  <section class="proto-section fade-up" id="s2">
+    <div class="section-header">
+      <div class="section-number">02 / 04</div>
+      <div class="section-title">Enhanced Card Hover Effects</div>
+      <div class="section-desc">Side-by-side comparison of current light-mode cards vs. the enhanced dark glass system with spotlight, parallax tilt, border luminance, and shadow cascade.</div>
+    </div>
+
+    <div class="comparison-grid">
+
+      <!-- Current -->
+      <div class="comparison-col">
+        <div class="comparison-label">
+          <div class="label-dot current"></div>
+          <span style="color:var(--text-muted)">Current</span>
+          <span style="color:var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;margin-left:4px">— lift + purple border</span>
+        </div>
+        <a class="card-current" href="#">
+          <div class="card-num">#001</div>
+          <div class="card-title">Code-First Agent Delivery</div>
+          <div class="card-desc">Build, deploy, and integrate a production agent into Teams in a single working session. VS Code to Azure to Copilot Chat.</div>
+          <div class="card-cta">Explore interactively &rarr;</div>
+        </a>
+        <div class="annotation-bar">
+          <span>Simple <strong>translateY(-3px)</strong> + border color change. No depth cascade. No light response.</span>
+        </div>
+      </div>
+
+      <!-- Enhanced -->
+      <div class="comparison-col">
+        <div class="comparison-label">
+          <div class="label-dot enhanced"></div>
+          <span style="color:var(--purple-bright)">Enhanced</span>
+          <span style="color:var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;margin-left:4px">— spotlight · tilt · cascade</span>
+        </div>
+
+        <div class="card-enhanced-wrapper" id="cardWrapper">
+          <div class="card-enhanced" id="enhancedCard">
+            <div class="card-content">
+              <div class="card-num">#001</div>
+              <div class="card-title">Code-First Agent Delivery</div>
+              <div class="card-desc">Build, deploy, and integrate a production agent into Teams in a single working session. VS Code to Azure to Copilot Chat.</div>
+              <div class="card-cta">Explore interactively <span>&#8594;</span></div>
+              <div class="effect-pills">
+                <span class="pill pill-purple">Spotlight</span>
+                <span class="pill pill-teal">Parallax Tilt</span>
+                <span class="pill pill-purple">Border Luminance</span>
+                <span class="pill pill-white">Shadow Cascade</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="annotation-bar">
+          <span><strong>Radial spotlight</strong> follows cursor · <strong>3D tilt</strong> via perspective · shadow grows in <strong>3 layers</strong> · top border brightens toward cursor</span>
+        </div>
+      </div>
+
+    </div><!-- /comparison-grid -->
+
+    <!-- Shadow cascade demo -->
+    <div class="shadow-cascade-demo" style="margin-top: 28px;">
+      <div class="shadow-cascade-label">Shadow Cascade — 4 stages from flat to float (hover to lift)</div>
+      <div class="shadow-stages">
+        <div class="shadow-stage">
+          <div class="shadow-box" style="box-shadow:none;border-color:rgba(255,255,255,0.06)"></div>
+          <div class="shadow-stage-label">Stage 0<br>No shadow</div>
+        </div>
+        <div class="shadow-stage">
+          <div class="shadow-box" style="box-shadow:var(--shadow-1)"></div>
+          <div class="shadow-stage-label">Stage 1<br>Subtle depth</div>
+        </div>
+        <div class="shadow-stage">
+          <div class="shadow-box" style="box-shadow:var(--shadow-2)"></div>
+          <div class="shadow-stage-label">Stage 2<br>Card lift</div>
+        </div>
+        <div class="shadow-stage">
+          <div class="shadow-box" style="box-shadow:var(--shadow-float)"></div>
+          <div class="shadow-stage-label">Stage 3+<br>Float + glow</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- =========================================================
+       SECTION 3: CONTEXT PANEL DEPTH
+       ========================================================= -->
+  <section class="proto-section fade-up" id="s3">
+    <div class="section-header">
+      <div class="section-number">03 / 04</div>
+      <div class="section-title">Context Panel Depth</div>
+      <div class="section-desc">The context/narrative panel enhanced with stronger frosted glass (32px blur), inner top shadow, elevated section cards, and spring animation on open/close.</div>
+    </div>
+
+    <div class="panel-demo-container">
+
+      <!-- Current Panel Demo -->
+      <div>
+        <div class="comparison-label" style="margin-bottom:16px;">
+          <div class="label-dot current"></div>
+          <span style="color:var(--text-muted)">Current</span>
+        </div>
+
+        <div class="panel-toggle-group">
+          <button class="panel-toggle open" id="currentOpenBtn" onclick="togglePanel('current','open')">Open</button>
+          <button class="panel-toggle closed" id="currentCloseBtn" onclick="togglePanel('current','close')">Closed</button>
+        </div>
+
+        <div id="currentPanel" class="context-panel-current panel-state-open" style="transition: all 0.3s ease; border-radius:12px;">
+          <div class="panel-inner-header current">
+            <div class="panel-dot" style="background:#6B2FA0"></div>
+            <div class="panel-title-current">Step 2: Input Analysis</div>
+          </div>
+          <div class="panel-section-cards">
+            <div class="panel-card-current">
+              <div class="panel-card-label-current">What Happens</div>
+              <div class="panel-card-text-current">The orchestrator receives the user query and breaks it into intent signals.</div>
+            </div>
+            <div class="panel-card-current">
+              <div class="panel-card-label-current">Why It Matters</div>
+              <div class="panel-card-text-current">Scoping reduces noise — only relevant sources are queried.</div>
+            </div>
+            <div class="panel-card-current">
+              <div class="panel-card-label-current">Design Decision</div>
+              <div class="panel-card-text-current">YAML playbooks encode the routing logic, keeping it auditable.</div>
+            </div>
+          </div>
+        </div>
+        <div style="height:24px;display:flex;align-items:center;margin-top:8px;">
+          <span style="font-size:11px;color:var(--text-muted)">transition: 0.3s ease · white bg · no blur</span>
+        </div>
+      </div>
+
+      <!-- Enhanced Panel Demo -->
+      <div>
+        <div class="comparison-label" style="margin-bottom:16px;">
+          <div class="label-dot enhanced"></div>
+          <span style="color:var(--purple-bright)">Enhanced</span>
+        </div>
+
+        <div class="panel-toggle-group">
+          <button class="panel-toggle open" id="enhancedOpenBtn" onclick="togglePanel('enhanced','open')">Open</button>
+          <button class="panel-toggle closed" id="enhancedCloseBtn" onclick="togglePanel('enhanced','close')">Closed</button>
+        </div>
+
+        <div id="enhancedPanel" class="context-panel-enhanced panel-state-open" style="transition: all 0.45s cubic-bezier(0.34,1.56,0.64,1); border-radius:14px;">
+          <div class="panel-inner-header enhanced">
+            <div class="panel-dot" style="background:var(--purple-bright);box-shadow:0 0 8px var(--purple-bright)"></div>
+            <div class="panel-title-enhanced">Step 2: Input Analysis</div>
+          </div>
+          <div class="panel-section-cards">
+            <div class="panel-card-enhanced">
+              <div class="panel-card-label-enhanced">What Happens</div>
+              <div class="panel-card-text-enhanced">The orchestrator receives the user query and breaks it into intent signals for routing.</div>
+            </div>
+            <div class="panel-card-enhanced">
+              <div class="panel-card-label-enhanced">Why It Matters</div>
+              <div class="panel-card-text-enhanced">Scoping reduces noise — only relevant sources are queried downstream.</div>
+            </div>
+            <div class="panel-card-enhanced">
+              <div class="panel-card-label-enhanced">Design Decision</div>
+              <div class="panel-card-text-enhanced">YAML playbooks encode routing logic, keeping it auditable by non-engineers.</div>
+            </div>
+          </div>
+        </div>
+        <div style="height:24px;display:flex;align-items:center;margin-top:8px;">
+          <span style="font-size:11px;color:var(--text-muted)">spring(0.45s) · frosted glass · 32px blur · inner shadow</span>
+        </div>
+      </div>
+
+    </div><!-- /panel-demo-container -->
+
+    <div class="annotation-bar" style="margin-top:20px;">
+      <span>Enhanced panel uses <strong>backdrop-filter: blur(32px)</strong>, <strong>inset 0 1px 0 rgba(255,255,255,0.08)</strong> for inner top edge, and <strong>cubic-bezier(0.34,1.56,0.64,1)</strong> spring easing on open. Section cards add a left-border accent on hover.</span>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       SECTION 4: DIAGRAM ELEMENT DEPTH
+       ========================================================= -->
+  <section class="proto-section fade-up" id="s4">
+    <div class="section-header">
+      <div class="section-number">04 / 04</div>
+      <div class="section-title">Diagram Element Depth</div>
+      <div class="section-desc">Active diagram steps get dimensional lift via scale + shadow cascade. Inactive zones dim to 28% opacity. Connection rows stage vertically — the active row lifts above the stack.</div>
+    </div>
+
+    <div class="interact-hint"><span class="hint-dot"></span> Click steps to activate zones and rows</div>
+
+    <div class="diagram-demo">
+
+      <!-- Step navigation -->
+      <div class="diagram-step-nav" id="stepNav">
+        <button class="step-pill active" data-step="0" onclick="setStep(0)">Overview</button>
+        <button class="step-pill" data-step="1" onclick="setStep(1)">Step 1 — Input</button>
+        <button class="step-pill" data-step="2" onclick="setStep(2)">Step 2 — Analyze</button>
+        <button class="step-pill" data-step="3" onclick="setStep(3)">Step 3 — Route</button>
+      </div>
+
+      <!-- Zone cards -->
+      <div class="diagram-zones" id="diagramZones">
+        <div class="zone-card" data-zone="1" onclick="setStep(1)">
+          <span class="zone-badge">ACTIVE</span>
+          <span class="zone-icon">&#128260;</span>
+          <div class="zone-name">Input Receiver</div>
+          <div class="zone-meta">Captures user query and session context from Teams or web.</div>
+        </div>
+        <div class="zone-card" data-zone="2" onclick="setStep(2)">
+          <span class="zone-badge">ACTIVE</span>
+          <span class="zone-icon">&#129504;</span>
+          <div class="zone-name">Intent Analyzer</div>
+          <div class="zone-meta">Classifies query type and extracts routing signals via LLM chain.</div>
+        </div>
+        <div class="zone-card" data-zone="3" onclick="setStep(3)">
+          <span class="zone-badge">ACTIVE</span>
+          <span class="zone-icon">&#128207;</span>
+          <div class="zone-name">Source Router</div>
+          <div class="zone-meta">Maps signals to data sources using YAML playbook rules.</div>
+        </div>
+      </div>
+
+      <!-- Connection rows -->
+      <div class="conn-rows" id="connRows">
+        <div class="conn-row" data-conn="1" onclick="setStep(1)">
+          <div class="conn-icon">&#128100;</div>
+          <div class="conn-label">User Query → Input Receiver</div>
+          <div class="conn-status idle" id="conn-status-1">IDLE</div>
+        </div>
+        <div class="conn-row" data-conn="2" onclick="setStep(2)">
+          <div class="conn-icon">&#9654;</div>
+          <div class="conn-label">Input Receiver → Intent Analyzer</div>
+          <div class="conn-status idle" id="conn-status-2">IDLE</div>
+        </div>
+        <div class="conn-row" data-conn="3" onclick="setStep(3)">
+          <div class="conn-icon">&#9866;</div>
+          <div class="conn-label">Analyzer → Source Router</div>
+          <div class="conn-status idle" id="conn-status-3">IDLE</div>
+        </div>
+      </div>
+
+    </div><!-- /diagram-demo -->
+
+    <div class="annotation-bar" style="margin-top:16px;">
+      <span>Active zone: <strong>scale(1.03) translateY(-2px)</strong> + purple glow border + inner top gradient. Inactive: <strong>opacity 0.28 + grayscale(0.4) + scale(0.97)</strong>. Connection rows use <strong>translateY(-1px) scale(1.005)</strong> with left-border accent on active.</span>
+    </div>
+  </section>
+
+</div><!-- /content -->
+
+<!-- Footer -->
+<footer class="proto-footer">
+  <div class="footer-brand">The Cheat Code — Design System</div>
+  <p>Depth &amp; Elevation Prototype · <code>docs/prototypes/depth-system/</code></p>
+  <p>ABS Tech Strategy · AI Business Solutions · Microsoft Internal</p>
+</footer>
+
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+(function() {
+  'use strict';
+
+  // ============================================================
+  // 1. ENHANCED CARD — Spotlight + Parallax Tilt
+  // ============================================================
+  const card = document.getElementById('enhancedCard');
+  const wrapper = document.getElementById('cardWrapper');
+
+  if (card) {
+    card.addEventListener('mousemove', function(e) {
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = e.clientX - cx;
+      const dy = e.clientY - cy;
+
+      // Normalize to -1…1
+      const nx = dx / (rect.width / 2);
+      const ny = dy / (rect.height / 2);
+
+      // Tilt: max 6deg
+      const tiltX = ny * -6;
+      const tiltY = nx * 6;
+
+      card.style.transform = `perspective(600px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(4px)`;
+
+      // Inner content counter-shifts for parallax
+      const content = card.querySelector('.card-content');
+      if (content) {
+        content.style.transform = `translate(${nx * -4}px, ${ny * -4}px)`;
+      }
+
+      // Spotlight position (percentage within card)
+      const pctX = ((e.clientX - rect.left) / rect.width) * 100;
+      const pctY = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--spot-x', pctX + '%');
+      card.style.setProperty('--spot-y', pctY + '%');
+
+      // Update pseudo-element via background on the card itself
+      card.style.backgroundImage = `radial-gradient(circle 200px at ${pctX}% ${pctY}%, rgba(255,255,255,0.07) 0%, transparent 60%)`;
+
+      // Border luminance: brighten border nearest cursor
+      // Top edge brightens when cursor is near top
+      const topProx = 1 - (e.clientY - rect.top) / rect.height;
+      const leftProx = 1 - (e.clientX - rect.left) / rect.width;
+      const rightProx = (e.clientX - rect.left) / rect.width;
+      const bottomProx = (e.clientY - rect.top) / rect.height;
+
+      const topAlpha = 0.06 + topProx * 0.22;
+      const rightAlpha = 0.06 + rightProx * 0.18;
+      const bottomAlpha = 0.06 + bottomProx * 0.12;
+      const leftAlpha = 0.06 + leftProx * 0.18;
+
+      card.style.borderColor = `rgba(255,255,255,${Math.max(topAlpha, rightAlpha, bottomAlpha, leftAlpha).toFixed(2)})`;
+    });
+
+    card.addEventListener('mouseleave', function() {
+      card.style.transform = '';
+      card.style.backgroundImage = '';
+      card.style.borderColor = '';
+      const content = card.querySelector('.card-content');
+      if (content) content.style.transform = '';
+    });
+  }
+
+  // ============================================================
+  // 2. PANEL TOGGLE — Spring Animation
+  // ============================================================
+  window.togglePanel = function(which, state) {
+    const panel = document.getElementById(which + 'Panel');
+    const openBtn = document.getElementById(which + 'OpenBtn');
+    const closeBtn = document.getElementById(which + 'CloseBtn');
+
+    if (!panel) return;
+
+    if (state === 'open') {
+      panel.classList.remove('panel-state-closed');
+      panel.classList.add('panel-state-open');
+      openBtn.classList.add('open');
+      openBtn.classList.remove('closed');
+      closeBtn.classList.add('closed');
+      closeBtn.classList.remove('open');
+    } else {
+      panel.classList.add('panel-state-closed');
+      panel.classList.remove('panel-state-open');
+      openBtn.classList.remove('open');
+      openBtn.classList.add('closed');
+      closeBtn.classList.remove('closed');
+      closeBtn.classList.add('open');
+    }
+  };
+
+  // ============================================================
+  // 3. DIAGRAM STEP SYSTEM
+  // ============================================================
+  var currentStep = 0;
+
+  window.setStep = function(step) {
+    currentStep = step;
+
+    // Update step pills
+    document.querySelectorAll('.step-pill').forEach(function(pill) {
+      if (parseInt(pill.dataset.step) === step) {
+        pill.classList.add('active');
+      } else {
+        pill.classList.remove('active');
+      }
+    });
+
+    // Update zone cards
+    document.querySelectorAll('.zone-card').forEach(function(zone) {
+      const zoneNum = parseInt(zone.dataset.zone);
+      zone.classList.remove('active', 'dim');
+
+      if (step === 0) {
+        // Overview: all equal
+      } else if (zoneNum === step) {
+        zone.classList.add('active');
+      } else {
+        zone.classList.add('dim');
+      }
+    });
+
+    // Update connection rows + status pills
+    document.querySelectorAll('.conn-row').forEach(function(row) {
+      const connNum = parseInt(row.dataset.conn);
+      row.classList.remove('active', 'dim');
+
+      const statusEl = document.getElementById('conn-status-' + connNum);
+
+      if (step === 0) {
+        if (statusEl) {
+          statusEl.className = 'conn-status idle';
+          statusEl.textContent = 'IDLE';
+        }
+      } else if (connNum === step) {
+        row.classList.add('active');
+        if (statusEl) {
+          statusEl.className = 'conn-status running';
+          statusEl.textContent = 'LIVE';
+        }
+      } else {
+        row.classList.add('dim');
+        if (statusEl) {
+          statusEl.className = 'conn-status idle';
+          statusEl.textContent = 'IDLE';
+        }
+      }
+    });
+  };
+
+  // ============================================================
+  // 4. ELEVATION ROWS — Hover highlight
+  // ============================================================
+  document.querySelectorAll('.level-row').forEach(function(row) {
+    row.addEventListener('mouseenter', function() {
+      document.querySelectorAll('.level-row').forEach(function(r) {
+        r.classList.remove('active-level');
+      });
+      row.classList.add('active-level');
+    });
+    row.addEventListener('mouseleave', function() {
+      row.classList.remove('active-level');
+    });
+  });
+
+  // ============================================================
+  // 5. SCROLL-BASED FADE-IN
+  // ============================================================
+  var fadeEls = document.querySelectorAll('.fade-up');
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  fadeEls.forEach(function(el) { observer.observe(el); });
+
+  // Also trigger visible for elements already in view
+  fadeEls.forEach(function(el) {
+    var rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      el.classList.add('visible');
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>

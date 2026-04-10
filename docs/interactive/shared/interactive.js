@@ -608,11 +608,46 @@
   }
 
   /* ========================================================
+     Theme Toggle (Light / Dark)
+     ======================================================== */
+  function buildThemeToggle() {
+    const saved = localStorage.getItem('tcc-theme');
+    const theme = saved || 'dark';
+
+    if (theme === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+
+    const btn = document.createElement('button');
+    btn.className = 'theme-toggle';
+    btn.setAttribute('aria-label', 'Toggle light/dark mode');
+    btn.textContent = theme === 'light' ? '\u263E' : '\u2600';
+
+    btn.addEventListener('click', () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('tcc-theme', 'dark');
+        btn.textContent = '\u2600';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('tcc-theme', 'light');
+        btn.textContent = '\u263E';
+      }
+    });
+
+    document.body.appendChild(btn);
+  }
+
+  /* ========================================================
      Init
      ======================================================== */
   function init() {
     // Global nav — always render
     buildGlobalNav();
+
+    // Theme toggle — always render
+    buildThemeToggle();
 
     // Only init step engine if config is defined by the page
     if (typeof window.interactiveConfig === 'undefined') return;
