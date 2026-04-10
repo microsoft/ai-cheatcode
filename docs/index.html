@@ -312,11 +312,10 @@
     }
 
     .hero-kicker::before {
-      content: '';
-      display: block;
-      width: 20px;
-      height: 1px;
-      background: var(--purple-light);
+      content: '▲ ▲ ▼ ▼ ◄ ► ◄ ►';
+      font-size: 7px;
+      letter-spacing: 2px;
+      opacity: 0.5;
     }
 
     .hero-headline {
@@ -1233,7 +1232,7 @@
       <div class="brand-mark">TC</div>
       <div class="brand-text">
         <span class="brand-title">The Cheat Code</span>
-        <span class="brand-sub">ABS Tech Strategy &bull; AI Business Solutions</span>
+        <span class="brand-sub">ABS Tech Strategy &bull; Frontier Architecture</span>
       </div>
     </div>
     <div class="header-badge">Microsoft Internal &bull; Not for External Distribution</div>
@@ -1247,7 +1246,7 @@
       <span class="accent">nobody documented yet</span>
     </h1>
     <p class="hero-desc">
-      AI agent patterns distilled from live customer builds — each one an interactive walkthrough you can deploy, not just read about.
+      No theory. No slide decks. Each pattern is extracted from a validated customer build and turned into an interactive walkthrough you can land this week.
     </p>
   </section>
 
@@ -1449,7 +1448,7 @@
       <div class="card-inner" style="padding:18px 22px;">
         <div style="font-size:10px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:6px;">About the Series</div>
         <p style="font-size:13px;color:var(--text-secondary);line-height:1.65;">
-          Each issue pairs a conceptual pattern with a practical build. Frontier architectures documented by the builders who shipped them — an ongoing archive from real customer engagements.
+          Built and validated by ABS Tech Strategy from first-encounter customer scenarios. Each issue extracts a reusable pattern so you can land it — not just learn about it.
         </p>
       </div>
     </div>
@@ -1458,12 +1457,8 @@
     <div class="card card-code span-4 row-2 reveal" aria-label="Sample code coming soon">
       <div class="card-glow" style="width:100px;height:100px;top:10px;right:10px;background:rgba(107,47,160,0.25);"></div>
       <div class="card-inner" style="padding:18px 22px;">
-        <div class="terminal-bar" aria-hidden="true">
-          <span class="terminal-dot dot-red"></span>
-          <span class="terminal-dot dot-yellow"></span>
-          <span class="terminal-dot dot-green"></span>
-        </div>
-        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;letter-spacing:-0.3px;">Sample Code</div>
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;letter-spacing:-0.3px;">Code Samples</div>
+        <p style="font-size:11px;color:var(--text-secondary);margin-top:3px;line-height:1.5;">Pattern starters and reference architectures.</p>
         <div class="code-preview" aria-hidden="true" style="margin-top:8px;">
           <span class="code-line"><span class="kw">from</span> <span class="fn">cheatcode</span> <span class="kw">import</span> <span class="fn">patterns</span></span>
           <span class="code-line"><span class="fn">agent</span> <span class="sym">=</span> <span class="fn">patterns</span><span class="sym">.</span><span class="fn">load</span><span class="sym">(</span><span class="str">"001"</span><span class="sym">)</span></span>
@@ -1499,7 +1494,7 @@
     <!-- Issue 004 link: un-gate after Apr 13 publish -->
     <!-- <a href="interactive/issue-004/">Issue 004</a> -->
   </div>
-  <p>Microsoft Internal &bull; Not for external distribution &bull; ABS Tech Strategy &bull; AI Business Solutions</p>
+  <p>Microsoft Internal &bull; Not for external distribution &bull; ABS Tech Strategy &bull; Frontier Architecture</p>
 </footer>
 
 <script>
