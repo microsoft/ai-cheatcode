@@ -55,6 +55,131 @@
       line-height: 1.6;
     }
 
+    [data-theme="light"] {
+      --purple-glow: rgba(107, 47, 160, 0.15);
+      --navy: #FFFFFF;
+      --navy-light: #F5F3F8;
+      --navy-deep: #F8F8FC;
+      --text-primary: #1B1B3A;
+      --text-secondary: #6B6B8D;
+      --text-muted: #999;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-bright: rgba(0, 0, 0, 0.18);
+      --glass: rgba(0, 0, 0, 0.03);
+      --glass-hover: rgba(0, 0, 0, 0.06);
+    }
+
+    [data-theme="light"] body {
+      background-color: var(--navy-deep);
+      color: var(--text-primary);
+    }
+
+    [data-theme="light"] .bg-mesh { opacity: 0.25; }
+    [data-theme="light"] .bg-grain { opacity: 0.01; }
+
+    [data-theme="light"] .card:hover {
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    [data-theme="light"] .card-practical {
+      background: linear-gradient(145deg, rgba(216, 59, 1, 0.06), rgba(107, 47, 160, 0.04));
+      border-color: rgba(216, 59, 1, 0.15);
+    }
+
+    [data-theme="light"] .card-conceptual {
+      background: linear-gradient(145deg, rgba(0, 120, 212, 0.06), rgba(107, 47, 160, 0.05));
+      border-color: rgba(0, 120, 212, 0.15);
+    }
+
+    [data-theme="light"] .badge-practical {
+      background: rgba(216, 59, 1, 0.12);
+      color: #D83B01;
+    }
+
+    [data-theme="light"] .badge-conceptual {
+      background: rgba(0, 120, 212, 0.12);
+      color: #0078D4;
+    }
+
+    [data-theme="light"] .header-badge {
+      background: rgba(216, 59, 1, 0.08);
+      border-color: rgba(216, 59, 1, 0.2);
+      color: #D83B01;
+    }
+
+    [data-theme="light"] .site-header .brand-mark {
+      box-shadow: 0 0 12px rgba(107, 47, 160, 0.25);
+    }
+
+    [data-theme="light"] .hero-headline .accent {
+      background: linear-gradient(90deg, #6B2FA0, #0078D4, #6B2FA0);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    [data-theme="light"] .card-code {
+      background: linear-gradient(145deg, #1B1B3A, #0E0E1F);
+    }
+
+    [data-theme="light"] .card-brand {
+      background: linear-gradient(135deg, #6B2FA0, #4A1F70);
+    }
+
+    [data-theme="light"] .card-subscribe {
+      background: linear-gradient(145deg, rgba(16, 124, 16, 0.08), rgba(0, 0, 0, 0.02));
+      border-color: rgba(16, 124, 16, 0.2);
+    }
+
+    [data-theme="light"] .card-about {
+      background: linear-gradient(135deg, rgba(107, 47, 160, 0.08), rgba(0, 0, 0, 0.02));
+    }
+
+    [data-theme="light"] .card-stats {
+      background: linear-gradient(145deg, rgba(107, 47, 160, 0.06), rgba(0, 120, 212, 0.04));
+    }
+
+    [data-theme="light"] .tag {
+      background: rgba(0, 0, 0, 0.05);
+      border-color: rgba(0, 0, 0, 0.1);
+      color: var(--text-secondary);
+    }
+
+    [data-theme="light"] .interactive-pill {
+      background: rgba(107, 47, 160, 0.1);
+      border-color: rgba(107, 47, 160, 0.25);
+      color: #6B2FA0;
+    }
+
+    [data-theme="light"] .coming-soon-chip {
+      background: rgba(0, 0, 0, 0.05);
+      border-color: rgba(0, 0, 0, 0.1);
+      color: #999;
+    }
+
+    [data-theme="light"] #konami-overlay {
+      background: rgba(248, 248, 252, 0.96);
+    }
+
+    [data-theme="light"] .konami-title {
+      background: linear-gradient(135deg, #6B2FA0, #0078D4, #D83B01);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    [data-theme="light"] .konami-sub { color: var(--text-secondary); }
+    [data-theme="light"] .konami-hint { color: var(--text-muted); }
+
+    [data-theme="light"] .subscribe-input {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.12);
+      color: var(--text-primary);
+    }
+
+    [data-theme="light"] .subscribe-input::placeholder { color: #999; }
+
     /* ─── Animated background ─── */
     .bg-scene {
       position: fixed;
@@ -1063,6 +1188,31 @@
         background-position: 0% center;
       }
     }
+
+    .theme-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 400;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: var(--text-secondary);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .theme-toggle:hover {
+      background: var(--glass-hover);
+      transform: scale(1.1);
+    }
   </style>
 </head>
 <body>
@@ -1117,12 +1267,31 @@
     Row 11–12: stats (3) + 005 small (3) + 006 small (3) + brand (3) = 12
     Row 13–14: about (12)                                           = 12
   -->
+  <!--
+  ISSUE GATING — Issues are published weekly. To un-gate a new interactive:
+  1. Change the issue card from <div> to <a href="interactive/issue-NNN/">
+  2. Replace <span class="coming-soon-chip">Interactive coming soon</span>
+     with: <span class="interactive-pill"><svg viewBox="0 0 10 10" fill="none" aria-hidden="true"><circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1"/><polygon points="4,3 7,5 4,7" fill="currentColor"/></svg> View interactive</span>
+  3. Ensure docs/interactive/issue-NNN/index.html exists
+-->
   <main class="bento-grid" aria-label="Pattern cards">
+
+    <!--
+      GATING: Issues are published weekly. To un-gate a new issue:
+      1. Change the card from <div> to <a href="interactive/issue-NNN/">
+      2. Replace <span class="coming-soon-chip">Interactive coming soon</span>
+         with the interactive-pill element:
+         <span class="interactive-pill">
+           <svg viewBox="0 0 10 10" fill="none" aria-hidden="true"><circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1"/><polygon points="4,3 7,5 4,7" fill="currentColor"/></svg>
+           View interactive
+         </span>
+      3. Ensure the interactive page exists at docs/interactive/issue-NNN/index.html
+    -->
 
     <!-- ══════════ ROWS 1–4: HERO PAIR ══════════ -->
 
     <!-- Issue 007: Holographic Memory — HERO LEFT -->
-    <a class="card card-conceptual card-hero-issue span-6 row-4 arc-pair-c reveal" href="#" aria-label="Issue 007: Holographic Memory by Tyson Dowd">
+    <div class="card card-conceptual card-hero-issue span-6 row-4 arc-pair-c reveal" aria-label="Issue 007: Holographic Memory by Tyson Dowd">
       <div class="hero-visual" aria-hidden="true">
         <svg class="hv-nodes" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="100" cy="100" r="70" stroke="#9B5FD0" stroke-width="1" stroke-dasharray="6 4"/>
@@ -1157,10 +1326,10 @@
         </div>
       </div>
       <span class="diagram-label">Layers</span>
-    </a>
+    </div>
 
     <!-- Issue 008: Cross-Project Knowledge Agent — HERO RIGHT -->
-    <a class="card card-practical card-hero-issue span-6 row-4 arc-pair-c reveal" href="#" aria-label="Issue 008: Cross-Project Knowledge Agent by Tyson Dowd">
+    <div class="card card-practical card-hero-issue span-6 row-4 arc-pair-c reveal" aria-label="Issue 008: Cross-Project Knowledge Agent by Tyson Dowd">
       <div class="hero-visual" aria-hidden="true">
         <svg class="hv-nodes" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="20"  y="20"  width="40" height="28" rx="4" fill="rgba(216,59,1,0.3)"  stroke="#F77050" stroke-width="1"/>
@@ -1191,7 +1360,7 @@
         </div>
       </div>
       <span class="diagram-label">Pipeline</span>
-    </a>
+    </div>
 
     <!-- ══════════ ROWS 5–7: ISSUE BAND 1 ══════════ -->
 
@@ -1544,6 +1713,33 @@
   </div>
   <p>Microsoft Internal &bull; Not for external distribution &bull; ABS Tech Strategy &bull; AI Business Solutions</p>
 </footer>
+
+<script>
+(function() {
+  var saved = localStorage.getItem('tcc-theme');
+  if (saved === 'light') document.documentElement.setAttribute('data-theme', 'light');
+
+  var btn = document.createElement('button');
+  btn.className = 'theme-toggle';
+  btn.setAttribute('aria-label', 'Toggle light/dark mode');
+  btn.textContent = saved === 'light' ? '\u263E' : '\u2600';
+
+  btn.addEventListener('click', function() {
+    var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    if (isLight) {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('tcc-theme', 'dark');
+      btn.textContent = '\u2600';
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+      localStorage.setItem('tcc-theme', 'light');
+      btn.textContent = '\u263E';
+    }
+  });
+
+  document.body.appendChild(btn);
+})();
+</script>
 
 <!-- ─── Konami Code Easter Egg ─── -->
 <script>
