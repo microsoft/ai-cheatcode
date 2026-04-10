@@ -4,8 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Interactive: Scoped Multi-Source Search — The Cheat Code #002</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Outfit:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../shared/interactive.css">
 <style>
+  /* --- Bento font overrides --- */
+  .analyzer-zone .zone-label,
+  .source-lane .lane-title,
+  .process-zone .zone-label {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+  }
+  .node-name,
+  .node-desc,
+  .comp-name,
+  .comp-returns,
+  .step-name,
+  .step-desc {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+  .comp-scope,
+  .step-num,
+  .ki-label,
+  .arrow-down .label {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
   /* Issue-specific diagram styles (adapted from diagrams/issue_002_query_routing.html) */
   .flow {
     display: flex;
@@ -178,9 +202,10 @@
 
 <div class="interactive-page">
   <div class="page-header">
-    <a href="../../" class="back-link">← All Patterns</a>
+    <a href="../../" class="back-link">← Back to patterns</a>
+    <span class="issue-badge">Issue #002 · Conceptual</span>
     <h1>Scoped Multi-Source Search</h1>
-    <p class="page-subtitle">Query Analysis → Targeted Source Routing → Grounded Response</p>
+    <p class="page-subtitle">Query Analysis → Targeted Source Routing → Grounded Response — Explore the pattern interactively</p>
   </div>
 
   <div class="diagram-canvas" id="diagram">
@@ -190,7 +215,8 @@
            data-tooltip="The user asks a natural language question that spans multiple data sources"
            data-expand-title="User Query"
            data-expand-desc="A natural language question that could touch work items, emails, and documents simultaneously."
-           data-expand-details='[{"heading":"Why This Matters","items":["Most RAG implementations query a single index","Real questions span multiple systems","Without scoping, results are noisy and unreliable"]},{"heading":"Example Queries","items":["What is the status of the auth refactor and who discussed it last week?","Show me all P0 bugs assigned to my team with related design docs","What decisions were made about the API migration in recent meetings?"]}]'>
+           data-expand-details='[{"heading":"Why This Matters","items":["Most RAG implementations query a single index","Real questions span multiple systems","Without scoping, results are noisy and unreliable"]},{"heading":"Example Queries","items":["What is the status of the auth refactor and who discussed it last week?","Show me all P0 bugs assigned to my team with related design docs","What decisions were made about the API migration in recent meetings?"]}]'
+           data-context='{"what":"The entry point for the pattern. A natural language question arrives via Copilot Chat that spans multiple data sources — work items in ADO, communications in Microsoft Graph, and documents in SharePoint. Traditional RAG would dump all sources into one index; this pattern routes intelligently.","requires":["Microsoft 365 Copilot license","Copilot Chat enabled in tenant","Bot Framework or Teams AI Library for message handling"],"prerequisites":["M365 Copilot license assigned to user","Custom agent registered in Teams Admin Center","Azure AD app registration with delegated permissions"],"links":[{"label":"Microsoft 365 Copilot overview","url":"https://learn.microsoft.com/en-us/microsoft-365-copilot/microsoft-365-copilot-overview"},{"label":"Teams AI Library","url":"https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/teams-conversational-ai/teams-conversation-ai-overview"}],"code":"# Example incoming query\n# User types in Copilot Chat:\n# \"What is the status of the auth refactor and who discussed it last week?\"\n\n# The agent receives this as a plain text string\n# and passes it to the Intent Analyzer"}'>
         <div class="node-name"><div class="icon icon-purple">💬</div> User Query via Copilot Chat</div>
         <div class="node-desc">Natural language question spanning work items, email, documents</div>
       </div>
@@ -202,7 +228,8 @@
            data-tooltip="The intelligence layer — classifies intent and determines which sources to query"
            data-expand-title="Query Analyzer (Intelligence Layer)"
            data-expand-desc="Intent classification engine that determines which data sources are relevant and how to scope each query."
-           data-expand-details='[{"heading":"How It Works","items":["Analyzes the user query for entity types (people, projects, dates, artifacts)","Maps entities to relevant data sources","Generates scoped sub-queries per source — not broad, noisy retrieval"]},{"heading":"Key Design Decision","items":["Analyze intent BEFORE querying — not after","Each source gets a tailored, filtered query","Avoids the #1 RAG failure: dumping everything into one search"]}]'>
+           data-expand-details='[{"heading":"How It Works","items":["Analyzes the user query for entity types (people, projects, dates, artifacts)","Maps entities to relevant data sources","Generates scoped sub-queries per source — not broad, noisy retrieval"]},{"heading":"Key Design Decision","items":["Analyze intent BEFORE querying — not after","Each source gets a tailored, filtered query","Avoids the #1 RAG failure: dumping everything into one search"]}]'
+           data-context='{"what":"The intelligence layer powered by Azure OpenAI. Receives the raw user query and uses a structured prompt to classify which data sources are relevant (ADO, Graph, SharePoint, or any combination) and generates a scoped sub-query for each selected source. This is the core of the pattern.","requires":["Azure OpenAI resource","GPT-4o or GPT-4 Turbo deployment","Function calling or structured output support"],"prerequisites":["Azure OpenAI resource created in Azure portal","GPT-4o model deployed","API key or managed identity auth configured","System prompt engineered for intent classification"],"links":[{"label":"Azure OpenAI Service","url":"https://learn.microsoft.com/en-us/azure/ai-services/openai/overview"},{"label":"GPT-4o model card","url":"https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models"},{"label":"Structured outputs guide","url":"https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/structured-outputs"}],"code":"# Intent classification prompt (simplified)\nSYSTEM_PROMPT = \"\"\"\nYou are a query router. Analyze the user query and return a JSON object:\n{\n  \"sources\": [\"ado\", \"graph\", \"sharepoint\"],  // which to query\n  \"ado_query\": \"...\",      // scoped WIQL or search term\n  \"graph_query\": \"...\",    // scoped OData filter\n  \"sp_query\": \"...\"        // scoped KQL search\n}\nOnly include sources that are clearly relevant.\n\"\"\"\n\nresponse = openai_client.chat.completions.create(\n  model=\"gpt-4o\",\n  messages=[{\"role\": \"system\", \"content\": SYSTEM_PROMPT},\n            {\"role\": \"user\", \"content\": user_query}],\n  response_format={\"type\": \"json_object\"}\n)"}'>
         <div class="zone-label">🧠 Intelligence Layer</div>
         <div class="analyzer-node">
           <div class="node-name"><div class="icon icon-purple">🎯</div> Query Analyzer</div>
@@ -218,7 +245,8 @@
              data-tooltip="Azure DevOps — scoped to specific project and work item types"
              data-expand-title="Azure DevOps Source"
              data-expand-desc="Queries ADO REST API with project and work item type filters."
-             data-expand-details='[{"heading":"Scoping Filters","items":["Project name","Work item type (Bug, Feature, Task)","Iteration path","Assigned-to field"]},{"heading":"Returns","items":["Work items with full field data","Repository references","Pipeline run results"]}]'>
+             data-expand-details='[{"heading":"Scoping Filters","items":["Project name","Work item type (Bug, Feature, Task)","Iteration path","Assigned-to field"]},{"heading":"Returns","items":["Work items with full field data","Repository references","Pipeline run results"]}]'
+             data-context='{"what":"Queries the Azure DevOps REST API with targeted filters derived from the intent analysis. Instead of a broad keyword search, the agent constructs a WIQL query scoped to the specific project, work item type, and relevant fields. Returns structured work item data with full field values.","requires":["Azure DevOps organization","Personal Access Token or Azure AD app with ADO scope","ADO REST API v7.0+"],"prerequisites":["ADO organization URL configured","PAT with Work Items Read scope, or Azure AD app with vso.work permission","Project name and area paths known"],"links":[{"label":"Azure DevOps REST API","url":"https://learn.microsoft.com/en-us/rest/api/azure/devops/"},{"label":"WIQL syntax reference","url":"https://learn.microsoft.com/en-us/azure/devops/boards/queries/wiql-syntax"},{"label":"Work Items API","url":"https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items/get-work-item"}],"code":"# Query ADO with scoped WIQL\nimport requests\n\nwiql = {\n  \"query\": \"\"\"\n    SELECT [System.Id], [System.Title], [System.State],\n           [System.AssignedTo], [System.ChangedDate]\n    FROM WorkItems\n    WHERE [System.TeamProject] = &#39;MyProject&#39;\n      AND [System.WorkItemType] = &#39;Bug&#39;\n      AND [System.ChangedDate] >= @today - 14\n    ORDER BY [System.ChangedDate] DESC\n  \"\"\"\n}\n\nresponse = requests.post(\n  f\"{ado_org_url}/{project}/_apis/wit/wiql?api-version=7.0\",\n  json=wiql,\n  headers={\"Authorization\": f\"Bearer {ado_token}\"}\n)"}'>
           <div class="lane-title"><div class="icon icon-blue" style="width:26px;height:26px;font-size:13px;">🔧</div> Azure DevOps</div>
           <div class="component">
             <div class="comp-name">ADO REST API</div>
@@ -231,7 +259,8 @@
              data-tooltip="Microsoft Graph — scoped to specific user and date range"
              data-expand-title="Microsoft Graph Source"
              data-expand-desc="Queries Graph API for emails, calendar, and files with user and time filters."
-             data-expand-details='[{"heading":"Scoping Filters","items":["User identity","Date range","Content type (email, event, file)","Subject/keyword filter"]},{"heading":"Returns","items":["Email threads with participants","Calendar events with attendees","OneDrive/SharePoint files"]}]'>
+             data-expand-details='[{"heading":"Scoping Filters","items":["User identity","Date range","Content type (email, event, file)","Subject/keyword filter"]},{"heading":"Returns","items":["Email threads with participants","Calendar events with attendees","OneDrive/SharePoint files"]}]'
+             data-context='{"what":"Queries the Microsoft Graph API for user communications and files, scoped by identity and time window. The intent analyzer determines the relevant user principal, date range, and content type (email, calendar events, or files). Uses OData filter syntax for precise, low-noise results.","requires":["Azure AD app registration","Microsoft Graph API permissions (Mail.Read, Calendars.Read, Files.Read)","Delegated or application auth flow"],"prerequisites":["Azure AD app registered with Graph permissions","Admin consent granted for application permissions","User UPN or object ID available for scoping"],"links":[{"label":"Microsoft Graph API overview","url":"https://learn.microsoft.com/en-us/graph/overview"},{"label":"Graph Explorer (test queries)","url":"https://developer.microsoft.com/en-us/graph/graph-explorer"},{"label":"OData filter syntax","url":"https://learn.microsoft.com/en-us/graph/filter-query-parameter"},{"label":"Graph permissions reference","url":"https://learn.microsoft.com/en-us/graph/permissions-reference"}],"code":"# Query Graph with scoped OData filter\nfrom msgraph import GraphServiceClient\nfrom msgraph.generated.users.item.messages.messages_request_builder import MessagesRequestBuilder\n\nquery_params = MessagesRequestBuilder.MessagesRequestBuilderGetQueryParameters(\n  filter=\"receivedDateTime ge 2024-01-01 and contains(subject, &#39;auth refactor&#39;)\",\n  select=[\"subject\", \"from\", \"receivedDateTime\", \"bodyPreview\"],\n  top=10\n)\n\nmessages = await graph_client.users.by_user_id(user_id).messages.get(\n  request_configuration=RequestConfiguration(query_parameters=query_params)\n)"}'>
           <div class="lane-title"><div class="icon icon-blue" style="width:26px;height:26px;font-size:13px;">📧</div> Microsoft Graph</div>
           <div class="component">
             <div class="comp-name">Graph API</div>
@@ -244,7 +273,8 @@
              data-tooltip="SharePoint — scoped to specific site and document library"
              data-expand-title="SharePoint Source"
              data-expand-desc="Queries SharePoint Search API with site and library filters."
-             data-expand-details='[{"heading":"Scoping Filters","items":["Site URL","Document library","Content type","Managed metadata terms"]},{"heading":"Returns","items":["Documents with metadata","List items","SharePoint pages"]}]'>
+             data-expand-details='[{"heading":"Scoping Filters","items":["Site URL","Document library","Content type","Managed metadata terms"]},{"heading":"Returns","items":["Documents with metadata","List items","SharePoint pages"]}]'
+             data-context='{"what":"Queries the SharePoint Search REST API with site and library scoping. The intent analyzer constructs a KQL (Keyword Query Language) query targeting specific SharePoint sites and content types. Returns documents, list items, and pages with rich metadata for citation.","requires":["SharePoint Online tenant","Azure AD app with Sites.Read.All or SharePoint delegated permissions","SharePoint Search REST API access"],"prerequisites":["SharePoint site URLs for relevant content areas configured","Managed metadata columns indexed for search","Search schema configured for relevant refiners"],"links":[{"label":"SharePoint Search REST API","url":"https://learn.microsoft.com/en-us/sharepoint/dev/general-development/sharepoint-search-rest-api-overview"},{"label":"KQL syntax reference","url":"https://learn.microsoft.com/en-us/sharepoint/dev/general-development/keyword-query-language-kql-syntax-reference"},{"label":"SharePoint REST API","url":"https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/get-to-know-the-sharepoint-rest-service"}],"code":"# Query SharePoint Search API with KQL\nimport requests\n\nkql_query = \"auth refactor site:https://contoso.sharepoint.com/sites/engineering contenttype:Document\"\n\nresponse = requests.get(\n  f\"https://contoso.sharepoint.com/_api/search/query\",\n  params={\n    \"querytext\": f\"&#39;{kql_query}&#39;\",\n    \"selectproperties\": \"&#39;Title,Path,Author,LastModifiedTime,HitHighlightedSummary&#39;\",\n    \"rowlimit\": 10\n  },\n  headers={\"Authorization\": f\"Bearer {sp_token}\", \"Accept\": \"application/json;odata=nometadata\"}\n)"}'>
           <div class="lane-title"><div class="icon icon-blue" style="width:26px;height:26px;font-size:13px;">📄</div> SharePoint</div>
           <div class="component">
             <div class="comp-name">Search API</div>
@@ -266,7 +296,8 @@
            data-tooltip="Response assembly — merge, rank, and synthesize results from all sources"
            data-expand-title="Response Assembly Pipeline"
            data-expand-desc="Three-stage processing: merge results across sources, rank by relevance to original intent, then synthesize a grounded answer."
-           data-expand-details='[{"heading":"Stage 1: Merge","items":["Deduplicate results appearing in multiple sources","Normalize data formats across ADO, Graph, and SharePoint","Preserve source attribution for each result"]},{"heading":"Stage 2: Rank","items":["Score results against the original query intent","Apply relevance thresholds to filter noise","Prioritize recent and directly referenced content"]},{"heading":"Stage 3: Synthesize","items":["Azure OpenAI generates a natural language answer","Each claim is grounded in specific source results","Citations link back to original documents, emails, or work items"]}]'>
+           data-expand-details='[{"heading":"Stage 1: Merge","items":["Deduplicate results appearing in multiple sources","Normalize data formats across ADO, Graph, and SharePoint","Preserve source attribution for each result"]},{"heading":"Stage 2: Rank","items":["Score results against the original query intent","Apply relevance thresholds to filter noise","Prioritize recent and directly referenced content"]},{"heading":"Stage 3: Synthesize","items":["Azure OpenAI generates a natural language answer","Each claim is grounded in specific source results","Citations link back to original documents, emails, or work items"]}]'
+           data-context='{"what":"Three-stage pipeline that takes raw results from all sources and produces a coherent, grounded response. Stage 1 merges and deduplicates across ADO, Graph, and SharePoint. Stage 2 scores each result against the original query intent. Stage 3 uses Azure OpenAI to synthesize a natural language answer with inline citations.","requires":["Azure OpenAI for synthesis stage","Custom ranking logic (cosine similarity or LLM-based scoring)","Source attribution tracking throughout the pipeline"],"prerequisites":["All source API responses collected and normalized","Original query intent preserved for ranking","Citation metadata (source URL, title, date) attached to each result"],"links":[{"label":"Azure OpenAI chat completions","url":"https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/chatgpt"},{"label":"Grounding with citations pattern","url":"https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/grounding"},{"label":"Azure AI Search for re-ranking","url":"https://learn.microsoft.com/en-us/azure/search/semantic-ranking-overview"}],"code":"# Simplified assembly pipeline\ndef assemble_response(ado_results, graph_results, sp_results, original_query):\n    # Stage 1: Merge and normalize\n    all_results = (\n        normalize_ado(ado_results) +\n        normalize_graph(graph_results) +\n        normalize_sharepoint(sp_results)\n    )\n    deduplicated = deduplicate_by_url(all_results)\n\n    # Stage 2: Rank by relevance\n    scored = [(r, score_relevance(r, original_query)) for r in deduplicated]\n    ranked = sorted(scored, key=lambda x: x[1], reverse=True)[:10]\n\n    # Stage 3: Synthesize with citations\n    context = format_context_with_citations(ranked)\n    response = openai_client.chat.completions.create(\n        model=\"gpt-4o\",\n        messages=[\n            {\"role\": \"system\", \"content\": \"Answer using only the provided context. Cite sources inline as [1], [2], etc.\"},\n            {\"role\": \"user\", \"content\": f\"Query: {original_query}\\n\\nContext:\\n{context}\"}\n        ]\n    )\n    return response, ranked  # return citations alongside answer"}'>
         <div class="zone-label">⚙️ Response Assembly</div>
         <div class="process-steps">
           <div class="process-step">
@@ -296,7 +327,8 @@
            data-tooltip="The final response — grounded, cited, and traceable to source data"
            data-expand-title="Grounded Response"
            data-expand-desc="A natural language answer where every claim links back to its source document, email, or work item."
-           data-expand-details='[{"heading":"What Makes It Different","items":["Every claim has a source citation","Users can verify by clicking through to the original","No hallucination — if the data is not in the sources, the agent says so"]},{"heading":"Quality Guarantee","items":["Scoped input = quality output","3-source triangulation increases confidence","Source diversity reduces single-source bias"]}]'>
+           data-expand-details='[{"heading":"What Makes It Different","items":["Every claim has a source citation","Users can verify by clicking through to the original","No hallucination — if the data is not in the sources, the agent says so"]},{"heading":"Quality Guarantee","items":["Scoped input = quality output","3-source triangulation increases confidence","Source diversity reduces single-source bias"]}]'
+           data-context='{"what":"The final output delivered back to the user in Copilot Chat. A natural language answer where every claim is grounded in and traceable to a specific source — a work item URL in ADO, an email thread in Outlook, or a document in SharePoint. If the scoped sources do not contain the answer, the agent explicitly says so rather than hallucinating.","requires":["Copilot Chat or Teams Bot surface for rendering","Citation rendering support (adaptive cards or markdown links)","Source URLs preserved through the entire pipeline"],"prerequisites":["All pipeline stages completed successfully","Citation metadata attached to each claim in the response","Bot Framework or Teams AI Library to send the final message"],"links":[{"label":"Adaptive Cards for rich citations","url":"https://learn.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference"},{"label":"Teams Bot message formatting","url":"https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/format-your-bot-messages"},{"label":"Responsible AI: grounding","url":"https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/grounding"}],"code":"# Sending the grounded response with citations\nasync def send_grounded_response(turn_context, answer_text, citations):\n    # Build citation list as adaptive card footer\n    citation_lines = [\n        f\"[{i+1}] [{c[&#39;title&#39;]}]({c[&#39;url&#39;]}) — {c[&#39;source&#39;]}\"\n        for i, c in enumerate(citations)\n    ]\n    full_response = answer_text + \"\\n\\n**Sources:**\\n\" + \"\\n\".join(citation_lines)\n\n    await turn_context.send_activity(\n        Activity(type=ActivityTypes.message, text=full_response)\n    )"}'>
         <div class="node-name"><div class="icon icon-green">✅</div> Grounded Response with Source Citations</div>
         <div class="node-desc">Each claim linked to its source document, email, or work item</div>
       </div>
@@ -311,13 +343,14 @@
 </div>
 
 <div class="interactive-footer">
-  <p>The Cheat Code · ABS Tech Strategy · <a href="https://aka.ms/the-cheat-code">Browse all issues</a></p>
+  <p>The Cheat Code · ABS Tech Strategy · <a href="../../">Back to all patterns</a></p>
 </div>
 
 <script src="../shared/interactive.js"></script>
 <script>
   window.interactiveConfig = {
     container: '#diagram',
+    contextMode: 'lightweight',
     steps: [
       {
         id: 'user-query',

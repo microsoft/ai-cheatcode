@@ -58,10 +58,19 @@ The logo is a **chat bubble containing the Konami directional arrows** — a spe
 
 👉 **[aka.ms/the-cheat-code](https://aka.ms/the-cheat-code)**
 
+### Interactive Portal
+
+The interactive portal at [aka.ms/the-cheat-code](https://aka.ms/the-cheat-code) provides step-through architectural walkthroughs for each pattern. Click any component in a diagram to see implementation requirements, prerequisites, platform links, and code snippets. Issues #001–004 have interactive walkthroughs; more are being added.
+
 ## Repo Structure
 
 ```
 ├── index.html                    # GitHub Pages landing page (archive)
+├── docs/                         # GitHub Pages portal (Bento design)
+│   ├── index.html                # Landing page with Bento grid layout
+│   └── interactive/              # Step-through diagram walkthroughs
+│       ├── shared/               # Shared CSS/JS framework
+│       └── issue-NNN/            # Per-issue interactive pages
 ├── PRODUCTION_PLAYBOOK.md        # Authoritative production reference
 ├── the_cheat_code_template.html  # Issue template
 ├── viva_engage_posts.txt         # Viva Engage companion posts
@@ -97,16 +106,16 @@ The logo is a **chat bubble containing the Konami directional arrows** — a spe
 
 ## Published Issues
 
-| # | Pattern | Type | Builder | Code Sample |
-|---|---------|------|---------|-------------|
-| 001 | Code-First Agent Delivery | 🔧 | Cristiano Almeida Gonçalves | [Deployable Template](samples/issue-001/) |
-| 002 | Scoped Multi-Source Search | 🧠 | Raghav BN | [Prompt Pack](samples/issue-002/) |
-| 003 | Prompt-Chained Triage + Playbooks | 🔧 | Raghav BN | [Starter Kit](samples/issue-003/) |
-| 004 | Secure In-Boundary Processing | 🧠 | Raghav BN | [Prompt Pack](samples/issue-004/) |
-| 005 | Human-in-the-Loop Approval Gates | 🧠 | Pete Puustinen | [Prompt Pack](samples/issue-005/) |
-| 006 | Meeting-to-Knowledge Pipeline | 🔧 | Pete Puustinen | [Starter Kit](samples/issue-006/) |
-| 007 | Holographic Memory | 🧠 | Tyson Dowd | [Prompt Pack](samples/issue-007/) |
-| 008 | Cross-Project Knowledge Agent | 🔧 | Tyson Dowd | [Deployable Template](samples/issue-008/) |
+| # | Pattern | Type | Builder | Code Sample | Interactive |
+|---|---------|------|---------|-------------|-------------|
+| 001 | Code-First Agent Delivery | 🔧 | Cristiano Almeida Gonçalves | [Deployable Template](samples/issue-001/) | [Walkthrough](docs/interactive/issue-001/) |
+| 002 | Scoped Multi-Source Search | 🧠 | Raghav BN | [Prompt Pack](samples/issue-002/) | [Walkthrough](docs/interactive/issue-002/) |
+| 003 | Prompt-Chained Triage + Playbooks | 🔧 | Raghav BN | [Starter Kit](samples/issue-003/) | [Walkthrough](docs/interactive/issue-003/) |
+| 004 | Secure In-Boundary Processing | 🧠 | Raghav BN | [Prompt Pack](samples/issue-004/) | [Walkthrough](docs/interactive/issue-004/) |
+| 005 | Human-in-the-Loop Approval Gates | 🧠 | Pete Puustinen | [Prompt Pack](samples/issue-005/) | — |
+| 006 | Meeting-to-Knowledge Pipeline | 🔧 | Pete Puustinen | [Starter Kit](samples/issue-006/) | — |
+| 007 | Holographic Memory | 🧠 | Tyson Dowd | [Prompt Pack](samples/issue-007/) | — |
+| 008 | Cross-Project Knowledge Agent | 🔧 | Tyson Dowd | [Deployable Template](samples/issue-008/) | — |
 
 ## Code Samples
 
@@ -125,9 +134,10 @@ See [`samples/PROVENANCE.md`](samples/PROVENANCE.md) for who built each pattern 
 1. Create the issue HTML from `the_cheat_code_template.html` (see `PRODUCTION_PLAYBOOK.md`)
 2. Render the PDF: `"$CHROME" --headless --print-to-pdf="issues/issue_NNN.pdf" --print-to-pdf-no-header "file://$PWD/issues/issue_NNN.html"`
 3. Create the diagram in `diagrams/` and render the PNG
-4. Update `index.html` to add the new issue to the Published section
-5. `git add -A && git commit && git push` — GitHub Pages deploys automatically
-6. Send the HTML email, post the Viva Engage teaser (see `viva_engage_posts.txt`)
+4. Create the interactive walkthrough page in `docs/interactive/issue-NNN/` and update the portal landing page (`docs/index.html`)
+5. Update `index.html` to add the new issue to the Published section
+6. `git add -A && git commit && git push` — GitHub Pages deploys automatically
+7. Send the HTML email, post the Viva Engage teaser (see `viva_engage_posts.txt`)
 
 ## Distribution Channels
 

@@ -240,6 +240,8 @@ Email versions are 380–740 KB (vs 20–32 KB archive). This is well within int
 - [ ] File size is reasonable (18–26K typical for archive; 380–740K for email version)
 - [ ] **Email version generated** (`python3 scripts/build_email.py NNN`)
 - [ ] **Diagram renders in .eml preview** (double-click `.eml` to verify in Outlook)
+- [ ] **Interactive page created/updated** (see Interactive Portal Page section)
+- [ ] **Portal card updated** in `docs/index.html`
 
 ---
 
@@ -307,9 +309,10 @@ All issues are hosted on GitHub Pages for easy browsing and cross-reference link
 
 - **Archive URL:** https://microsoft.github.io/ai-cheatcode/ (requires GitHub login — internal only)
 - **Repo:** https://github.com/microsoft/the-cheat-code (private)
-- **How to publish a new issue:** Copy the HTML + PDF to the repo, `git push`. GitHub Pages deploys automatically.
+- **How to publish a new issue:** Copy the HTML + PDF to the repo, create/update the interactive page under `docs/interactive/issue-NNN/`, update the portal card in `docs/index.html`, then `git push`. GitHub Pages deploys automatically.
 - **Cross-references:** All "Issue #NNN" mentions in newsletter HTML are hyperlinked to the archive. When creating new issues, link cross-references using: `<a href="https://microsoft.github.io/ai-cheatcode/the_cheat_code_issue_NNN.html" style="color:#6B2FA0;text-decoration:underline;">Issue #NNN</a>`
-- **Index page:** `index.html` at the root lists all issues with type tags, arc groupings, and dates. Update it when adding new issues.
+- **Portal landing page:** `docs/index.html` is the GitHub Pages landing page, using a Bento grid design with glassmorphism cards. Update it when adding new issues (see Interactive Portal Page section for grid layout details).
+- **Interactive pages:** Each issue with an interactive companion lives at `docs/interactive/issue-NNN/index.html`. Cards on the portal link directly to these pages.
 
 ---
 
@@ -338,6 +341,8 @@ The newsletter goes out through three channels each week. Here's the workflow.
 ### Weekly Distribution Checklist
 - [ ] Generate email version (`python3 scripts/build_email.py NNN`)
 - [ ] Verify diagram renders (double-click `.eml` in Outlook)
+- [ ] Create/update the interactive page (see Interactive Portal Page section)
+- [ ] Update the portal card in `docs/index.html`
 - [ ] Send `.eml` version via Outlook (Monday AM)
 - [ ] Post Viva Engage teaser (Monday PM / Tuesday AM)
 - [ ] Attach PDF to Engage post
@@ -586,7 +591,8 @@ Use these CSS patterns when creating new diagrams. Copy from existing diagram HT
    <img src="diagrams/issue_NNN_name_rich.png" alt="[descriptive alt text]"
         style="width:100%;max-width:536px;height:auto;display:block;border-radius:6px;border:1px solid #E0E0E0;">
    ```
-7. **Re-render the PDF**:
+7. **Create/update the interactive page** using the diagram HTML (see Interactive Portal Page section)
+8. **Re-render the PDF**:
    ```bash
    "$CHROME" --headless --disable-gpu --no-sandbox \
      --print-to-pdf="the_cheat_code_issue_NNN.pdf" \
@@ -652,36 +658,62 @@ HTML newsletter sections → Amplify web parts:
 
 See `AMPLIFY_SETUP_GUIDE.md` for the full setup and authoring guide.
 
-## Interactive Companion Pages
+## Interactive Portal Page
 
-Each published issue can have an interactive companion page on GitHub Pages that brings the architecture diagram to life. These live in `interactive/issue-NNN/index.html`.
+Each published issue should have an interactive companion page at `docs/interactive/issue-NNN/index.html`. These pages bring the architecture diagram to life with step-through walkthroughs and implementation context panels. The portal landing page at `docs/index.html` uses a Bento grid layout to showcase all issues.
 
-### Features
-- **Step-through walkthrough**: Bottom bar with Previous/Next, keyboard arrows, narrative panels
-- **Hover tooltips**: `data-tooltip` attributes on diagram zones
-- **Click-to-expand**: Side panel with detailed component breakdown
-- **Entrance animations**: Zones fade in on scroll with staggered timing
-- **Responsive**: Works on mobile (unlike the 1680px static diagrams)
-- **Konami code**: Easter egg on every interactive page 🎮
+### Design System
 
-### Technology
-Vanilla JS + CSS animations. No npm, no build pipeline, no frameworks. Files are served directly by GitHub Pages.
+The portal uses the **Bento design language**, separate from the email newsletter's Segoe UI styling:
 
-### File Structure
-```
-interactive/
-├── shared/interactive.css    # Animation + interaction styles
-├── shared/interactive.js     # Step-through engine + tooltips
-├── issue-NNN/index.html      # Per-issue interactive page
-└── README.md                 # Full creation guide
-```
+- **Fonts**: Outfit (body), Sora (display), JetBrains Mono (code) — loaded via Google Fonts
+- **Theme**: Dark navy background (#0E0E1F), glassmorphism cards, purple (#6B2FA0) accents
+- **Color coding**: Warm gradients for Practical issues, cool gradients for Conceptual issues
 
-### Creating a New Interactive Page
-1. Copy an existing page: `cp interactive/issue-002/index.html interactive/issue-NNN/index.html`
-2. Replace CSS and HTML from the corresponding `diagrams/issue_NNN_*.html`
-3. Add `data-step`, `data-tooltip`, and `data-expand-*` attributes
-4. Define `window.interactiveConfig` with step narratives
-5. Add CTA link to newsletter HTML: `🔬 Explore this pattern interactively →`
-6. Add `🔬 Interactive` badge to `index.html`
+### Creating the Interactive Page
 
-See `interactive/README.md` for the full guide with code examples.
+1. Copy `docs/interactive/issue-001/index.html` (reference implementation)
+2. Replace diagram HTML with the new issue's architecture
+3. Add Google Fonts import and Bento font overrides for diagram CSS classes
+4. Add `data-context` JSON attributes to all major components with:
+   - `what` — brief description
+   - `requires` — array of requirements (rendered as pills)
+   - `prerequisites` — array of setup steps (rendered as checklist)
+   - `links` — array of `{label, url}` objects pointing to Microsoft Learn docs
+   - `code` — CLI commands or code snippets
+5. Set `contextMode: 'lightweight'` in `window.interactiveConfig`
+6. Update page header with issue badge and back link
+7. Test locally: `python3 -m http.server 8000 --directory docs`
+
+### Updating the Portal
+
+After creating the interactive page, update `docs/index.html`:
+
+1. Change the issue's card from `<div>` to `<a>` with `href="interactive/issue-NNN/"`
+2. Add the `interactive-pill` element to the card
+3. Remove the `coming-soon-chip` if present
+4. If this is a new issue (not one of the existing 8), add a new card to the Bento grid with appropriate span classes
+
+### Portal Grid Layout
+
+The Bento grid uses 12 columns with `grid-auto-rows: 100px`. Card sizes:
+- Hero (latest arc): `span-6 row-4`
+- Large (with interactive): `span-5 row-3`
+- Medium: `span-4 row-3`
+- Small: `span-3 row-2`
+- Full-width (about): `span-12 row-2`
+
+Every row must sum to 12 columns. When adding a new card, adjust existing spans to maintain the grid.
+
+### Pre-Publish Checklist (Interactive)
+
+- [ ] Google Fonts import present (Outfit, Sora, JetBrains Mono)
+- [ ] `contextMode: 'lightweight'` set in config
+- [ ] All major components have `data-context` attributes with valid JSON
+- [ ] Links use real Microsoft Learn URLs (not placeholders)
+- [ ] Page header has issue badge with correct type (Practical/Conceptual)
+- [ ] Footer links to `../../` (back to portal)
+- [ ] Clean directory URLs (no .html extensions)
+- [ ] Responsive layout works on mobile (test at 600px width)
+- [ ] Portal card updated in `docs/index.html`
+- [ ] Konami code works (up-up-down-down-left-right-left-right-B-A)

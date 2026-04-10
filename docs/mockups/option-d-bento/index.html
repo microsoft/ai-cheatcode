@@ -230,7 +230,7 @@
     .bento-grid {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
-      grid-auto-rows: 100px;
+      grid-auto-rows: 120px;
       gap: 14px;
     }
 
@@ -344,19 +344,12 @@
       margin-bottom: 4px;
     }
 
-    .card-desc {
-      font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.55;
-      margin-top: 6px;
-      flex: 1;
-    }
-
     .card-title {
       font-family: 'Sora', sans-serif;
       font-weight: 700;
       line-height: 1.2;
       color: var(--text-primary);
+      flex: 1;
     }
 
     .card-meta {
@@ -419,34 +412,6 @@
       height: 10px;
     }
 
-    /* Secondary detail link */
-    .detail-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.3px;
-      color: var(--text-muted);
-      text-decoration: none;
-      margin-top: 5px;
-      width: fit-content;
-      transition: color 0.2s;
-    }
-
-    .detail-link:hover {
-      color: var(--purple-light);
-    }
-
-    .detail-link::before {
-      content: '';
-      display: inline-block;
-      width: 3px;
-      height: 3px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-
     /* Diagram type hover reveal */
     .diagram-label {
       position: absolute;
@@ -500,22 +465,22 @@
       height: 80px;
     }
 
-    /* Grid spans — !important so these utility overrides beat card-type classes */
-    .span-1  { grid-column: span 1  !important; }
-    .span-2  { grid-column: span 2  !important; }
-    .span-3  { grid-column: span 3  !important; }
-    .span-4  { grid-column: span 4  !important; }
-    .span-5  { grid-column: span 5  !important; }
-    .span-6  { grid-column: span 6  !important; }
-    .span-7  { grid-column: span 7  !important; }
-    .span-8  { grid-column: span 8  !important; }
-    .span-12 { grid-column: span 12 !important; }
+    /* Grid spans */
+    .span-1  { grid-column: span 1; }
+    .span-2  { grid-column: span 2; }
+    .span-3  { grid-column: span 3; }
+    .span-4  { grid-column: span 4; }
+    .span-5  { grid-column: span 5; }
+    .span-6  { grid-column: span 6; }
+    .span-7  { grid-column: span 7; }
+    .span-8  { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
 
-    .row-1  { grid-row: span 1 !important; }
-    .row-2  { grid-row: span 2 !important; }
-    .row-3  { grid-row: span 3 !important; }
-    .row-4  { grid-row: span 4 !important; }
-    .row-5  { grid-row: span 5 !important; }
+    .row-1  { grid-row: span 1; }
+    .row-2  { grid-row: span 2; }
+    .row-3  { grid-row: span 3; }
+    .row-4  { grid-row: span 4; }
+    .row-5  { grid-row: span 5; }
 
     /* ─── Hero card (issues 007 + 008) ─── */
     .card-hero-issue {
@@ -762,12 +727,12 @@
       right: -20px;
       width: 200px;
       height: 200px;
-      opacity: 0.25;
+      opacity: 0.15;
       transition: opacity 0.3s;
     }
 
     .card:hover .hv-nodes {
-      opacity: 0.38;
+      opacity: 0.28;
     }
 
     /* ─── Brand card content ─── */
@@ -897,116 +862,76 @@
       background: rgba(107, 47, 160, 0.5);
     }
 
-    /* ─── Scroll-reveal animations ─── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-                  transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Hero section reveals faster */
-    .hero-section.reveal {
-      transition-duration: 0.45s;
-    }
-
     /* ─── Responsive ─── */
     @media (max-width: 1100px) {
-      /*
-        8-column layout:
-        Row 1–4 : hero 007 (4) + hero 008 (4)         = 8
-        Row 5–7 : 001 large (5) + subscribe (3)        = 8
-        Row 8–10: 002 medium (4) + 003 medium (4)      = 8
-        Row 11–13: 004 medium (4) + sample-code (4)    = 8
-        Row 14–15: stats (2) + 005 (3) + 006 (3)       = 8
-        Row 16–17: brand (4) + about (4)               = 8
-      */
       .bento-grid {
         grid-template-columns: repeat(8, 1fr);
       }
 
-      /* Reset all explicit span/row utilities so card-type classes take over */
-      .span-1, .span-2, .span-3, .span-4,
-      .span-5, .span-6, .span-7, .span-8, .span-12,
-      .row-1, .row-2, .row-3, .row-4, .row-5 {
-        grid-column: unset !important;
-        grid-row: unset !important;
-      }
-
       .card-hero-issue {
-        grid-column: span 4 !important;
-        grid-row: span 4 !important;
+        grid-column: span 4;
+        grid-row: span 4;
       }
 
       .card-large {
-        grid-column: span 5 !important;
-        grid-row: span 3 !important;
+        grid-column: span 4;
+        grid-row: span 3;
       }
 
       .card-medium {
-        grid-column: span 4 !important;
-        grid-row: span 3 !important;
+        grid-column: span 4;
+        grid-row: span 3;
       }
 
       .card-about {
-        grid-column: span 4 !important;
-        grid-row: span 2 !important;
+        grid-column: span 4;
+        grid-row: span 2;
       }
 
       .card-subscribe {
-        grid-column: span 3 !important;
-        grid-row: span 3 !important;
+        grid-column: span 4;
+        grid-row: span 3;
       }
 
       .card-code {
-        grid-column: span 4 !important;
-        grid-row: span 3 !important;
+        grid-column: span 5;
+        grid-row: span 3;
       }
 
       .card-stats {
-        grid-column: span 2 !important;
-        grid-row: span 2 !important;
+        grid-column: span 3;
+        grid-row: span 2;
       }
 
       .card-brand {
-        grid-column: span 4 !important;
-        grid-row: span 2 !important;
+        grid-column: span 4;
+        grid-row: span 2;
       }
 
       .card-small {
-        grid-column: span 3 !important;
-        grid-row: span 2 !important;
+        grid-column: span 4;
+        grid-row: span 2;
       }
     }
 
     @media (max-width: 720px) {
-      /* About card inner: stack vertically on small screens */
-      .card-about .card-inner {
-        flex-direction: column !important;
-        gap: 16px !important;
-        align-items: flex-start !important;
-      }
-
       .bento-grid {
         grid-template-columns: repeat(2, 1fr);
         grid-auto-rows: 140px;
         gap: 10px;
       }
 
-      /* Reset all explicit utilities and card-type classes */
-      .span-1, .span-2, .span-3, .span-4,
-      .span-5, .span-6, .span-7, .span-8, .span-12,
-      .row-1, .row-2, .row-3, .row-4, .row-5,
-      .card-hero-issue, .card-large, .card-medium,
-      .card-about, .card-subscribe, .card-code,
-      .card-stats, .card-brand, .card-small {
-        grid-column: span 2 !important;
-        grid-row: span 3 !important;
+      .card-hero-issue,
+      .card-large,
+      .card-medium,
+      .card-about,
+      .card-subscribe,
+      .card-code,
+      .card-stats,
+      .card-brand,
+      .card-small {
+        grid-column: span 2;
+        grid-row: span 3;
       }
 
       .hero-headline {
@@ -1030,37 +955,21 @@
         gap: 10px;
       }
 
-      /* Reset all explicit utilities and card-type classes */
-      .span-1, .span-2, .span-3, .span-4,
-      .span-5, .span-6, .span-7, .span-8, .span-12,
-      .row-1, .row-2, .row-3, .row-4, .row-5,
-      .card-hero-issue, .card-large, .card-medium,
-      .card-about, .card-subscribe, .card-code,
-      .card-stats, .card-brand, .card-small {
-        grid-column: span 1 !important;
-        grid-row: span 1 !important;
+      .card-hero-issue,
+      .card-large,
+      .card-medium,
+      .card-about,
+      .card-subscribe,
+      .card-code,
+      .card-stats,
+      .card-brand,
+      .card-small {
+        grid-column: span 1;
+        grid-row: span 1;
       }
 
       .card-inner {
         min-height: 180px;
-      }
-    }
-
-    /* Respect reduced-motion preference */
-    @media (prefers-reduced-motion: reduce) {
-      .reveal {
-        opacity: 1;
-        transform: none;
-        transition: none;
-      }
-
-      .bg-mesh {
-        animation: none;
-      }
-
-      .hero-headline .accent {
-        animation: none;
-        background-position: 0% center;
       }
     }
   </style>
@@ -1085,7 +994,7 @@
 <div class="site-wrapper">
 
   <!-- Header -->
-  <header class="site-header reveal">
+  <header class="site-header">
     <div class="header-brand">
       <div class="brand-mark">TC</div>
       <div class="brand-text">
@@ -1097,7 +1006,7 @@
   </header>
 
   <!-- Hero -->
-  <section class="hero-section reveal" aria-label="Page introduction">
+  <section class="hero-section" aria-label="Page introduction">
     <p class="hero-kicker">AI Agent Pattern Library</p>
     <h1 class="hero-headline">
       Reusable patterns<br>
@@ -1109,20 +1018,12 @@
   </section>
 
   <!-- ─────────────── BENTO GRID ─────────────── -->
-  <!--
-    12-column layout:
-    Row  1–4 : 007 hero (6) + 008 hero (6)                         = 12
-    Row  5–7 : 001 large (5) + 002 medium (4) + subscribe (3)      = 12
-    Row  8–10: 003 medium (4) + 004 medium (4) + sample-code (4)   = 12
-    Row 11–12: stats (3) + 005 small (3) + 006 small (3) + brand (3) = 12
-    Row 13–14: about (12)                                           = 12
-  -->
   <main class="bento-grid" aria-label="Pattern cards">
 
-    <!-- ══════════ ROWS 1–4: HERO PAIR ══════════ -->
+    <!-- ══════════ ROW 1 ══════════ -->
 
-    <!-- Issue 007: Holographic Memory — HERO LEFT -->
-    <a class="card card-conceptual card-hero-issue span-6 row-4 arc-pair-c reveal" href="#" aria-label="Issue 007: Holographic Memory by Tyson Dowd">
+    <!-- Issue 007: Holographic Memory — HERO (left) -->
+    <a class="card card-conceptual card-hero-issue arc-pair-c" href="#" aria-label="Issue 007: Holographic Memory by Tyson Dowd">
       <div class="hero-visual" aria-hidden="true">
         <svg class="hv-nodes" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="100" cy="100" r="70" stroke="#9B5FD0" stroke-width="1" stroke-dasharray="6 4"/>
@@ -1145,7 +1046,6 @@
         <div class="issue-num">Issue 007</div>
         <div class="issue-badge badge-conceptual">Conceptual</div>
         <h2 class="card-title">Holographic Memory</h2>
-        <p class="card-desc">Give agents memory that persists across sessions — layered context that grows richer with every interaction.</p>
         <div class="card-meta">
           <div class="card-builder">Tyson Dowd</div>
           <div class="card-tags">
@@ -1159,8 +1059,8 @@
       <span class="diagram-label">Layers</span>
     </a>
 
-    <!-- Issue 008: Cross-Project Knowledge Agent — HERO RIGHT -->
-    <a class="card card-practical card-hero-issue span-6 row-4 arc-pair-c reveal" href="#" aria-label="Issue 008: Cross-Project Knowledge Agent by Tyson Dowd">
+    <!-- Issue 008: Cross-Project Knowledge Agent — HERO (right) -->
+    <a class="card card-practical card-hero-issue arc-pair-c" href="#" aria-label="Issue 008: Cross-Project Knowledge Agent by Tyson Dowd">
       <div class="hero-visual" aria-hidden="true">
         <svg class="hv-nodes" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="20"  y="20"  width="40" height="28" rx="4" fill="rgba(216,59,1,0.3)"  stroke="#F77050" stroke-width="1"/>
@@ -1179,7 +1079,6 @@
         <div class="issue-num">Issue 008</div>
         <div class="issue-badge badge-practical">Practical</div>
         <h2 class="card-title">Cross-Project Knowledge Agent</h2>
-        <p class="card-desc">Connect knowledge across repos and projects. One agent that understands your entire engineering portfolio.</p>
         <div class="card-meta">
           <div class="card-builder">Tyson Dowd</div>
           <div class="card-tags">
@@ -1193,11 +1092,21 @@
       <span class="diagram-label">Pipeline</span>
     </a>
 
-    <!-- ══════════ ROWS 5–7: ISSUE BAND 1 ══════════ -->
+    <!-- Stats card -->
+    <div class="card card-stats" aria-label="Stats: 8 patterns">
+      <div class="card-glow" style="width:100px;height:100px;top:-20px;right:-20px;background:rgba(107,47,160,0.5);"></div>
+      <div class="card-inner" style="justify-content:center;">
+        <div class="stat-num">8</div>
+        <div class="stat-label">Patterns published</div>
+      </div>
+    </div>
 
-    <!-- Issue 001: Code-First Agent Delivery — span 5 -->
-    <a class="card card-practical card-large span-5 row-3 arc-pair-a reveal" href="interactive/issue-001/" aria-label="Issue 001: Code-First Agent Delivery — view interactive walkthrough">
+    <!-- ══════════ ROW 2 ══════════ -->
+
+    <!-- Issue 001: Code-First Agent Delivery — LARGE with interactive -->
+    <a class="card card-practical card-large arc-pair-a" href="../interactive/issue-001/" aria-label="Issue 001: Code-First Agent Delivery — view interactive walkthrough">
       <div class="hero-visual" aria-hidden="true">
+        <!-- Flow diagram schematic -->
         <svg class="hv-nodes" style="width:160px;height:130px;" viewBox="0 0 160 130" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="10" y="20"  width="36" height="20" rx="3" fill="rgba(216,59,1,0.35)"  stroke="#F77050" stroke-width="1"/>
           <rect x="62" y="20"  width="36" height="20" rx="3" fill="rgba(216,59,1,0.25)"  stroke="#F77050" stroke-width="0.8"/>
@@ -1215,7 +1124,6 @@
         <div class="issue-num">Issue 001</div>
         <div class="issue-badge badge-practical">Practical</div>
         <h2 class="card-title">Code-First Agent Delivery</h2>
-        <p class="card-desc">Build, deploy, and integrate a production agent into Teams in a single working session. VS Code → Azure → Copilot Chat.</p>
         <div class="card-meta">
           <div class="card-builder">Cristiano Almeida Gonçalves</div>
           <div class="card-tags">
@@ -1232,34 +1140,13 @@
       <span class="diagram-label">Flow</span>
     </a>
 
-    <!-- Issue 002: Scoped Multi-Source Search — span 4 -->
-    <a class="card card-conceptual card-medium span-4 row-3 arc-pair-b reveal" href="interactive/issue-002/" aria-label="Issue 002: Scoped Multi-Source Search — view interactive walkthrough">
-      <div class="hero-visual" aria-hidden="true">
-        <svg class="hv-nodes" style="width:180px;height:160px;" viewBox="0 0 180 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Analyzer node top center -->
-          <rect x="65" y="8" width="50" height="26" rx="5" fill="rgba(155,95,208,0.35)" stroke="#9B5FD0" stroke-width="1.5"/>
-          <!-- Three source nodes middle row -->
-          <rect x="8"  y="68" width="44" height="22" rx="4" fill="rgba(91,181,255,0.3)" stroke="#5BB5FF" stroke-width="1.5"/>
-          <rect x="68" y="68" width="44" height="22" rx="4" fill="rgba(91,181,255,0.3)" stroke="#5BB5FF" stroke-width="1.5"/>
-          <rect x="128" y="68" width="44" height="22" rx="4" fill="rgba(91,181,255,0.3)" stroke="#5BB5FF" stroke-width="1.5"/>
-          <!-- Aggregator node bottom center -->
-          <rect x="65" y="128" width="50" height="24" rx="5" fill="rgba(91,181,255,0.25)" stroke="#5BB5FF" stroke-width="1.5"/>
-          <!-- Fan-out lines: analyzer → sources -->
-          <line x1="90" y1="34" x2="30"  y2="68" stroke="#9B5FD0" stroke-width="1.5" opacity="0.6"/>
-          <line x1="90" y1="34" x2="90"  y2="68" stroke="#9B5FD0" stroke-width="1.5" opacity="0.6"/>
-          <line x1="90" y1="34" x2="150" y2="68" stroke="#9B5FD0" stroke-width="1.5" opacity="0.6"/>
-          <!-- Fan-in lines: sources → aggregator -->
-          <line x1="30"  y1="90" x2="90" y2="128" stroke="#5BB5FF" stroke-width="1.5" opacity="0.6"/>
-          <line x1="90"  y1="90" x2="90" y2="128" stroke="#5BB5FF" stroke-width="1.5" opacity="0.6"/>
-          <line x1="150" y1="90" x2="90" y2="128" stroke="#5BB5FF" stroke-width="1.5" opacity="0.6"/>
-        </svg>
-        <div class="card-glow" style="width:120px;height:120px;bottom:-20px;right:-10px;background:rgba(0,120,212,0.35);"></div>
-      </div>
+    <!-- Issue 002: Scoped Multi-Source Search — MEDIUM -->
+    <a class="card card-conceptual card-medium arc-pair-b" href="../interactive/issue-002/" aria-label="Issue 002: Scoped Multi-Source Search — view interactive walkthrough">
+      <div class="card-glow" style="width:100px;height:100px;bottom:-20px;right:0;background:rgba(0,120,212,0.35);"></div>
       <div class="card-inner">
         <div class="issue-num">Issue 002</div>
         <div class="issue-badge badge-conceptual">Conceptual</div>
         <h2 class="card-title">Scoped Multi-Source Search</h2>
-        <p class="card-desc">Stop searching everything. Analyze the input first, then target specific sources. The fix for "Copilot found the wrong stuff."</p>
         <div class="card-meta">
           <div class="card-builder">Raghav BN</div>
           <div class="card-tags">
@@ -1276,8 +1163,8 @@
       <span class="diagram-label">Branch</span>
     </a>
 
-    <!-- Subscribe card — span 3 -->
-    <div class="card card-subscribe span-3 row-3 reveal" aria-label="Subscribe to The Cheat Code">
+    <!-- Subscribe card -->
+    <div class="card card-subscribe" aria-label="Subscribe to The Cheat Code">
       <div class="card-glow" style="width:120px;height:120px;top:-20px;left:-20px;background:rgba(16,124,16,0.4);"></div>
       <div class="card-inner">
         <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;letter-spacing:-0.3px;color:var(--text-primary);">Stay in the loop</div>
@@ -1289,34 +1176,13 @@
       </div>
     </div>
 
-    <!-- ══════════ ROWS 8–10: ISSUE BAND 2 ══════════ -->
-
-    <!-- Issue 003: Prompt-Chained Triage — span 4 -->
-    <a class="card card-practical card-medium span-4 row-3 arc-pair-a reveal" href="interactive/issue-003/" aria-label="Issue 003: Prompt-Chained Triage — view interactive walkthrough">
-      <div class="hero-visual" aria-hidden="true">
-        <svg class="hv-nodes" style="width:190px;height:80px;" viewBox="0 0 190 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Three pipeline stages -->
-          <rect x="4"   y="20" width="50" height="30" rx="5" fill="rgba(247,112,80,0.35)" stroke="#F77050" stroke-width="1.5"/>
-          <rect x="70"  y="20" width="50" height="30" rx="5" fill="rgba(247,112,80,0.28)" stroke="#F77050" stroke-width="1.5"/>
-          <rect x="136" y="20" width="50" height="30" rx="5" fill="rgba(247,112,80,0.2)"  stroke="#F77050" stroke-width="1.5"/>
-          <!-- Arrow 1: extract → classify -->
-          <line x1="54" y1="35" x2="70" y2="35" stroke="#F77050" stroke-width="2" opacity="0.7"/>
-          <polygon points="68,31 76,35 68,39" fill="#F77050" opacity="0.7"/>
-          <!-- Arrow 2: classify → recommend -->
-          <line x1="120" y1="35" x2="136" y2="35" stroke="#F77050" stroke-width="2" opacity="0.7"/>
-          <polygon points="134,31 142,35 134,39" fill="#F77050" opacity="0.7"/>
-          <!-- Stage labels dots -->
-          <circle cx="29"  cy="35" r="4" fill="#F77050" opacity="0.5"/>
-          <circle cx="95"  cy="35" r="4" fill="#F77050" opacity="0.5"/>
-          <circle cx="161" cy="35" r="4" fill="#F77050" opacity="0.5"/>
-        </svg>
-        <div class="card-glow" style="width:120px;height:100px;bottom:-20px;right:-10px;background:rgba(216,59,1,0.3);"></div>
-      </div>
+    <!-- Issue 003: Prompt-Chained Triage — MEDIUM -->
+    <a class="card card-practical card-medium arc-pair-a" href="../interactive/issue-003/" aria-label="Issue 003: Prompt-Chained Triage — view interactive walkthrough">
+      <div class="card-glow" style="width:100px;height:100px;bottom:0;right:0;background:rgba(216,59,1,0.3);"></div>
       <div class="card-inner">
         <div class="issue-num">Issue 003</div>
         <div class="issue-badge badge-practical">Practical</div>
         <h2 class="card-title">Prompt-Chained Triage</h2>
-        <p class="card-desc">Extract → Classify → Recommend. One prompt chain with YAML playbooks that replaces a manual triage board.</p>
         <div class="card-meta">
           <div class="card-builder">Raghav BN</div>
           <div class="card-tags">
@@ -1332,28 +1198,13 @@
       <span class="diagram-label">Pipeline</span>
     </a>
 
-    <!-- Issue 004: Secure In-Boundary Processing — span 4 -->
-    <a class="card card-conceptual card-medium span-4 row-3 arc-pair-b reveal" href="interactive/issue-004/" aria-label="Issue 004: Secure In-Boundary Processing — view interactive walkthrough">
-      <div class="hero-visual" aria-hidden="true">
-        <svg class="hv-nodes" style="width:170px;height:160px;" viewBox="0 0 170 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Outer dashed trust boundary -->
-          <rect x="6"  y="6"  width="158" height="148" rx="12" stroke="#13A113" stroke-width="1.5" stroke-dasharray="6 4" fill="rgba(16,124,16,0.06)"/>
-          <!-- Middle tenant layer -->
-          <rect x="22" y="22" width="126" height="116" rx="9"  stroke="#5BB5FF" stroke-width="1.5" fill="rgba(0,120,212,0.08)"/>
-          <!-- Inner agent core -->
-          <rect x="42" y="44" width="86"  height="72"  rx="7"  stroke="#5BB5FF" stroke-width="2"   fill="rgba(0,120,212,0.15)"/>
-          <!-- Data node inside -->
-          <rect x="60" y="62" width="50"  height="36"  rx="5"  stroke="#9B5FD0" stroke-width="1.5" fill="rgba(107,47,160,0.25)"/>
-          <!-- Center dot -->
-          <circle cx="85" cy="80" r="5" fill="#9B5FD0" opacity="0.8"/>
-        </svg>
-        <div class="card-glow" style="width:120px;height:100px;bottom:-20px;right:-10px;background:rgba(0,120,212,0.3);"></div>
-      </div>
+    <!-- Issue 004: Secure In-Boundary Processing — MEDIUM -->
+    <a class="card card-conceptual card-medium arc-pair-b" href="../interactive/issue-004/" aria-label="Issue 004: Secure In-Boundary Processing — view interactive walkthrough">
+      <div class="card-glow" style="width:100px;height:100px;bottom:0;right:0;background:rgba(0,120,212,0.3);"></div>
       <div class="card-inner">
         <div class="issue-num">Issue 004</div>
         <div class="issue-badge badge-conceptual">Conceptual</div>
         <h2 class="card-title">Secure In-Boundary Processing</h2>
-        <p class="card-desc">"Our data can't leave our tenant." MCP connectors + in-memory aggregation + tenant-scoped AI for regulated industries.</p>
         <div class="card-meta">
           <div class="card-builder">Raghav BN</div>
           <div class="card-tags">
@@ -1370,8 +1221,8 @@
       <span class="diagram-label">Boundary</span>
     </a>
 
-    <!-- Sample Code card — span 4, coming soon -->
-    <div class="card card-code span-4 row-3 reveal" aria-label="Sample code coming soon">
+    <!-- Sample Code card — large, visually distinct -->
+    <a class="card card-code" href="#sample-repo" aria-label="Browse sample code repository">
       <div class="card-glow" style="width:120px;height:120px;top:20px;right:20px;background:rgba(107,47,160,0.25);"></div>
       <div class="card-inner">
         <div class="terminal-bar" aria-hidden="true">
@@ -1379,60 +1230,31 @@
           <span class="terminal-dot dot-yellow"></span>
           <span class="terminal-dot dot-green"></span>
         </div>
-        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;letter-spacing:-0.3px;">Sample Code</div>
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;letter-spacing:-0.3px;">Sample Code Repo</div>
         <p style="font-size:11px;color:var(--text-secondary);margin-top:4px;">Pattern starters, YAML configs, and reference architectures.</p>
         <div class="code-preview" aria-hidden="true">
-          <span class="code-line"><span class="cm"># coming soon...</span></span>
+          <span class="code-line"><span class="cm"># agent_pattern_007.py</span></span>
+          <span class="code-line"><span class="kw">from</span> <span class="fn">cheatcode</span> <span class="kw">import</span> <span class="fn">HolographicMemory</span></span>
           <span class="code-line">&nbsp;</span>
-          <span class="code-line"><span class="kw">from</span> <span class="fn">cheatcode</span> <span class="kw">import</span> <span class="fn">patterns</span></span>
-          <span class="code-line"><span class="fn">agent</span> <span class="sym">=</span> <span class="fn">patterns</span><span class="sym">.</span><span class="fn">load</span><span class="sym">(</span><span class="str">"001"</span><span class="sym">)</span></span>
+          <span class="code-line"><span class="fn">memory</span> <span class="sym">=</span> <span class="fn">HolographicMemory</span><span class="sym">(</span></span>
+          <span class="code-line">&nbsp;&nbsp;<span class="fn">layers</span><span class="sym">=</span><span class="num">3</span><span class="sym">,</span></span>
+          <span class="code-line">&nbsp;&nbsp;<span class="fn">context_window</span><span class="sym">=</span><span class="str">"128k"</span></span>
+          <span class="code-line"><span class="sym">)</span></span>
+          <span class="code-line"><span class="fn">memory</span><span class="sym">.</span><span class="fn">inject</span><span class="sym">(</span><span class="fn">session</span><span class="sym">)</span></span>
         </div>
-        <div style="margin-top:10px;">
-          <span class="coming-soon-chip">Coming soon</span>
+        <div style="margin-top:10px;font-size:11px;font-weight:600;color:var(--purple-light);display:flex;align-items:center;gap:6px;">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M5.5 1 L5.5 7 M2.5 5 L5.5 7.5 L8.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="1" y="9" width="9" height="1.5" rx="0.75" fill="currentColor"/></svg>
+          Browse repository
         </div>
       </div>
-    </div>
+    </a>
 
-    <!-- ══════════ ROWS 11–12: UTILITY BAND ══════════ -->
-
-    <!-- Stats card — span 3 -->
-    <div class="card card-stats span-3 row-2 reveal" aria-label="Stats: 8 patterns">
-      <div class="card-glow" style="width:100px;height:100px;top:-20px;right:-20px;background:rgba(107,47,160,0.5);"></div>
-      <div class="card-inner" style="justify-content:center;">
-        <div class="stat-num">8</div>
-        <div class="stat-label">Patterns published</div>
-      </div>
-    </div>
-
-    <!-- Issue 005: Human-in-the-Loop Approval Gates — span 3 -->
-    <div class="card card-conceptual card-small span-3 row-2 arc-pair-b reveal" aria-label="Issue 005: Human-in-the-Loop Approval Gates">
-      <div class="hero-visual" aria-hidden="true">
-        <svg class="hv-nodes" style="width:160px;height:130px;" viewBox="0 0 160 130" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Diamond decision gate -->
-          <polygon points="80,10 140,55 80,100 20,55" fill="rgba(91,181,255,0.18)" stroke="#5BB5FF" stroke-width="2"/>
-          <!-- Arrow left: approve (checkmark branch) -->
-          <line x1="20" y1="55" x2="4"  y2="55" stroke="#5BB5FF" stroke-width="2" opacity="0.7"/>
-          <circle cx="4" cy="55" r="6" fill="rgba(39,201,63,0.4)" stroke="#27C93F" stroke-width="1.5"/>
-          <!-- Checkmark inside -->
-          <polyline points="1,55 3,58 7,52" stroke="#27C93F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <!-- Arrow right: reject (X branch) -->
-          <line x1="140" y1="55" x2="156" y2="55" stroke="#5BB5FF" stroke-width="2" opacity="0.7"/>
-          <circle cx="156" cy="55" r="6" fill="rgba(255,95,87,0.4)" stroke="#FF5F57" stroke-width="1.5"/>
-          <!-- X inside -->
-          <line x1="153" y1="52" x2="159" y2="58" stroke="#FF5F57" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="159" y1="52" x2="153" y2="58" stroke="#FF5F57" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- Incoming arrow from top -->
-          <line x1="80" y1="0" x2="80" y2="10" stroke="#5BB5FF" stroke-width="2" opacity="0.6"/>
-          <!-- Center label dot -->
-          <circle cx="80" cy="55" r="4" fill="#5BB5FF" opacity="0.7"/>
-        </svg>
-        <div class="card-glow" style="width:100px;height:100px;bottom:-20px;right:-10px;background:rgba(0,120,212,0.3);"></div>
-      </div>
+    <!-- Issue 005: Human-in-the-Loop Approval Gates — SMALL -->
+    <div class="card card-conceptual card-small arc-pair-b" aria-label="Issue 005: Human-in-the-Loop Approval Gates">
       <div class="card-inner">
         <div class="issue-num">Issue 005</div>
         <div class="issue-badge badge-conceptual">Conceptual</div>
         <h2 class="card-title">Human-in-the-Loop Approval Gates</h2>
-        <p class="card-desc">When the agent needs a human to say "yes" before it acts. Approval flows that don't break the conversation.</p>
         <div class="card-meta">
           <div class="card-builder">Pete Puustinen</div>
           <div class="card-tags">
@@ -1445,38 +1267,12 @@
       <span class="diagram-label">Gate</span>
     </div>
 
-    <!-- Issue 006: Meeting-to-Knowledge Pipeline — span 3 -->
-    <div class="card card-practical card-small span-3 row-2 arc-pair-a reveal" aria-label="Issue 006: Meeting-to-Knowledge Pipeline">
-      <div class="hero-visual" aria-hidden="true">
-        <svg class="hv-nodes" style="width:170px;height:100px;" viewBox="0 0 170 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Cylinder (recording) left -->
-          <ellipse cx="22" cy="26" rx="16" ry="6" fill="rgba(247,112,80,0.3)" stroke="#F77050" stroke-width="1.5"/>
-          <rect x="6" y="26" width="32" height="32" fill="rgba(247,112,80,0.15)" stroke="none"/>
-          <ellipse cx="22" cy="58" rx="16" ry="6" fill="rgba(247,112,80,0.2)" stroke="#F77050" stroke-width="1.5"/>
-          <line x1="6"  y1="26" x2="6"  y2="58" stroke="#F77050" stroke-width="1.5"/>
-          <line x1="38" y1="26" x2="38" y2="58" stroke="#F77050" stroke-width="1.5"/>
-          <!-- Arrow right from cylinder -->
-          <line x1="38" y1="42" x2="58" y2="42" stroke="#F77050" stroke-width="2" opacity="0.7"/>
-          <polygon points="56,38 64,42 56,46" fill="#F77050" opacity="0.7"/>
-          <!-- Document stack (3 stacked rects) middle -->
-          <rect x="64" y="22" width="36" height="8" rx="2" fill="rgba(247,112,80,0.15)" stroke="#F77050" stroke-width="1.2"/>
-          <rect x="64" y="32" width="36" height="8" rx="2" fill="rgba(247,112,80,0.22)" stroke="#F77050" stroke-width="1.2"/>
-          <rect x="64" y="42" width="36" height="18" rx="3" fill="rgba(247,112,80,0.3)"  stroke="#F77050" stroke-width="1.5"/>
-          <!-- Arrow right from docs -->
-          <line x1="100" y1="51" x2="120" y2="51" stroke="#F77050" stroke-width="2" opacity="0.7"/>
-          <polygon points="118,47 126,51 118,55" fill="#F77050" opacity="0.7"/>
-          <!-- Search icon (circle + handle) right -->
-          <circle cx="140" cy="45" r="14" stroke="#F77050" stroke-width="2" fill="rgba(247,112,80,0.15)"/>
-          <line x1="150" y1="55" x2="162" y2="67" stroke="#F77050" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="140" cy="45" r="7" fill="none" stroke="#F77050" stroke-width="1.5" opacity="0.5"/>
-        </svg>
-        <div class="card-glow" style="width:100px;height:80px;bottom:-10px;right:-10px;background:rgba(216,59,1,0.3);"></div>
-      </div>
+    <!-- Issue 006: Meeting-to-Knowledge Pipeline — SMALL -->
+    <div class="card card-practical card-small arc-pair-a" aria-label="Issue 006: Meeting-to-Knowledge Pipeline">
       <div class="card-inner">
         <div class="issue-num">Issue 006</div>
         <div class="issue-badge badge-practical">Practical</div>
         <h2 class="card-title">Meeting-to-Knowledge Pipeline</h2>
-        <p class="card-desc">Turn meeting recordings into structured, searchable knowledge that agents can reason over.</p>
         <div class="card-meta">
           <div class="card-builder">Pete Puustinen</div>
           <div class="card-tags">
@@ -1489,41 +1285,33 @@
       <span class="diagram-label">Pipeline</span>
     </div>
 
-    <!-- ABS Brand card — span 3 -->
-    <div class="card card-brand span-3 row-2 reveal" aria-label="ABS Tech Strategy branding">
+    <!-- About the Series card -->
+    <div class="card card-about" aria-label="About The Cheat Code newsletter series">
+      <div class="card-glow" style="width:140px;height:140px;bottom:-30px;right:-30px;background:rgba(107,47,160,0.4);"></div>
       <div class="card-inner">
-        <div class="brand-logo-area">
-          <div class="brand-logo-text">ABS Tech Strategy</div>
-          <div class="brand-logo-sub">AI Business Solutions</div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:8px;">About the Series</div>
+        <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;flex:1;">
+          Each issue pairs a conceptual pattern with a practical implementation. Builders from ABS Tech Strategy document real customer engagements so others can reuse the architecture.
+        </p>
+        <div style="margin-top:10px;display:flex;gap:14px;">
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--purple-light);">4</div>
+            <div style="font-size:10px;color:var(--text-muted);">builders</div>
+          </div>
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--blue-light);">4</div>
+            <div style="font-size:10px;color:var(--text-muted);">interactive walkthroughs</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ══════════ ROWS 13–14: ABOUT BAND ══════════ -->
-
-    <!-- About the Series card — full width -->
-    <div class="card card-about span-12 row-2 reveal" aria-label="About The Cheat Code newsletter series">
-      <div class="card-glow" style="width:200px;height:200px;bottom:-60px;right:-30px;background:rgba(107,47,160,0.3);"></div>
-      <div class="card-inner" style="flex-direction:row;align-items:center;gap:40px;">
-        <div style="flex:1;">
-          <div style="font-size:10px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:8px;">About the Series</div>
-          <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;max-width:560px;">
-            Each issue pairs a conceptual pattern with a practical implementation. Builders from ABS Tech Strategy document real customer engagements so others can reuse the architecture.
-          </p>
-        </div>
-        <div style="display:flex;gap:28px;flex-shrink:0;">
-          <div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--purple-light);">4</div>
-            <div style="font-size:10px;color:var(--text-muted);">builders</div>
-          </div>
-          <div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--blue-light);">4</div>
-            <div style="font-size:10px;color:var(--text-muted);">interactive walkthroughs</div>
-          </div>
-          <div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--green-light);">8</div>
-            <div style="font-size:10px;color:var(--text-muted);">patterns total</div>
-          </div>
+    <!-- ABS Brand card -->
+    <div class="card card-brand" aria-label="ABS Tech Strategy branding">
+      <div class="card-inner">
+        <div class="brand-logo-area">
+          <div class="brand-logo-text">ABS Tech Strategy</div>
+          <div class="brand-logo-sub">AI Business Solutions</div>
         </div>
       </div>
     </div>
@@ -1536,13 +1324,15 @@
 <!-- Footer -->
 <footer class="site-footer">
   <div class="footer-links">
-    <a href="./">Portal home</a>
-    <a href="interactive/issue-001/">Issue 001</a>
-    <a href="interactive/issue-002/">Issue 002</a>
-    <a href="interactive/issue-003/">Issue 003</a>
-    <a href="interactive/issue-004/">Issue 004</a>
+    <a href="../">Portal home</a>
+    <a href="../interactive/issue-001/">Issue 001</a>
+    <a href="../interactive/issue-002/">Issue 002</a>
+    <a href="../interactive/issue-003/">Issue 003</a>
+    <a href="../interactive/issue-004/">Issue 004</a>
+    <a href="#sample-repo">Sample Code</a>
   </div>
   <p>Microsoft Internal &bull; Not for external distribution &bull; ABS Tech Strategy &bull; AI Business Solutions</p>
+  <p style="margin-top:2px;font-size:10px;opacity:0.5;">Design option D — Bento Grid</p>
 </footer>
 
 <!-- ─── Konami Code Easter Egg ─── -->
@@ -1561,53 +1351,6 @@
         pos = (e.keyCode === seq[0]) ? 1 : 0;
       }
     });
-  })();
-</script>
-
-<!-- ─── Scroll-reveal via IntersectionObserver ─── -->
-<script>
-  (function () {
-    // Skip if reduced motion is preferred — CSS already handles the no-animation state,
-    // but we still need to mark elements as visible so they render at full opacity.
-    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    var items = Array.from(document.querySelectorAll('.reveal'));
-
-    if (prefersReduced) {
-      items.forEach(function (el) { el.classList.add('visible'); });
-      return;
-    }
-
-    // Stagger delay: cards inside the bento grid get incremental delays based
-    // on their position within the grid so they cascade in row by row.
-    var gridEl = document.querySelector('.bento-grid');
-    var gridCards = gridEl ? Array.from(gridEl.querySelectorAll('.reveal')) : [];
-
-    gridCards.forEach(function (card, i) {
-      // Cap stagger at 8 steps (≈ 560ms total) so late cards don't wait too long.
-      var step = Math.min(i, 8);
-      card.style.transitionDelay = (step * 70) + 'ms';
-    });
-
-    var observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            // Once revealed, stop observing to avoid re-triggering on scroll back up.
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        // Trigger when at least 8% of the element is visible.
-        threshold: 0.08,
-        // Give a small top margin so elements reveal slightly before they fully enter.
-        rootMargin: '0px 0px -40px 0px'
-      }
-    );
-
-    items.forEach(function (el) { observer.observe(el); });
   })();
 </script>
 

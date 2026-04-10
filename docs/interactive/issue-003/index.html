@@ -4,8 +4,53 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Interactive: Prompt-Chained Triage — The Cheat Code #003</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Outfit:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../shared/interactive.css">
 <style>
+  /* --- Bento font overrides --- */
+  .step-zone .step-badge {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .step-zone .step-title,
+  .zone-title {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+  }
+  .step-zone .step-subtitle,
+  .zone-subtitle {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+  .output-fields .field-label {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+  .output-fields .field-desc {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+  .output-fields .field-icon {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+  .prompt-indicator {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .pb-file {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .input-card .label,
+  .output-card .label {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+  }
+  .input-card .desc,
+  .output-card .desc {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+  .playbook-box .pb-title {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+  }
+  .arrow-between .alabel {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+
   /* Issue-specific diagram styles (adapted from diagrams/issue_003_chain_sequence.html) */
   .pipeline {
     display: flex;
@@ -168,7 +213,6 @@
     padding: 6px 12px;
     font-size: 12px;
     font-weight: 500;
-    font-family: 'Consolas', 'Monaco', monospace;
     color: #8B6914;
   }
   .pb-file.custom { border: 2px dashed #107C10; color: #107C10; }
@@ -193,9 +237,10 @@
 
 <div class="interactive-page">
   <div class="page-header">
-    <a href="../../" class="back-link">← All Patterns</a>
+    <a href="../../" class="back-link">← Back to patterns</a>
+    <span class="issue-badge">Issue #003 · Practical</span>
     <h1>Prompt-Chained Triage</h1>
-    <p class="page-subtitle">3-Step Reasoning Chain with Runtime Playbook Loading</p>
+    <p class="page-subtitle">3-Step Reasoning Chain with Runtime Playbook Loading — Explore the pipeline interactively</p>
   </div>
 
   <div class="diagram-canvas" id="diagram">
@@ -206,7 +251,8 @@
              data-tooltip="A raw bug report or feature request — unstructured text from Azure DevOps"
              data-expand-title="New Work Item (Input)"
              data-expand-desc="Raw, unstructured text from a bug report or feature request in Azure DevOps."
-             data-expand-details='[{"heading":"The Problem","items":["Work items arrive as unstructured text","Manual triage takes 15-30 minutes per item","Inconsistent categorization across team members","SLA tracking starts late because routing is slow"]},{"heading":"What the Chain Receives","items":["Title and description text","Any attached error logs or screenshots","Reporter metadata","Creation timestamp"]}]'>
+             data-expand-details='[{"heading":"The Problem","items":["Work items arrive as unstructured text","Manual triage takes 15-30 minutes per item","Inconsistent categorization across team members","SLA tracking starts late because routing is slow"]},{"heading":"What the Chain Receives","items":["Title and description text","Any attached error logs or screenshots","Reporter metadata","Creation timestamp"]}]'
+             data-context='{"what":"Incoming unstructured work item — a raw bug report or feature request submitted to Azure DevOps. The text is freeform: no enforced schema, no consistent fields, no severity label. This is the starting point for the prompt chain.","requires":["Azure DevOps organization","Work Item Tracking API access","Service principal or PAT token for agent authentication"],"prerequisites":["Azure DevOps project configured","Agent has read access to the work items board","Webhook or polling trigger configured to fire on new item creation"],"links":[{"label":"Azure DevOps Work Item Tracking API","url":"https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items"},{"label":"ADO Service Hooks (webhooks)","url":"https://learn.microsoft.com/en-us/azure/devops/service-hooks/overview"},{"label":"Copilot Studio trigger topics","url":"https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-triggers"}],"code":"// Example: Fetching a work item via ADO REST API\nconst response = await fetch(\n  `https://dev.azure.com/{org}/{project}/_apis/wit/workitems/${id}?api-version=7.1`,\n  { headers: { Authorization: `Bearer ${token}` } }\n);\nconst workItem = await response.json();\nconst rawText = `${workItem.fields[\"System.Title\"]}\\n${workItem.fields[\"System.Description\"]}`;"}'>
           <div class="label">📥 New Work Item</div>
           <div class="desc">Raw bug report or feature request from Azure DevOps</div>
         </div>
@@ -222,7 +268,8 @@
            data-tooltip="Step 1: Parse raw text into structured fields using its own system prompt"
            data-expand-title="Step 1: EXTRACT"
            data-expand-desc="Parses unstructured bug report text into clean, structured fields using a dedicated system prompt."
-           data-expand-details='[{"heading":"Own System Prompt","items":["Each step in the chain has its OWN system prompt","Extract prompt is tuned for field identification","Does NOT classify or recommend — single responsibility"]},{"heading":"Output Fields","items":["Title — concise issue summary","Description — detailed problem statement","Affected Component — system area identification","Error Signatures — stack traces and error codes","Reproduction Steps — how to recreate the issue"]},{"heading":"Design Decision","items":["Separate extraction from classification","One prompt doing one job = higher accuracy","Structured JSON output for downstream consumption"]}]'>
+           data-expand-details='[{"heading":"Own System Prompt","items":["Each step in the chain has its OWN system prompt","Extract prompt is tuned for field identification","Does NOT classify or recommend — single responsibility"]},{"heading":"Output Fields","items":["Title — concise issue summary","Description — detailed problem statement","Affected Component — system area identification","Error Signatures — stack traces and error codes","Reproduction Steps — how to recreate the issue"]},{"heading":"Design Decision","items":["Separate extraction from classification","One prompt doing one job = higher accuracy","Structured JSON output for downstream consumption"]}]'
+           data-context='{"what":"The first prompt in the chain. Its sole responsibility is parsing raw work item text into structured JSON fields. It does not classify severity or recommend actions — single-responsibility design means higher accuracy for each step.","requires":["Azure OpenAI deployment (GPT-4o recommended)","System prompt defining the extraction schema","JSON output mode enabled on the model call"],"prerequisites":["Azure OpenAI resource provisioned in target region","GPT-4o or GPT-4-turbo model deployed","API key or managed identity configured for agent access"],"links":[{"label":"Azure OpenAI Service overview","url":"https://learn.microsoft.com/en-us/azure/ai-services/openai/overview"},{"label":"Azure OpenAI Chat Completions API","url":"https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions"},{"label":"Structured outputs (JSON mode)","url":"https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/structured-outputs"}],"code":"// EXTRACT step system prompt (example)\nconst extractSystemPrompt = `\nYou are a work item parser. Extract structured fields from the raw text below.\nReturn ONLY valid JSON with these exact keys:\n{\n  \"title\": \"concise one-line summary\",\n  \"description\": \"detailed problem statement\",\n  \"affectedComponent\": \"system area or service name\",\n  \"errorSignatures\": [\"list of error codes or stack trace snippets\"],\n  \"reproductionSteps\": [\"ordered list of steps to reproduce\"]\n}\nDo not classify severity. Do not recommend actions. Extract only.\n`;\n\nconst result = await openai.chat.completions.create({\n  model: \"gpt-4o\",\n  response_format: { type: \"json_object\" },\n  messages: [\n    { role: \"system\", content: extractSystemPrompt },\n    { role: \"user\", content: rawWorkItemText }\n  ]\n});"}'>
         <div class="prompt-indicator prompt-purple">📝 Own System Prompt</div>
         <div class="zone-header">
           <span class="step-badge">Step 1</span>
@@ -248,7 +295,8 @@
            data-tooltip="Step 2: Determine severity, category, team assignment, and SLA tier"
            data-expand-title="Step 2: CLASSIFY"
            data-expand-desc="Takes structured fields from Extract and applies classification rules to determine routing."
-           data-expand-details='[{"heading":"Own System Prompt","items":["Classification prompt is tuned for routing decisions","Receives structured input, not raw text","Can reference org-specific severity definitions"]},{"heading":"Output Fields","items":["Severity — P0 (critical) through P4 (low)","Category — Bug, Feature, Task, or Question","Team Assignment — owning team based on component","SLA Tier — response time requirement"]},{"heading":"Playbook Matching","items":["Classification output determines which playbook to load","Severity + Category = playbook key","This is where the chain branches to the YAML registry"]}]'>
+           data-expand-details='[{"heading":"Own System Prompt","items":["Classification prompt is tuned for routing decisions","Receives structured input, not raw text","Can reference org-specific severity definitions"]},{"heading":"Output Fields","items":["Severity — P0 (critical) through P4 (low)","Category — Bug, Feature, Task, or Question","Team Assignment — owning team based on component","SLA Tier — response time requirement"]},{"heading":"Playbook Matching","items":["Classification output determines which playbook to load","Severity + Category = playbook key","This is where the chain branches to the YAML registry"]}]'
+           data-context='{"what":"The second prompt in the chain. It receives the structured JSON from EXTRACT and applies classification rules to determine severity, category, team assignment, and SLA tier. Its output also determines which YAML playbook to load in the next step.","requires":["Azure OpenAI deployment (same or different instance as EXTRACT)","System prompt with org-specific severity and category definitions","Structured JSON output from EXTRACT step"],"prerequisites":["Severity taxonomy defined (P0–P4 or equivalent)","Team ownership matrix documented","SLA tiers defined per severity level","Azure OpenAI quota sufficient for chain throughput"],"links":[{"label":"Azure OpenAI Service overview","url":"https://learn.microsoft.com/en-us/azure/ai-services/openai/overview"},{"label":"Azure OpenAI Chat Completions API","url":"https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions"},{"label":"ADO work item field reference","url":"https://learn.microsoft.com/en-us/azure/devops/boards/work-items/guidance/work-item-field"}],"code":"// CLASSIFY step system prompt (example)\nconst classifySystemPrompt = `\nYou are a work item classifier. Given structured fields from a parsed work item,\ndetermine the following and return ONLY valid JSON:\n{\n  \"severity\": \"P0 | P1 | P2 | P3 | P4\",\n  \"category\": \"Bug | Feature | Task | Question\",\n  \"teamAssignment\": \"team name based on affectedComponent\",\n  \"slaTier\": \"critical-4h | high-24h | medium-72h | low-1w\",\n  \"playbookKey\": \"database-errors | ui-bugs | feature-requests | security-incidents\"\n}\nSeverity definitions:\n  P0 = production outage or data loss\n  P1 = major feature broken, no workaround\n  P2 = significant impact, workaround exists\n  P3 = minor issue or cosmetic\n  P4 = nice-to-have improvement\n`;\n\nconst result = await openai.chat.completions.create({\n  model: \"gpt-4o\",\n  response_format: { type: \"json_object\" },\n  messages: [\n    { role: \"system\", content: classifySystemPrompt },\n    { role: \"user\", content: JSON.stringify(extractedFields) }\n  ]\n});"}'>
         <div class="prompt-indicator prompt-blue">📝 Own System Prompt</div>
         <div class="zone-header">
           <span class="step-badge">Step 2</span>
@@ -273,7 +321,8 @@
            data-tooltip="Step 3: Generate actions by combining classification with matched playbook"
            data-expand-title="Step 3: RECOMMEND"
            data-expand-desc="Combines classification results with the matched YAML playbook to generate concrete actions."
-           data-expand-details='[{"heading":"Own System Prompt","items":["Recommendation prompt receives classification + playbook content","Generates actionable steps, not just analysis","Maps to real ADO field updates and assignments"]},{"heading":"Output Fields","items":["Suggested Assignee — best engineer based on expertise map","Required Fields — fields to populate per playbook rules","Escalation Path — who to notify if SLA is breached","Related Work Items — linked issues and dependencies"]},{"heading":"Key Insight","items":["Playbook is loaded at RUNTIME, not baked into the prompt","Customer can add, edit, or remove playbooks without touching agent code","No redeployment needed — just update the YAML file"]}]'>
+           data-expand-details='[{"heading":"Own System Prompt","items":["Recommendation prompt receives classification + playbook content","Generates actionable steps, not just analysis","Maps to real ADO field updates and assignments"]},{"heading":"Output Fields","items":["Suggested Assignee — best engineer based on expertise map","Required Fields — fields to populate per playbook rules","Escalation Path — who to notify if SLA is breached","Related Work Items — linked issues and dependencies"]},{"heading":"Key Insight","items":["Playbook is loaded at RUNTIME, not baked into the prompt","Customer can add, edit, or remove playbooks without touching agent code","No redeployment needed — just update the YAML file"]}]'
+           data-context='{"what":"The third and final prompt in the chain. It combines the classification output with the runtime-loaded YAML playbook to generate concrete, actionable recommendations: suggested assignee, required fields to populate, escalation path, and related work items. The playbook content is injected into the prompt at runtime — no redeployment needed when playbooks change.","requires":["Azure OpenAI deployment","Classification output from CLASSIFY step","Matched YAML playbook loaded from the Playbook Registry","ADO Work Item Tracking API write access for applying updates"],"prerequisites":["Playbook files exist in the registry for each playbookKey","Agent has write access to ADO work items","Escalation contact list maintained in playbook YAML","Engineer expertise map defined in playbook or separate config"],"links":[{"label":"Azure OpenAI Chat Completions API","url":"https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions"},{"label":"ADO Work Item update API","url":"https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items/update"},{"label":"Copilot Studio topic actions","url":"https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-create-edit-topics"}],"code":"// RECOMMEND step — inject playbook at runtime\nconst playbookContent = await loadPlaybook(classification.playbookKey);\n\nconst recommendSystemPrompt = `\nYou are a triage recommendation engine.\nGiven the classification and the playbook below, return ONLY valid JSON:\n{\n  \"suggestedAssignee\": \"engineer alias\",\n  \"requiredFields\": [\"field names to populate in ADO\"],\n  \"escalationPath\": [\"notify: manager@org.com if SLA breached\"],\n  \"relatedWorkItems\": [\"#1234\", \"#5678\"]\n}\n\nPlaybook content:\n${playbookContent}\n`;\n\nconst result = await openai.chat.completions.create({\n  model: \"gpt-4o\",\n  response_format: { type: \"json_object\" },\n  messages: [\n    { role: \"system\", content: recommendSystemPrompt },\n    { role: \"user\", content: JSON.stringify({ extracted: extractedFields, classification }) }\n  ]\n});"}'>
         <div class="prompt-indicator prompt-green">📝 Own System Prompt</div>
         <div class="zone-header">
           <span class="step-badge">Step 3</span>
@@ -299,7 +348,8 @@
              data-tooltip="The triaged work item — fields set, tags applied, assignee routed, SLA tracked"
              data-expand-title="Triaged Work Item (Output)"
              data-expand-desc="A fully triaged work item with all fields populated, assignee routed, and SLA clock started."
-             data-expand-details='[{"heading":"What Changed","items":["All structured fields populated from Extract","Severity, category, and team set from Classify","Assignee, escalation path, and related items from Recommend","Tags and SLA tracking applied automatically"]},{"heading":"Time Savings","items":["Manual triage: 15-30 minutes per item","Agent triage: under 30 seconds","Consistency: same rules applied every time","SLA clock starts immediately, not after human review"]}]'>
+             data-expand-details='[{"heading":"What Changed","items":["All structured fields populated from Extract","Severity, category, and team set from Classify","Assignee, escalation path, and related items from Recommend","Tags and SLA tracking applied automatically"]},{"heading":"Time Savings","items":["Manual triage: 15-30 minutes per item","Agent triage: under 30 seconds","Consistency: same rules applied every time","SLA clock starts immediately, not after human review"]}]'
+             data-context='{"what":"The fully structured, classified, and routed work item written back to Azure DevOps. Every field is populated, the assignee is set, tags are applied, and the SLA clock has started. What took a human 15-30 minutes now takes under 30 seconds — with the same rules applied consistently every time.","requires":["Azure DevOps Work Item Tracking API (PATCH)","Agent write permissions on the ADO project","All three prompt steps completed successfully"],"prerequisites":["ADO work item field schema matches the output fields from EXTRACT","Team assignments in CLASSIFY map to valid ADO user aliases","SLA tracking configured in ADO (e.g., via service hooks or Azure Monitor)"],"links":[{"label":"ADO Work Item update API","url":"https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items/update"},{"label":"Azure DevOps Work Item Tracking API","url":"https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items"},{"label":"ADO service hooks for SLA tracking","url":"https://learn.microsoft.com/en-us/azure/devops/service-hooks/overview"}],"code":"// Write triage results back to ADO work item\nconst patchDocument = [\n  { op: \"add\", path: \"/fields/System.Title\", value: extracted.title },\n  { op: \"add\", path: \"/fields/System.Description\", value: extracted.description },\n  { op: \"add\", path: \"/fields/Microsoft.VSTS.Common.Priority\", value: severityToPriority(classification.severity) },\n  { op: \"add\", path: \"/fields/System.AssignedTo\", value: recommendations.suggestedAssignee },\n  { op: \"add\", path: \"/fields/System.Tags\", value: `${classification.category}; ${classification.slaTier}` }\n];\n\nawait fetch(\n  `https://dev.azure.com/{org}/{project}/_apis/wit/workitems/${id}?api-version=7.1`,\n  {\n    method: \"PATCH\",\n    headers: {\n      \"Content-Type\": \"application/json-patch+json\",\n      Authorization: `Bearer ${token}`\n    },\n    body: JSON.stringify(patchDocument)\n  }\n);"}'>
           <div class="label">✅ Triaged Work Item</div>
           <div class="desc">Fields set, tags applied, assignee routed, SLA tracked</div>
         </div>
@@ -312,7 +362,8 @@
            data-tooltip="Customer-owned YAML playbooks — add or edit without touching agent code"
            data-expand-title="YAML Playbook Registry"
            data-expand-desc="Decoupled playbook files loaded at runtime based on classification match. Customer-owned, no redeployment needed."
-           data-expand-details='[{"heading":"How It Works","items":["Step 2 (Classify) determines the playbook key","Step 3 (Recommend) loads the matching YAML file at runtime","Playbook defines: required fields, routing rules, escalation paths, response templates"]},{"heading":"Example Playbooks","items":["database-errors.yaml — DB-specific triage rules","ui-bugs.yaml — frontend issue routing","security-incidents.yaml — immediate escalation path","feature-requests.yaml — PM routing and backlog rules"]},{"heading":"Why YAML?","items":["Human-readable, no code knowledge needed","Version controlled alongside agent code","Easy to add customer-specific playbooks","No agent redeployment when playbooks change"]}]'>
+           data-expand-details='[{"heading":"How It Works","items":["Step 2 (Classify) determines the playbook key","Step 3 (Recommend) loads the matching YAML file at runtime","Playbook defines: required fields, routing rules, escalation paths, response templates"]},{"heading":"Example Playbooks","items":["database-errors.yaml — DB-specific triage rules","ui-bugs.yaml — frontend issue routing","security-incidents.yaml — immediate escalation path","feature-requests.yaml — PM routing and backlog rules"]},{"heading":"Why YAML?","items":["Human-readable, no code knowledge needed","Version controlled alongside agent code","Easy to add customer-specific playbooks","No agent redeployment when playbooks change"]}]'
+           data-context='{"what":"A collection of YAML files loaded at runtime by the RECOMMEND step, keyed by the classification output from CLASSIFY. Each playbook defines triage rules, required fields, routing logic, and escalation paths for a specific issue category. Because playbooks are loaded at runtime, customers can add, edit, or remove them without redeploying the agent.","requires":["File system or blob storage access for the agent to read YAML files","YAML parser in the agent runtime (js-yaml, PyYAML, etc.)","Playbook filenames matching the playbookKey values output by CLASSIFY"],"prerequisites":["Playbook directory accessible to the agent at runtime","At least one playbook per classification category","YAML schema consistent across all playbook files","Version control for playbooks (Git recommended)"],"links":[{"label":"Azure Blob Storage for config files","url":"https://learn.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-nodejs"},{"label":"Azure DevOps Repos for playbook versioning","url":"https://learn.microsoft.com/en-us/azure/devops/repos/git/"},{"label":"Copilot Studio topic variables","url":"https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-variables"}],"code":"# Example: database-errors.yaml\nplaybook:\n  key: database-errors\n  description: Triage rules for database and data layer issues\n  requiredFields:\n    - affectedComponent\n    - errorSignatures\n    - reproductionSteps\n  routing:\n    defaultTeam: platform-data\n    escalationContact: data-oncall@org.com\n    escalationSeverities: [P0, P1]\n  slaTiers:\n    P0: 4h\n    P1: 24h\n    P2: 72h\n  responseTemplates:\n    P0: |\n      Immediate escalation: page data-oncall, open war room.\n      Required: connection string, error logs, affected row count.\n    P1: |\n      Assign to platform-data team. Attach query plan and error trace."}'>
         <div class="pb-title">📋 YAML Playbook Registry <span style="font-size:11px;font-weight:400;color:#8B6914;">(loaded at runtime by classification match)</span></div>
         <div class="playbook-files">
           <div class="pb-file">database-errors.yaml</div>
@@ -330,13 +381,14 @@
 </div>
 
 <div class="interactive-footer">
-  <p>The Cheat Code · ABS Tech Strategy · <a href="https://aka.ms/the-cheat-code">Browse all issues</a></p>
+  <p>The Cheat Code · ABS Tech Strategy · <a href="../../">Back to all patterns</a></p>
 </div>
 
 <script src="../shared/interactive.js"></script>
 <script>
   window.interactiveConfig = {
     container: '#diagram',
+    contextMode: 'lightweight',
     steps: [
       {
         id: 'input',

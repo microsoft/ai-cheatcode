@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE CHEAT CODE // PATTERN LIBRARY v2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@300;400;500;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --purple:     #6B2FA0;
+  --purple-lt:  #9B59D0;
+  --purple-dim: #3D1A5C;
+  --navy:       #1B1B3A;
+  --navy-dk:    #0D0D1F;
+  --blue:       #0078D4;
+  --green:      #00FF41;
+  --green-dim:  #107C10;
+  --green-dk:   #003B0C;
+  --orange:     #FF6B00;
+  --amber:      #FFB800;
+  --red:        #FF2020;
+  --white:      #E0E0E0;
+  --dim:        rgba(0,255,65,0.15);
+  --scan-color: rgba(0,0,0,0.08);
+  --crt-glow:   0 0 10px rgba(0,255,65,0.4), 0 0 30px rgba(0,255,65,0.15);
+  --purple-glow:0 0 10px rgba(107,47,160,0.6), 0 0 30px rgba(107,47,160,0.3);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'JetBrains Mono', monospace;
+  background: #050510;
+  color: var(--green);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  cursor: default;
+}
+
+/* CRT Scanlines overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    var(--scan-color) 0px,
+    var(--scan-color) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* CRT vignette */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.7) 100%);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* ============================================================
+   TYPOGRAPHY HELPERS
+   ============================================================ */
+.pixel    { font-family: 'Press Start 2P', monospace; }
+.vt323    { font-family: 'VT323', monospace; }
+.mono     { font-family: 'JetBrains Mono', monospace; }
+
+.text-green  { color: var(--green); }
+.text-purple { color: var(--purple-lt); }
+.text-amber  { color: var(--amber); }
+.text-orange { color: var(--orange); }
+.text-white  { color: var(--white); }
+.text-dim    { color: rgba(0,255,65,0.45); }
+
+/* ============================================================
+   CURSOR BLINK
+   ============================================================ */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.cursor::after {
+  content: '_';
+  display: inline-block;
+  animation: blink 1s step-end infinite;
+  color: var(--green);
+}
+.cursor-block::after {
+  content: '█';
+  display: inline-block;
+  animation: blink 0.8s step-end infinite;
+  color: var(--green);
+}
+
+/* ============================================================
+   TYPING ANIMATION
+   ============================================================ */
+@keyframes typing {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes glitch {
+  0%   { clip-path: inset(40% 0 61% 0); transform: translate(-2px); }
+  20%  { clip-path: inset(92% 0 1% 0);  transform: translate(1px); }
+  40%  { clip-path: inset(43% 0 1% 0);  transform: translate(3px); }
+  60%  { clip-path: inset(25% 0 58% 0); transform: translate(-2px); }
+  80%  { clip-path: inset(54% 0 7% 0);  transform: translate(1px); }
+  100% { clip-path: inset(58% 0 43% 0); transform: translate(-3px); }
+}
+@keyframes scanSwipe {
+  0%   { top: -100%; }
+  100% { top: 100%; }
+}
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.4; }
+  94% { opacity: 1; }
+  96% { opacity: 0.3; }
+  97% { opacity: 1; }
+}
+@keyframes pulse-glow {
+  0%, 100% { text-shadow: 0 0 8px currentColor; }
+  50%       { text-shadow: 0 0 20px currentColor, 0 0 40px currentColor; }
+}
+@keyframes matrix-rain {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+@keyframes konami-flash {
+  0%   { background: #050510; }
+  10%  { background: #1a0030; }
+  20%  { background: #003300; }
+  30%  { background: #1a0030; }
+  40%  { background: #003300; }
+  50%  { background: #000030; }
+  60%  { background: #300000; }
+  70%  { background: #003000; }
+  80%  { background: #1a0030; }
+  100% { background: #050510; }
+}
+@keyframes spin3d {
+  0%   { transform: perspective(600px) rotateY(0deg); }
+  100% { transform: perspective(600px) rotateY(360deg); }
+}
+@keyframes zoomIn {
+  from { transform: scale(0.1) rotate(-10deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ============================================================
+   GLOBAL NAV / STATUSBAR
+   ============================================================ */
+.statusbar {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: rgba(5,5,16,0.97);
+  border-bottom: 1px solid var(--green-dim);
+  padding: 0 16px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  font-size: 10px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+.statusbar::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+.sb-brand {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: var(--green);
+  text-shadow: var(--crt-glow);
+  white-space: nowrap;
+  margin-right: 20px;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+.sb-brand:hover { color: var(--purple-lt); }
+.sb-sep {
+  color: rgba(0,255,65,0.3);
+  margin: 0 8px;
+  flex-shrink: 0;
+}
+.sb-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.sb-nav::-webkit-scrollbar { display: none; }
+.sb-link {
+  font-size: 9px;
+  color: rgba(0,255,65,0.5);
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 2px;
+  white-space: nowrap;
+  transition: color 0.15s, background 0.15s;
+  letter-spacing: 0.5px;
+}
+.sb-link:hover {
+  color: var(--green);
+  background: rgba(0,255,65,0.08);
+}
+.sb-time {
+  font-size: 9px;
+  color: rgba(0,255,65,0.4);
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+/* ============================================================
+   HERO: LEVEL SELECT SCREEN
+   ============================================================ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px 80px;
+  position: relative;
+  overflow: hidden;
+  animation: flicker 8s infinite;
+}
+
+/* Grid background */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,255,65,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,65,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+.hero-corner {
+  position: absolute;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(0,255,65,0.2);
+  line-height: 1.4;
+}
+.hero-corner.tl { top: 16px; left: 16px; }
+.hero-corner.tr { top: 16px; right: 16px; text-align: right; }
+.hero-corner.bl { bottom: 16px; left: 16px; }
+.hero-corner.br { bottom: 16px; right: 16px; text-align: right; }
+
+.hero-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--purple-lt);
+  border: 1px solid var(--purple);
+  padding: 4px 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  position: relative;
+  animation: fadeInUp 0.6s ease both;
+}
+.hero-badge::before {
+  content: '>> ';
+  color: var(--green);
+}
+
+.hero-title-wrap {
+  text-align: center;
+  margin-bottom: 16px;
+  animation: fadeInUp 0.7s 0.1s ease both;
+}
+
+.hero-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(22px, 5vw, 52px);
+  color: var(--green);
+  text-shadow: var(--crt-glow);
+  line-height: 1.3;
+  letter-spacing: 2px;
+  position: relative;
+  display: inline-block;
+}
+.hero-title .glitch-layer {
+  position: absolute;
+  top: 0; left: 0;
+  color: var(--purple-lt);
+  opacity: 0;
+  pointer-events: none;
+}
+.hero-title:hover .glitch-layer {
+  animation: glitch 0.4s steps(1) infinite;
+  opacity: 0.7;
+}
+
+.hero-subtitle {
+  font-family: 'VT323', monospace;
+  font-size: clamp(18px, 3vw, 28px);
+  color: var(--purple-lt);
+  text-align: center;
+  letter-spacing: 4px;
+  margin-bottom: 48px;
+  animation: fadeInUp 0.7s 0.2s ease both;
+}
+
+/* Konami hero block */
+.konami-hero {
+  background: rgba(107,47,160,0.08);
+  border: 1px solid var(--purple);
+  padding: 28px 40px;
+  text-align: center;
+  position: relative;
+  margin-bottom: 48px;
+  max-width: 700px;
+  width: 100%;
+  animation: fadeInUp 0.7s 0.3s ease both;
+  box-shadow: var(--purple-glow);
+}
+.konami-hero::before {
+  content: '// SECRET CHEAT CODE //';
+  position: absolute;
+  top: -10px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  background: #050510;
+  padding: 0 12px;
+  color: var(--purple-lt);
+  letter-spacing: 3px;
+  white-space: nowrap;
+}
+.konami-sequence {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(10px, 2vw, 14px);
+  color: var(--amber);
+  letter-spacing: 6px;
+  line-height: 2;
+  text-shadow: 0 0 12px var(--amber);
+  margin-bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+.konami-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  border: 2px solid var(--amber);
+  background: rgba(255,184,0,0.08);
+  font-size: 10px;
+  color: var(--amber);
+  border-radius: 4px;
+  text-shadow: 0 0 8px var(--amber);
+  box-shadow: 0 0 8px rgba(255,184,0,0.3);
+  transition: all 0.1s;
+}
+.konami-key.active {
+  background: var(--amber);
+  color: #000;
+  box-shadow: 0 0 20px var(--amber), 0 0 40px var(--amber);
+}
+.konami-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,184,0,0.5);
+  letter-spacing: 2px;
+}
+
+/* Stats bar */
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 48px;
+  animation: fadeInUp 0.7s 0.4s ease both;
+}
+.stat-item {
+  text-align: center;
+}
+.stat-val {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 20px;
+  color: var(--green);
+  text-shadow: var(--crt-glow);
+  display: block;
+}
+.stat-lbl {
+  font-size: 9px;
+  color: rgba(0,255,65,0.4);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Git clone CTA */
+.clone-cta {
+  background: rgba(0,0,0,0.6);
+  border: 1px solid var(--green-dim);
+  border-left: 3px solid var(--green);
+  padding: 16px 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--white);
+  text-decoration: none;
+  transition: all 0.2s;
+  animation: fadeInUp 0.7s 0.5s ease both;
+  max-width: 100%;
+}
+.clone-cta:hover {
+  border-left-color: var(--purple-lt);
+  background: rgba(107,47,160,0.1);
+  box-shadow: var(--purple-glow);
+}
+.clone-cta .prompt {
+  color: var(--green);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.clone-cta .cmd {
+  color: var(--amber);
+}
+.clone-cta .cursor-inline {
+  display: inline-block;
+  width: 8px; height: 14px;
+  background: var(--green);
+  animation: blink 1s step-end infinite;
+  margin-left: 2px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   SECTION WRAPPER
+   ============================================================ */
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px 24px;
+}
+
+.section-header {
+  margin-bottom: 40px;
+}
+.section-label {
+  font-size: 10px;
+  color: rgba(0,255,65,0.4);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.section-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(12px, 2vw, 18px);
+  color: var(--green);
+  text-shadow: var(--crt-glow);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   LEVEL GROUPINGS
+   ============================================================ */
+.level-group {
+  margin-bottom: 64px;
+}
+.level-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0,255,65,0.12);
+  position: relative;
+}
+.level-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0;
+  width: 80px; height: 1px;
+  background: var(--green);
+  box-shadow: var(--crt-glow);
+}
+.level-badge {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  padding: 6px 12px;
+  border: 1px solid;
+  letter-spacing: 2px;
+}
+.level-badge.lv1 { border-color: var(--green-dim); color: var(--green); background: rgba(0,255,65,0.06); }
+.level-badge.lv2 { border-color: var(--blue); color: #4DB8FF; background: rgba(0,120,212,0.08); }
+.level-badge.lv3 { border-color: var(--purple); color: var(--purple-lt); background: rgba(107,47,160,0.1); }
+.level-badge.lv4 { border-color: var(--amber); color: var(--amber); background: rgba(255,184,0,0.08); }
+
+.level-desc {
+  font-size: 11px;
+  color: rgba(0,255,65,0.45);
+  letter-spacing: 1px;
+}
+.level-arc {
+  margin-left: auto;
+  font-size: 9px;
+  color: rgba(0,255,65,0.25);
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   PATTERN CARDS — TERMINAL WINDOW STYLE
+   ============================================================ */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+.cards-grid.single { grid-template-columns: 1fr; }
+
+.card {
+  background: rgba(0,0,0,0.7);
+  border: 1px solid rgba(0,255,65,0.2);
+  border-radius: 0;
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.card:hover {
+  border-color: var(--green);
+  box-shadow: 0 0 20px rgba(0,255,65,0.15), inset 0 0 40px rgba(0,255,65,0.03);
+}
+.card.purple:hover {
+  border-color: var(--purple-lt);
+  box-shadow: 0 0 20px rgba(107,47,160,0.25), inset 0 0 40px rgba(107,47,160,0.05);
+}
+.card.blue:hover {
+  border-color: #4DB8FF;
+  box-shadow: 0 0 20px rgba(0,120,212,0.25), inset 0 0 40px rgba(0,120,212,0.05);
+}
+.card.coming-soon {
+  opacity: 0.55;
+  border-style: dashed;
+  border-color: rgba(0,255,65,0.12);
+}
+.card.coming-soon:hover {
+  opacity: 0.75;
+  border-color: rgba(0,255,65,0.3);
+  box-shadow: none;
+}
+
+/* Terminal title bar */
+.card-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(0,255,65,0.05);
+  border-bottom: 1px solid rgba(0,255,65,0.1);
+  flex-shrink: 0;
+}
+.card.purple .card-titlebar { background: rgba(107,47,160,0.1); border-bottom-color: rgba(107,47,160,0.2); }
+.card.blue .card-titlebar { background: rgba(0,120,212,0.08); border-bottom-color: rgba(0,120,212,0.15); }
+
+.tb-dots {
+  display: flex; gap: 5px;
+}
+.tb-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.tb-dot.red    { background: #FF5F57; }
+.tb-dot.yellow { background: #FFBD2E; }
+.tb-dot.green  { background: #28CA41; }
+
+.tb-title {
+  font-size: 9px;
+  color: rgba(0,255,65,0.4);
+  letter-spacing: 2px;
+  flex: 1;
+  text-align: center;
+}
+.card.purple .tb-title { color: rgba(155,89,208,0.5); }
+.card.blue .tb-title { color: rgba(77,184,255,0.4); }
+
+.tb-issue {
+  font-size: 9px;
+  color: rgba(0,255,65,0.3);
+  letter-spacing: 1px;
+}
+
+/* Card body */
+.card-body {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card-issue-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+}
+.issue-num {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: var(--green);
+  text-shadow: var(--crt-glow);
+}
+.card.purple .issue-num { color: var(--purple-lt); }
+.card.blue .issue-num { color: #4DB8FF; }
+
+.type-badge {
+  font-size: 8px;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border: 1px solid;
+}
+.type-badge.conceptual { border-color: var(--purple); color: var(--purple-lt); }
+.type-badge.practical  { border-color: var(--green-dim); color: var(--green); }
+
+.card-pattern-name {
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  color: var(--white);
+  line-height: 1.2;
+  letter-spacing: 1px;
+}
+
+/* ASCII art area */
+.card-ascii {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(0,255,65,0.08);
+  padding: 10px 12px;
+  font-size: 9px;
+  line-height: 1.5;
+  color: rgba(0,255,65,0.35);
+  overflow: hidden;
+  white-space: pre;
+  font-family: 'JetBrains Mono', monospace;
+}
+.card.purple .card-ascii { color: rgba(155,89,208,0.4); border-color: rgba(107,47,160,0.12); }
+.card.blue .card-ascii { color: rgba(77,184,255,0.35); border-color: rgba(0,120,212,0.12); }
+
+/* Stats row */
+.card-stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.cs-item {
+  font-size: 9px;
+  color: rgba(0,255,65,0.4);
+  letter-spacing: 1px;
+}
+.cs-item span {
+  color: var(--green);
+  font-weight: 700;
+}
+.card.purple .cs-item { color: rgba(155,89,208,0.4); }
+.card.purple .cs-item span { color: var(--purple-lt); }
+.card.blue .cs-item { color: rgba(77,184,255,0.3); }
+.card.blue .cs-item span { color: #4DB8FF; }
+
+/* Tags */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tag {
+  font-size: 8px;
+  padding: 2px 8px;
+  background: rgba(0,255,65,0.06);
+  border: 1px solid rgba(0,255,65,0.15);
+  color: rgba(0,255,65,0.55);
+  letter-spacing: 0.5px;
+}
+.card.purple .tag { background: rgba(107,47,160,0.08); border-color: rgba(107,47,160,0.2); color: rgba(155,89,208,0.6); }
+.card.blue .tag { background: rgba(0,120,212,0.06); border-color: rgba(0,120,212,0.18); color: rgba(77,184,255,0.55); }
+
+/* Builder line */
+.card-builder {
+  font-size: 10px;
+  color: rgba(0,255,65,0.35);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0,255,65,0.07);
+}
+.builder-prompt {
+  color: rgba(0,255,65,0.5);
+}
+.card.purple .card-builder { color: rgba(155,89,208,0.35); border-top-color: rgba(107,47,160,0.1); }
+.card.purple .builder-prompt { color: rgba(155,89,208,0.5); }
+.card.blue .card-builder { color: rgba(77,184,255,0.3); border-top-color: rgba(0,120,212,0.1); }
+.card.blue .builder-prompt { color: rgba(77,184,255,0.4); }
+
+/* Card CTA */
+.card-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(0,255,65,0.08);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.card.purple .card-footer { border-top-color: rgba(107,47,160,0.12); }
+.card.blue .card-footer { border-top-color: rgba(0,120,212,0.1); }
+
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  color: var(--green);
+  text-decoration: none;
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  border: 1px solid rgba(0,255,65,0.3);
+  transition: all 0.15s;
+}
+.card-link:hover {
+  background: rgba(0,255,65,0.1);
+  border-color: var(--green);
+  box-shadow: 0 0 10px rgba(0,255,65,0.2);
+}
+.card.purple .card-link { color: var(--purple-lt); border-color: rgba(107,47,160,0.4); }
+.card.purple .card-link:hover { background: rgba(107,47,160,0.15); border-color: var(--purple-lt); }
+.card.blue .card-link { color: #4DB8FF; border-color: rgba(0,120,212,0.35); }
+.card.blue .card-link:hover { background: rgba(0,120,212,0.1); border-color: #4DB8FF; }
+
+.card-link-soon {
+  font-size: 9px;
+  color: rgba(0,255,65,0.25);
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  border: 1px dashed rgba(0,255,65,0.12);
+}
+
+/* ============================================================
+   SUBSCRIBE TERMINAL
+   ============================================================ */
+.subscribe-section {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(0,255,65,0.15);
+  border-top: 2px solid var(--green);
+  padding: 48px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.subscribe-section::before {
+  content: 'NEWSLETTER.SH';
+  position: absolute;
+  top: -12px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  background: #050510;
+  padding: 0 16px;
+  color: var(--green);
+  letter-spacing: 3px;
+  text-shadow: var(--crt-glow);
+}
+
+.subscribe-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(10px, 2vw, 14px);
+  color: var(--green);
+  margin-bottom: 12px;
+  text-shadow: var(--crt-glow);
+}
+.subscribe-desc {
+  font-size: 12px;
+  color: rgba(0,255,65,0.5);
+  margin-bottom: 32px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.subscribe-form {
+  display: flex;
+  max-width: 480px;
+  margin: 0 auto 16px;
+  gap: 0;
+  border: 1px solid rgba(0,255,65,0.3);
+}
+.subscribe-form::before {
+  content: '> ';
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  color: var(--green);
+  font-size: 14px;
+  background: rgba(0,255,65,0.05);
+  border-right: 1px solid rgba(0,255,65,0.15);
+  flex-shrink: 0;
+}
+.subscribe-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 12px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--white);
+  outline: none;
+}
+.subscribe-input::placeholder { color: rgba(0,255,65,0.25); }
+.subscribe-btn {
+  background: var(--green);
+  color: #000;
+  border: none;
+  padding: 12px 20px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.subscribe-btn:hover { background: #00CC33; }
+.subscribe-note {
+  font-size: 9px;
+  color: rgba(0,255,65,0.25);
+  letter-spacing: 1px;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  background: rgba(0,0,0,0.8);
+  border-top: 1px solid rgba(0,255,65,0.1);
+  padding: 32px 24px;
+  text-align: center;
+}
+.footer-brand {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: var(--green);
+  margin-bottom: 12px;
+  text-shadow: var(--crt-glow);
+}
+.footer-meta {
+  font-size: 9px;
+  color: rgba(0,255,65,0.25);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.footer-warning {
+  font-size: 9px;
+  color: rgba(255,107,0,0.5);
+  letter-spacing: 1px;
+}
+.footer-warning::before { content: '[WARNING] '; color: var(--orange); }
+
+/* ============================================================
+   KONAMI OVERLAY
+   ============================================================ */
+#konami-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  overflow: hidden;
+}
+#konami-overlay.active {
+  display: flex;
+  animation: konami-flash 1s ease forwards;
+}
+
+.konami-text {
+  font-family: 'Press Start 2P', monospace;
+  text-align: center;
+  z-index: 2;
+  animation: zoomIn 0.4s ease both;
+}
+.konami-title {
+  font-size: clamp(18px, 4vw, 36px);
+  color: var(--green);
+  text-shadow: 0 0 20px var(--green), 0 0 60px var(--green);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.konami-msg {
+  font-size: clamp(10px, 2vw, 14px);
+  color: var(--amber);
+  text-shadow: 0 0 15px var(--amber);
+  margin-bottom: 32px;
+  line-height: 2;
+}
+.konami-score {
+  font-size: clamp(14px, 3vw, 24px);
+  color: var(--purple-lt);
+  text-shadow: 0 0 15px var(--purple-lt);
+  margin-bottom: 40px;
+  line-height: 1.8;
+}
+.konami-close {
+  background: transparent;
+  border: 2px solid var(--green);
+  color: var(--green);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  padding: 12px 28px;
+  cursor: pointer;
+  text-shadow: var(--crt-glow);
+  box-shadow: var(--crt-glow);
+  letter-spacing: 2px;
+  transition: all 0.15s;
+}
+.konami-close:hover {
+  background: var(--green);
+  color: #000;
+}
+
+/* Matrix rain canvas */
+#konami-canvas {
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+}
+
+/* Konami progress indicator */
+#konami-progress {
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+  z-index: 600;
+  display: flex;
+  gap: 4px;
+  pointer-events: none;
+}
+.kp-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(107,47,160,0.2);
+  border: 1px solid rgba(107,47,160,0.3);
+  transition: all 0.1s;
+}
+.kp-dot.hit {
+  background: var(--purple-lt);
+  box-shadow: 0 0 6px var(--purple-lt);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 600px) {
+  .hero { padding: 40px 16px 60px; }
+  .konami-hero { padding: 20px 16px; }
+  .konami-key { width: 28px; height: 28px; font-size: 8px; }
+  .hero-stats { gap: 20px; }
+  .section { padding: 40px 16px; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .subscribe-form { flex-direction: column; }
+  .subscribe-form::before { border-right: none; border-bottom: 1px solid rgba(0,255,65,0.15); }
+  .level-arc { display: none; }
+  .hero-corner { display: none; }
+}
+@media (max-width: 900px) {
+  .cards-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   UTILITY
+   ============================================================ */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+a { color: inherit; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     STATUS BAR NAV
+     ============================================================ -->
+<nav class="statusbar" aria-label="Primary navigation">
+  <a class="sb-brand" href="../../">TCC</a>
+  <span class="sb-sep" aria-hidden="true">|</span>
+  <div class="sb-nav" role="list">
+    <a class="sb-link" href="../../interactive/issue-001/" role="listitem">[001] CODE-FIRST</a>
+    <a class="sb-link" href="../../interactive/issue-002/" role="listitem">[002] SCOPED-SEARCH</a>
+    <a class="sb-link" href="../../interactive/issue-003/" role="listitem">[003] TRIAGE</a>
+    <a class="sb-link" href="../../interactive/issue-004/" role="listitem">[004] SECURE-PROC</a>
+    <a class="sb-link" href="#issue-005" role="listitem">[005] HITL-APPROVAL</a>
+    <a class="sb-link" href="#issue-006" role="listitem">[006] MTG-PIPELINE</a>
+    <a class="sb-link" href="#issue-007" role="listitem">[007] HOLO-MEMORY</a>
+    <a class="sb-link" href="#issue-008" role="listitem">[008] CROSS-PROJECT</a>
+  </div>
+  <span class="sb-time" id="sb-clock" aria-live="polite"></span>
+</nav>
+
+<!-- Konami progress -->
+<div id="konami-progress" aria-hidden="true">
+  <div class="kp-dot" id="kp0"></div>
+  <div class="kp-dot" id="kp1"></div>
+  <div class="kp-dot" id="kp2"></div>
+  <div class="kp-dot" id="kp3"></div>
+  <div class="kp-dot" id="kp4"></div>
+  <div class="kp-dot" id="kp5"></div>
+  <div class="kp-dot" id="kp6"></div>
+  <div class="kp-dot" id="kp7"></div>
+  <div class="kp-dot" id="kp8"></div>
+  <div class="kp-dot" id="kp9"></div>
+</div>
+
+<!-- ============================================================
+     HERO: LEVEL SELECT
+     ============================================================ -->
+<header class="hero" role="banner">
+  <div class="hero-corner tl" aria-hidden="true">SYS:ONLINE<br>MEM:8192K<br>VER:2.0.26</div>
+  <div class="hero-corner tr" aria-hidden="true">ABS-TECH<br>AI-BSOL<br>MSFT-INT</div>
+  <div class="hero-corner bl" aria-hidden="true">PATTERN-LIB<br>ISSUES:008<br>STATUS:LIVE</div>
+  <div class="hero-corner br" aria-hidden="true">PRESS START<br>TO BEGIN<br><span class="cursor-block" aria-hidden="true"></span></div>
+
+  <div class="hero-badge">ABS Tech Strategy &bull; AI Business Solutions</div>
+
+  <div class="hero-title-wrap">
+    <h1 class="hero-title pixel">
+      THE CHEAT CODE
+      <span class="glitch-layer" aria-hidden="true">THE CHEAT CODE</span>
+    </h1>
+  </div>
+
+  <p class="hero-subtitle">// INTERACTIVE PATTERN LIBRARY //</p>
+
+  <!-- KONAMI CODE HERO ELEMENT -->
+  <div class="konami-hero" role="region" aria-label="Konami cheat code">
+    <div class="konami-sequence" aria-label="Konami sequence: up up down down left right left right B A START">
+      <span class="konami-key" id="hero-k0" aria-label="up">&#8593;</span>
+      <span class="konami-key" id="hero-k1" aria-label="up">&#8593;</span>
+      <span class="konami-key" id="hero-k2" aria-label="down">&#8595;</span>
+      <span class="konami-key" id="hero-k3" aria-label="down">&#8595;</span>
+      <span class="konami-key" id="hero-k4" aria-label="left">&#8592;</span>
+      <span class="konami-key" id="hero-k5" aria-label="right">&#8594;</span>
+      <span class="konami-key" id="hero-k6" aria-label="left">&#8592;</span>
+      <span class="konami-key" id="hero-k7" aria-label="right">&#8594;</span>
+      <span class="konami-key" id="hero-k8" aria-label="B">B</span>
+      <span class="konami-key" id="hero-k9" aria-label="A">A</span>
+      <span class="konami-key" id="hero-k10" aria-label="START" style="width:64px;font-size:8px;">START</span>
+    </div>
+    <p class="konami-label">TYPE THE CODE ON YOUR KEYBOARD TO UNLOCK</p>
+  </div>
+
+  <div class="hero-stats" role="list" aria-label="Library statistics">
+    <div class="stat-item" role="listitem">
+      <span class="stat-val" aria-label="8 issues">08</span>
+      <span class="stat-lbl">ISSUES</span>
+    </div>
+    <div class="stat-item" role="listitem">
+      <span class="stat-val" aria-label="4 builders">04</span>
+      <span class="stat-lbl">BUILDERS</span>
+    </div>
+    <div class="stat-item" role="listitem">
+      <span class="stat-val" aria-label="4 live walkthroughs">04</span>
+      <span class="stat-lbl">LIVE DEMOS</span>
+    </div>
+    <div class="stat-item" role="listitem">
+      <span class="stat-val" aria-label="8 patterns">8K+</span>
+      <span class="stat-lbl">PATTERNS</span>
+    </div>
+  </div>
+
+  <a href="#sample-repo" class="clone-cta" aria-label="Clone sample code repository">
+    <span class="prompt">$</span>
+    <span>git clone <span class="cmd">the-cheat-code-samples</span></span>
+    <span class="cursor-inline" aria-hidden="true"></span>
+  </a>
+</header>
+
+<!-- ============================================================
+     MAIN CONTENT: PATTERN LEVELS
+     ============================================================ -->
+<main id="main-content">
+<div class="section">
+
+  <div class="section-header">
+    <p class="section-label">// PATTERN_DATABASE.JSON LOADED //</p>
+    <h2 class="section-title">SELECT YOUR LEVEL<span class="cursor" aria-hidden="true"></span></h2>
+  </div>
+
+  <!-- ============================================================
+       LEVEL 0 — FOUNDATIONS
+       ============================================================ -->
+  <div class="level-group">
+    <div class="level-header">
+      <span class="level-badge lv1" aria-label="Level 0">LV.00</span>
+      <span class="level-desc">FOUNDATIONS — Individual patterns, standalone builds</span>
+      <span class="level-arc" aria-hidden="true">ISSUES 001-002</span>
+    </div>
+
+    <div class="cards-grid">
+
+      <!-- CARD 001 -->
+      <article class="card" id="issue-001" aria-label="Issue 001: Code-First Agent Delivery">
+        <div class="card-titlebar" aria-hidden="true">
+          <div class="tb-dots">
+            <div class="tb-dot red"></div>
+            <div class="tb-dot yellow"></div>
+            <div class="tb-dot green"></div>
+          </div>
+          <span class="tb-title">pattern_001.sh &mdash; LIVE</span>
+          <span class="tb-issue">#001</span>
+        </div>
+        <div class="card-body">
+          <div class="card-issue-line">
+            <span class="issue-num">ISSUE-001</span>
+            <span class="type-badge practical">[PRACTICAL]</span>
+          </div>
+          <h3 class="card-pattern-name">Code-First Agent Delivery</h3>
+          <div class="card-ascii" aria-hidden="true">┌─ AGENT ──────────────────┐
+│  [VS Code] ──► [Azure]   │
+│      │           │       │
+│      └──► [Teams Bot] ◄─┘
+│           [Deploy:AUTO]  │
+└──────────────────────────┘</div>
+          <div class="card-stats">
+            <span class="cs-item">COMPONENTS: <span>6</span></span>
+            <span class="cs-item">CONNECTIONS: <span>9</span></span>
+            <span class="cs-item">COMPLEXITY: <span>LOW</span></span>
+          </div>
+          <div class="card-tags" aria-label="Tags">
+            <span class="tag">VS CODE</span>
+            <span class="tag">AZURE</span>
+            <span class="tag">TEAMS</span>
+          </div>
+          <div class="card-builder">
+            <span class="builder-prompt">BUILDER&gt;</span>
+            Cristiano Almeida Gonçalves
+          </div>
+        </div>
+        <div class="card-footer">
+          <a href="../../interactive/issue-001/" class="card-link" aria-label="Launch interactive walkthrough for Issue 001">
+            &gt; LAUNCH WALKTHROUGH
+          </a>
+        </div>
+      </article>
+
+      <!-- CARD 002 -->
+      <article class="card blue" id="issue-002" aria-label="Issue 002: Scoped Multi-Source Search">
+        <div class="card-titlebar" aria-hidden="true">
+          <div class="tb-dots">
+            <div class="tb-dot red"></div>
+            <div class="tb-dot yellow"></div>
+            <div class="tb-dot green"></div>
+          </div>
+          <span class="tb-title">pattern_002.sh &mdash; LIVE</span>
+          <span class="tb-issue">#002</span>
+        </div>
+        <div class="card-body">
+          <div class="card-issue-line">
+            <span class="issue-num">ISSUE-002</span>
+            <span class="type-badge conceptual">[CONCEPTUAL]</span>
+          </div>
+          <h3 class="card-pattern-name">Scoped Multi-Source Search</h3>
+          <div class="card-ascii" aria-hidden="true">┌─ QUERY ROUTER ───────────┐
+│  [ADO] ◄─┐               │
+│  [Graph]◄─┤ [RAG Engine] │
+│  [Docs] ◄─┘  [Reranker]  │
+│         [Response]        │
+└──────────────────────────┘</div>
+          <div class="card-stats">
+            <span class="cs-item">COMPONENTS: <span>8</span></span>
+            <span class="cs-item">CONNECTIONS: <span>12</span></span>
+            <span class="cs-item">COMPLEXITY: <span>MED</span></span>
+          </div>
+          <div class="card-tags" aria-label="Tags">
+            <span class="tag">RAG</span>
+            <span class="tag">QUERY ROUTING</span>
+            <span class="tag">ADO + GRAPH</span>
+          </div>
+          <div class="card-builder">
+            <span class="builder-prompt">BUILDER&gt;</span>
+            Raghav BN
+          </div>
+        </div>
+        <div class="card-footer">
+          <a href="../../interactive/issue-002/" class="card-link" aria-label="Launch interactive walkthrough for Issue 002">
+            &gt; LAUNCH WALKTHROUGH
+          </a>
+        </div>
+      </article>
+
+    </div><!-- /cards-grid -->
+  </div><!-- /level-group 0 -->
+
+  <!-- ============================================================
+       LEVEL 1 — CHAINED OPERATIONS
+       ============================================================ -->
+  <div class="level-group">
+    <div class="level-header">
+      <span class="level-badge lv1" aria-label="Level 1">LV.01</span>
+      <span class="level-desc">CHAINED OPS — Sequential orchestration, triage &amp; security</span>
+      <span class="level-arc" aria-hidden="true">ISSUES 003-004 &bull; ARC: PIPELINE</span>
+    </div>
+
+    <div class="cards-grid">
+
+      <!-- CARD 003 -->
+      <article class="card" id="issue-003" aria-label="Issue 003: Prompt-Chained Triage">
+        <div class="card-titlebar" aria-hidden="true">
+          <div class="tb-dots">
+            <div class="tb-dot red"></div>
+            <div class="tb-dot yellow"></div>
+            <div class="tb-dot green"></div>
+          </div>
+          <span class="tb-title">pattern_003.sh &mdash; LIVE</span>
+          <span class="tb-issue">#003</span>
+        </div>
+        <div class="card-body">
+          <div class="card-issue-line">
+            <span class="issue-num">ISSUE-003</span>
+            <span class="type-badge practical">[PRACTICAL]</span>
+          </div>
+          <h3 class="card-pattern-name">Prompt-Chained Triage</h3>
+          <div class="card-ascii" aria-hidden="true">┌─ PROMPT CHAIN ───────────┐
+│  [P1:Classify]            │
+│       │                   │
+│  [P2:Enrich] ──► [YAML]  │
+│       │                   │
+│  [P3:Route] ──► [Action] │
+└──────────────────────────┘</div>
+          <div class="card-stats">
+            <span class="cs-item">COMPONENTS: <span>7</span></span>
+            <span class="cs-item">CONNECTIONS: <span>10</span></span>
+            <span class="cs-item">COMPLEXITY: <span>MED</span></span>
+          </div>
+          <div class="card-tags" aria-label="Tags">
+            <span class="tag">PROMPT CHAINING</span>
+            <span class="tag">YAML PLAYBOOKS</span>
+          </div>
+          <div class="card-builder">
+            <span class="builder-prompt">BUILDER&gt;</span>
+            Raghav BN
+          </div>
+        </div>
+        <div class="card-footer">
+          <a href="../../interactive/issue-003/" class="card-link" aria-label="Launch interactive walkthrough for Issue 003">
+            &gt; LAUNCH WALKTHROUGH
+          </a>
+        </div>
+      </article>
+
+      <!-- CARD 004 -->
+      <article class="card purple" id="issue-004" aria-label="Issue 004: Secure In-Boundary Processing">
+        <div class="card-titlebar" aria-hidden="true">
+          <div class="tb-dots">
+            <div class="tb-dot red"></div>
+            <div class="tb-dot yellow"></div>
+            <div class="tb-dot green"></div>
+          </div>
+          <span class="tb-title">pattern_004.sh &mdash; LIVE</span>
+          <span class="tb-issue">#004</span>
+        </div>
+        <div class="card-body">
+          <div class="card-issue-line">
+            <span class="issue-num">ISSUE-004</span>
+            <span class="type-badge conceptual">[CONCEPTUAL]</span>
+          </div>
+          <h3 class="card-pattern-name">Secure In-Boundary Processing</h3>
+          <div class="card-ascii" aria-hidden="true">┌─ TENANT BOUNDARY ────────┐
+│ ╔═══════════════════════╗ │
+│ ║  [MCP Server]         ║ │
+│ ║  [Compliance Layer]   ║ │
+│ ║  [Data:STAYS-IN]      ║ │
+│ ╚═══════════════════════╝ │
+└──────────────────────────┘</div>
+          <div class="card-stats">
+            <span class="cs-item">COMPONENTS: <span>9</span></span>
+            <span class="cs-item">CONNECTIONS: <span>11</span></span>
+            <span class="cs-item">COMPLEXITY: <span>HIGH</span></span>
+          </div>
+          <div class="card-tags" aria-label="Tags">
+            <span class="tag">MCP</span>
+            <span class="tag">TENANT SECURITY</span>
+            <span class="tag">COMPLIANCE</span>
+          </div>
+          <div class="card-builder">
+            <span class="builder-prompt">BUILDER&gt;</span>
+            Raghav BN
+          </div>
+        </div>
+        <div class="card-footer">
+          <a href="../../interactive/issue-004/" class="card-link" aria-label="Launch interactive walkthrough for Issue 004">
+            &gt; LAUNCH WALKTHROUGH
+          </a>
+        </div>
+      </article>
+
+    </div><!-- /cards-grid -->
+  </div><!-- /level 1 -->
+
+  <!-- ============================================================
+       LEVEL 2 — HUMAN LOOPS
+       ============================================================ -->
+  <div class="level-group">
+    <div class="level-header">
+      <span class="level-badge lv2" aria-label="Level 2">LV.02</span>
+      <span class="level-desc">HUMAN LOOPS — Approval gates &amp; knowledge pipelines</span>
+      <span class="level-arc" aria-hidden="true">ISSUES 005-006 &bull; ARC: HUMAN-IN-LOOP</span>
+    </div>
+
+    <div class="cards-grid">
+
+      <!-- CARD 005 -->
+      <article class="card coming-soon" id="issue-005" aria-label="Issue 005: Human-in-the-Loop Approval Gates (coming soon)">
+        <div class="card-titlebar" aria-hidden="true">
+          <div class="tb-dots">
+            <div class="tb-dot red"></div>
+            <div class="tb-dot yellow"></div>
+            <div class="tb-dot green"></div>
+          </div>
+          <span class="tb-title">pattern_005.sh &mdash; PENDING</span>
+          <span class="tb-issue">#005</span>
+        </div>
+        <div class="card-body">
+          <div class="card-issue-line">
+            <span class="issue-num">ISSUE-005</span>
+            <span class="type-badge conceptual">[CONCEPTUAL]</span>
+          </div>
+          <h3 class="card-pattern-name">Human-in-the-Loop Approval Gates</h3>
+          <div class="card-ascii" aria-hidden="true">┌─ APPROVAL FLOW ──────────┐
+│  [Agent] ──► [Gate?]     │
+│                │          │
+│        ┌──────┘          │
+│    [HUMAN] ──► [Resume]  │
+│   Copilot Studio          │
+└──────────────────────────┘</div>
+          <div class="card-stats">
+            <span class="cs-item">COMPONENTS: <span>8</span></span>
+            <span class="cs-item">CONNECTIONS: <span>10</span></span>
+            <span class="cs-item">COMPLEXITY: <span>MED</span></span>
+          </div>
+          <div class="card-tags" aria-label="Tags">
+            <span class="tag">APPROVAL FLOWS</span>
+            <span class="tag">COPILOT STUDIO</span>
+          </div>
+          <div class="card-builder">
+            <span class="builder-prompt">BUILDER&gt;</span>
+            Pete Puustinen
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="card-link-soon" aria-label="Interactive walkthrough coming soon">&gt; INTERACTIVE COMING SOON...</span>
+        </div>
+      </article>
+
+      <!-- CARD 006 -->
+      <article class="card coming-soon" id="issue-006" aria-label="Issue 006: Meeting-to-Knowledge Pipeline (coming soon)">
+        <div class="card-titlebar" aria-hidden="true">
+          <div class="tb-dots">
+            <div class="tb-dot red"></div>
+            <div class="tb-dot yellow"></div>
+            <div class="tb-dot green"></div>
+          </div>
+          <span class="tb-title">pattern_006.sh &mdash; PENDING</span>
+          <span class="tb-issue">#006</span>
+        </div>
+        <div class="card-body">
+          <div class="card-issue-line">
+            <span class="issue-num">ISSUE-006</span>
+            <span class="type-badge practical">[PRACTICAL]</span>
+          </div>
+          <h3 class="card-pattern-name">Meeting-to-Knowledge Pipeline</h3>
+          <div class="card-ascii" aria-hidden="true">┌─ TEAMS PIPELINE ─────────┐
+│  [Meeting] ──► [Transcript│
+│       │              │    │
+│  [Summary]    [KB Write]  │
+│       └─────► [SearchIdx] │
+│               Knowledge   │
+└──────────────────────────┘</div>
+          <div class="card-stats">
+            <span class="cs-item">COMPONENTS: <span>7</span></span>
+            <span class="cs-item">CONNECTIONS: <span>9</span></span>
+            <span class="cs-item">COMPLEXITY: <span>MED</span></span>
+          </div>
+          <div class="card-tags" aria-label="Tags">
+            <span class="tag">TEAMS</span>
+            <span class="tag">KNOWLEDGE BASE</span>
+            <span class="tag">AUTOMATION</span>
+          </div>
+          <div class="card-builder">
+            <span class="builder-prompt">BUILDER&gt;</span>
+            Pete Puustinen
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="card-link-soon" aria-label="Interactive walkthrough coming soon">&gt; INTERACTIVE COMING SOON...</span>
+        </div>
+      </article>
+
+    </div><!-- /cards-grid -->
+  </div><!-- /level 2 -->
+
+  <!-- ============================================================
+       LEVEL 3 — ADVANCED MEMORY
+       ============================================================ -->
+  <div class="level-group">
+    <div class="level-header">
+      <span class="level-badge lv3" aria-label="Level 3">LV.03</span>
+      <span class="level-desc">ADVANCED MEMORY — Persistent state &amp; cross-project intelligence</span>
+      <span class="level-arc" aria-hidden="true">ISSUES 007-008 &bull; ARC: MEMORY+GRAPH</span>
+    </div>
+
+    <div class="cards-grid">
+
+      <!-- CARD 007 -->
+      <article class="card purple coming-soon" id="issue-007" aria-label="Issue 007: Holographic Memory (coming soon)">
+        <div class="card-titlebar" aria-hidden="true">
+          <div class="tb-dots">
+            <div class="tb-dot red"></div>
+            <div class="tb-dot yellow"></div>
+            <div class="tb-dot green"></div>
+          </div>
+          <span class="tb-title">pattern_007.sh &mdash; PENDING</span>
+          <span class="tb-issue">#007</span>
+        </div>
+        <div class="card-body">
+          <div class="card-issue-line">
+            <span class="issue-num">ISSUE-007</span>
+            <span class="type-badge conceptual">[CONCEPTUAL]</span>
+          </div>
+          <h3 class="card-pattern-name">Holographic Memory</h3>
+          <div class="card-ascii" aria-hidden="true">┌─ MEMORY LAYER ───────────┐
+│     ◈ Context Node        │
+│    ╱ │ ╲                  │
+│  ◈   ◈   ◈  State Mesh   │
+│    ╲ │ ╱                  │
+│     ◈ Recall              │
+│   [Persistent State]      │
+└──────────────────────────┘</div>
+          <div class="card-stats">
+            <span class="cs-item">COMPONENTS: <span>10</span></span>
+            <span class="cs-item">CONNECTIONS: <span>16</span></span>
+            <span class="cs-item">COMPLEXITY: <span>HIGH</span></span>
+          </div>
+          <div class="card-tags" aria-label="Tags">
+            <span class="tag">MEMORY</span>
+            <span class="tag">CONTEXT</span>
+            <span class="tag">STATE MGMT</span>
+          </div>
+          <div class="card-builder">
+            <span class="builder-prompt">BUILDER&gt;</span>
+            Tyson Dowd
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="card-link-soon" aria-label="Interactive walkthrough coming soon">&gt; INTERACTIVE COMING SOON...</span>
+        </div>
+      </article>
+
+      <!-- CARD 008 -->
+      <article class="card purple coming-soon" id="issue-008" aria-label="Issue 008: Cross-Project Knowledge Agent (coming soon)">
+        <div class="card-titlebar" aria-hidden="true">
+          <div class="tb-dots">
+            <div class="tb-dot red"></div>
+            <div class="tb-dot yellow"></div>
+            <div class="tb-dot green"></div>
+          </div>
+          <span class="tb-title">pattern_008.sh &mdash; PENDING</span>
+          <span class="tb-issue">#008</span>
+        </div>
+        <div class="card-body">
+          <div class="card-issue-line">
+            <span class="issue-num">ISSUE-008</span>
+            <span class="type-badge practical">[PRACTICAL]</span>
+          </div>
+          <h3 class="card-pattern-name">Cross-Project Knowledge Agent</h3>
+          <div class="card-ascii" aria-hidden="true">┌─ KNOWLEDGE GRAPH ────────┐
+│  [Repo A] ─┐              │
+│  [Repo B] ─┼► [KG Index] │
+│  [Repo C] ─┘      │       │
+│              [RAG Agent] │
+│            Multi-Repo    │
+└──────────────────────────┘</div>
+          <div class="card-stats">
+            <span class="cs-item">COMPONENTS: <span>11</span></span>
+            <span class="cs-item">CONNECTIONS: <span>18</span></span>
+            <span class="cs-item">COMPLEXITY: <span>HIGH</span></span>
+          </div>
+          <div class="card-tags" aria-label="Tags">
+            <span class="tag">MULTI-REPO</span>
+            <span class="tag">KNOWLEDGE GRAPH</span>
+            <span class="tag">RAG</span>
+          </div>
+          <div class="card-builder">
+            <span class="builder-prompt">BUILDER&gt;</span>
+            Tyson Dowd
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="card-link-soon" aria-label="Interactive walkthrough coming soon">&gt; INTERACTIVE COMING SOON...</span>
+        </div>
+      </article>
+
+    </div><!-- /cards-grid -->
+  </div><!-- /level 3 -->
+
+</div><!-- /section -->
+
+<!-- ============================================================
+     SAMPLE REPO TERMINAL
+     ============================================================ -->
+<div class="section" style="padding-top:0;">
+  <div id="sample-repo" style="
+    background: rgba(0,0,0,0.8);
+    border: 1px solid rgba(0,255,65,0.2);
+    max-width: 680px;
+    margin: 0 auto;
+  " role="region" aria-label="Sample code repository">
+    <div style="
+      background: rgba(0,255,65,0.06);
+      border-bottom: 1px solid rgba(0,255,65,0.12);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      color: rgba(0,255,65,0.4);
+    " aria-hidden="true">
+      <div style="display:flex;gap:5px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:#FF5F57;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:#FFBD2E;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:#28CA41;"></div>
+      </div>
+      <span style="flex:1;text-align:center;letter-spacing:2px;">SAMPLE_CODE_REPO.SH</span>
+    </div>
+    <div style="padding:28px 24px;">
+      <p style="font-size:10px;color:rgba(0,255,65,0.35);letter-spacing:3px;margin-bottom:16px;">// SAMPLE CODE REPOSITORY</p>
+      <div style="font-size:13px;line-height:2.2;">
+        <div><span style="color:rgba(0,255,65,0.4);">$</span> <span style="color:var(--white);">git clone</span> <span style="color:var(--amber);">https://github.com/microsoft/the-cheat-code-samples</span></div>
+        <div style="color:rgba(0,255,65,0.35);">Cloning into 'the-cheat-code-samples'...</div>
+        <div style="color:rgba(0,255,65,0.35);">remote: Enumerating objects: 142, done.</div>
+        <div style="color:rgba(0,255,65,0.35);">Receiving objects: 100% (142/142), 2.4 MB | done.</div>
+        <div><span style="color:rgba(0,255,65,0.4);">$</span> <span style="color:var(--white);">ls</span> <span style="color:var(--amber);">the-cheat-code-samples/</span></div>
+        <div style="color:var(--purple-lt);">issue-001/&nbsp;&nbsp;issue-002/&nbsp;&nbsp;issue-003/&nbsp;&nbsp;issue-004/</div>
+        <div style="color:rgba(155,89,208,0.4);">issue-005/&nbsp;&nbsp;issue-006/&nbsp;&nbsp;issue-007/&nbsp;&nbsp;issue-008/</div>
+        <div><span style="color:rgba(0,255,65,0.4);">$</span> <span style="color:rgba(0,255,65,0.5);">_</span><span style="display:inline-block;width:8px;height:14px;background:var(--green);animation:blink 1s step-end infinite;vertical-align:middle;margin-left:2px;"></span></div>
+      </div>
+      <div style="margin-top:24px;padding-top:16px;border-top:1px solid rgba(0,255,65,0.08);">
+        <a href="#sample-repo" style="
+          display:inline-flex;align-items:center;gap:10px;
+          color:var(--green);text-decoration:none;
+          font-size:10px;letter-spacing:2px;
+          border:1px solid rgba(0,255,65,0.3);
+          padding:8px 18px;
+          transition:all 0.15s;
+        "
+        onmouseenter="this.style.background='rgba(0,255,65,0.08)'"
+        onmouseleave="this.style.background='transparent'"
+        aria-label="View sample code repository on GitHub">
+          &gt; VIEW ON GITHUB
+        </a>
+        <span style="font-size:9px;color:rgba(0,255,65,0.2);margin-left:16px;letter-spacing:1px;">(placeholder — link pending)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     NEWSLETTER SUBSCRIBE
+     ============================================================ -->
+<div class="section" style="padding-top:0;">
+  <div class="subscribe-section" role="region" aria-label="Newsletter subscription">
+    <h2 class="subscribe-title">SUBSCRIBE TO THE CHEAT CODE</h2>
+    <p class="subscribe-desc">New patterns dropped every sprint. Real engagements, reusable architectures, zero fluff.</p>
+    <form class="subscribe-form" action="#" onsubmit="handleSubscribe(event)" aria-label="Email subscription form">
+      <label for="email-input" class="sr-only">Your Microsoft email address</label>
+      <input
+        type="email"
+        id="email-input"
+        class="subscribe-input"
+        placeholder="alias@microsoft.com"
+        autocomplete="email"
+        required
+        aria-required="true"
+      >
+      <button type="submit" class="subscribe-btn">ENROLL</button>
+    </form>
+    <p class="subscribe-note">MICROSOFT INTERNAL ONLY &bull; UNSUBSCRIBE ANYTIME &bull; NO SPAM PROTOCOLS</p>
+  </div>
+</div>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer" role="contentinfo">
+  <p class="footer-brand">THE CHEAT CODE</p>
+  <p class="footer-meta">ABS TECH STRATEGY &bull; AI BUSINESS SOLUTIONS &bull; MICROSOFT INTERNAL</p>
+  <p class="footer-meta" style="margin-bottom:16px;">PATTERN LIBRARY v2.0 &bull; 8 ISSUES &bull; 4 BUILDERS</p>
+  <p class="footer-warning">NOT FOR EXTERNAL DISTRIBUTION</p>
+  <p style="margin-top:16px;font-size:9px;color:rgba(0,255,65,0.15);letter-spacing:1px;">
+    &copy; MICROSOFT CORPORATION &bull; ALL RIGHTS RESERVED
+  </p>
+</footer>
+
+<!-- ============================================================
+     KONAMI OVERLAY
+     ============================================================ -->
+<div id="konami-overlay" role="dialog" aria-modal="true" aria-label="Konami code unlocked" aria-hidden="true">
+  <canvas id="konami-canvas" aria-hidden="true"></canvas>
+  <div class="konami-text">
+    <p class="konami-title">
+      *** CHEAT CODE ACTIVATED ***
+    </p>
+    <p class="konami-msg">
+      &uarr; &uarr; &darr; &darr; &larr; &rarr; &larr; &rarr; B A START
+    </p>
+    <p class="konami-score">
+      +30 LIVES GRANTED<br>
+      UNLOCK: SECRET PATTERN #000<br>
+      "THE META-AGENT"
+    </p>
+    <button class="konami-close" onclick="closeKonami()" aria-label="Close konami overlay">
+      [ PRESS START ]
+    </button>
+  </div>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+// ── Clock ──────────────────────────────────────────────────────
+(function updateClock() {
+  const el = document.getElementById('sb-clock');
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
+  el.textContent = h + ':' + m + ':' + s;
+  setTimeout(updateClock, 1000);
+})();
+
+// ── Konami Code ────────────────────────────────────────────────
+const KONAMI = [
+  'ArrowUp','ArrowUp',
+  'ArrowDown','ArrowDown',
+  'ArrowLeft','ArrowRight',
+  'ArrowLeft','ArrowRight',
+  'b','a'
+];
+// Map key to hero key indices (0-9 map to konami sequence 0-9, START is 10)
+const KONAMI_LABELS = ['↑','↑','↓','↓','←','→','←','→','B','A'];
+
+let konamiPos = 0;
+let konamiTimer = null;
+
+function updateKonamiUI(pos) {
+  // Update progress dots
+  for (let i = 0; i < 10; i++) {
+    const dot = document.getElementById('kp' + i);
+    if (dot) dot.classList.toggle('hit', i < pos);
+  }
+  // Update hero keys
+  for (let i = 0; i < 10; i++) {
+    const key = document.getElementById('hero-k' + i);
+    if (key) key.classList.toggle('active', i < pos);
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  const key = e.key.toLowerCase() === 'b' ? 'b'
+    : e.key.toLowerCase() === 'a' ? 'a'
+    : e.key;
+
+  if (key === KONAMI[konamiPos]) {
+    konamiPos++;
+    updateKonamiUI(konamiPos);
+
+    // Reset timer
+    clearTimeout(konamiTimer);
+    konamiTimer = setTimeout(function() {
+      konamiPos = 0;
+      updateKonamiUI(0);
+    }, 3000);
+
+    if (konamiPos === KONAMI.length) {
+      clearTimeout(konamiTimer);
+      // Activate the START key briefly
+      const startKey = document.getElementById('hero-k10');
+      if (startKey) startKey.classList.add('active');
+      setTimeout(function() {
+        activateKonami();
+      }, 200);
+    }
+  } else if (key !== KONAMI[0]) {
+    // Wrong key — reset unless it starts a new sequence
+    konamiPos = 0;
+    updateKonamiUI(0);
+    clearTimeout(konamiTimer);
+  }
+});
+
+function activateKonami() {
+  const overlay = document.getElementById('konami-overlay');
+  overlay.classList.add('active');
+  overlay.setAttribute('aria-hidden', 'false');
+  overlay.focus();
+  startMatrixRain();
+  // Reset hero keys
+  konamiPos = 0;
+  updateKonamiUI(0);
+  for (let i = 0; i < 11; i++) {
+    const key = document.getElementById('hero-k' + i);
+    if (key) key.classList.remove('active');
+  }
+}
+
+function closeKonami() {
+  const overlay = document.getElementById('konami-overlay');
+  overlay.classList.remove('active');
+  overlay.setAttribute('aria-hidden', 'true');
+  stopMatrixRain();
+}
+
+// Close on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const overlay = document.getElementById('konami-overlay');
+    if (overlay.classList.contains('active')) closeKonami();
+  }
+});
+
+// ── Matrix Rain ────────────────────────────────────────────────
+let matrixInterval = null;
+const CHARS = 'アァカサタナハマヤャラワン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ<>/{}[]|!@#$%^&*';
+
+function startMatrixRain() {
+  const canvas = document.getElementById('konami-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const cols = Math.floor(canvas.width / 16);
+  const drops = new Array(cols).fill(1);
+
+  function draw() {
+    ctx.fillStyle = 'rgba(0,0,0,0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#00FF41';
+    ctx.font = '14px JetBrains Mono, monospace';
+    for (let i = 0; i < drops.length; i++) {
+      const text = CHARS[Math.floor(Math.random() * CHARS.length)];
+      ctx.fillText(text, i * 16, drops[i] * 16);
+      if (drops[i] * 16 > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+  matrixInterval = setInterval(draw, 40);
+}
+
+function stopMatrixRain() {
+  clearInterval(matrixInterval);
+  const canvas = document.getElementById('konami-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+// ── Subscribe form ─────────────────────────────────────────────
+function handleSubscribe(e) {
+  e.preventDefault();
+  const input = document.getElementById('email-input');
+  const btn = e.target.querySelector('button');
+  const orig = btn.textContent;
+  btn.textContent = 'ENROLLED';
+  btn.style.background = '#00CC33';
+  input.value = '';
+  input.placeholder = 'SUBSCRIPTION CONFIRMED';
+  setTimeout(function() {
+    btn.textContent = orig;
+    btn.style.background = '';
+    input.placeholder = 'alias@microsoft.com';
+  }, 3000);
+}
+
+// ── Keyboard focus polish for konami overlay ───────────────────
+document.getElementById('konami-overlay').addEventListener('keydown', function(e) {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    document.querySelector('.konami-close').focus();
+  }
+});
+</script>
+</body>
+</html>
