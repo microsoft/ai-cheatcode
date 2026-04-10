@@ -12,6 +12,7 @@ Each issue exists in **four parallel formats**, all produced from the same sourc
 2. **PDF** (`issues/the_cheat_code_issue_NNN.pdf`) — rendered from HTML via Chrome headless, attached to Engage posts
 3. **Viva Amplify content** (`viva_amplify/issue_NNN_amplify.md`) — section-by-section content mapped to Amplify web parts
 4. **Architecture diagram** (`diagrams/issue_NNN_*_rich.png`) — rendered from companion HTML/CSS files in `diagrams/`
+5. **Interactive portal** (`docs/`) — GitHub Pages site with Bento grid portal and step-through diagram walkthroughs. Separate design system from the email newsletter.
 
 The **PRODUCTION_PLAYBOOK.md** is the authoritative reference for all production processes. Read it first when working on anything.
 
@@ -19,10 +20,11 @@ The **PRODUCTION_PLAYBOOK.md** is the authoritative reference for all production
 
 - **GitHub Pages archive:** https://aka.ms/the-cheat-code (resolves to `microsoft.github.io/ai-cheatcode`)
 - **Repo:** `microsoft/the-cheat-code` (private, GitHub Enterprise)
-- **Pages source:** `main` branch, root `/`
+- **Pages source:** `main` branch, `docs/` folder
 - **Workflow:** Edit files → `git push` → GitHub Pages auto-deploys
-- Only the `index.html` and `issues/` folder are reader-facing via Pages. Everything else (playbook, series plan, templates) lives in the repo but isn't linked from the page.
-- The `index.html` should only show **published** issues + a "Coming Next" teaser for the next one. Update it as each issue is sent.
+- The portal (`docs/index.html`) shows all published issues in a Bento grid layout. Interactive walkthroughs live at `docs/interactive/issue-NNN/`.
+- Only the `docs/` folder is reader-facing via Pages. Everything else (playbook, series plan, templates) lives in the repo but isn't linked from the portal.
+- The `docs/index.html` should only show **published** issues + a "Coming Next" teaser for the next one. Update it as each issue is sent.
 
 ## Alternating Cadence: Conceptual → Practical
 
@@ -78,7 +80,7 @@ Each issue follows a fixed structure defined in `the_cheat_code_template.html`:
 | 019 | Custom Connector Patterns | 🧠 | TBD | Jul 28 |
 | 020 | Building Custom Connectors | 🔧 | TBD | Aug 4 |
 
-Only Issue #001 is published. Issues #002–006 are written and ready from prior work. Issues #007–020 are drafted.
+Issues #001–008 are published. Issues #001–004 have interactive walkthroughs. Issues #002–006 are written and ready from prior work. Issues #007–020 are drafted.
 
 ## Series Plan
 
@@ -118,6 +120,47 @@ CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 Copy an existing diagram HTML file from `diagrams/` as your starting point for new diagrams.
 
+## Interactive Portal Design System
+
+The interactive portal at `docs/` uses a separate design system from the email newsletter.
+
+### Typography (Google Fonts)
+- **Outfit** — body text, descriptions, UI elements
+- **Sora** — display text, headings, card titles
+- **JetBrains Mono** — code snippets, badges, labels, monospace elements
+
+### Color System
+- All newsletter colors carry over (Purple #6B2FA0, Blue #0078D4, Green #107C10, Orange #D83B01)
+- **Dark theme**: Navy deep #0E0E1F (background), Navy #1B1B3A (surfaces), Navy light #252548 (cards)
+- **Glassmorphism**: `backdrop-filter: blur(20px)` with semi-transparent borders
+- **Pattern type gradients**: Warm (orange-tinted) for Practical issues, cool (blue-tinted) for Conceptual issues
+
+### Portal Layout (Bento Grid)
+- 12-column CSS Grid with mixed card sizes
+- Hero cards (latest arc) span 6 cols, medium cards span 4-5, small cards span 3
+- Utility cards: Subscribe, Sample Code, About, Stats, Brand
+- Scroll-reveal animations via IntersectionObserver
+- Responsive breakpoints: 1100px (8-col), 720px (2-col), 480px (1-col)
+
+### Interactive Diagram Pages
+- Shared framework: `docs/interactive/shared/interactive.css` + `interactive.js`
+- Each page: Bento font imports + shared CSS/JS + issue-specific inline styles
+- **StepEngine** drives step-through walkthroughs with narrative panels
+- **Context panels** show implementation details when clicking components:
+  - `contextMode: 'lightweight'` — what it is, requirements (pills), prerequisites (checklist), links, code snippets
+  - Data provided via `data-context` JSON attribute on diagram elements
+- Clean directory URLs throughout (no `.html` extensions)
+- Konami code easter egg on every page
+
+### Creating a New Interactive Page
+1. Copy an existing issue page from `docs/interactive/issue-001/`
+2. Add Google Fonts import (Outfit, Sora, JetBrains Mono)
+3. Add Bento font overrides for diagram-specific CSS classes
+4. Add `contextMode: 'lightweight'` to `window.interactiveConfig`
+5. Add `data-context` JSON attributes to diagram elements
+6. Update page header with issue badge and "← Back to patterns" link
+7. Update portal `docs/index.html` with new card in the Bento grid
+
 ## Newsletter Styling
 
 - Max width: 600px, font: Segoe UI family, body 15px `#444444` on white
@@ -130,6 +173,11 @@ Copy an existing diagram HTML file from `diagrams/` as your starting point for n
 ## Repo Structure
 
 ```
+├── docs/                         # GitHub Pages portal (Bento design)
+│   ├── index.html                # Bento grid portal landing page
+│   └── interactive/              # Step-through diagram walkthroughs
+│       ├── shared/               # Shared CSS/JS framework
+│       └── issue-NNN/            # Per-issue interactive pages
 ├── index.html                    # GitHub Pages landing page
 ├── README.md                     # Repo overview
 ├── PRODUCTION_PLAYBOOK.md        # Authoritative production reference
@@ -155,11 +203,13 @@ Copy an existing diagram HTML file from `diagrams/` as your starting point for n
 1. Finalize the issue HTML in `issues/`
 2. Render PDF via Chrome headless
 3. Create/render the diagram in `diagrams/`
-4. Move the issue from "Coming Next" to "Published" in `index.html`
-5. Update the "Coming Next" teaser to the following issue
-6. `git add -A && git commit && git push` — Pages auto-deploys
-7. Send the HTML email (Monday AM)
-8. Post the Viva Engage teaser from `viva_engage_posts.txt` (Monday PM)
+4. Create/update the interactive page in `docs/interactive/issue-NNN/`
+5. Move the issue from "Coming Next" to "Published" in `index.html`
+6. Add or update the issue card in `docs/index.html` (Bento portal)
+7. Update the "Coming Next" teaser to the following issue
+8. `git add -A && git commit && git push` — Pages auto-deploys
+9. Send the HTML email (Monday AM)
+10. Post the Viva Engage teaser from `viva_engage_posts.txt` (Monday PM)
 
 ## Pre-Send Checklist
 
@@ -173,3 +223,5 @@ Before publishing any issue, verify: no placeholder text remaining, correct issu
 - **aka.ms/the-cheat-code** — vanity URL pointing to GitHub Pages archive
 - **Private repo, public-facing Pages** — repo holds all working files, only index + issues are reader-facing
 - **Alternating cadence** — inspired by Issue #007 producing two equally strong versions (conceptual + practical)
+- **Bento design for portal, Segoe UI for email** — portal uses Outfit/Sora/JetBrains Mono dark theme; email newsletter keeps Segoe UI for Outlook compatibility. Two design systems, one brand.
+- **Lightweight context mode as default** — interactive pages use `contextMode: 'lightweight'` showing requirements, prerequisites, links, and code snippets. No detailed specs tables needed.

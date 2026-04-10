@@ -2,6 +2,8 @@
 
 > **Purpose:** Step-by-step instructions to create and manage "The Cheat Code" as a Viva Amplify campaign, enabling one-click publishing to Outlook, SharePoint, Teams, and Viva Engage from a single authoring surface.
 
+> **Design System Note:** This guide covers the **email/Amplify distribution** design, which uses Segoe UI typography and Outlook-compatible inline CSS. The interactive portal at `docs/` uses a separate **Bento design system** (Outfit/Sora/JetBrains Mono, dark theme, glassmorphism). See `.github/copilot-instructions.md` for the portal design specs. The two systems share brand colors (Purple #6B2FA0, Blue #0078D4, etc.) but differ in typography and layout approach.
+
 ---
 
 ## Prerequisites
