@@ -957,29 +957,31 @@
       position: relative;
       z-index: 1;
       text-align: center;
-      padding: 40px 24px 32px;
-      font-size: 11px;
+      padding: 48px 24px 32px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
       color: var(--text-muted);
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      align-items: center;
+      gap: 10px;
     }
 
-    .footer-links {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
+    .footer-rule {
+      width: 40px;
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 4px;
     }
 
-    .footer-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover {
-      color: var(--purple-light);
+    .footer-glyphs {
+      font-size: 7px;
+      letter-spacing: 3px;
+      color: var(--purple);
+      opacity: 0.4;
     }
 
     /* ─── Konami easter egg ─── */
@@ -1552,15 +1554,9 @@
 
 <!-- Footer -->
 <footer class="site-footer">
-  <div class="footer-links">
-    <a href="./">Portal home</a>
-    <a href="interactive/issue-001/">Issue 001</a>
-    <a href="interactive/issue-002/">Issue 002</a>
-    <a href="interactive/issue-003/">Issue 003</a>
-    <!-- Issue 004 link: un-gate after Apr 13 publish -->
-    <!-- <a href="interactive/issue-004/">Issue 004</a> -->
-  </div>
-  <p>Microsoft Internal &bull; Not for external distribution &bull; ABS Tech Strategy &bull; Frontier Architecture</p>
+  <div class="footer-rule"></div>
+  <p>ABS Tech Strategy &bull; Frontier Architecture</p>
+  <span class="footer-glyphs">▲ ▲ ▼ ▼ ◄ ► ◄ ► B A</span>
 </footer>
 
 <script>
