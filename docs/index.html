@@ -1044,12 +1044,10 @@
     @media (max-width: 1100px) {
       /*
         8-column layout:
-        Row 1–4 : hero 007 (4) + hero 008 (4)         = 8
-        Row 5–7 : 001 large (5) + subscribe (3)        = 8
-        Row 8–10: 002 medium (4) + 003 medium (4)      = 8
-        Row 11–13: 004 medium (4) + sample-code (4)    = 8
-        Row 14–15: stats (2) + 005 (3) + 006 (3)       = 8
-        Row 16–17: brand (4) + about (4)               = 8
+        Row 1–3 : 001 large (5) + subscribe (3)        = 8
+        Row 4–6 : 002 medium (4) + 003 medium (4)      = 8
+        Row 7–9 : 004 medium (4) + sample-code (4)     = 8
+        Row 10–11: about (4) + brand (4)                = 8
       */
       .bento-grid {
         grid-template-columns: repeat(8, 1fr);
@@ -1093,11 +1091,6 @@
         grid-row: span 3 !important;
       }
 
-      .card-stats {
-        grid-column: span 2 !important;
-        grid-row: span 2 !important;
-      }
-
       .card-brand {
         grid-column: span 4 !important;
         grid-row: span 2 !important;
@@ -1129,7 +1122,7 @@
       .row-1, .row-2, .row-3, .row-4, .row-5,
       .card-hero-issue, .card-large, .card-medium,
       .card-about, .card-subscribe, .card-code,
-      .card-stats, .card-brand, .card-small {
+      .card-brand, .card-small {
         grid-column: span 2 !important;
         grid-row: span 3 !important;
       }
@@ -1161,7 +1154,7 @@
       .row-1, .row-2, .row-3, .row-4, .row-5,
       .card-hero-issue, .card-large, .card-medium,
       .card-about, .card-subscribe, .card-code,
-      .card-stats, .card-brand, .card-small {
+      .card-brand, .card-small {
         grid-column: span 1 !important;
         grid-row: span 1 !important;
       }
@@ -1248,24 +1241,22 @@
 
   <!-- Hero -->
   <section class="hero-section reveal" aria-label="Page introduction">
-    <p class="hero-kicker">AI Agent Pattern Library</p>
+    <p class="hero-kicker">Frontier Architecture · Field-Tested</p>
     <h1 class="hero-headline">
-      Reusable patterns<br>
-      from <span class="accent">real engagements</span>
+      The architectures<br>
+      <span class="accent">nobody documented yet</span>
     </h1>
     <p class="hero-desc">
-      Eight proven AI agent architectures, each distilled from customer work into an interactive walkthrough you can apply to your next build.
+      AI agent patterns distilled from live customer builds — each one an interactive walkthrough you can deploy, not just read about.
     </p>
   </section>
 
   <!-- ─────────────── BENTO GRID ─────────────── -->
   <!--
     12-column layout:
-    Row  1–4 : 007 hero (6) + 008 hero (6)                         = 12
-    Row  5–7 : 001 large (5) + 002 medium (4) + subscribe (3)      = 12
-    Row  8–10: 003 medium (4) + 004 medium (4) + sample-code (4)   = 12
-    Row 11–12: stats (3) + 005 small (3) + 006 small (3) + brand (3) = 12
-    Row 13–14: about (12)                                           = 12
+    Row  1–3 : 001 large (5) + 002 medium (4) + subscribe (3)      = 12
+    Row  4–6 : 003 medium (4) + 004 medium (4) + sample-code (4)   = 12
+    Row  7–8 : about (7) + brand (5)                                = 12
   -->
   <!--
   ISSUE GATING — Issues are published weekly. To un-gate a new interactive:
@@ -1485,50 +1476,27 @@
       </div>
     </div>
 
-    <!-- ══════════ ROWS 7–8: UTILITY BAND ══════════ -->
+    <!-- ══════════ BOTTOM ROW: ABOUT + BRAND ══════════ -->
 
-    <!-- Stats card — span 3 -->
-    <div class="card card-stats span-3 row-2 reveal" aria-label="Stats: 3 interactive walkthroughs">
-      <div class="card-glow" style="width:100px;height:100px;top:-20px;right:-20px;background:rgba(107,47,160,0.5);"></div>
-      <div class="card-inner" style="justify-content:center;">
-        <div class="stat-num">3</div>
-        <div class="stat-label">Interactive walkthroughs</div>
-      </div>
-    </div>
-
-    <!-- ABS Brand card — span 3 -->
-    <div class="card card-brand span-3 row-2 reveal" aria-label="ABS Tech Strategy branding">
-      <div class="card-inner">
-        <div class="brand-logo-area">
-          <div class="brand-logo-text">ABS Tech Strategy</div>
-          <div class="brand-logo-sub">AI Business Solutions</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- About the Series card — span 6 to complete the row -->
-    <div class="card card-about span-6 row-2 reveal" aria-label="About The Cheat Code newsletter series">
+    <!-- About the Series card — span 7 (left) -->
+    <div class="card card-about span-7 row-2 reveal" aria-label="About The Cheat Code series">
       <div class="card-glow" style="width:200px;height:200px;bottom:-60px;right:-30px;background:rgba(107,47,160,0.3);"></div>
       <div class="card-inner" style="flex-direction:row;align-items:center;gap:40px;">
         <div style="flex:1;">
           <div style="font-size:10px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:8px;">About the Series</div>
           <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;max-width:560px;">
-            Each issue pairs a conceptual pattern with a practical implementation. Builders from ABS Tech Strategy document real customer engagements so others can reuse the architecture.
+            Each issue pairs a conceptual pattern with a practical build. Frontier architectures documented by the builders who shipped them — an ongoing archive from real customer engagements.
           </p>
         </div>
-        <div style="display:flex;gap:28px;flex-shrink:0;">
-          <div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--purple-light);">4</div>
-            <div style="font-size:10px;color:var(--text-muted);">builders</div>
-          </div>
-          <div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--blue-light);">3</div>
-            <div style="font-size:10px;color:var(--text-muted);">interactive walkthroughs</div>
-          </div>
-          <div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--green-light);">8</div>
-            <div style="font-size:10px;color:var(--text-muted);">patterns total</div>
-          </div>
+      </div>
+    </div>
+
+    <!-- ABS Brand card — span 5 (right) -->
+    <div class="card card-brand span-5 row-2 reveal" aria-label="ABS Tech Strategy branding">
+      <div class="card-inner">
+        <div class="brand-logo-area">
+          <div class="brand-logo-text">ABS Tech Strategy</div>
+          <div class="brand-logo-sub">AI Business Solutions</div>
         </div>
       </div>
     </div>
