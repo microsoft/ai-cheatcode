@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Cheat Code — Blueprint Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Inconsolata:wght@300;400;500;600;700&family=Special+Elite&family=Architects+Daughter&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES — BLUEPRINT PALETTE
+    ============================================================ */
+    :root {
+      --bp-bg:          #0d2137;
+      --bp-mid:         #1a3a5c;
+      --bp-light:       #2a5280;
+      --bp-line:        #6ab4f5;
+      --bp-line-dim:    rgba(106, 180, 245, 0.25);
+      --bp-line-faint:  rgba(106, 180, 245, 0.08);
+      --bp-text:        #c8e6ff;
+      --bp-text-dim:    rgba(200, 230, 255, 0.55);
+      --bp-white:       #e8f4ff;
+      --bp-cyan:        #7fd9ff;
+      --bp-purple:      #6B2FA0;
+      --bp-purple-lt:   #9b5fd8;
+      --bp-green:       #107C10;
+      --bp-green-lt:    #13a013;
+      --bp-orange:      #D83B01;
+      --bp-grid-major:  rgba(106, 180, 245, 0.12);
+      --bp-grid-minor:  rgba(106, 180, 245, 0.05);
+      --font-mono:      'Inconsolata', 'Courier Prime', monospace;
+      --font-draft:     'Architects Daughter', cursive;
+      --font-stamp:     'Special Elite', cursive;
+      --font-code:      'Courier Prime', monospace;
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      background-color: var(--bp-bg);
+      color: var(--bp-text);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ============================================================
+       GRID PAPER BACKGROUND
+    ============================================================ */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        /* major grid lines — 80px */
+        linear-gradient(var(--bp-grid-major) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bp-grid-major) 1px, transparent 1px),
+        /* minor grid lines — 16px */
+        linear-gradient(var(--bp-grid-minor) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bp-grid-minor) 1px, transparent 1px);
+      background-size:
+        80px 80px,
+        80px 80px,
+        16px 16px,
+        16px 16px;
+    }
+
+    /* ============================================================
+       FOLD MARKS — corners
+    ============================================================ */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        /* TL corner fold */
+        linear-gradient(45deg, transparent 48px, var(--bp-line-dim) 48px, var(--bp-line-dim) 49px, transparent 49px),
+        /* TR corner fold */
+        linear-gradient(315deg, transparent 48px, var(--bp-line-dim) 48px, var(--bp-line-dim) 49px, transparent 49px),
+        /* BL corner fold */
+        linear-gradient(135deg, transparent 48px, var(--bp-line-dim) 48px, var(--bp-line-dim) 49px, transparent 49px),
+        /* BR corner fold */
+        linear-gradient(225deg, transparent 48px, var(--bp-line-dim) 48px, var(--bp-line-dim) 49px, transparent 49px);
+      background-size: 72px 72px, 72px 72px, 72px 72px, 72px 72px;
+      background-position: top left, top right, bottom left, bottom right;
+      background-repeat: no-repeat;
+    }
+
+    /* content wrapper sits above bg layers */
+    .page-wrap { position: relative; z-index: 1; }
+
+    /* ============================================================
+       MARGIN BORDER FRAME
+    ============================================================ */
+    .frame {
+      border: 1px solid var(--bp-line-dim);
+      margin: 20px;
+      min-height: calc(100vh - 40px);
+      position: relative;
+    }
+
+    /* inner margin line */
+    .frame::before {
+      content: '';
+      position: absolute;
+      inset: 16px;
+      border: 1px solid var(--bp-line-faint);
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       TITLE BLOCK — top right corner engineering title block
+    ============================================================ */
+    .title-block {
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-left: 1px solid var(--bp-line-dim);
+      border-bottom: 1px solid var(--bp-line-dim);
+      width: 320px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--bp-text-dim);
+    }
+
+    .title-block-row {
+      display: flex;
+      border-bottom: 1px solid var(--bp-line-dim);
+    }
+    .title-block-row:last-child { border-bottom: none; }
+
+    .tb-label {
+      padding: 4px 8px;
+      border-right: 1px solid var(--bp-line-dim);
+      min-width: 80px;
+      color: var(--bp-text-dim);
+      font-size: 0.6rem;
+    }
+
+    .tb-value {
+      padding: 4px 8px;
+      color: var(--bp-cyan);
+      flex: 1;
+    }
+
+    /* ============================================================
+       SHEET IDENTIFIER — bottom right
+    ============================================================ */
+    .sheet-id {
+      position: fixed;
+      bottom: 24px;
+      right: 36px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--bp-text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: right;
+      line-height: 1.6;
+      z-index: 10;
+    }
+
+    /* ============================================================
+       MARGIN ANNOTATIONS — left edge
+    ============================================================ */
+    .margin-note {
+      position: absolute;
+      left: -80px;
+      font-family: var(--font-draft);
+      font-size: 0.65rem;
+      color: var(--bp-text-dim);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      letter-spacing: 0.05em;
+    }
+
+    /* ============================================================
+       MAIN LAYOUT
+    ============================================================ */
+    main {
+      padding: 80px 48px 120px 48px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      main { padding: 60px 20px 80px 20px; }
+      .frame { margin: 10px; }
+      .title-block { display: none; }
+    }
+
+    /* ============================================================
+       SECTION MARKERS — architectural "cut line" markers
+    ============================================================ */
+    .section-marker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .section-marker-symbol {
+      width: 28px;
+      height: 28px;
+      border: 1.5px solid var(--bp-cyan);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--bp-cyan);
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .section-marker-symbol::after {
+      content: '';
+      position: absolute;
+      bottom: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1.5px;
+      height: 14px;
+      background: var(--bp-cyan);
+    }
+
+    .section-marker-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--bp-cyan);
+    }
+
+    /* ============================================================
+       DIMENSION LINE DIVIDER
+    ============================================================ */
+    .dim-divider {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 32px 0;
+      position: relative;
+    }
+
+    .dim-divider::before,
+    .dim-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--bp-line-dim);
+    }
+
+    .dim-divider-tick {
+      width: 1px;
+      height: 12px;
+      background: var(--bp-line);
+      margin: 0 1px;
+    }
+
+    .dim-divider-label {
+      padding: 0 16px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--bp-line);
+    }
+
+    /* ============================================================
+       HEADER — MASTHEAD
+    ============================================================ */
+    .masthead {
+      padding-top: 48px;
+      padding-bottom: 40px;
+      position: relative;
+    }
+
+    .masthead-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bp-text-dim);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .masthead-eyebrow::after {
+      content: '';
+      flex: 1;
+      max-width: 120px;
+      height: 1px;
+      background: var(--bp-line-dim);
+    }
+
+    .masthead-title {
+      font-family: var(--font-stamp);
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      color: var(--bp-white);
+      line-height: 1;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .masthead-subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--bp-cyan);
+      margin-bottom: 24px;
+    }
+
+    .masthead-desc {
+      font-family: var(--font-code);
+      font-size: 0.95rem;
+      color: var(--bp-text-dim);
+      max-width: 560px;
+      line-height: 1.7;
+      border-left: 2px solid var(--bp-line-dim);
+      padding-left: 16px;
+    }
+
+    /* ============================================================
+       ANNOTATION CALLOUTS
+    ============================================================ */
+    .annotation {
+      font-family: var(--font-draft);
+      font-size: 0.75rem;
+      color: var(--bp-text-dim);
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .annotation::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--bp-cyan);
+    }
+
+    /* ============================================================
+       INTERNAL CONFIDENTIAL BANNER
+    ============================================================ */
+    .confidential-banner {
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 8px,
+        rgba(106, 180, 245, 0.04) 8px,
+        rgba(106, 180, 245, 0.04) 16px
+      );
+      border: 1px solid var(--bp-line-dim);
+      border-left: 3px solid var(--bp-orange);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .confidential-banner span {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--bp-orange);
+    }
+
+    .confidential-banner .conf-right {
+      color: var(--bp-text-dim);
+    }
+
+    /* ============================================================
+       DISTRIBUTION LIST SUBSCRIBE
+    ============================================================ */
+    .distribution-list {
+      border: 1px solid var(--bp-line-dim);
+      padding: 24px;
+      position: relative;
+      margin-bottom: 48px;
+      background: rgba(26, 58, 92, 0.3);
+    }
+
+    .distribution-list::before {
+      content: 'DISTRIBUTION LIST';
+      position: absolute;
+      top: -9px;
+      left: 16px;
+      background: var(--bp-bg);
+      padding: 0 8px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--bp-cyan);
+    }
+
+    .dl-inner {
+      display: flex;
+      gap: 24px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .dl-field {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .dl-field label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--bp-text-dim);
+      margin-bottom: 6px;
+    }
+
+    .dl-field input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--bp-line-dim);
+      color: var(--bp-text);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 6px 0;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .dl-field input:focus {
+      border-bottom-color: var(--bp-cyan);
+    }
+
+    .dl-field input::placeholder {
+      color: var(--bp-text-dim);
+      font-style: italic;
+    }
+
+    .dl-submit {
+      background: transparent;
+      border: 1px solid var(--bp-cyan);
+      color: var(--bp-cyan);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+
+    .dl-submit:hover {
+      background: var(--bp-cyan);
+      color: var(--bp-bg);
+    }
+
+    .dl-note {
+      font-family: var(--font-draft);
+      font-size: 0.7rem;
+      color: var(--bp-text-dim);
+      margin-top: 10px;
+    }
+
+    /* ============================================================
+       SECTION HEADING
+    ============================================================ */
+    .section-heading {
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .section-heading h2 {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bp-cyan);
+      margin-bottom: 4px;
+    }
+
+    .section-heading h3 {
+      font-family: var(--font-stamp);
+      font-size: 1.6rem;
+      color: var(--bp-white);
+      letter-spacing: 0.06em;
+    }
+
+    /* ============================================================
+       ARC PAIRING SECTION MARKERS
+    ============================================================ */
+    .arc-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .arc-symbol {
+      width: 24px;
+      height: 24px;
+      border: 1.5px solid var(--bp-line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--bp-line);
+      position: relative;
+    }
+
+    /* cut line through arc symbol */
+    .arc-symbol::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: -8px;
+      width: calc(100% + 16px);
+      height: 1px;
+      background: var(--bp-line-dim);
+    }
+
+    .arc-name {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--bp-line);
+    }
+
+    /* ============================================================
+       BLUEPRINT SHEET — PATTERN CARDS
+    ============================================================ */
+    .sheets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+
+    @media (max-width: 600px) {
+      .sheets-grid { grid-template-columns: 1fr; }
+    }
+
+    .sheet {
+      border: 1px solid var(--bp-line-dim);
+      background: rgba(26, 58, 92, 0.2);
+      position: relative;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      overflow: hidden;
+    }
+
+    .sheet.available:hover {
+      border-color: var(--bp-cyan);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(106, 180, 245, 0.12);
+    }
+
+    .sheet.available:hover .sheet-schematic { opacity: 1; }
+    .sheet.available:hover .sheet-cta { opacity: 1; transform: translateY(0); }
+
+    .sheet.wip {
+      border-style: dashed;
+      opacity: 0.65;
+    }
+
+    /* sheet number tab — top left */
+    .sheet-num {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: var(--bp-mid);
+      border-right: 1px solid var(--bp-line-dim);
+      border-bottom: 1px solid var(--bp-line-dim);
+      padding: 6px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--bp-text-dim);
+    }
+
+    /* revision mark — top right */
+    .sheet-rev {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      color: var(--bp-text-dim);
+      text-transform: uppercase;
+    }
+
+    /* stamp: APPROVED / DRAFT */
+    .sheet-stamp {
+      position: absolute;
+      bottom: 100px;
+      right: 16px;
+      font-family: var(--font-stamp);
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      transform: rotate(-12deg);
+      border: 2px solid;
+      opacity: 0.65;
+    }
+
+    .stamp-approved {
+      color: var(--bp-green-lt);
+      border-color: var(--bp-green-lt);
+    }
+
+    .stamp-draft {
+      color: var(--bp-orange);
+      border-color: var(--bp-orange);
+    }
+
+    .stamp-wip {
+      color: var(--bp-text-dim);
+      border-color: var(--bp-text-dim);
+      font-size: 0.65rem;
+    }
+
+    /* mini schematic SVG area */
+    .sheet-schematic {
+      padding: 36px 20px 12px 20px;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sheet-schematic svg {
+      width: 100%;
+      height: 80px;
+    }
+
+    /* sheet body */
+    .sheet-body {
+      padding: 12px 20px 16px 20px;
+    }
+
+    .sheet-issue-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--bp-text-dim);
+      margin-bottom: 4px;
+    }
+
+    .sheet-title {
+      font-family: var(--font-stamp);
+      font-size: 1.05rem;
+      color: var(--bp-white);
+      line-height: 1.3;
+      margin-bottom: 8px;
+      letter-spacing: 0.04em;
+    }
+
+    .sheet-builder {
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      color: var(--bp-text-dim);
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+
+    .sheet-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--bp-line);
+      border: 1px solid var(--bp-line-dim);
+      padding: 2px 6px;
+    }
+
+    /* bottom strip: type indicator */
+    .sheet-footer {
+      border-top: 1px solid var(--bp-line-dim);
+      padding: 8px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .type-conceptual { color: var(--bp-purple-lt); }
+    .type-practical   { color: var(--bp-green-lt); }
+    .type-wip         { color: var(--bp-text-dim); }
+
+    /* CTA arrow link */
+    .sheet-cta {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--bp-cyan);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.25s, transform 0.25s;
+    }
+
+    .sheet-cta::after {
+      content: '→';
+    }
+
+    .sheet-cta:hover { text-decoration: underline; }
+
+    /* cross-hatch overlay on WIP cards */
+    .sheet.wip::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 12px,
+        rgba(106, 180, 245, 0.03) 12px,
+        rgba(106, 180, 245, 0.03) 13px
+      );
+    }
+
+    /* ============================================================
+       LEGEND SECTION
+    ============================================================ */
+    .legend {
+      border: 1px solid var(--bp-line-dim);
+      padding: 24px;
+      position: relative;
+      background: rgba(26, 58, 92, 0.15);
+      margin-bottom: 48px;
+    }
+
+    .legend::before {
+      content: 'LEGEND';
+      position: absolute;
+      top: -9px;
+      left: 16px;
+      background: var(--bp-bg);
+      padding: 0 8px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--bp-cyan);
+    }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .legend-swatch {
+      width: 28px;
+      height: 18px;
+      border: 1px solid;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.5rem;
+      letter-spacing: 0.06em;
+    }
+
+    /* ============================================================
+       BILL OF MATERIALS — SAMPLE CODE
+    ============================================================ */
+    .bom {
+      border: 2px solid var(--bp-cyan);
+      padding: 32px;
+      position: relative;
+      background: rgba(26, 58, 92, 0.3);
+      margin-bottom: 48px;
+    }
+
+    .bom::before {
+      content: 'BILL OF MATERIALS — SHEET BM-01';
+      position: absolute;
+      top: -11px;
+      left: 20px;
+      background: var(--bp-bg);
+      padding: 0 10px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--bp-cyan);
+    }
+
+    .bom-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .bom-title {
+      font-family: var(--font-stamp);
+      font-size: 1.4rem;
+      color: var(--bp-white);
+      letter-spacing: 0.06em;
+    }
+
+    .bom-stamp {
+      font-family: var(--font-stamp);
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      color: var(--bp-purple-lt);
+      border: 2px solid var(--bp-purple-lt);
+      padding: 4px 12px;
+      transform: rotate(2deg);
+      display: inline-block;
+    }
+
+    .bom-desc {
+      font-family: var(--font-code);
+      font-size: 0.85rem;
+      color: var(--bp-text-dim);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .bom-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      margin-bottom: 20px;
+    }
+
+    .bom-table th {
+      border-bottom: 1px solid var(--bp-line-dim);
+      padding: 6px 10px;
+      text-align: left;
+      color: var(--bp-cyan);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-size: 0.65rem;
+    }
+
+    .bom-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--bp-line-faint);
+      color: var(--bp-text);
+    }
+
+    .bom-table tr:last-child td { border-bottom: none; }
+
+    .bom-table .item-code { color: var(--bp-cyan); font-weight: 600; }
+    .bom-table .item-status-avail { color: var(--bp-green-lt); }
+    .bom-table .item-status-wip   { color: var(--bp-orange); }
+
+    .bom-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--bp-cyan);
+      padding: 12px 24px;
+      color: var(--bp-cyan);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .bom-cta:hover {
+      background: var(--bp-cyan);
+      color: var(--bp-bg);
+    }
+
+    .bom-cta::after { content: ' ↗'; }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      border-top: 1px solid var(--bp-line-dim);
+      padding: 24px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--bp-text-dim);
+    }
+
+    @media (max-width: 600px) {
+      footer { padding: 16px 20px; flex-direction: column; }
+    }
+
+    /* ============================================================
+       KONAMI CODE EASTER EGG ANNOTATION
+    ============================================================ */
+    .konami-annotation {
+      position: fixed;
+      bottom: 60px;
+      left: 24px;
+      font-family: var(--font-draft);
+      font-size: 0.55rem;
+      color: rgba(106, 180, 245, 0.2);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      letter-spacing: 0.08em;
+      pointer-events: none;
+      z-index: 5;
+      line-height: 1.8;
+    }
+
+    /* konami activation overlay */
+    #konami-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(13, 33, 55, 0.96);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      gap: 16px;
+    }
+
+    #konami-overlay.active { display: flex; }
+
+    #konami-overlay .ko-title {
+      font-family: var(--font-stamp);
+      font-size: 3rem;
+      color: var(--bp-cyan);
+      letter-spacing: 0.08em;
+    }
+
+    #konami-overlay .ko-sub {
+      font-family: var(--font-draft);
+      font-size: 1rem;
+      color: var(--bp-text-dim);
+    }
+
+    #konami-overlay .ko-close {
+      margin-top: 20px;
+      background: transparent;
+      border: 1px solid var(--bp-cyan);
+      color: var(--bp-cyan);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      padding: 10px 20px;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    #konami-overlay .ko-close:hover {
+      background: var(--bp-cyan);
+      color: var(--bp-bg);
+    }
+
+    /* ============================================================
+       SCROLL REVEAL ANIMATION
+    ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* staggered children */
+    .reveal-stagger > * {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+
+    .reveal-stagger.visible > *:nth-child(1)  { opacity: 1; transform: none; transition-delay: 0.05s; }
+    .reveal-stagger.visible > *:nth-child(2)  { opacity: 1; transform: none; transition-delay: 0.12s; }
+    .reveal-stagger.visible > *:nth-child(3)  { opacity: 1; transform: none; transition-delay: 0.19s; }
+    .reveal-stagger.visible > *:nth-child(4)  { opacity: 1; transform: none; transition-delay: 0.26s; }
+    .reveal-stagger.visible > *:nth-child(5)  { opacity: 1; transform: none; transition-delay: 0.33s; }
+    .reveal-stagger.visible > *:nth-child(6)  { opacity: 1; transform: none; transition-delay: 0.40s; }
+    .reveal-stagger.visible > *:nth-child(7)  { opacity: 1; transform: none; transition-delay: 0.47s; }
+    .reveal-stagger.visible > *:nth-child(8)  { opacity: 1; transform: none; transition-delay: 0.54s; }
+
+    /* ============================================================
+       DIMENSION ARROW DETAIL
+    ============================================================ */
+    .dim-arrows {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--bp-text-dim);
+    }
+
+    .dim-arrows span { display: flex; align-items: center; gap: 2px; }
+
+    /* ============================================================
+       NAV BAR
+    ============================================================ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(13, 33, 55, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--bp-line-dim);
+      padding: 10px 48px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 600px) { nav { padding: 10px 16px; gap: 14px; } }
+
+    nav .nav-brand {
+      font-family: var(--font-stamp);
+      font-size: 0.9rem;
+      color: var(--bp-white);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      flex: 1;
+    }
+
+    nav a {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--bp-text-dim);
+      text-decoration: none;
+      padding: 4px 0;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    nav a:hover {
+      color: var(--bp-cyan);
+      border-bottom-color: var(--bp-cyan);
+    }
+
+    .nav-ref {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--bp-text-dim);
+      border: 1px solid var(--bp-line-dim);
+      padding: 3px 8px;
+    }
+
+    /* ============================================================
+       UTILITY
+    ============================================================ */
+    a { color: inherit; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+
+    <!-- ============================================================
+         KONAMI EASTER EGG
+    ============================================================ -->
+    <div id="konami-overlay" role="dialog" aria-label="Secret unlocked">
+      <div class="ko-title">BLUEPRINT UNLOCKED</div>
+      <div class="ko-sub">↑ ↑ ↓ ↓ ← → ← → B A — Access granted to classified schematics.</div>
+      <div style="font-family:'Courier Prime',monospace;font-size:0.7rem;color:rgba(106,180,245,0.5);letter-spacing:0.12em;margin-top:8px;">
+        NOTE REF: KNM-001 • SEE MARGIN ANNOTATION
+      </div>
+      <button class="ko-close" id="konami-close">DISMISS — ESC</button>
+    </div>
+
+    <!-- margin annotation for konami -->
+    <div class="konami-annotation" aria-hidden="true">
+      ↑↑↓↓←→←→ B A — classified schematic ref. KNM-001
+    </div>
+
+    <!-- ============================================================
+         NAV
+    ============================================================ -->
+    <nav aria-label="Primary navigation">
+      <a href="../../" class="nav-brand" aria-label="The Cheat Code — Home">The Cheat Code</a>
+      <a href="#patterns">Patterns</a>
+      <a href="#materials">Materials</a>
+      <a href="#legend">Legend</a>
+      <a href="#subscribe">Subscribe</a>
+      <span class="nav-ref">ABS-PORTAL-v1.0</span>
+    </nav>
+
+    <!-- ============================================================
+         FRAME — outer border mimicking blueprint sheet edge
+    ============================================================ -->
+    <div class="frame" aria-hidden="true">
+
+      <!-- title block — engineering standard top-right -->
+      <div class="title-block">
+        <div class="title-block-row">
+          <span class="tb-label">Project</span>
+          <span class="tb-value">AI Cheat Code</span>
+        </div>
+        <div class="title-block-row">
+          <span class="tb-label">Org</span>
+          <span class="tb-value">ABS Tech Strategy</span>
+        </div>
+        <div class="title-block-row">
+          <span class="tb-label">Sheet</span>
+          <span class="tb-value">P-001 / Portal Index</span>
+        </div>
+        <div class="title-block-row">
+          <span class="tb-label">Rev</span>
+          <span class="tb-value">A</span>
+        </div>
+        <div class="title-block-row">
+          <span class="tb-label">Date</span>
+          <span class="tb-value">2026-04-09</span>
+        </div>
+        <div class="title-block-row">
+          <span class="tb-label">Scale</span>
+          <span class="tb-value">NTS</span>
+        </div>
+      </div>
+
+    </div><!-- /.frame -->
+
+    <!-- sheet id fixed label -->
+    <div class="sheet-id" aria-hidden="true">
+      Sheet P-001 Rev A<br>
+      Microsoft Internal<br>
+      ABS Tech Strategy
+    </div>
+
+    <!-- ============================================================
+         MAIN CONTENT
+    ============================================================ -->
+    <main>
+
+      <!-- MASTHEAD -->
+      <header class="masthead reveal" id="top">
+        <div class="masthead-eyebrow" aria-hidden="true">
+          <span>ABS Tech Strategy</span>
+          <span>•</span>
+          <span>AI Business Solutions</span>
+        </div>
+
+        <h1 class="masthead-title">The Cheat Code</h1>
+        <div class="masthead-subtitle">AI Agent Pattern Library — Architectural Schematics</div>
+
+        <p class="masthead-desc">
+          Reusable agent patterns extracted from real Microsoft customer engagements.
+          Each issue is a blueprint — a technical schematic for building production-grade
+          AI agent systems. Study the patterns. Copy the approach.
+        </p>
+
+        <div style="margin-top:20px;" class="dim-arrows" aria-hidden="true">
+          <span>←——— 8 ISSUED SHEETS ———→</span>
+          <span style="margin-left:24px;">←— 4 INTERACTIVE ——→</span>
+          <span style="margin-left:24px;">←— 4 IN PROGRESS —→</span>
+        </div>
+      </header>
+
+      <!-- CONFIDENTIAL BANNER -->
+      <div class="confidential-banner reveal" role="note">
+        <span>Microsoft Internal — Not for External Distribution</span>
+        <span class="conf-right">Classification: Internal Only • Handle per Microsoft Data Policy</span>
+      </div>
+
+      <!-- DISTRIBUTION LIST / SUBSCRIBE -->
+      <section class="distribution-list reveal" id="subscribe" aria-labelledby="dl-heading">
+        <h2 id="dl-heading" class="sr-only">Newsletter Subscription — Distribution List</h2>
+        <div class="dl-inner">
+          <div class="dl-field">
+            <label for="sub-name">Recipient Name</label>
+            <input type="text" id="sub-name" placeholder="Your Name" autocomplete="name" />
+          </div>
+          <div class="dl-field">
+            <label for="sub-email">Microsoft Alias</label>
+            <input type="email" id="sub-email" placeholder="alias@microsoft.com" autocomplete="email" />
+          </div>
+          <button class="dl-submit" type="button" aria-label="Add yourself to the distribution list">
+            Add to Distro List
+          </button>
+        </div>
+        <p class="dl-note">
+          * Each issue delivered directly to your inbox. No spam. Pure blueprints.
+          Ref. DISTRO-FORM-001.
+        </p>
+      </section>
+
+      <!-- SECTION A — PUBLISHED PATTERNS -->
+      <section id="patterns" aria-labelledby="patterns-heading">
+        <div class="section-heading reveal">
+          <div class="section-marker" aria-hidden="true">
+            <div class="section-marker-symbol">A</div>
+            <span class="section-marker-label">Section A — Published Schematics</span>
+          </div>
+          <h2 id="patterns-heading" style="padding-top:24px;">Pattern Sheets</h2>
+          <h3>Agent Architecture Blueprints</h3>
+        </div>
+
+        <!-- ARC PAIRING: Cristiano + Raghav -->
+        <div class="arc-label reveal" aria-hidden="true">
+          <div class="arc-symbol">S.A</div>
+          <span class="arc-name">Section A — Foundations Arc (Issues 001–004)</span>
+        </div>
+
+        <div class="sheets-grid reveal-stagger" id="sheets-001-004">
+
+          <!-- SHEET 001 -->
+          <article class="sheet available" aria-labelledby="sheet-001-title">
+            <span class="sheet-num" aria-hidden="true">SHT-001 / AGT-101</span>
+            <span class="sheet-rev" aria-hidden="true">REV A</span>
+
+            <!-- mini schematic: linear pipeline -->
+            <div class="sheet-schematic" aria-hidden="true">
+              <svg viewBox="0 0 300 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="20" width="52" height="20" stroke="#6ab4f5" stroke-width="1" stroke-dasharray="3 2"/>
+                <line x1="56" y1="30" x2="78" y2="30" stroke="#6ab4f5" stroke-width="1"/>
+                <polygon points="75,27 81,30 75,33" fill="#6ab4f5"/>
+                <rect x="82" y="20" width="52" height="20" stroke="#6ab4f5" stroke-width="1"/>
+                <line x1="134" y1="30" x2="156" y2="30" stroke="#6ab4f5" stroke-width="1"/>
+                <polygon points="153,27 159,30 153,33" fill="#6ab4f5"/>
+                <rect x="160" y="20" width="52" height="20" stroke="#6ab4f5" stroke-width="1"/>
+                <line x1="212" y1="30" x2="234" y2="30" stroke="#6ab4f5" stroke-width="1"/>
+                <polygon points="231,27 237,30 231,33" fill="#6ab4f5"/>
+                <rect x="238" y="20" width="52" height="20" stroke="#6ab4f5" stroke-width="1" stroke-dasharray="3 2"/>
+                <text x="10" y="34" fill="rgba(106,180,245,0.5)" font-size="6" font-family="monospace">IDE</text>
+                <text x="90" y="34" fill="rgba(106,180,245,0.5)" font-size="6" font-family="monospace">AGENT</text>
+                <text x="168" y="34" fill="rgba(106,180,245,0.5)" font-size="6" font-family="monospace">AZURE</text>
+                <text x="246" y="34" fill="rgba(106,180,245,0.5)" font-size="6" font-family="monospace">TEAMS</text>
+              </svg>
+            </div>
+
+            <div class="sheet-body">
+              <div class="sheet-issue-label" aria-hidden="true">Issue 001 • Practical Pattern</div>
+              <h3 class="sheet-title" id="sheet-001-title">Code-First Agent Delivery</h3>
+              <p class="sheet-builder">Cristiano Almeida Gonçalves</p>
+              <div class="sheet-tags" aria-label="Tags">
+                <span class="tag">VS Code</span>
+                <span class="tag">Azure</span>
+                <span class="tag">Teams</span>
+              </div>
+            </div>
+
+            <div class="sheet-stamp stamp-approved" aria-label="Status: Approved">APPROVED</div>
+
+            <div class="sheet-footer">
+              <span class="type-practical">Practical</span>
+              <a href="../../../interactive/issue-001/" class="sheet-cta" aria-label="View Issue 001 interactive walkthrough">
+                Open Walkthrough
+              </a>
+            </div>
+          </article>
+
+          <!-- SHEET 002 -->
+          <article class="sheet available" aria-labelledby="sheet-002-title">
+            <span class="sheet-num" aria-hidden="true">SHT-002 / AGT-102</span>
+            <span class="sheet-rev" aria-hidden="true">REV A</span>
+
+            <!-- mini schematic: multi-source fan-in -->
+            <div class="sheet-schematic" aria-hidden="true">
+              <svg viewBox="0 0 300 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="4" width="52" height="14" stroke="#6ab4f5" stroke-width="1"/>
+                <rect x="4" y="24" width="52" height="14" stroke="#6ab4f5" stroke-width="1"/>
+                <rect x="4" y="44" width="52" height="14" stroke="#6ab4f5" stroke-width="1"/>
+                <line x1="56" y1="11" x2="110" y2="30" stroke="#6ab4f5" stroke-width="1"/>
+                <line x1="56" y1="31" x2="110" y2="30" stroke="#6ab4f5" stroke-width="1"/>
+                <line x1="56" y1="51" x2="110" y2="30" stroke="#6ab4f5" stroke-width="1"/>
+                <rect x="110" y="18" width="56" height="24" stroke="#6ab4f5" stroke-width="1.5"/>
+                <line x1="166" y1="30" x2="198" y2="30" stroke="#6ab4f5" stroke-width="1"/>
+                <polygon points="195,27 201,30 195,33" fill="#6ab4f5"/>
+                <rect x="202" y="18" width="76" height="24" stroke="#6ab4f5" stroke-width="1" stroke-dasharray="3 2"/>
+                <text x="8" y="13" fill="rgba(106,180,245,0.5)" font-size="5" font-family="monospace">ADO</text>
+                <text x="8" y="33" fill="rgba(106,180,245,0.5)" font-size="5" font-family="monospace">GRAPH</text>
+                <text x="8" y="53" fill="rgba(106,180,245,0.5)" font-size="5" font-family="monospace">DOCS</text>
+                <text x="116" y="33" fill="rgba(106,180,245,0.5)" font-size="5.5" font-family="monospace">ROUTER</text>
+                <text x="208" y="33" fill="rgba(106,180,245,0.5)" font-size="5.5" font-family="monospace">RESPONSE</text>
+              </svg>
+            </div>
+
+            <div class="sheet-body">
+              <div class="sheet-issue-label" aria-hidden="true">Issue 002 • Conceptual Pattern</div>
+              <h3 class="sheet-title" id="sheet-002-title">Scoped Multi-Source Search</h3>
+              <p class="sheet-builder">Raghav BN</p>
+              <div class="sheet-tags" aria-label="Tags">
+                <span class="tag">RAG</span>
+                <span class="tag">Query Routing</span>
+                <span class="tag">ADO + Graph</span>
+              </div>
+            </div>
+
+            <div class="sheet-stamp stamp-draft" aria-label="Status: Draft / Conceptual">DRAFT</div>
+
+            <div class="sheet-footer">
+              <span class="type-conceptual">Conceptual</span>
+              <a href="../../../interactive/issue-002/" class="sheet-cta" aria-label="View Issue 002 interactive walkthrough">
+                Open Walkthrough
+              </a>
+            </div>
+          </article>
+
+          <!-- SHEET 003 -->
+          <article class="sheet available" aria-labelledby="sheet-003-title">
+            <span class="sheet-num" aria-hidden="true">SHT-003 / AGT-103</span>
+            <span class="sheet-rev" aria-hidden="true">REV A</span>
+
+            <!-- mini schematic: chained boxes -->
+            <div class="sheet-schematic" aria-hidden="true">
+              <svg viewBox="0 0 300 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="16" width="56" height="28" stroke="#6ab4f5" stroke-width="1"/>
+                <line x1="60" y1="30" x2="80" y2="30" stroke="#6ab4f5" stroke-width="1" stroke-dasharray="4 2"/>
+                <polygon points="77,27 83,30 77,33" fill="#6ab4f5"/>
+                <rect x="84" y="16" width="56" height="28" stroke="#6ab4f5" stroke-width="1"/>
+                <line x1="140" y1="30" x2="160" y2="30" stroke="#6ab4f5" stroke-width="1" stroke-dasharray="4 2"/>
+                <polygon points="157,27 163,30 157,33" fill="#6ab4f5"/>
+                <rect x="164" y="16" width="56" height="28" stroke="#6ab4f5" stroke-width="1"/>
+                <line x1="220" y1="30" x2="240" y2="30" stroke="#6ab4f5" stroke-width="1" stroke-dasharray="4 2"/>
+                <polygon points="237,27 243,30 237,33" fill="#6ab4f5"/>
+                <rect x="244" y="16" width="50" height="28" stroke="#6ab4f5" stroke-width="1" stroke-dasharray="3 2"/>
+                <text x="10" y="33" fill="rgba(106,180,245,0.5)" font-size="5.5" font-family="monospace">PROMPT A</text>
+                <text x="90" y="33" fill="rgba(106,180,245,0.5)" font-size="5.5" font-family="monospace">PROMPT B</text>
+                <text x="170" y="33" fill="rgba(106,180,245,0.5)" font-size="5.5" font-family="monospace">PROMPT C</text>
+                <text x="248" y="33" fill="rgba(106,180,245,0.5)" font-size="5.5" font-family="monospace">TRIAGE</text>
+              </svg>
+            </div>
+
+            <div class="sheet-body">
+              <div class="sheet-issue-label" aria-hidden="true">Issue 003 • Practical Pattern</div>
+              <h3 class="sheet-title" id="sheet-003-title">Prompt-Chained Triage</h3>
+              <p class="sheet-builder">Raghav BN</p>
+              <div class="sheet-tags" aria-label="Tags">
+                <span class="tag">Prompt Chaining</span>
+                <span class="tag">YAML Playbooks</span>
+              </div>
+            </div>
+
+            <div class="sheet-stamp stamp-approved" aria-label="Status: Approved">APPROVED</div>
+
+            <div class="sheet-footer">
+              <span class="type-practical">Practical</span>
+              <a href="../../../interactive/issue-003/" class="sheet-cta" aria-label="View Issue 003 interactive walkthrough">
+                Open Walkthrough
+              </a>
+            </div>
+          </article>
+
+          <!-- SHEET 004 -->
+          <article class="sheet available" aria-labelledby="sheet-004-title">
+            <span class="sheet-num" aria-hidden="true">SHT-004 / AGT-104</span>
+            <span class="sheet-rev" aria-hidden="true">REV A</span>
+
+            <!-- mini schematic: boundary/perimeter diagram -->
+            <div class="sheet-schematic" aria-hidden="true">
+              <svg viewBox="0 0 300 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- outer boundary -->
+                <rect x="4" y="4" width="292" height="52" stroke="#6ab4f5" stroke-width="1" stroke-dasharray="6 3"/>
+                <!-- inner secure zone -->
+                <rect x="80" y="12" width="140" height="36" stroke="#6ab4f5" stroke-width="1.5"/>
+                <!-- agent box -->
+                <rect x="108" y="20" width="84" height="20" stroke="#6ab4f5" stroke-width="1"/>
+                <!-- MCP indicator -->
+                <circle cx="24" cy="30" r="10" stroke="#6ab4f5" stroke-width="1"/>
+                <circle cx="276" cy="30" r="10" stroke="#6ab4f5" stroke-width="1"/>
+                <!-- connector lines -->
+                <line x1="34" y1="30" x2="80" y2="30" stroke="#6ab4f5" stroke-width="1"/>
+                <line x1="220" y1="30" x2="266" y2="30" stroke="#6ab4f5" stroke-width="1"/>
+                <text x="20" y="33" fill="rgba(106,180,245,0.5)" font-size="5" font-family="monospace">EXT</text>
+                <text x="116" y="33" fill="rgba(106,180,245,0.5)" font-size="5.5" font-family="monospace">SECURE AGENT</text>
+                <text x="271" y="33" fill="rgba(106,180,245,0.5)" font-size="5" font-family="monospace">TGT</text>
+                <text x="82" y="10" fill="rgba(106,180,245,0.4)" font-size="4.5" font-family="monospace">TENANT BOUNDARY</text>
+              </svg>
+            </div>
+
+            <div class="sheet-body">
+              <div class="sheet-issue-label" aria-hidden="true">Issue 004 • Conceptual Pattern</div>
+              <h3 class="sheet-title" id="sheet-004-title">Secure In-Boundary Processing</h3>
+              <p class="sheet-builder">Raghav BN</p>
+              <div class="sheet-tags" aria-label="Tags">
+                <span class="tag">MCP</span>
+                <span class="tag">Tenant Security</span>
+                <span class="tag">Compliance</span>
+              </div>
+            </div>
+
+            <div class="sheet-stamp stamp-draft" aria-label="Status: Draft / Conceptual">DRAFT</div>
+
+            <div class="sheet-footer">
+              <span class="type-conceptual">Conceptual</span>
+              <a href="../../../interactive/issue-004/" class="sheet-cta" aria-label="View Issue 004 interactive walkthrough">
+                Open Walkthrough
+              </a>
+            </div>
+          </article>
+
+        </div><!-- /#sheets-001-004 -->
+
+        <!-- dimension divider between arcs -->
+        <div class="dim-divider reveal" aria-hidden="true">
+          <div class="dim-divider-tick"></div>
+          <div class="dim-divider-tick"></div>
+          <span class="dim-divider-label">Section Break — B</span>
+          <div class="dim-divider-tick"></div>
+          <div class="dim-divider-tick"></div>
+        </div>
+
+        <!-- ARC PAIRING: Pete + Tyson -->
+        <div class="arc-label reveal" aria-hidden="true">
+          <div class="arc-symbol">S.B</div>
+          <span class="arc-name">Section B — Human &amp; Memory Arc (Issues 005–008)</span>
+        </div>
+
+        <div class="sheets-grid reveal-stagger" id="sheets-005-008">
+
+          <!-- SHEET 005 -->
+          <article class="sheet wip" aria-labelledby="sheet-005-title">
+            <span class="sheet-num" aria-hidden="true">SHT-005 / AGT-105</span>
+            <span class="sheet-rev" aria-hidden="true">REV —</span>
+
+            <!-- mini schematic: approval gate -->
+            <div class="sheet-schematic" aria-hidden="true">
+              <svg viewBox="0 0 300 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="18" width="52" height="24" stroke="rgba(106,180,245,0.3)" stroke-width="1"/>
+                <line x1="56" y1="30" x2="90" y2="30" stroke="rgba(106,180,245,0.3)" stroke-width="1"/>
+                <!-- diamond gate -->
+                <polygon points="120,10 150,30 120,50 90,30" stroke="rgba(106,180,245,0.3)" stroke-width="1" fill="none"/>
+                <line x1="150" y1="30" x2="184" y2="30" stroke="rgba(106,180,245,0.3)" stroke-width="1"/>
+                <!-- approval branch -->
+                <line x1="120" y1="10" x2="120" y2="2" stroke="rgba(106,180,245,0.2)" stroke-width="1" stroke-dasharray="3 2"/>
+                <rect x="184" y="18" width="52" height="24" stroke="rgba(106,180,245,0.3)" stroke-width="1"/>
+                <text x="10" y="33" fill="rgba(106,180,245,0.3)" font-size="5.5" font-family="monospace">AGENT</text>
+                <text x="104" y="33" fill="rgba(106,180,245,0.3)" font-size="5" font-family="monospace">GATE</text>
+                <text x="190" y="33" fill="rgba(106,180,245,0.3)" font-size="5.5" font-family="monospace">ACTION</text>
+                <text x="100" y="8" fill="rgba(106,180,245,0.2)" font-size="4.5" font-family="monospace">HUMAN ↑</text>
+              </svg>
+            </div>
+
+            <div class="sheet-body">
+              <div class="sheet-issue-label" aria-hidden="true">Issue 005 • Conceptual Pattern</div>
+              <h3 class="sheet-title" id="sheet-005-title">Human-in-the-Loop Approval Gates</h3>
+              <p class="sheet-builder">Pete Puustinen</p>
+              <div class="sheet-tags" aria-label="Tags">
+                <span class="tag">Approval Flows</span>
+                <span class="tag">Copilot Studio</span>
+              </div>
+            </div>
+
+            <div class="sheet-stamp stamp-wip" aria-label="Status: Under Construction">PENDING</div>
+
+            <div class="sheet-footer">
+              <span class="type-wip">Conceptual — In Progress</span>
+              <span style="font-family:var(--font-draft);font-size:0.65rem;color:var(--bp-text-dim);" aria-hidden="true">Schematic in progress…</span>
+            </div>
+          </article>
+
+          <!-- SHEET 006 -->
+          <article class="sheet wip" aria-labelledby="sheet-006-title">
+            <span class="sheet-num" aria-hidden="true">SHT-006 / AGT-106</span>
+            <span class="sheet-rev" aria-hidden="true">REV —</span>
+
+            <!-- mini schematic: pipeline to storage -->
+            <div class="sheet-schematic" aria-hidden="true">
+              <svg viewBox="0 0 300 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="18" width="44" height="24" stroke="rgba(106,180,245,0.3)" stroke-width="1"/>
+                <line x1="48" y1="30" x2="68" y2="30" stroke="rgba(106,180,245,0.3)" stroke-width="1"/>
+                <polygon points="65,27 71,30 65,33" fill="rgba(106,180,245,0.3)"/>
+                <rect x="72" y="14" width="56" height="32" stroke="rgba(106,180,245,0.3)" stroke-width="1"/>
+                <line x1="128" y1="30" x2="148" y2="30" stroke="rgba(106,180,245,0.3)" stroke-width="1"/>
+                <polygon points="145,27 151,30 145,33" fill="rgba(106,180,245,0.3)"/>
+                <!-- db cylinder -->
+                <ellipse cx="175" cy="20" rx="22" ry="6" stroke="rgba(106,180,245,0.3)" stroke-width="1" fill="none"/>
+                <rect x="153" y="20" width="44" height="24" stroke="rgba(106,180,245,0.3)" stroke-width="1"/>
+                <ellipse cx="175" cy="44" rx="22" ry="6" stroke="rgba(106,180,245,0.3)" stroke-width="1" fill="none"/>
+                <line x1="197" y1="30" x2="240" y2="30" stroke="rgba(106,180,245,0.3)" stroke-width="1" stroke-dasharray="3 2"/>
+                <rect x="240" y="18" width="54" height="24" stroke="rgba(106,180,245,0.3)" stroke-width="1" stroke-dasharray="3 2"/>
+                <text x="8" y="33" fill="rgba(106,180,245,0.3)" font-size="5" font-family="monospace">MEETING</text>
+                <text x="78" y="33" fill="rgba(106,180,245,0.3)" font-size="5.5" font-family="monospace">PIPELINE</text>
+                <text x="246" y="33" fill="rgba(106,180,245,0.3)" font-size="5" font-family="monospace">KB-STORE</text>
+              </svg>
+            </div>
+
+            <div class="sheet-body">
+              <div class="sheet-issue-label" aria-hidden="true">Issue 006 • Practical Pattern</div>
+              <h3 class="sheet-title" id="sheet-006-title">Meeting-to-Knowledge Pipeline</h3>
+              <p class="sheet-builder">Pete Puustinen</p>
+              <div class="sheet-tags" aria-label="Tags">
+                <span class="tag">Teams</span>
+                <span class="tag">Knowledge Base</span>
+                <span class="tag">Automation</span>
+              </div>
+            </div>
+
+            <div class="sheet-stamp stamp-wip" aria-label="Status: Under Construction">PENDING</div>
+
+            <div class="sheet-footer">
+              <span class="type-wip">Practical — In Progress</span>
+              <span style="font-family:var(--font-draft);font-size:0.65rem;color:var(--bp-text-dim);" aria-hidden="true">Schematic in progress…</span>
+            </div>
+          </article>
+
+          <!-- SHEET 007 -->
+          <article class="sheet wip" aria-labelledby="sheet-007-title">
+            <span class="sheet-num" aria-hidden="true">SHT-007 / AGT-107</span>
+            <span class="sheet-rev" aria-hidden="true">REV —</span>
+
+            <!-- mini schematic: memory rings -->
+            <div class="sheet-schematic" aria-hidden="true">
+              <svg viewBox="0 0 300 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- concentric memory rings -->
+                <circle cx="150" cy="30" r="26" stroke="rgba(106,180,245,0.15)" stroke-width="1"/>
+                <circle cx="150" cy="30" r="18" stroke="rgba(106,180,245,0.22)" stroke-width="1"/>
+                <circle cx="150" cy="30" r="10" stroke="rgba(106,180,245,0.3)" stroke-width="1"/>
+                <circle cx="150" cy="30" r="4" fill="rgba(106,180,245,0.25)"/>
+                <!-- spokes -->
+                <line x1="150" y1="4" x2="150" y2="12" stroke="rgba(106,180,245,0.2)" stroke-width="1"/>
+                <line x1="150" y1="48" x2="150" y2="56" stroke="rgba(106,180,245,0.2)" stroke-width="1"/>
+                <line x1="124" y1="30" x2="116" y2="30" stroke="rgba(106,180,245,0.2)" stroke-width="1"/>
+                <line x1="176" y1="30" x2="184" y2="30" stroke="rgba(106,180,245,0.2)" stroke-width="1"/>
+                <!-- labels -->
+                <text x="38" y="20" fill="rgba(106,180,245,0.3)" font-size="5" font-family="monospace">STM</text>
+                <text x="32" y="44" fill="rgba(106,180,245,0.3)" font-size="5" font-family="monospace">LTM</text>
+                <text x="210" y="20" fill="rgba(106,180,245,0.3)" font-size="5" font-family="monospace">WM</text>
+                <text x="210" y="44" fill="rgba(106,180,245,0.3)" font-size="5" font-family="monospace">CTX</text>
+              </svg>
+            </div>
+
+            <div class="sheet-body">
+              <div class="sheet-issue-label" aria-hidden="true">Issue 007 • Conceptual Pattern</div>
+              <h3 class="sheet-title" id="sheet-007-title">Holographic Memory</h3>
+              <p class="sheet-builder">Tyson Dowd</p>
+              <div class="sheet-tags" aria-label="Tags">
+                <span class="tag">Memory</span>
+                <span class="tag">Context</span>
+                <span class="tag">State Management</span>
+              </div>
+            </div>
+
+            <div class="sheet-stamp stamp-wip" aria-label="Status: Under Construction">PENDING</div>
+
+            <div class="sheet-footer">
+              <span class="type-wip">Conceptual — In Progress</span>
+              <span style="font-family:var(--font-draft);font-size:0.65rem;color:var(--bp-text-dim);" aria-hidden="true">Schematic in progress…</span>
+            </div>
+          </article>
+
+          <!-- SHEET 008 -->
+          <article class="sheet wip" aria-labelledby="sheet-008-title">
+            <span class="sheet-num" aria-hidden="true">SHT-008 / AGT-108</span>
+            <span class="sheet-rev" aria-hidden="true">REV —</span>
+
+            <!-- mini schematic: graph network -->
+            <div class="sheet-schematic" aria-hidden="true">
+              <svg viewBox="0 0 300 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- nodes -->
+                <circle cx="30" cy="15" r="8" stroke="rgba(106,180,245,0.3)" stroke-width="1" fill="none"/>
+                <circle cx="80" cy="45" r="8" stroke="rgba(106,180,245,0.3)" stroke-width="1" fill="none"/>
+                <circle cx="150" cy="20" r="10" stroke="rgba(106,180,245,0.35)" stroke-width="1.5" fill="none"/>
+                <circle cx="220" cy="40" r="8" stroke="rgba(106,180,245,0.3)" stroke-width="1" fill="none"/>
+                <circle cx="270" cy="15" r="8" stroke="rgba(106,180,245,0.3)" stroke-width="1" fill="none"/>
+                <circle cx="260" cy="50" r="6" stroke="rgba(106,180,245,0.2)" stroke-width="1" fill="none"/>
+                <!-- edges -->
+                <line x1="38" y1="19" x2="142" y2="22" stroke="rgba(106,180,245,0.25)" stroke-width="1"/>
+                <line x1="80" y1="37" x2="142" y2="26" stroke="rgba(106,180,245,0.25)" stroke-width="1"/>
+                <line x1="160" y1="24" x2="213" y2="37" stroke="rgba(106,180,245,0.25)" stroke-width="1"/>
+                <line x1="160" y1="18" x2="263" y2="18" stroke="rgba(106,180,245,0.25)" stroke-width="1"/>
+                <line x1="226" y1="42" x2="256" y2="48" stroke="rgba(106,180,245,0.2)" stroke-width="1"/>
+                <text x="145" y="23" fill="rgba(106,180,245,0.35)" font-size="5" font-family="monospace" text-anchor="middle">KG</text>
+              </svg>
+            </div>
+
+            <div class="sheet-body">
+              <div class="sheet-issue-label" aria-hidden="true">Issue 008 • Practical Pattern</div>
+              <h3 class="sheet-title" id="sheet-008-title">Cross-Project Knowledge Agent</h3>
+              <p class="sheet-builder">Tyson Dowd</p>
+              <div class="sheet-tags" aria-label="Tags">
+                <span class="tag">Multi-Repo</span>
+                <span class="tag">Knowledge Graph</span>
+                <span class="tag">RAG</span>
+              </div>
+            </div>
+
+            <div class="sheet-stamp stamp-wip" aria-label="Status: Under Construction">PENDING</div>
+
+            <div class="sheet-footer">
+              <span class="type-wip">Practical — In Progress</span>
+              <span style="font-family:var(--font-draft);font-size:0.65rem;color:var(--bp-text-dim);" aria-hidden="true">Schematic in progress…</span>
+            </div>
+          </article>
+
+        </div><!-- /#sheets-005-008 -->
+      </section>
+
+      <!-- LEGEND -->
+      <div class="dim-divider reveal" aria-hidden="true">
+        <div class="dim-divider-tick"></div>
+        <span class="dim-divider-label">Legend — Ref L-001</span>
+        <div class="dim-divider-tick"></div>
+      </div>
+
+      <section class="legend reveal" id="legend" aria-labelledby="legend-heading">
+        <h2 id="legend-heading" class="sr-only">Visual Language Legend</h2>
+        <div class="legend-grid">
+          <div class="legend-item">
+            <div class="legend-swatch" style="color:var(--bp-green-lt);border-color:var(--bp-green-lt);">APR</div>
+            <span>APPROVED — Practical (deployed pattern)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="color:var(--bp-orange);border-color:var(--bp-orange);">DRF</div>
+            <span>DRAFT — Conceptual (design pattern)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="color:var(--bp-text-dim);border-color:var(--bp-text-dim);">PND</div>
+            <span>PENDING — Under construction</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="color:var(--bp-purple-lt);border-color:var(--bp-purple-lt);font-size:0.5rem;">CON</div>
+            <span style="color:var(--bp-purple-lt);">Conceptual pattern type</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="color:var(--bp-green-lt);border-color:var(--bp-green-lt);font-size:0.5rem;">PRC</div>
+            <span style="color:var(--bp-green-lt);">Practical pattern type</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="border-color:var(--bp-line-dim);border-style:dashed;color:var(--bp-text-dim);font-size:0.45rem;">- -</div>
+            <span>Dashed border — external boundary</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="border-color:var(--bp-line);color:var(--bp-line);font-size:0.5rem;">SHT</div>
+            <span>Blueprint sheet identifier</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="border-color:var(--bp-cyan);color:var(--bp-cyan);font-size:0.45rem;">REV</div>
+            <span>Revision — A = first release</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- BILL OF MATERIALS -->
+      <div class="dim-divider reveal" aria-hidden="true">
+        <div class="dim-divider-tick"></div>
+        <span class="dim-divider-label">Bill of Materials — Sheet BM-01</span>
+        <div class="dim-divider-tick"></div>
+      </div>
+
+      <section class="bom reveal" id="materials" aria-labelledby="bom-heading">
+        <div class="bom-header">
+          <h2 class="bom-title" id="bom-heading">Sample Code Repository</h2>
+          <div class="bom-stamp">ABS Internal</div>
+        </div>
+
+        <p class="bom-desc">
+          Each pattern schematic is backed by deployable sample code. The repository
+          below contains reference implementations, YAML playbooks, and agent scaffolding
+          for all published patterns. Study the blueprints. Deploy the code.
+        </p>
+
+        <table class="bom-table" aria-label="Bill of materials — code samples">
+          <thead>
+            <tr>
+              <th scope="col">Item Code</th>
+              <th scope="col">Component</th>
+              <th scope="col">Sheet Ref</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="item-code">BOM-001</td>
+              <td>Code-First Agent Scaffold</td>
+              <td>SHT-001</td>
+              <td class="item-status-avail">Available</td>
+            </tr>
+            <tr>
+              <td class="item-code">BOM-002</td>
+              <td>Multi-Source Query Router</td>
+              <td>SHT-002</td>
+              <td class="item-status-avail">Available</td>
+            </tr>
+            <tr>
+              <td class="item-code">BOM-003</td>
+              <td>Prompt Chain + YAML Playbook</td>
+              <td>SHT-003</td>
+              <td class="item-status-avail">Available</td>
+            </tr>
+            <tr>
+              <td class="item-code">BOM-004</td>
+              <td>In-Boundary MCP Server Setup</td>
+              <td>SHT-004</td>
+              <td class="item-status-avail">Available</td>
+            </tr>
+            <tr>
+              <td class="item-code">BOM-005</td>
+              <td>Approval Gate Flow (Copilot Studio)</td>
+              <td>SHT-005</td>
+              <td class="item-status-wip">In Progress</td>
+            </tr>
+            <tr>
+              <td class="item-code">BOM-006</td>
+              <td>Meeting Pipeline Connector</td>
+              <td>SHT-006</td>
+              <td class="item-status-wip">In Progress</td>
+            </tr>
+            <tr>
+              <td class="item-code">BOM-007</td>
+              <td>Memory Layer Implementation</td>
+              <td>SHT-007</td>
+              <td class="item-status-wip">In Progress</td>
+            </tr>
+            <tr>
+              <td class="item-code">BOM-008</td>
+              <td>Knowledge Graph Agent Harness</td>
+              <td>SHT-008</td>
+              <td class="item-status-wip">In Progress</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <a href="#sample-repo" class="bom-cta" aria-label="Access the sample code repository">
+          Access Sample Repository
+        </a>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <span>ABS Tech Strategy • AI Business Solutions</span>
+      <span>The Cheat Code — AI Agent Pattern Library</span>
+      <span>Microsoft Internal • Not for External Distribution</span>
+    </footer>
+
+  </div><!-- /.page-wrap -->
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    'use strict';
+
+    /* ----------------------------------------------------------
+       SCROLL REVEAL — IntersectionObserver
+    ---------------------------------------------------------- */
+    const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    revealEls.forEach(el => revealObserver.observe(el));
+
+    /* ----------------------------------------------------------
+       KONAMI CODE EASTER EGG
+       ↑ ↑ ↓ ↓ ← → ← → B A
+    ---------------------------------------------------------- */
+    const KONAMI = [
+      'ArrowUp','ArrowUp','ArrowDown','ArrowDown',
+      'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight',
+      'b','a'
+    ];
+    let konamiIdx = 0;
+
+    const konamiOverlay = document.getElementById('konami-overlay');
+    const konamiClose   = document.getElementById('konami-close');
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === KONAMI[konamiIdx]) {
+        konamiIdx++;
+        if (konamiIdx === KONAMI.length) {
+          konamiIdx = 0;
+          konamiOverlay.classList.add('active');
+          konamiClose.focus();
+        }
+      } else {
+        konamiIdx = e.key === KONAMI[0] ? 1 : 0;
+      }
+    });
+
+    konamiClose.addEventListener('click', () => {
+      konamiOverlay.classList.remove('active');
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && konamiOverlay.classList.contains('active')) {
+        konamiOverlay.classList.remove('active');
+      }
+    });
+
+    /* ----------------------------------------------------------
+       SHEET HOVER — keyboard accessible (Enter/Space on cards)
+    ---------------------------------------------------------- */
+    document.querySelectorAll('.sheet.available').forEach(card => {
+      const link = card.querySelector('.sheet-cta');
+      if (!link) return;
+
+      card.setAttribute('tabindex', '0');
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          link.click();
+        }
+      });
+    });
+
+    /* ----------------------------------------------------------
+       DISTRIBUTION LIST SUBMIT — placeholder behavior
+    ---------------------------------------------------------- */
+    document.querySelector('.dl-submit').addEventListener('click', () => {
+      const nameEl  = document.getElementById('sub-name');
+      const emailEl = document.getElementById('sub-email');
+      const email   = emailEl.value.trim();
+
+      if (!email || !email.includes('@microsoft.com')) {
+        emailEl.style.borderBottomColor = 'var(--bp-orange)';
+        emailEl.focus();
+        return;
+      }
+
+      emailEl.style.borderBottomColor = 'var(--bp-green-lt)';
+      nameEl.style.borderBottomColor  = 'var(--bp-green-lt)';
+
+      const btn = document.querySelector('.dl-submit');
+      btn.textContent = 'Added to Distro ✓';
+      btn.style.borderColor = 'var(--bp-green-lt)';
+      btn.style.color = 'var(--bp-green-lt)';
+      btn.disabled = true;
+    });
+  </script>
+</body>
+</html>

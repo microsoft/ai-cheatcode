@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Cheat Code — AI Pattern Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & TOKENS
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --purple:    #6B2FA0;
+  --purple-lt: #9B5FD0;
+  --purple-dk: #4A1F72;
+  --navy:      #1B1B3A;
+  --navy-lt:   #2D2D52;
+  --blue:      #0078D4;
+  --green:     #107C10;
+  --orange:    #D83B01;
+  --cream:     #F5F0E8;
+  --warm-gray: #E8E2D9;
+  --ink:       #1A1612;
+  --ink-50:    rgba(26,22,18,0.5);
+  --ink-20:    rgba(26,22,18,0.2);
+  --white:     #FFFFFF;
+  --rule:      1px solid var(--ink-20);
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Libre Baskerville', Georgia, serif;
+  --font-mono:    'DM Mono', 'Courier New', monospace;
+
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  32px;
+  --space-xl:  64px;
+  --space-2xl: 96px;
+  --space-3xl: 128px;
+
+  scroll-behavior: smooth;
+}
+
+html { font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+/* ============================================================
+   SCROLL REVEAL ANIMATION
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1),
+              transform 0.7s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ============================================================
+   MASTHEAD / NAV
+   ============================================================ */
+.masthead {
+  background: var(--navy);
+  color: var(--white);
+  border-bottom: 3px solid var(--purple);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.masthead-inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+  height: 56px;
+}
+
+.masthead-brand {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: var(--white);
+  white-space: nowrap;
+}
+.masthead-brand span {
+  color: var(--purple-lt);
+}
+
+.masthead-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.masthead-nav a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  padding: 6px 10px;
+  border-radius: 3px;
+  transition: color 0.2s, background 0.2s;
+}
+.masthead-nav a:hover {
+  color: var(--white);
+  background: rgba(255,255,255,0.08);
+}
+.masthead-nav a.nav-code {
+  color: var(--purple-lt);
+  border: 1px solid rgba(155,95,208,0.4);
+}
+.masthead-nav a.nav-code:hover {
+  background: rgba(107,47,160,0.3);
+  border-color: var(--purple-lt);
+  color: var(--white);
+}
+
+.masthead-meta {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.masthead-meta span {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   HERO — EDITORIAL SPREAD
+   ============================================================ */
+.hero {
+  background: var(--navy);
+  color: var(--white);
+  padding: var(--space-3xl) 0 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -120px;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle at center, rgba(107,47,160,0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: var(--space-xl);
+  align-items: end;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--purple-lt);
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 28px; height: 2px;
+  background: var(--purple-lt);
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 8vw, 108px);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -3px;
+  margin-bottom: var(--space-lg);
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--purple-lt);
+}
+
+.hero-subtitle {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.65);
+  max-width: 520px;
+  margin-bottom: var(--space-xl);
+}
+
+.hero-stats {
+  display: flex;
+  gap: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: var(--rule);
+  border-color: rgba(255,255,255,0.12);
+  padding-bottom: var(--space-3xl);
+}
+.hero-stat-num {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--white);
+}
+.hero-stat-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-top: var(--space-xs);
+}
+
+/* Hero sidebar */
+.hero-sidebar {
+  border-left: 1px solid rgba(255,255,255,0.1);
+  padding-left: var(--space-xl);
+  padding-bottom: var(--space-3xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.sidebar-block {
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.sidebar-block:last-child {
+  border-bottom: none;
+}
+
+.sidebar-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: var(--space-sm);
+}
+
+.sidebar-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: var(--space-sm);
+}
+
+.sidebar-body {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.55);
+}
+
+/* Sample Code Block — First Class */
+.code-cta {
+  background: var(--purple-dk);
+  border: 1px solid var(--purple-lt);
+  border-radius: 4px;
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  transition: background 0.25s, transform 0.25s;
+  cursor: pointer;
+}
+.code-cta:hover {
+  background: var(--purple);
+  transform: translateY(-2px);
+}
+.code-cta-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--purple-lt);
+}
+.code-cta-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+}
+.code-cta-arrow {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--purple-lt);
+  transition: transform 0.2s;
+}
+.code-cta:hover .code-cta-arrow {
+  transform: translateX(4px);
+}
+
+/* Subscribe CTA */
+.subscribe-cta {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  padding: var(--space-md) var(--space-lg);
+}
+.subscribe-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+.subscribe-form input {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 3px;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--white);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.subscribe-form input::placeholder { color: rgba(255,255,255,0.3); }
+.subscribe-form input:focus { border-color: var(--purple-lt); }
+.subscribe-form button {
+  background: var(--purple);
+  border: none;
+  border-radius: 3px;
+  padding: 9px 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--white);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.subscribe-form button:hover { background: var(--purple-lt); }
+
+/* ============================================================
+   SECTION DIVIDER — EDITORIAL RULE
+   ============================================================ */
+.editorial-divider {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-xl) var(--space-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.editorial-divider::before,
+.editorial-divider::after {
+  content: '';
+  display: block;
+  height: 1px;
+  background: var(--ink-20);
+}
+.editorial-divider-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   ARC HEADER — ISSUE GROUPINGS
+   ============================================================ */
+.arc-section {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+.arc-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-lg);
+  align-items: baseline;
+  padding: var(--space-lg) 0 var(--space-md);
+  border-top: 3px solid var(--ink);
+  margin-bottom: var(--space-lg);
+}
+
+.arc-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+  padding-top: 4px;
+}
+
+.arc-name {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* ============================================================
+   PATTERN CARDS — EDITORIAL MAGAZINE STYLE
+   ============================================================ */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  margin-bottom: var(--space-lg);
+}
+
+.pattern-card {
+  background: var(--white);
+  padding: var(--space-lg);
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 320px;
+  transition: background 0.3s;
+  border: 1px solid transparent;
+}
+.pattern-card:hover {
+  background: #FEFCF8;
+  border-color: var(--ink-20);
+  z-index: 10;
+}
+
+/* Giant issue number as background element */
+.card-number-bg {
+  position: absolute;
+  top: -20px;
+  right: -12px;
+  font-family: var(--font-display);
+  font-size: 160px;
+  font-weight: 900;
+  line-height: 1;
+  color: rgba(26,22,18,0.04);
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -8px;
+  transition: color 0.3s;
+}
+.pattern-card:hover .card-number-bg {
+  color: rgba(107,47,160,0.06);
+}
+
+/* Card top row */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-md);
+}
+
+.card-issue-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--purple);
+  text-transform: uppercase;
+}
+
+/* Pattern type badge */
+.type-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+  border: 1px solid currentColor;
+}
+.type-badge.conceptual {
+  color: var(--blue);
+}
+.type-badge.practical {
+  color: var(--green);
+}
+
+/* Card diagram preview */
+.card-diagram {
+  width: 100%;
+  height: 72px;
+  margin-bottom: var(--space-md);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+  background: var(--cream);
+}
+
+/* Diagram SVG illustrations — inline per pattern */
+.diagram-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Card body */
+.card-body {
+  flex: 1;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: var(--space-sm);
+  color: var(--ink);
+  transition: color 0.2s;
+}
+.pattern-card:hover .card-title {
+  color: var(--purple-dk);
+}
+
+.card-builder {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-50);
+  margin-bottom: var(--space-md);
+}
+.card-builder span {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* Tags */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: var(--space-md);
+}
+.card-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  background: var(--warm-gray);
+  border-radius: 2px;
+  color: var(--ink-50);
+}
+
+/* Card footer / CTA */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--ink-20);
+}
+
+.card-cta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: gap 0.2s;
+  color: var(--purple);
+}
+.pattern-card:hover .card-cta {
+  gap: 10px;
+}
+.card-cta.coming-soon {
+  color: var(--ink-50);
+  cursor: default;
+}
+
+.card-arc-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   STANDALONE ISSUE (no pair — issue 001, 002)
+   ============================================================ */
+.cards-solo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  margin-bottom: var(--space-xl);
+}
+
+/* ============================================================
+   DARK INTERSTITIAL — PULL QUOTE
+   ============================================================ */
+.pull-quote-section {
+  background: var(--navy);
+  color: var(--white);
+  padding: var(--space-2xl) var(--space-lg);
+  margin: var(--space-xl) 0;
+  position: relative;
+  overflow: hidden;
+}
+.pull-quote-section::before {
+  content: '"';
+  position: absolute;
+  top: -40px; left: 40px;
+  font-family: var(--font-display);
+  font-size: 400px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.03);
+  line-height: 1;
+  pointer-events: none;
+}
+.pull-quote-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+.pull-quote-text {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3.5vw, 36px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--white);
+  margin-bottom: var(--space-lg);
+}
+.pull-quote-attribution {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
+.pull-quote-attribution strong {
+  color: var(--purple-lt);
+}
+
+/* ============================================================
+   ABOUT / FOOTER BAND
+   ============================================================ */
+.footer-band {
+  background: var(--ink);
+  color: var(--white);
+  padding: var(--space-2xl) var(--space-lg);
+}
+.footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--space-xl);
+}
+
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: var(--space-sm);
+}
+.footer-brand em {
+  font-style: italic;
+  color: var(--purple-lt);
+}
+
+.footer-tagline {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.5);
+  max-width: 360px;
+  margin-bottom: var(--space-lg);
+}
+
+.footer-disclaimer {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  padding-top: var(--space-lg);
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.footer-col-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: var(--space-md);
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.footer-links a {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: rgba(255,255,255,0.55);
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--white); }
+
+/* Easter egg */
+.konami-zone {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.1);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  user-select: none;
+  cursor: default;
+  transition: color 0.4s, letter-spacing 0.4s;
+}
+.konami-zone:hover {
+  color: rgba(155,95,208,0.5);
+  letter-spacing: 0.12em;
+}
+.konami-activated {
+  color: var(--purple-lt) !important;
+  letter-spacing: 0.18em !important;
+  text-shadow: 0 0 20px rgba(155,95,208,0.6);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+  }
+  .hero-sidebar {
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-left: 0;
+    padding-top: var(--space-xl);
+  }
+  .cards-grid,
+  .cards-solo {
+    grid-template-columns: 1fr;
+  }
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+  .masthead-inner {
+    grid-template-columns: 1fr auto;
+  }
+  .masthead-meta { display: none; }
+}
+
+@media (max-width: 600px) {
+  .masthead-nav {
+    display: none;
+  }
+  .hero-stats {
+    gap: var(--space-lg);
+  }
+  .card-number-bg {
+    font-size: 100px;
+  }
+}
+
+/* ============================================================
+   KONAMI FLASH OVERLAY
+   ============================================================ */
+#konami-flash {
+  position: fixed;
+  inset: 0;
+  background: var(--purple);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+#konami-flash.show {
+  opacity: 1;
+  pointer-events: all;
+}
+#konami-flash.hide {
+  opacity: 0;
+}
+.konami-msg {
+  text-align: center;
+}
+.konami-msg h2 {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: var(--space-md);
+}
+.konami-msg p {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.1em;
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     KONAMI FLASH OVERLAY
+     ============================================================ -->
+<div id="konami-flash" aria-hidden="true">
+  <div class="konami-msg">
+    <h2>+30 Lives</h2>
+    <p>Pattern mastery unlocked.<br>You found the cheat code.</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     MASTHEAD
+     ============================================================ -->
+<header class="masthead" role="banner">
+  <div class="masthead-inner">
+    <a href="../" class="masthead-brand">The <em>Cheat</em> <span>Code</span></a>
+
+    <nav class="masthead-nav" aria-label="Primary navigation">
+      <a href="#patterns">Patterns</a>
+      <a href="#arcs">Arcs</a>
+      <a href="#sample-repo" class="nav-code">&#x7B;&#x7D; Sample Code</a>
+      <a href="#subscribe">Subscribe</a>
+    </nav>
+
+    <div class="masthead-meta">
+      <span>ABS Tech Strategy &bull; AI Business Solutions</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-inner">
+    <!-- Main hero copy -->
+    <div class="hero-main">
+      <p class="hero-eyebrow reveal">Issue Library &mdash; Vol. I</p>
+      <h1 class="hero-title reveal reveal-delay-1" id="hero-title">
+        The<br><em>Cheat</em><br>Code
+      </h1>
+      <p class="hero-subtitle reveal reveal-delay-2">
+        Reusable AI agent patterns drawn from real Microsoft customer engagements.
+        Each issue dissects one pattern — architecture, tradeoffs, and working code.
+      </p>
+
+      <div class="hero-stats reveal reveal-delay-3">
+        <div>
+          <div class="hero-stat-num">8</div>
+          <div class="hero-stat-label">Published Issues</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">4</div>
+          <div class="hero-stat-label">Arc Groupings</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">6</div>
+          <div class="hero-stat-label">Contributors</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">4</div>
+          <div class="hero-stat-label">Live Walkthroughs</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="hero-sidebar reveal reveal-delay-2" aria-label="Quick links">
+
+      <!-- Sample Code CTA — first class -->
+      <div class="sidebar-block">
+        <div class="sidebar-label">Sample Repository</div>
+        <a href="#sample-repo" class="code-cta" id="sample-repo">
+          <div class="code-cta-label">&#x7B;&#x7D; Code</div>
+          <div class="code-cta-title">Browse Pattern Implementations</div>
+          <div class="code-cta-arrow">View Repository &rarr;</div>
+        </a>
+      </div>
+
+      <!-- Subscribe -->
+      <div class="sidebar-block" id="subscribe">
+        <div class="sidebar-label">Newsletter</div>
+        <div class="subscribe-cta">
+          <div class="sidebar-title" style="color:var(--white); font-family: var(--font-display); font-size:16px; font-weight:700; margin-bottom:6px;">
+            Get new issues in your inbox
+          </div>
+          <div class="sidebar-body">New patterns drop monthly. No spam — just architectures that work.</div>
+          <form class="subscribe-form" onsubmit="event.preventDefault(); this.innerHTML='<div style=\'font-family:var(--font-mono);font-size:12px;color:rgba(255,255,255,0.6);padding:8px 0;\'>&#10003; You\'re on the list.</div>'">
+            <input type="email" placeholder="alias@microsoft.com" aria-label="Email address">
+            <button type="submit">Subscribe &rarr;</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div class="sidebar-block">
+        <div class="sidebar-label">About</div>
+        <div class="sidebar-title">ABS Tech Strategy</div>
+        <div class="sidebar-body">AI Business Solutions — translating complex agent architectures into patterns any team can reuse.</div>
+      </div>
+
+    </aside>
+  </div>
+</section>
+
+<!-- ============================================================
+     SOLO ISSUES (001, 002 — unpaired)
+     ============================================================ -->
+<div class="editorial-divider">
+  <span class="editorial-divider-text">Issues 001 &amp; 002 &mdash; Standalone</span>
+</div>
+
+<section class="arc-section" id="patterns" aria-label="All patterns">
+  <div class="arc-header reveal">
+    <div>
+      <div class="arc-label">Standalone</div>
+      <div class="arc-name">Foundational Patterns</div>
+    </div>
+    <div style="border-top: 1px solid var(--ink-20); flex:1; margin-left: var(--space-lg); align-self:center; margin-top:8px;"></div>
+  </div>
+
+  <div class="cards-solo">
+
+    <!-- CARD 001 -->
+    <article class="pattern-card reveal" aria-label="Issue 001: Code-First Agent Delivery">
+      <div class="card-number-bg" aria-hidden="true">001</div>
+      <div>
+        <div class="card-top">
+          <span class="card-issue-num">Issue 001</span>
+          <span class="type-badge practical">Practical</span>
+        </div>
+        <!-- Diagram: pipeline flow -->
+        <div class="card-diagram" aria-hidden="true">
+          <svg class="diagram-svg" viewBox="0 0 400 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="72" fill="#F5F0E8"/>
+            <!-- Flow nodes -->
+            <rect x="12" y="22" width="64" height="28" rx="4" fill="white" stroke="#6B2FA0" stroke-width="1.5"/>
+            <text x="44" y="38" font-family="DM Mono, monospace" font-size="8" fill="#6B2FA0" text-anchor="middle">VS Code</text>
+            <!-- Arrow -->
+            <line x1="76" y1="36" x2="104" y2="36" stroke="#1A1612" stroke-width="1" stroke-dasharray="4 2"/>
+            <polygon points="104,32 112,36 104,40" fill="#1A1612"/>
+            <!-- Node 2 -->
+            <rect x="112" y="22" width="64" height="28" rx="4" fill="white" stroke="#0078D4" stroke-width="1.5"/>
+            <text x="144" y="38" font-family="DM Mono, monospace" font-size="8" fill="#0078D4" text-anchor="middle">Azure CI</text>
+            <!-- Arrow -->
+            <line x1="176" y1="36" x2="204" y2="36" stroke="#1A1612" stroke-width="1" stroke-dasharray="4 2"/>
+            <polygon points="204,32 212,36 204,40" fill="#1A1612"/>
+            <!-- Node 3 -->
+            <rect x="212" y="22" width="64" height="28" rx="4" fill="white" stroke="#107C10" stroke-width="1.5"/>
+            <text x="244" y="38" font-family="DM Mono, monospace" font-size="8" fill="#107C10" text-anchor="middle">Deploy</text>
+            <!-- Arrow -->
+            <line x1="276" y1="36" x2="304" y2="36" stroke="#1A1612" stroke-width="1" stroke-dasharray="4 2"/>
+            <polygon points="304,32 312,36 304,40" fill="#1A1612"/>
+            <!-- Node 4 -->
+            <rect x="312" y="22" width="64" height="28" rx="4" fill="white" stroke="#D83B01" stroke-width="1.5"/>
+            <text x="344" y="38" font-family="DM Mono, monospace" font-size="8" fill="#D83B01" text-anchor="middle">Teams</text>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Code-First Agent Delivery</h2>
+        <div class="card-builder">by <span>Cristiano Almeida Gonçalves</span></div>
+        <div class="card-tags">
+          <span class="card-tag">VS Code</span>
+          <span class="card-tag">Azure</span>
+          <span class="card-tag">Teams</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="../interactive/issue-001/" class="card-cta" aria-label="Explore interactive walkthrough for Issue 001">
+          Explore Pattern &rarr;
+        </a>
+        <div class="card-arc-dot" style="background: var(--green);" title="Standalone issue"></div>
+      </div>
+    </article>
+
+    <!-- CARD 002 -->
+    <article class="pattern-card reveal reveal-delay-1" aria-label="Issue 002: Scoped Multi-Source Search">
+      <div class="card-number-bg" aria-hidden="true">002</div>
+      <div>
+        <div class="card-top">
+          <span class="card-issue-num">Issue 002</span>
+          <span class="type-badge conceptual">Conceptual</span>
+        </div>
+        <!-- Diagram: RAG fan-out -->
+        <div class="card-diagram" aria-hidden="true">
+          <svg class="diagram-svg" viewBox="0 0 400 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="72" fill="#F5F0E8"/>
+            <!-- Central node -->
+            <rect x="156" y="20" width="88" height="32" rx="16" fill="white" stroke="#6B2FA0" stroke-width="1.5"/>
+            <text x="200" y="38" font-family="DM Mono, monospace" font-size="8" fill="#6B2FA0" text-anchor="middle">Query Router</text>
+            <!-- Left source -->
+            <rect x="24" y="8" width="56" height="24" rx="4" fill="white" stroke="#0078D4" stroke-width="1.5"/>
+            <text x="52" y="22" font-family="DM Mono, monospace" font-size="7" fill="#0078D4" text-anchor="middle">ADO</text>
+            <!-- Right source -->
+            <rect x="316" y="8" width="56" height="24" rx="4" fill="white" stroke="#107C10" stroke-width="1.5"/>
+            <text x="344" y="22" font-family="DM Mono, monospace" font-size="7" fill="#107C10" text-anchor="middle">Graph</text>
+            <!-- Bottom sink -->
+            <rect x="156" y="52" width="88" height="16" rx="4" fill="white" stroke="#D83B01" stroke-width="1"/>
+            <text x="200" y="62" font-family="DM Mono, monospace" font-size="7" fill="#D83B01" text-anchor="middle">Merged Result</text>
+            <!-- Lines -->
+            <line x1="80" y1="20" x2="156" y2="32" stroke="#1A1612" stroke-width="1" stroke-dasharray="3 2"/>
+            <line x1="316" y1="20" x2="244" y2="32" stroke="#1A1612" stroke-width="1" stroke-dasharray="3 2"/>
+            <line x1="200" y1="52" x2="200" y2="52" stroke="#1A1612" stroke-width="1"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Scoped Multi-Source Search</h2>
+        <div class="card-builder">by <span>Raghav BN</span></div>
+        <div class="card-tags">
+          <span class="card-tag">RAG</span>
+          <span class="card-tag">Query Routing</span>
+          <span class="card-tag">ADO + Graph</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="../interactive/issue-002/" class="card-cta" aria-label="Explore interactive walkthrough for Issue 002">
+          Explore Pattern &rarr;
+        </a>
+        <div class="card-arc-dot" style="background: var(--blue);" title="Standalone issue"></div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     PULL QUOTE
+     ============================================================ -->
+<section class="pull-quote-section reveal" aria-label="Editorial quote">
+  <div class="pull-quote-inner">
+    <p class="pull-quote-text">
+      "The pattern is the product. Once you see the architecture clearly,
+       the implementation becomes obvious."
+    </p>
+    <p class="pull-quote-attribution">
+      — <strong>ABS Tech Strategy</strong> &bull; AI Business Solutions
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     ARC: 003 + 004 — Triage & Security
+     ============================================================ -->
+<section class="arc-section" id="arcs" aria-label="Arc: Triage and Security">
+  <div class="arc-header reveal">
+    <div>
+      <div class="arc-label">Arc A &mdash; Issues 003–004</div>
+      <div class="arc-name">Triage &amp; Security</div>
+    </div>
+    <div style="border-top: 1px solid var(--ink-20); flex:1; margin-left: var(--space-lg); align-self:center; margin-top:8px;"></div>
+  </div>
+
+  <div class="cards-grid">
+
+    <!-- CARD 003 -->
+    <article class="pattern-card reveal" aria-label="Issue 003: Prompt-Chained Triage">
+      <div class="card-number-bg" aria-hidden="true">003</div>
+      <div>
+        <div class="card-top">
+          <span class="card-issue-num">Issue 003</span>
+          <span class="type-badge practical">Practical</span>
+        </div>
+        <div class="card-diagram" aria-hidden="true">
+          <svg class="diagram-svg" viewBox="0 0 400 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="72" fill="#F5F0E8"/>
+            <!-- Chain of prompts -->
+            <rect x="8" y="24" width="56" height="24" rx="3" fill="#6B2FA0" opacity="0.9"/>
+            <text x="36" y="38" font-family="DM Mono, monospace" font-size="8" fill="white" text-anchor="middle">Classify</text>
+            <line x1="64" y1="36" x2="88" y2="36" stroke="#6B2FA0" stroke-width="2"/>
+            <polygon points="84,32 92,36 84,40" fill="#6B2FA0"/>
+            <rect x="92" y="24" width="56" height="24" rx="3" fill="#4A1F72" opacity="0.9"/>
+            <text x="120" y="38" font-family="DM Mono, monospace" font-size="8" fill="white" text-anchor="middle">Triage</text>
+            <line x1="148" y1="36" x2="172" y2="36" stroke="#6B2FA0" stroke-width="2"/>
+            <polygon points="168,32 176,36 168,40" fill="#6B2FA0"/>
+            <rect x="176" y="24" width="56" height="24" rx="3" fill="#0078D4" opacity="0.9"/>
+            <text x="204" y="38" font-family="DM Mono, monospace" font-size="8" fill="white" text-anchor="middle">Route</text>
+            <line x1="232" y1="36" x2="256" y2="36" stroke="#0078D4" stroke-width="2"/>
+            <polygon points="252,32 260,36 252,40" fill="#0078D4"/>
+            <rect x="260" y="24" width="72" height="24" rx="3" fill="#107C10" opacity="0.9"/>
+            <text x="296" y="38" font-family="DM Mono, monospace" font-size="8" fill="white" text-anchor="middle">Playbook</text>
+            <!-- YAML label -->
+            <rect x="340" y="8" width="44" height="14" rx="3" fill="white" stroke="#107C10" stroke-width="1"/>
+            <text x="362" y="17" font-family="DM Mono, monospace" font-size="7" fill="#107C10" text-anchor="middle">YAML</text>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Prompt-Chained Triage</h2>
+        <div class="card-builder">by <span>Raghav BN</span></div>
+        <div class="card-tags">
+          <span class="card-tag">Prompt Chaining</span>
+          <span class="card-tag">YAML Playbooks</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="../interactive/issue-003/" class="card-cta" aria-label="Explore interactive walkthrough for Issue 003">
+          Explore Pattern &rarr;
+        </a>
+        <div class="card-arc-dot" style="background: var(--purple);" title="Arc A"></div>
+      </div>
+    </article>
+
+    <!-- CARD 004 -->
+    <article class="pattern-card reveal reveal-delay-1" aria-label="Issue 004: Secure In-Boundary Processing">
+      <div class="card-number-bg" aria-hidden="true">004</div>
+      <div>
+        <div class="card-top">
+          <span class="card-issue-num">Issue 004</span>
+          <span class="type-badge conceptual">Conceptual</span>
+        </div>
+        <div class="card-diagram" aria-hidden="true">
+          <svg class="diagram-svg" viewBox="0 0 400 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="72" fill="#F5F0E8"/>
+            <!-- Security boundary -->
+            <rect x="8" y="6" width="384" height="60" rx="6" fill="none" stroke="#D83B01" stroke-width="1.5" stroke-dasharray="6 3"/>
+            <text x="20" y="18" font-family="DM Mono, monospace" font-size="8" fill="#D83B01">Tenant Boundary</text>
+            <!-- Inner nodes -->
+            <rect x="40" y="24" width="72" height="26" rx="3" fill="white" stroke="#1B1B3A" stroke-width="1.5"/>
+            <text x="76" y="38" font-family="DM Mono, monospace" font-size="8" fill="#1B1B3A" text-anchor="middle">MCP Server</text>
+            <line x1="112" y1="37" x2="140" y2="37" stroke="#1B1B3A" stroke-width="1" stroke-dasharray="3 2"/>
+            <polygon points="136,33 144,37 136,41" fill="#1B1B3A"/>
+            <rect x="144" y="24" width="80" height="26" rx="3" fill="white" stroke="#6B2FA0" stroke-width="1.5"/>
+            <text x="184" y="38" font-family="DM Mono, monospace" font-size="8" fill="#6B2FA0" text-anchor="middle">Compliance</text>
+            <line x1="224" y1="37" x2="252" y2="37" stroke="#1B1B3A" stroke-width="1" stroke-dasharray="3 2"/>
+            <polygon points="248,33 256,37 248,41" fill="#1B1B3A"/>
+            <rect x="256" y="24" width="80" height="26" rx="3" fill="white" stroke="#107C10" stroke-width="1.5"/>
+            <text x="296" y="38" font-family="DM Mono, monospace" font-size="8" fill="#107C10" text-anchor="middle">Data Store</text>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Secure In-Boundary Processing</h2>
+        <div class="card-builder">by <span>Raghav BN</span></div>
+        <div class="card-tags">
+          <span class="card-tag">MCP</span>
+          <span class="card-tag">Tenant Security</span>
+          <span class="card-tag">Compliance</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="../interactive/issue-004/" class="card-cta" aria-label="Explore interactive walkthrough for Issue 004">
+          Explore Pattern &rarr;
+        </a>
+        <div class="card-arc-dot" style="background: var(--purple);" title="Arc A"></div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     ARC: 005 + 006 — Human Control & Knowledge
+     ============================================================ -->
+<div class="editorial-divider">
+  <span class="editorial-divider-text">Arc B &mdash; Human Control &amp; Knowledge Capture</span>
+</div>
+
+<section class="arc-section" aria-label="Arc: Human Control and Knowledge">
+  <div class="arc-header reveal">
+    <div>
+      <div class="arc-label">Arc B &mdash; Issues 005–006</div>
+      <div class="arc-name">Human Control &amp; Knowledge Capture</div>
+    </div>
+    <div style="border-top: 1px solid var(--ink-20); flex:1; margin-left: var(--space-lg); align-self:center; margin-top:8px;"></div>
+  </div>
+
+  <div class="cards-grid">
+
+    <!-- CARD 005 -->
+    <article class="pattern-card reveal" aria-label="Issue 005: Human-in-the-Loop Approval Gates">
+      <div class="card-number-bg" aria-hidden="true">005</div>
+      <div>
+        <div class="card-top">
+          <span class="card-issue-num">Issue 005</span>
+          <span class="type-badge conceptual">Conceptual</span>
+        </div>
+        <div class="card-diagram" aria-hidden="true">
+          <svg class="diagram-svg" viewBox="0 0 400 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="72" fill="#F5F0E8"/>
+            <!-- Agent → Gate → Human loop -->
+            <rect x="20" y="22" width="64" height="28" rx="4" fill="white" stroke="#6B2FA0" stroke-width="1.5"/>
+            <text x="52" y="38" font-family="DM Mono, monospace" font-size="8" fill="#6B2FA0" text-anchor="middle">Agent</text>
+            <line x1="84" y1="36" x2="108" y2="36" stroke="#1A1612" stroke-width="1" stroke-dasharray="3 2"/>
+            <polygon points="104,32 112,36 104,40" fill="#1A1612"/>
+            <!-- Gate diamond -->
+            <polygon points="168,18 196,36 168,54 140,36" fill="white" stroke="#D83B01" stroke-width="1.5"/>
+            <text x="168" y="40" font-family="DM Mono, monospace" font-size="7" fill="#D83B01" text-anchor="middle">Gate</text>
+            <line x1="196" y1="36" x2="220" y2="36" stroke="#1A1612" stroke-width="1" stroke-dasharray="3 2"/>
+            <polygon points="216,32 224,36 216,40" fill="#1A1612"/>
+            <!-- Human -->
+            <rect x="224" y="20" width="68" height="32" rx="16" fill="white" stroke="#107C10" stroke-width="1.5"/>
+            <text x="258" y="38" font-family="DM Mono, monospace" font-size="8" fill="#107C10" text-anchor="middle">Human</text>
+            <!-- Loop back arrow -->
+            <path d="M 258 52 Q 258 62 52 62 Q 52 52 52 50" fill="none" stroke="#D83B01" stroke-width="1" stroke-dasharray="4 2"/>
+            <polygon points="48,50 52,42 56,50" fill="#D83B01"/>
+            <!-- Copilot badge -->
+            <rect x="308" y="24" width="72" height="16" rx="3" fill="#0078D4" opacity="0.15"/>
+            <text x="344" y="34" font-family="DM Mono, monospace" font-size="7" fill="#0078D4" text-anchor="middle">Copilot Studio</text>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Human-in-the-Loop Approval Gates</h2>
+        <div class="card-builder">by <span>Pete Puustinen</span></div>
+        <div class="card-tags">
+          <span class="card-tag">Approval Flows</span>
+          <span class="card-tag">Copilot Studio</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta coming-soon" aria-label="Interactive walkthrough coming soon">
+          Interactive coming soon
+        </span>
+        <div class="card-arc-dot" style="background: var(--orange);" title="Arc B"></div>
+      </div>
+    </article>
+
+    <!-- CARD 006 -->
+    <article class="pattern-card reveal reveal-delay-1" aria-label="Issue 006: Meeting-to-Knowledge Pipeline">
+      <div class="card-number-bg" aria-hidden="true">006</div>
+      <div>
+        <div class="card-top">
+          <span class="card-issue-num">Issue 006</span>
+          <span class="type-badge practical">Practical</span>
+        </div>
+        <div class="card-diagram" aria-hidden="true">
+          <svg class="diagram-svg" viewBox="0 0 400 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="72" fill="#F5F0E8"/>
+            <!-- Pipeline: Meeting → Transcript → Extract → KB -->
+            <rect x="8" y="22" width="56" height="28" rx="4" fill="white" stroke="#0078D4" stroke-width="1.5"/>
+            <text x="36" y="38" font-family="DM Mono, monospace" font-size="7.5" fill="#0078D4" text-anchor="middle">Teams Mtg</text>
+            <line x1="64" y1="36" x2="88" y2="36" stroke="#1A1612" stroke-width="1"/>
+            <polygon points="84,32 92,36 84,40" fill="#1A1612"/>
+            <rect x="92" y="22" width="64" height="28" rx="4" fill="white" stroke="#6B2FA0" stroke-width="1.5"/>
+            <text x="124" y="38" font-family="DM Mono, monospace" font-size="7.5" fill="#6B2FA0" text-anchor="middle">Transcript</text>
+            <line x1="156" y1="36" x2="180" y2="36" stroke="#1A1612" stroke-width="1"/>
+            <polygon points="176,32 184,36 176,40" fill="#1A1612"/>
+            <rect x="184" y="22" width="60" height="28" rx="4" fill="white" stroke="#D83B01" stroke-width="1.5"/>
+            <text x="214" y="38" font-family="DM Mono, monospace" font-size="7.5" fill="#D83B01" text-anchor="middle">Extract</text>
+            <line x1="244" y1="36" x2="268" y2="36" stroke="#1A1612" stroke-width="1"/>
+            <polygon points="264,32 272,36 264,40" fill="#1A1612"/>
+            <rect x="272" y="18" width="116" height="36" rx="4" fill="#107C10" opacity="0.9"/>
+            <text x="330" y="38" font-family="DM Mono, monospace" font-size="8" fill="white" text-anchor="middle">Knowledge Base</text>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Meeting-to-Knowledge Pipeline</h2>
+        <div class="card-builder">by <span>Pete Puustinen</span></div>
+        <div class="card-tags">
+          <span class="card-tag">Teams</span>
+          <span class="card-tag">Knowledge Base</span>
+          <span class="card-tag">Automation</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta coming-soon" aria-label="Interactive walkthrough coming soon">
+          Interactive coming soon
+        </span>
+        <div class="card-arc-dot" style="background: var(--orange);" title="Arc B"></div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     ARC: 007 + 008 — Memory & Knowledge
+     ============================================================ -->
+<div class="editorial-divider">
+  <span class="editorial-divider-text">Arc C &mdash; Memory &amp; Cross-Project Knowledge</span>
+</div>
+
+<section class="arc-section" aria-label="Arc: Memory and Cross-Project Knowledge">
+  <div class="arc-header reveal">
+    <div>
+      <div class="arc-label">Arc C &mdash; Issues 007–008</div>
+      <div class="arc-name">Memory &amp; Cross-Project Knowledge</div>
+    </div>
+    <div style="border-top: 1px solid var(--ink-20); flex:1; margin-left: var(--space-lg); align-self:center; margin-top:8px;"></div>
+  </div>
+
+  <div class="cards-grid">
+
+    <!-- CARD 007 -->
+    <article class="pattern-card reveal" aria-label="Issue 007: Holographic Memory">
+      <div class="card-number-bg" aria-hidden="true">007</div>
+      <div>
+        <div class="card-top">
+          <span class="card-issue-num">Issue 007</span>
+          <span class="type-badge conceptual">Conceptual</span>
+        </div>
+        <div class="card-diagram" aria-hidden="true">
+          <svg class="diagram-svg" viewBox="0 0 400 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="72" fill="#F5F0E8"/>
+            <!-- Holographic: concentric rings with nodes -->
+            <!-- Outer ring arc -->
+            <ellipse cx="200" cy="36" rx="160" ry="28" fill="none" stroke="#6B2FA0" stroke-width="1" stroke-dasharray="5 3" opacity="0.4"/>
+            <ellipse cx="200" cy="36" rx="90" ry="18" fill="none" stroke="#6B2FA0" stroke-width="1" stroke-dasharray="4 3" opacity="0.6"/>
+            <!-- Core -->
+            <circle cx="200" cy="36" r="20" fill="white" stroke="#6B2FA0" stroke-width="2"/>
+            <text x="200" y="33" font-family="DM Mono, monospace" font-size="7" fill="#6B2FA0" text-anchor="middle">Agent</text>
+            <text x="200" y="43" font-family="DM Mono, monospace" font-size="7" fill="#6B2FA0" text-anchor="middle">Memory</text>
+            <!-- Satellite nodes -->
+            <circle cx="80" cy="22" r="12" fill="white" stroke="#0078D4" stroke-width="1.5"/>
+            <text x="80" y="26" font-family="DM Mono, monospace" font-size="6.5" fill="#0078D4" text-anchor="middle">Ctx</text>
+            <circle cx="80" cy="50" r="12" fill="white" stroke="#107C10" stroke-width="1.5"/>
+            <text x="80" y="54" font-family="DM Mono, monospace" font-size="6.5" fill="#107C10" text-anchor="middle">State</text>
+            <circle cx="320" cy="22" r="12" fill="white" stroke="#D83B01" stroke-width="1.5"/>
+            <text x="320" y="26" font-family="DM Mono, monospace" font-size="6.5" fill="#D83B01" text-anchor="middle">Hist</text>
+            <circle cx="320" cy="50" r="12" fill="white" stroke="#6B2FA0" stroke-width="1.5"/>
+            <text x="320" y="54" font-family="DM Mono, monospace" font-size="6.5" fill="#6B2FA0" text-anchor="middle">Ref</text>
+            <!-- Spokes -->
+            <line x1="180" y1="30" x2="92" y2="26" stroke="#6B2FA0" stroke-width="0.75" stroke-dasharray="3 2"/>
+            <line x1="180" y1="42" x2="92" y2="48" stroke="#6B2FA0" stroke-width="0.75" stroke-dasharray="3 2"/>
+            <line x1="220" y1="30" x2="308" y2="26" stroke="#6B2FA0" stroke-width="0.75" stroke-dasharray="3 2"/>
+            <line x1="220" y1="42" x2="308" y2="48" stroke="#6B2FA0" stroke-width="0.75" stroke-dasharray="3 2"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Holographic Memory</h2>
+        <div class="card-builder">by <span>Tyson Dowd</span></div>
+        <div class="card-tags">
+          <span class="card-tag">Memory</span>
+          <span class="card-tag">Context</span>
+          <span class="card-tag">State Management</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta coming-soon" aria-label="Interactive walkthrough coming soon">
+          Interactive coming soon
+        </span>
+        <div class="card-arc-dot" style="background: var(--blue);" title="Arc C"></div>
+      </div>
+    </article>
+
+    <!-- CARD 008 -->
+    <article class="pattern-card reveal reveal-delay-1" aria-label="Issue 008: Cross-Project Knowledge Agent">
+      <div class="card-number-bg" aria-hidden="true">008</div>
+      <div>
+        <div class="card-top">
+          <span class="card-issue-num">Issue 008</span>
+          <span class="type-badge practical">Practical</span>
+        </div>
+        <div class="card-diagram" aria-hidden="true">
+          <svg class="diagram-svg" viewBox="0 0 400 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="72" fill="#F5F0E8"/>
+            <!-- Graph network -->
+            <circle cx="60" cy="36" r="20" fill="white" stroke="#6B2FA0" stroke-width="1.5"/>
+            <text x="60" y="33" font-family="DM Mono, monospace" font-size="6.5" fill="#6B2FA0" text-anchor="middle">Repo A</text>
+            <circle cx="160" cy="14" r="16" fill="white" stroke="#0078D4" stroke-width="1.5"/>
+            <text x="160" y="18" font-family="DM Mono, monospace" font-size="6.5" fill="#0078D4" text-anchor="middle">Repo B</text>
+            <circle cx="160" cy="58" r="16" fill="white" stroke="#107C10" stroke-width="1.5"/>
+            <text x="160" y="62" font-family="DM Mono, monospace" font-size="6.5" fill="#107C10" text-anchor="middle">Repo C</text>
+            <!-- Central Knowledge Graph -->
+            <rect x="220" y="22" width="88" height="28" rx="4" fill="#1B1B3A"/>
+            <text x="264" y="37" font-family="DM Mono, monospace" font-size="7.5" fill="white" text-anchor="middle">Knowledge Graph</text>
+            <!-- RAG output -->
+            <rect x="328" y="24" width="60" height="24" rx="12" fill="white" stroke="#D83B01" stroke-width="1.5"/>
+            <text x="358" y="38" font-family="DM Mono, monospace" font-size="7" fill="#D83B01" text-anchor="middle">RAG</text>
+            <!-- Edges -->
+            <line x1="80" y1="30" x2="144" y2="18" stroke="#6B2FA0" stroke-width="0.75" stroke-dasharray="3 2"/>
+            <line x1="80" y1="42" x2="144" y2="56" stroke="#6B2FA0" stroke-width="0.75" stroke-dasharray="3 2"/>
+            <line x1="176" y1="20" x2="220" y2="30" stroke="#0078D4" stroke-width="0.75" stroke-dasharray="3 2"/>
+            <line x1="176" y1="54" x2="220" y2="42" stroke="#107C10" stroke-width="0.75" stroke-dasharray="3 2"/>
+            <line x1="308" y1="36" x2="328" y2="36" stroke="#D83B01" stroke-width="1"/>
+            <polygon points="324,32 332,36 324,40" fill="#D83B01"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Cross-Project Knowledge Agent</h2>
+        <div class="card-builder">by <span>Tyson Dowd</span></div>
+        <div class="card-tags">
+          <span class="card-tag">Multi-Repo</span>
+          <span class="card-tag">Knowledge Graph</span>
+          <span class="card-tag">RAG</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta coming-soon" aria-label="Interactive walkthrough coming soon">
+          Interactive coming soon
+        </span>
+        <div class="card-arc-dot" style="background: var(--blue);" title="Arc C"></div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer-band" role="contentinfo">
+  <div class="footer-inner">
+    <!-- Brand col -->
+    <div>
+      <div class="footer-brand">The <em>Cheat</em> Code</div>
+      <div class="footer-tagline">
+        An internal Microsoft newsletter surfacing reusable AI agent patterns from real customer engagements.
+        Built by the AI Business Solutions team so every practitioner can stand on the shoulders of what's already working.
+      </div>
+      <div class="footer-disclaimer">
+        Microsoft Internal &bull; Not for external distribution &bull; ABS Tech Strategy &bull; AI Business Solutions
+      </div>
+
+      <div class="konami-zone" id="konami-zone" aria-hidden="true" title="...">
+        ↑ ↑ ↓ ↓ ← → ← → B A START
+      </div>
+    </div>
+
+    <!-- Quick links col -->
+    <div>
+      <div class="footer-col-title">Pattern Library</div>
+      <nav class="footer-links" aria-label="Pattern links">
+        <a href="../interactive/issue-001/">001 — Code-First Delivery</a>
+        <a href="../interactive/issue-002/">002 — Multi-Source Search</a>
+        <a href="../interactive/issue-003/">003 — Prompt-Chained Triage</a>
+        <a href="../interactive/issue-004/">004 — Secure Boundary</a>
+        <a href="#patterns">005 — Approval Gates</a>
+        <a href="#patterns">006 — Meeting Pipeline</a>
+        <a href="#patterns">007 — Holographic Memory</a>
+        <a href="#patterns">008 — Cross-Project Agent</a>
+      </nav>
+    </div>
+
+    <!-- Resources col -->
+    <div>
+      <div class="footer-col-title">Resources</div>
+      <nav class="footer-links" aria-label="Resource links">
+        <a href="#sample-repo">{} Sample Code Repository</a>
+        <a href="#subscribe">Subscribe to Newsletter</a>
+        <a href="#arcs">View Arc Groupings</a>
+        <a href="../">Portal Home</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT — Scroll Reveal + Konami Code
+     ============================================================ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ---- Scroll Reveal ---- */
+  var revealEls = document.querySelectorAll('.reveal');
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  revealEls.forEach(function (el) { observer.observe(el); });
+
+  /* ---- Konami Code ---- */
+  var KONAMI = [
+    'ArrowUp','ArrowUp','ArrowDown','ArrowDown',
+    'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight',
+    'b','a'
+  ];
+  var progress = 0;
+  var konamiFlash = document.getElementById('konami-flash');
+  var konamiZone  = document.getElementById('konami-zone');
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === KONAMI[progress]) {
+      progress++;
+      if (progress === KONAMI.length) {
+        progress = 0;
+        triggerKonami();
+      }
+    } else {
+      progress = (e.key === KONAMI[0]) ? 1 : 0;
+    }
+  });
+
+  function triggerKonami() {
+    konamiFlash.classList.add('show');
+    if (konamiZone) konamiZone.classList.add('konami-activated');
+    setTimeout(function () {
+      konamiFlash.classList.remove('show');
+      konamiFlash.classList.add('hide');
+      setTimeout(function () {
+        konamiFlash.classList.remove('hide');
+      }, 400);
+    }, 2200);
+  }
+
+  konamiFlash.addEventListener('click', function () {
+    konamiFlash.classList.remove('show');
+  });
+
+  /* ---- Trigger reveals already in viewport on load ---- */
+  setTimeout(function () {
+    revealEls.forEach(function (el) {
+      var rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight) {
+        el.classList.add('visible');
+      }
+    });
+  }, 100);
+
+})();
+</script>
+
+</body>
+</html>
