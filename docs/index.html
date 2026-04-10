@@ -32,9 +32,9 @@
       --text-primary: #F0EDF8;
       --text-secondary: #A89DC0;
       --text-muted: #8A82A0;
-      --border: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.10);
       --border-bright: rgba(255, 255, 255, 0.14);
-      --glass: rgba(255, 255, 255, 0.04);
+      --glass: rgba(255, 255, 255, 0.06);
       --glass-hover: rgba(255, 255, 255, 0.07);
       --radius-sm: 12px;
       --radius-md: 18px;
@@ -123,10 +123,6 @@
       background: linear-gradient(145deg, #1B1B3A, #0E0E1F);
     }
 
-    [data-theme="light"] .card-brand {
-      background: linear-gradient(135deg, #6B2FA0, #4A1F70);
-    }
-
     [data-theme="light"] .card-subscribe {
       background: linear-gradient(145deg, rgba(0, 120, 212, 0.08), rgba(0, 0, 0, 0.02));
       border-color: rgba(0, 120, 212, 0.2);
@@ -134,10 +130,6 @@
 
     [data-theme="light"] .card-about {
       background: linear-gradient(135deg, rgba(107, 47, 160, 0.08), rgba(0, 0, 0, 0.02));
-    }
-
-    [data-theme="light"] .card-stats {
-      background: linear-gradient(145deg, rgba(107, 47, 160, 0.06), rgba(0, 120, 212, 0.04));
     }
 
     [data-theme="light"] .tag {
@@ -295,7 +287,10 @@
 
     /* ─── Hero section ─── */
     .hero-section {
+      position: relative;
       margin-bottom: 28px;
+      overflow: visible;
+      z-index: 1;
     }
 
     .hero-kicker {
@@ -309,10 +304,6 @@
       text-transform: uppercase;
       color: var(--purple-light);
       margin-bottom: 16px;
-    }
-
-    .hero-kicker::before {
-      display: none;
     }
 
     .hero-headline {
@@ -347,6 +338,86 @@
       line-height: 1.7;
     }
 
+    /* ─── Hero decorative diagonal pattern ─── */
+    .hero-pattern {
+      position: absolute;
+      top: -60px;
+      right: -120px;
+      width: 760px;
+      height: 580px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+    }
+
+    .hero-pattern.visible {
+      opacity: 1;
+    }
+
+    /* ─── Konami decorative margin element ─── */
+    .hero-konami-deco {
+      position: absolute;
+      left: -32px;
+      top: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: var(--purple-light);
+      opacity: 0;
+      writing-mode: vertical-lr;
+      text-orientation: upright;
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
+    }
+
+    .hero-konami-deco.visible {
+      opacity: 0.10;
+    }
+
+    [data-theme="light"] .hero-konami-deco.visible {
+      opacity: 0.14;
+    }
+
+    /* ─── Hero choreographed entrance ─── */
+    .hero-section .hero-kicker {
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .hero-section .hero-kicker.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .hero-section .hero-headline {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s,
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
+    }
+
+    .hero-section .hero-headline.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-section .hero-desc {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.5s,
+                  transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.5s;
+    }
+
+    .hero-section .hero-desc.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     /* ─── Bento grid ─── */
     .bento-grid {
       display: grid;
@@ -371,6 +442,7 @@
       text-decoration: none;
       color: inherit;
       display: block;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
     }
 
     .card:hover {
@@ -404,7 +476,7 @@
 
     /* ─── Pattern card: practical (warm) ─── */
     .card-practical {
-      background: linear-gradient(145deg, rgba(216, 59, 1, 0.12) 0%, rgba(107, 47, 160, 0.08) 100%);
+      background: linear-gradient(145deg, rgba(216, 59, 1, 0.15) 0%, rgba(107, 47, 160, 0.08) 100%);
     }
 
     .card-practical::before {
@@ -413,7 +485,7 @@
 
     /* ─── Pattern card: conceptual (cool) ─── */
     .card-conceptual {
-      background: linear-gradient(145deg, rgba(0, 120, 212, 0.12) 0%, rgba(107, 47, 160, 0.10) 100%);
+      background: linear-gradient(145deg, rgba(0, 120, 212, 0.15) 0%, rgba(107, 47, 160, 0.10) 100%);
     }
 
     .card-conceptual::before {
@@ -700,6 +772,8 @@
       grid-column: span 4;
       grid-row: span 3;
       background: linear-gradient(145deg, rgba(0, 120, 212, 0.2) 0%, rgba(27, 27, 58, 0.9) 100%);
+      border-color: rgba(0, 120, 212, 0.35);
+      box-shadow: 0 4px 20px rgba(0, 120, 212, 0.15);
     }
 
     /* Sample code card */
@@ -707,21 +781,7 @@
       grid-column: span 5;
       grid-row: span 3;
       background: linear-gradient(145deg, rgba(27, 27, 58, 0.9) 0%, rgba(14, 14, 31, 0.95) 100%);
-    }
-
-    /* Stats card */
-    .card-stats {
-      grid-column: span 3;
-      grid-row: span 2;
-      background: linear-gradient(145deg, rgba(107, 47, 160, 0.2) 0%, rgba(0, 120, 212, 0.15) 100%);
-    }
-
-    /* ABS brand card */
-    .card-brand {
-      grid-column: span 4;
-      grid-row: span 2;
-      background: linear-gradient(135deg, var(--purple-dark) 0%, var(--navy-light) 100%);
-      border-color: rgba(107, 47, 160, 0.3);
+      border-top: 2px solid rgba(107, 47, 160, 0.25);
     }
 
     /* ─── Stat number ─── */
@@ -833,7 +893,8 @@
 
     .subscribe-btn:hover {
       opacity: 0.9;
-      transform: scale(1.02);
+      transform: scale(1.04);
+      box-shadow: 0 0 16px rgba(0, 120, 212, 0.4);
     }
 
     /* ─── Arc pairing treatment ─── */
@@ -883,42 +944,12 @@
       right: -20px;
       width: 200px;
       height: 200px;
-      opacity: 0.25;
+      opacity: 0.30;
       transition: opacity 0.3s;
     }
 
     .card:hover .hv-nodes {
       opacity: 0.38;
-    }
-
-    /* ─── Brand card content ─── */
-    .brand-logo-area {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .brand-logo-text {
-      font-family: 'Sora', sans-serif;
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -1px;
-      background: linear-gradient(135deg, var(--purple-light) 0%, var(--blue-light) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .brand-logo-sub {
-      font-size: 10px;
-      font-weight: 500;
-      color: var(--text-muted);
-      letter-spacing: 1px;
-      text-align: center;
-      text-transform: uppercase;
     }
 
     /* ─── Footer ─── */
@@ -1031,11 +1062,6 @@
       transform: translateY(0);
     }
 
-    /* Hero section reveals faster */
-    .hero-section.reveal {
-      transition-duration: 0.45s;
-    }
-
     /* ─── Responsive ─── */
     @media (max-width: 1100px) {
       /*
@@ -1087,11 +1113,6 @@
         grid-row: span 3 !important;
       }
 
-      .card-brand {
-        grid-column: span 4 !important;
-        grid-row: span 2 !important;
-      }
-
       .card-small {
         grid-column: span 3 !important;
         grid-row: span 2 !important;
@@ -1118,7 +1139,7 @@
       .row-1, .row-2, .row-3, .row-4, .row-5,
       .card-hero-issue, .card-large, .card-medium,
       .card-about, .card-subscribe, .card-code,
-      .card-brand, .card-small {
+      .card-small {
         grid-column: span 2 !important;
         grid-row: span 3 !important;
       }
@@ -1126,6 +1147,9 @@
       .hero-headline {
         letter-spacing: -1.5px;
       }
+
+      .hero-pattern { display: none; }
+      .hero-konami-deco { display: none; }
 
       .site-header {
         flex-wrap: wrap;
@@ -1150,7 +1174,7 @@
       .row-1, .row-2, .row-3, .row-4, .row-5,
       .card-hero-issue, .card-large, .card-medium,
       .card-about, .card-subscribe, .card-code,
-      .card-brand, .card-small {
+      .card-small {
         grid-column: span 1 !important;
         grid-row: span 1 !important;
       }
@@ -1165,6 +1189,24 @@
       .reveal {
         opacity: 1;
         transform: none;
+        transition: none;
+      }
+
+      .hero-section .hero-kicker,
+      .hero-section .hero-headline,
+      .hero-section .hero-desc {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      .hero-pattern {
+        opacity: 1;
+        transition: none;
+      }
+
+      .hero-konami-deco {
+        opacity: 0.10;
         transition: none;
       }
 
@@ -1236,9 +1278,35 @@
   </header>
 
   <!-- Hero -->
-  <section class="hero-section reveal" aria-label="Page introduction">
+  <section class="hero-section" aria-label="Page introduction">
+    <!-- Diagonal architectural pattern extending into card grid -->
+    <div class="hero-pattern" aria-hidden="true">
+      <svg viewBox="0 0 760 580" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="hpf" cx="0.28" cy="0.22" r="0.72">
+            <stop offset="0%" stop-color="white"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+          </radialGradient>
+          <mask id="hpm"><rect width="760" height="580" fill="url(#hpf)"/></mask>
+        </defs>
+        <g mask="url(#hpm)">
+          <line x1="95"  y1="0" x2="0"   y2="380" stroke="rgba(107,47,160,0.055)" stroke-width="0.75"/>
+          <line x1="215" y1="0" x2="120" y2="380" stroke="rgba(107,47,160,0.055)" stroke-width="0.75"/>
+          <line x1="335" y1="0" x2="240" y2="380" stroke="rgba(107,47,160,0.055)" stroke-width="0.75"/>
+          <line x1="455" y1="0" x2="360" y2="380" stroke="rgba(107,47,160,0.055)" stroke-width="0.75"/>
+          <line x1="575" y1="0" x2="480" y2="380" stroke="rgba(107,47,160,0.055)" stroke-width="0.75"/>
+          <line x1="695" y1="0" x2="600" y2="380" stroke="rgba(107,47,160,0.055)" stroke-width="0.75"/>
+          <line x1="0" y1="140" x2="760" y2="210" stroke="rgba(107,47,160,0.03)" stroke-width="0.5"/>
+          <line x1="0" y1="320" x2="760" y2="390" stroke="rgba(107,47,160,0.022)" stroke-width="0.5"/>
+          <circle cx="215" cy="140" r="2" fill="rgba(107,47,160,0.04)"/>
+          <circle cx="455" cy="210" r="2" fill="rgba(107,47,160,0.035)"/>
+          <circle cx="335" cy="320" r="2" fill="rgba(107,47,160,0.03)"/>
+        </g>
+      </svg>
+    </div>
+    <!-- Konami sequence as vertical decorative element -->
+    <span class="hero-konami-deco" aria-hidden="true">↑↑↓↓←→←→BA</span>
     <p class="hero-kicker">Frontier Architecture · Field-Tested</p>
-    <p style="font-family:'Consolas','Courier New',monospace;font-size:8px;color:var(--purple);letter-spacing:3px;margin-bottom:16px;opacity:0.6;">▲ ▲ ▼ ▼ ◄ ► ◄ ► B A START</p>
     <h1 class="hero-headline">
       The architectures<br>
       <span class="accent">nobody documented yet</span>
@@ -1544,10 +1612,27 @@
 <!-- ─── Scroll-reveal via IntersectionObserver ─── -->
 <script>
   (function () {
-    // Skip if reduced motion is preferred — CSS already handles the no-animation state,
-    // but we still need to mark elements as visible so they render at full opacity.
     var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // ── Hero choreographed entrance (immediate, not scroll-gated) ──
+    var heroEls = [
+      { el: document.querySelector('.hero-kicker'), delay: 0 },
+      { el: document.querySelector('.hero-konami-deco'), delay: 200 },
+      { el: document.querySelector('.hero-pattern'), delay: 150 },
+      { el: document.querySelector('.hero-headline'), delay: 300 },
+      { el: document.querySelector('.hero-desc'), delay: 500 }
+    ];
+
+    if (prefersReduced) {
+      heroEls.forEach(function (h) { if (h.el) h.el.classList.add('visible'); });
+    } else {
+      heroEls.forEach(function (h) {
+        if (!h.el) return;
+        setTimeout(function () { h.el.classList.add('visible'); }, h.delay);
+      });
+    }
+
+    // ── Header + grid cards use IntersectionObserver ──
     var items = Array.from(document.querySelectorAll('.reveal'));
 
     if (prefersReduced) {
@@ -1555,13 +1640,10 @@
       return;
     }
 
-    // Stagger delay: cards inside the bento grid get incremental delays based
-    // on their position within the grid so they cascade in row by row.
     var gridEl = document.querySelector('.bento-grid');
     var gridCards = gridEl ? Array.from(gridEl.querySelectorAll('.reveal')) : [];
 
     gridCards.forEach(function (card, i) {
-      // Cap stagger at 8 steps (≈ 560ms total) so late cards don't wait too long.
       var step = Math.min(i, 8);
       card.style.transitionDelay = (step * 70) + 'ms';
     });
@@ -1571,15 +1653,12 @@
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            // Once revealed, stop observing to avoid re-triggering on scroll back up.
             observer.unobserve(entry.target);
           }
         });
       },
       {
-        // Trigger when at least 8% of the element is visible.
         threshold: 0.08,
-        // Give a small top margin so elements reveal slightly before they fully enter.
         rootMargin: '0px 0px -40px 0px'
       }
     );
