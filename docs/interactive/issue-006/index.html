@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive: Meeting-to-Knowledge Pipeline — The Cheat Code #006</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Outfit:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/interactive.css">
+<style>
+  /* --- Bento font overrides --- */
+  .layer-label {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+  }
+  .comp-name {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+  .comp-desc {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+  .stage-badge {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .note-text {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+  .pipeline-label {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+  }
+
+  /* Issue-specific diagram styles */
+
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .layer {
+    border-radius: 14px;
+    padding: 16px 18px;
+    position: relative;
+    transition: all 0.4s ease;
+  }
+  .layer.dimmed { opacity: 0.25; transform: scale(0.98); }
+  .layer.highlighted { opacity: 1; transform: scale(1); box-shadow: 0 0 0 3px rgba(107,47,160,0.3); }
+
+  .layer-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .layer-mcp {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 1.5px solid #0078D4;
+  }
+  .layer-mcp .layer-label { color: #0078D4; }
+
+  .layer-copilot {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 1.5px solid #6B2FA0;
+  }
+  .layer-copilot .layer-label { color: #6B2FA0; }
+
+  .layer-storage {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 1.5px solid #0078D4;
+  }
+  .layer-storage .layer-label { color: #0078D4; }
+
+  .layer-process {
+    background: linear-gradient(135deg, #FFF8E1, #FFF0CC);
+    border: 1.5px solid #CA5010;
+  }
+  .layer-process .layer-label { color: #CA5010; }
+
+  .layer-ai {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 1.5px solid #107C10;
+  }
+  .layer-ai .layer-label { color: #107C10; }
+
+  .component-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .component {
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+    flex: 1;
+    min-width: 160px;
+  }
+  .comp-name {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .comp-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+  .icon {
+    width: 26px; height: 26px; border-radius: 6px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px; color: white; flex-shrink: 0;
+  }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-orange { background: #CA5010; }
+  .icon-green { background: #107C10; }
+  .icon-amber { background: #CA5010; }
+
+  .stage-badge {
+    font-size: 9px;
+    font-weight: 600;
+    background: #6B2FA0;
+    color: white;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+  .stage-badge-blue { background: #0078D4; }
+  .stage-badge-amber { background: #CA5010; }
+  .stage-badge-green { background: #107C10; }
+
+  /* Flow arrows between layers */
+  .flow-arrow {
+    display: flex;
+    justify-content: center;
+    padding: 4px 0;
+  }
+  .varrow { display: flex; flex-direction: column; align-items: center; }
+  .varrow .shaft { width: 2px; height: 10px; background: #555; }
+  .varrow .head { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid #555; }
+  .varrow .label { font-size: 9px; color: #6B6B8D; font-style: italic; }
+
+  /* Note callout */
+  .note-callout {
+    margin-top: 8px;
+    background: #F0F6FF;
+    border: 1px dashed #0078D4;
+    border-radius: 8px;
+    padding: 8px 12px;
+    transition: all 0.4s ease;
+  }
+  .note-callout.dimmed { opacity: 0.25; }
+  .note-callout.highlighted { opacity: 1; }
+  .note-text {
+    font-size: 11px;
+    color: #0078D4;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  /* Cross-ref link */
+  .cross-ref {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 10px;
+    color: #CA5010;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px dashed #CA5010;
+  }
+  .cross-ref:hover { color: #A52E00; }
+
+  /* Pipeline summary bar */
+  .pipeline-summary {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 12px;
+    color: #107C10;
+    font-weight: 600;
+    transition: all 0.4s ease;
+  }
+  .pipeline-summary.dimmed { opacity: 0.25; }
+  .pipeline-summary.highlighted { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="interactive-page">
+  <div class="page-header">
+    <a href="../../" class="back-link">← Back to patterns</a>
+    <span class="issue-badge">Issue #006 · Practical</span>
+    <h1>Meeting-to-Knowledge Pipeline</h1>
+    <p class="page-subtitle">Two agents, one pipeline — from Teams meeting to searchable knowledge base in 2.5 days</p>
+  </div>
+
+  <div class="diagram-canvas" id="diagram">
+
+    <div class="pipeline">
+      <!-- Stage 1: Input Zone -->
+      <div class="layer layer-mcp" data-layer="input"
+           data-context='{
+             "title": "Meeting Capture — Input Zone",
+             "what": "The pipeline starts with a Teams meeting recording and transcript. A custom Graph connector navigates the chain: base64 meeting chat ID → join URL → meeting ID → transcript ID → raw WebVTT. This is the most complex part of the build but fully reusable once built.",
+             "requires": ["Microsoft Teams with recording enabled", "Microsoft Graph API permissions", "Custom Power Automate connector", "Meeting organizer consent"],
+             "prerequisites": ["Teams admin policy enables cloud recording and transcription", "Entra ID app registration with OnlineMeetings.Read and CallTranscript.Read.All permissions", "Admin consent granted for Graph API permissions", "Power Automate premium license for custom connector"],
+             "links": [
+               {"label": "Graph API: Get call transcript", "url": "https://learn.microsoft.com/en-us/graph/api/calltranscript-get"},
+               {"label": "Teams meeting transcription", "url": "https://learn.microsoft.com/en-us/microsoftteams/teams-recording-policy"},
+               {"label": "Power Automate custom connectors", "url": "https://learn.microsoft.com/en-us/connectors/custom-connectors/"}
+             ],
+             "code": "// Custom Graph connector — decode meeting chain\n// Step 1: Extract base64 chat ID from Teams meeting\n// Step 2: Decode to get joinWebUrl\n// Step 3: Use joinWebUrl to get meeting ID\nGET https://graph.microsoft.com/v1.0/me/onlineMeetings?$filter=joinWebUrl eq {joinUrl}\n\n// Step 4: Get transcript ID from meeting\nGET https://graph.microsoft.com/v1.0/me/onlineMeetings/{meetingId}/transcripts\n\n// Step 5: Fetch raw WebVTT content\nGET https://graph.microsoft.com/v1.0/me/onlineMeetings/{meetingId}/transcripts/{transcriptId}/content?$format=text/vtt"
+           }'>
+        <div class="layer-label">📥 Stage 1 — Meeting Capture</div>
+        <div class="component-row">
+          <div class="component"
+               data-context='{
+                 "title": "Teams Meeting",
+                 "what": "Source Teams meeting with cloud recording and transcription enabled. The meeting recording triggers the pipeline automatically when transcription completes. Supports both scheduled and ad-hoc meetings.",
+                 "requires": ["Microsoft Teams", "Cloud recording policy enabled", "Transcription enabled"],
+                 "prerequisites": ["Teams admin enables transcription in meeting policies", "Meeting organizer enables recording", "Attendees notified of recording per compliance"],
+                 "links": [
+                   {"label": "Teams meeting recording", "url": "https://learn.microsoft.com/en-us/microsoftteams/meeting-recording"},
+                   {"label": "Teams transcription overview", "url": "https://learn.microsoft.com/en-us/microsoftteams/teams-recording-policy"}
+                 ],
+                 "code": "// No custom code — Teams handles recording natively\n// Transcription auto-generates when recording is enabled\n// Output: WebVTT transcript stored in OneDrive/SharePoint"
+               }'>
+            <div class="comp-name"><div class="icon icon-blue">🎙️</div> Teams Meeting</div>
+            <div class="comp-desc">Source meeting with recording and transcript enabled.</div>
+          </div>
+          <div class="component"
+               data-context='{
+                 "title": "Custom Graph Connector",
+                 "what": "The most complex component — navigates the Microsoft Graph API chain to extract the raw transcript. Decodes base64 meeting chat ID to join URL, resolves meeting ID, finds transcript ID, and fetches raw WebVTT content. Built once, reused across all meetings.",
+                 "requires": ["Power Automate premium", "Custom connector definition", "Graph API delegated permissions"],
+                 "prerequisites": ["OnlineMeetings.Read permission granted", "CallTranscript.Read.All permission granted", "Custom connector registered in Power Platform", "Connection reference configured for target tenant"],
+                 "links": [
+                   {"label": "Graph API: Get call transcript", "url": "https://learn.microsoft.com/en-us/graph/api/calltranscript-get"},
+                   {"label": "Graph API: Online meetings", "url": "https://learn.microsoft.com/en-us/graph/api/resources/onlinemeeting"},
+                   {"label": "Custom connectors in Power Automate", "url": "https://learn.microsoft.com/en-us/connectors/custom-connectors/"}
+                 ],
+                 "code": "// Graph connector chain (Power Automate HTTP actions)\n// 1. Decode base64 chat ID\nbase64Decode(triggerBody()?[\"chatId\"])\n\n// 2. Extract joinWebUrl from decoded string\n// 3. GET /me/onlineMeetings?$filter=joinWebUrl eq ...\n// 4. GET /me/onlineMeetings/{id}/transcripts\n// 5. GET .../transcripts/{id}/content?$format=text/vtt\n\n// Key insight: This 5-step chain is the hardest part\n// but once built, it works for every meeting"
+               }'>
+            <div class="comp-name"><div class="icon icon-blue">🔗</div> Custom Graph Connector <span class="stage-badge stage-badge-blue">REUSABLE</span></div>
+            <div class="comp-desc">Decodes base64 chat ID → join URL → meeting ID → transcript ID → raw WebVTT.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Raw WebVTT transcript</div><div class="head"></div></div></div>
+
+      <!-- Stage 2: Scribe Agent -->
+      <div class="layer layer-copilot" data-layer="scribe"
+           data-context='{
+             "title": "Scribe Agent — Transcript Processing",
+             "what": "The first of two agents. The Scribe Agent receives the raw WebVTT transcript, processes it with AI to extract structured information (key decisions, action items, open questions, follow-ups), and generates a formatted Word document via the Word Online connector. Critical design decision: save the transcript to SharePoint first, then pass the link — not the content — to avoid token limits.",
+             "requires": ["Copilot Studio agent", "Word Online connector", "SharePoint connector", "AI Builder or Azure OpenAI"],
+             "prerequisites": ["Copilot Studio environment provisioned", "Word Online Business connector configured", "SharePoint site with document libraries created", "Agent prompt engineered for structured extraction"],
+             "links": [
+               {"label": "Copilot Studio overview", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio"},
+               {"label": "Word Online connector", "url": "https://learn.microsoft.com/en-us/connectors/wordonlinebusiness/"},
+               {"label": "SharePoint connector", "url": "https://learn.microsoft.com/en-us/connectors/sharepointonline/"}
+             ],
+             "code": "// Scribe Agent — structured extraction prompt\nYou are a meeting scribe agent. Given a meeting transcript,\nextract the following sections:\n\n## Key Decisions\n- List each decision made during the meeting\n\n## Action Items\n- Owner | Action | Due Date\n\n## Open Questions\n- Questions raised but not resolved\n\n## Follow-ups\n- Items requiring follow-up before next meeting\n\n// CRITICAL: Save transcript to SharePoint FIRST,\n// then pass the SharePoint link to the agent.\n// Raw transcripts often exceed token limits."
+           }'>
+        <div class="layer-label">🟣 Stage 2 — Scribe Agent</div>
+        <div class="component-row">
+          <div class="component"
+               data-context='{
+                 "title": "Transcript Processing",
+                 "what": "Ingests the raw WebVTT transcript from the Graph connector. The transcript is first saved to SharePoint Library A (raw archive), then the SharePoint link is passed to the AI for processing. This avoids token limit issues with long meetings.",
+                 "requires": ["Raw WebVTT input", "SharePoint write access"],
+                 "prerequisites": ["SharePoint Library A created for raw transcripts", "Write permissions configured for the agent service account"],
+                 "links": [
+                   {"label": "SharePoint connector", "url": "https://learn.microsoft.com/en-us/connectors/sharepointonline/"}
+                 ],
+                 "code": "// Save raw transcript first, then pass link\n// This is the key insight from the hackathon build\nSave transcript → SharePoint Library A\nPass SharePoint link → AI extraction step\n// NOT: Pass raw text → AI (hits token limits)"
+               }'>
+            <div class="comp-name"><div class="icon icon-purple">📝</div> Transcript Processing</div>
+            <div class="comp-desc">Raw WebVTT fetched via Graph API. Saved to archive first.</div>
+          </div>
+          <div class="component"
+               data-context='{
+                 "title": "Structured Extraction",
+                 "what": "AI processes the transcript and extracts structured information: key decisions, action items with owners, open questions, and follow-up items. Uses prompt engineering to consistently format output regardless of meeting style or length.",
+                 "requires": ["AI model access", "Structured extraction prompt", "Meeting transcript input"],
+                 "prerequisites": ["Agent prompt tested against multiple meeting styles", "Output format validated with stakeholders", "Edge cases handled (short meetings, no decisions, etc.)"],
+                 "links": [
+                   {"label": "Copilot Studio AI features", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio"},
+                   {"label": "Prompt engineering best practices", "url": "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/prompt-engineering"}
+                 ],
+                 "code": "// Extraction categories\n1. Key Decisions — what was decided\n2. Action Items — who, what, when\n3. Open Questions — unresolved items\n4. Follow-ups — pre-next-meeting tasks"
+               }'>
+            <div class="comp-name"><div class="icon icon-purple">🔍</div> Structured Extraction</div>
+            <div class="comp-desc">AI extracts key decisions, action items, open questions, follow-ups.</div>
+          </div>
+          <div class="component"
+               data-context='{
+                 "title": "Meeting Summary Document",
+                 "what": "The final output of the Scribe Agent: a formatted Word document generated via the Word Online connector. The document contains all extracted sections in a consistent template, ready for project owner review. Saved to SharePoint Library B (generated summaries).",
+                 "requires": ["Word Online Business connector", "Document template", "SharePoint Library B write access"],
+                 "prerequisites": ["Word document template created in SharePoint", "Word Online connector configured in Power Automate", "Library B permissions set for agent write access"],
+                 "links": [
+                   {"label": "Word Online connector actions", "url": "https://learn.microsoft.com/en-us/connectors/wordonlinebusiness/"},
+                   {"label": "Populate Word template action", "url": "https://learn.microsoft.com/en-us/power-automate/get-started-logic-template"}
+                 ],
+                 "code": "// Word Online connector — populate template\n// Action: \"Populate a Microsoft Word template\"\n// Template location: SharePoint Library B\n// Fields mapped from AI extraction output:\n//   {{KeyDecisions}} → bullet list\n//   {{ActionItems}} → table with Owner|Action|Due\n//   {{OpenQuestions}} → numbered list\n//   {{FollowUps}} → checklist format"
+               }'>
+            <div class="comp-name"><div class="icon icon-purple">📄</div> Meeting Summary</div>
+            <div class="comp-desc">Word doc generated via Word Online connector.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Documents saved to SharePoint</div><div class="head"></div></div></div>
+
+      <!-- Stage 3: Storage Layer -->
+      <div class="layer layer-storage" data-layer="storage"
+           data-context='{
+             "title": "Two SharePoint Libraries — Storage Layer",
+             "what": "Two separate SharePoint document libraries enforce clean separation of concerns. Library A stores raw, immutable transcripts — the original record that should never be modified. Library B stores generated summaries — editable documents that go through the approval process. This separation prevents accidental modification of originals and creates a clear audit trail.",
+             "requires": ["SharePoint Online", "Two document libraries", "Separate permission sets"],
+             "prerequisites": ["SharePoint site created for the project", "Library A configured with read-only permissions (no edit for non-admins)", "Library B configured with edit permissions for reviewers", "Retention policies applied per compliance requirements"],
+             "links": [
+               {"label": "SharePoint document libraries", "url": "https://learn.microsoft.com/en-us/sharepoint/dev/general-development/sharepoint-development-overview"},
+               {"label": "SharePoint permissions management", "url": "https://learn.microsoft.com/en-us/sharepoint/modern-experience-sharing-permissions"},
+               {"label": "SharePoint retention policies", "url": "https://learn.microsoft.com/en-us/microsoft-365/compliance/retention-policies-sharepoint"}
+             ],
+             "code": "// SharePoint library structure\n//\n// Library A: Raw Transcripts (immutable archive)\n//   Permissions: Agent = Write, Humans = Read-only\n//   Retention: 7 years (compliance)\n//   Naming: YYYY-MM-DD_MeetingTitle_transcript.vtt\n//\n// Library B: Generated Summaries (editable)\n//   Permissions: Agent = Write, Reviewers = Edit\n//   Retention: Standard\n//   Naming: YYYY-MM-DD_MeetingTitle_summary.docx\n//\n// WHY two libraries?\n// Prevents accidental edit of raw transcripts\n// Clear audit: original vs. generated content"
+           }'>
+        <div class="layer-label">📁 Stage 3 — Two SharePoint Libraries</div>
+        <div class="component-row">
+          <div class="component"
+               data-context='{
+                 "title": "Library A — Raw Transcripts",
+                 "what": "Immutable archive of original meeting transcripts. The raw WebVTT files are saved here by the Scribe Agent before any AI processing occurs. Permissions are set to prevent editing — only the agent can write, humans get read-only access. This preserves the original record for compliance and audit purposes.",
+                 "requires": ["SharePoint document library", "Restrictive permissions (read-only for users)"],
+                 "prerequisites": ["Library created with unique permissions (break inheritance)", "Agent service account granted Contribute rights", "All other users granted Read-only access", "Versioning enabled for audit trail"],
+                 "links": [
+                   {"label": "SharePoint library permissions", "url": "https://learn.microsoft.com/en-us/sharepoint/modern-experience-sharing-permissions"},
+                   {"label": "SharePoint retention labels", "url": "https://learn.microsoft.com/en-us/microsoft-365/compliance/retention-policies-sharepoint"}
+                 ],
+                 "code": "// Library A permissions\n// Break permission inheritance from parent site\n// Agent service account → Contribute\n// Project members → Read\n// Everyone else → No access\n// Enable versioning (major versions only)"
+               }'>
+            <div class="comp-name"><div class="icon icon-blue">🗄️</div> Library A — Raw Transcripts <span class="stage-badge stage-badge-blue">IMMUTABLE</span></div>
+            <div class="comp-desc">Original transcripts. Read-only archive — never modified after save.</div>
+          </div>
+          <div class="component"
+               data-context='{
+                 "title": "Library B — Generated Summaries",
+                 "what": "Editable document library for AI-generated meeting summaries. Project owners can review, annotate, and approve summaries here before they enter the knowledge base. Approval status is tracked via SharePoint metadata columns.",
+                 "requires": ["SharePoint document library", "Edit permissions for reviewers", "Approval metadata columns"],
+                 "prerequisites": ["Library created with approval workflow columns", "Content approval enabled in library settings", "Reviewers granted Edit permissions", "Approval status column: Pending | Approved | Needs Revision"],
+                 "links": [
+                   {"label": "SharePoint content approval", "url": "https://learn.microsoft.com/en-us/sharepoint/governance/content-approval-overview"},
+                   {"label": "SharePoint column types", "url": "https://learn.microsoft.com/en-us/sharepoint/dev/declarative-customization/column-formatting"}
+                 ],
+                 "code": "// Library B metadata columns\n// Title (default)\n// MeetingDate — Date field\n// ApprovalStatus — Choice: Pending | Approved | Needs Revision\n// ReviewedBy — Person field\n// ReviewDate — Date field\n// LinkedTranscript — Hyperlink to Library A source"
+               }'>
+            <div class="comp-name"><div class="icon icon-blue">📋</div> Library B — Generated Summaries <span class="stage-badge stage-badge-blue">EDITABLE</span></div>
+            <div class="comp-desc">AI-generated summaries. Reviewable, approvable, editable.</div>
+          </div>
+        </div>
+        <div class="note-callout" data-layer="storage-note">
+          <div class="note-text">💡 Two libraries, not one — clean separation prevents accidental modification of originals and creates a clear audit trail.</div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Summary routed for review</div><div class="head"></div></div></div>
+
+      <!-- Stage 4: Approval Gate -->
+      <div class="layer layer-process" data-layer="gate"
+           data-context='{
+             "title": "Approval Gate — Human-in-the-Loop",
+             "what": "The project owner reviews the AI-generated summary against the raw transcript before it enters the knowledge base. This is the Issue #005 Human-in-the-Loop pattern applied in practice — the agent never publishes directly to the knowledge base without human approval. Reviewers can approve, request corrections, or reject.",
+             "requires": ["Power Automate approval flow", "Project owner with review permissions", "Access to both Library A and Library B"],
+             "prerequisites": ["Power Automate approval connector configured", "Approval flow triggered on new document in Library B", "Reviewer has read access to Library A (raw transcript) for comparison", "Email notifications configured for pending approvals"],
+             "links": [
+               {"label": "Power Automate approvals", "url": "https://learn.microsoft.com/en-us/power-automate/get-started-approvals"},
+               {"label": "Issue #005: Human-in-the-Loop", "url": "https://microsoft.github.io/ai-cheatcode/interactive/issue-005/"},
+               {"label": "SharePoint content approval", "url": "https://learn.microsoft.com/en-us/sharepoint/governance/content-approval-overview"}
+             ],
+             "code": "// Power Automate approval flow\n// Trigger: When a file is created in Library B\n// Action 1: Get linked transcript from Library A\n// Action 2: Start approval (Approve/Reject)\n//   Assignee: Project Owner\n//   Details: Link to summary + link to raw transcript\n// Action 3a: If Approved → Update ApprovalStatus column\n// Action 3b: If Rejected → Notify agent, flag for revision"
+           }'>
+        <div class="layer-label">⚡ Stage 4 — Approval Gate</div>
+        <div class="component-row">
+          <div class="component"
+               data-context='{
+                 "title": "Project Owner Review",
+                 "what": "The human reviewer (project owner) receives the AI-generated summary and compares it against the raw transcript in Library A. They verify accuracy of extracted decisions, action items, and follow-ups. This prevents AI hallucinations from entering the knowledge base.",
+                 "requires": ["Project owner role", "Read access to Library A", "Edit access to Library B"],
+                 "prerequisites": ["Project owner identified and has required permissions", "Approval notification flow configured", "Side-by-side review process documented for reviewers"],
+                 "links": [
+                   {"label": "Power Automate approvals", "url": "https://learn.microsoft.com/en-us/power-automate/get-started-approvals"}
+                 ],
+                 "code": "// Reviewer checklist\n// 1. Open summary document (Library B)\n// 2. Open raw transcript (Library A) side-by-side\n// 3. Verify: Are all key decisions captured?\n// 4. Verify: Are action items correctly attributed?\n// 5. Verify: No hallucinated content added\n// 6. Approve or Request Corrections"
+               }'>
+            <div class="comp-name"><div class="icon icon-amber">👤</div> Project Owner Review</div>
+            <div class="comp-desc">Reviews summary against raw transcript for accuracy.</div>
+          </div>
+          <div class="component"
+               data-context='{
+                 "title": "Approve / Request Corrections",
+                 "what": "The human decision point. Approve sends the document to the Library Agent for knowledge base indexing. Request Corrections flags the document and notifies the Scribe Agent to regenerate. This is the Issue #005 Human-in-the-Loop pattern in action — AI never publishes without human sign-off.",
+                 "requires": ["Approval workflow", "Status tracking in SharePoint"],
+                 "prerequisites": ["Approval outcomes configured: Approve, Request Corrections", "Status update automation for Library B metadata", "Notification flow for corrections back to Scribe Agent"],
+                 "links": [
+                   {"label": "Issue #005: Human-in-the-Loop Approval Gates", "url": "https://microsoft.github.io/ai-cheatcode/interactive/issue-005/"},
+                   {"label": "Power Automate conditions", "url": "https://learn.microsoft.com/en-us/power-automate/use-expressions-in-conditions"}
+                 ],
+                 "code": "// Approval outcomes\nif (approvalResult === \"Approved\") {\n  // Update SharePoint metadata\n  updateColumn(\"ApprovalStatus\", \"Approved\");\n  updateColumn(\"ReviewedBy\", approver);\n  // Trigger Library Agent pipeline\n  triggerFlow(\"Library-Agent-Index\", documentUrl);\n} else {\n  // Flag for revision\n  updateColumn(\"ApprovalStatus\", \"Needs Revision\");\n  notifyScribeAgent(documentUrl, rejectionComments);\n}"
+               }'>
+            <div class="comp-name"><div class="icon icon-amber">✅</div> Approve / Request Corrections</div>
+            <div class="comp-desc">Human decision point. <a href="../../interactive/issue-005/" class="cross-ref">→ Issue #005 pattern</a></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Approved docs → knowledge base</div><div class="head"></div></div></div>
+
+      <!-- Stage 5: Library Agent -->
+      <div class="layer layer-ai" data-layer="library"
+           data-context='{
+             "title": "Library Agent — Knowledge Indexing",
+             "what": "The second agent in the pipeline. The Library Agent takes approved meeting summaries, copies them to Azure Blob Storage, indexes them in Azure AI Search, and exposes a natural-language query interface. Leadership can ask questions across all meeting knowledge — \"What were the key decisions about Project X in the last month?\"",
+             "requires": ["Copilot Studio agent", "Azure Blob Storage", "Azure AI Search", "SharePoint connector"],
+             "prerequisites": ["Azure subscription with AI Search provisioned", "Blob Storage container created for approved documents", "AI Search index configured with meeting summary schema", "Copilot Studio agent configured with AI Search as knowledge source"],
+             "links": [
+               {"label": "Azure AI Search overview", "url": "https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search"},
+               {"label": "Azure Blob Storage", "url": "https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blobs-overview"},
+               {"label": "Copilot Studio knowledge sources", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-overview"}
+             ],
+             "code": "// Library Agent pipeline\n// 1. Trigger: Approved document in Library B\n// 2. Copy document to Azure Blob Storage\n// 3. Azure AI Search indexer picks up new blob\n// 4. Document chunked, embedded, indexed\n// 5. Copilot Studio agent queries via AI Search\n\n// AI Search index schema\n{\n  \"name\": \"meeting-knowledge-index\",\n  \"fields\": [\n    {\"name\": \"id\", \"type\": \"Edm.String\", \"key\": true},\n    {\"name\": \"title\", \"type\": \"Edm.String\", \"searchable\": true},\n    {\"name\": \"meetingDate\", \"type\": \"Edm.DateTimeOffset\", \"filterable\": true},\n    {\"name\": \"decisions\", \"type\": \"Edm.String\", \"searchable\": true},\n    {\"name\": \"actionItems\", \"type\": \"Edm.String\", \"searchable\": true},\n    {\"name\": \"content\", \"type\": \"Edm.String\", \"searchable\": true},\n    {\"name\": \"contentVector\", \"type\": \"Collection(Edm.Single)\", \"dimensions\": 1536}\n  ]\n}"
+           }'>
+        <div class="layer-label">🟢 Stage 5 — Library Agent</div>
+        <div class="component-row">
+          <div class="component"
+               data-context='{
+                 "title": "Knowledge Indexer",
+                 "what": "Copies approved documents from SharePoint Library B to Azure Blob Storage, where Azure AI Search indexes them. The indexer runs on a schedule or is triggered by the approval flow. Documents are chunked and vectorized for semantic search.",
+                 "requires": ["Azure Blob Storage", "Azure AI Search indexer", "Power Automate or Logic App for copy"],
+                 "prerequisites": ["Blob Storage container with appropriate access policies", "AI Search data source pointing to Blob Storage", "Indexer schedule configured (every 5 minutes or on-demand)", "Skillset configured for document chunking"],
+                 "links": [
+                   {"label": "AI Search indexers", "url": "https://learn.microsoft.com/en-us/azure/search/search-indexer-overview"},
+                   {"label": "Blob Storage indexer", "url": "https://learn.microsoft.com/en-us/azure/search/search-howto-indexing-azure-blob-storage"}
+                 ],
+                 "code": "// Copy approved doc to Blob Storage\n// Power Automate: Get file content from SharePoint\n// → Create blob in Azure Blob Storage\n// → AI Search indexer detects new blob\n// → Document indexed within minutes"
+               }'>
+            <div class="comp-name"><div class="icon icon-green">📦</div> Knowledge Indexer</div>
+            <div class="comp-desc">Copies approved docs to Azure Blob Storage for indexing.</div>
+          </div>
+          <div class="component"
+               data-context='{
+                 "title": "Azure AI Search",
+                 "what": "Indexes all approved meeting summaries for full-text and semantic search. Supports hybrid search (keyword + vector) so leadership can find information using natural language. The index schema captures meeting metadata (date, project, attendees) alongside content.",
+                 "requires": ["Azure AI Search service (Basic tier or above)", "Search index with meeting schema", "Vector search enabled"],
+                 "prerequisites": ["AI Search service provisioned in Azure", "Index created with meeting summary fields", "Semantic configuration enabled for natural language queries", "Vector search profile configured with embedding model"],
+                 "links": [
+                   {"label": "Azure AI Search overview", "url": "https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search"},
+                   {"label": "Semantic search", "url": "https://learn.microsoft.com/en-us/azure/search/semantic-search-overview"},
+                   {"label": "Vector search", "url": "https://learn.microsoft.com/en-us/azure/search/vector-search-overview"}
+                 ],
+                 "code": "// Example: Semantic + vector hybrid query\nPOST https://{search-service}.search.windows.net/indexes/meeting-knowledge-index/docs/search\n{\n  \"search\": \"key decisions about Project X\",\n  \"searchFields\": \"decisions,actionItems,content\",\n  \"queryType\": \"semantic\",\n  \"semanticConfiguration\": \"meeting-semantic-config\",\n  \"vectorQueries\": [{\n    \"text\": \"key decisions about Project X\",\n    \"fields\": \"contentVector\",\n    \"kind\": \"text\",\n    \"k\": 5\n  }],\n  \"top\": 10\n}"
+               }'>
+            <div class="comp-name"><div class="icon icon-green">🔎</div> Azure AI Search</div>
+            <div class="comp-desc">Indexes content for full-text and semantic search.</div>
+          </div>
+          <div class="component"
+               data-context='{
+                 "title": "Query Interface",
+                 "what": "Leadership-facing natural-language interface powered by Copilot Studio. Users ask questions like \"What were the key decisions about Project X in the last month?\" or \"Who has outstanding action items from last week?\" The agent queries Azure AI Search and synthesizes answers with source citations.",
+                 "requires": ["Copilot Studio agent", "Azure AI Search knowledge source", "Teams or M365 Copilot deployment"],
+                 "prerequisites": ["Copilot Studio agent configured with AI Search connection", "Agent deployed to Teams or M365 Copilot", "Users have appropriate permissions to query the knowledge base", "Agent instructions tuned for meeting knowledge queries"],
+                 "links": [
+                   {"label": "Copilot Studio overview", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio"},
+                   {"label": "Copilot Studio knowledge sources", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-overview"}
+                 ],
+                 "code": "// Example queries the Library Agent handles:\n//\n// \"What decisions were made about the API redesign?\"\n// \"Who owns the action items from Monday standup?\"\n// \"Summarize all open questions from this sprint.\"\n// \"What follow-ups are pending from last month?\"\n//\n// Agent returns answers with citations:\n// \"Based on the May 12 engineering meeting [1],\n//  the team decided to... [source link]\""
+               }'>
+            <div class="comp-name"><div class="icon icon-green">💬</div> Query Interface</div>
+            <div class="comp-desc">Natural-language questions across all meeting knowledge.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pipeline summary -->
+    <div class="pipeline-summary" data-layer="landing">
+      🚀 Built in 2.5 days at a customer hackathon — "What if every meeting your team runs was automatically documented, approved, and searchable by end of day?"
+    </div>
+
+  </div><!-- /#diagram -->
+</div><!-- /.interactive-page -->
+
+<div class="interactive-footer">
+  <p>The Cheat Code · ABS Tech Strategy · <a href="../../">Back to all patterns</a></p>
+</div>
+
+<script src="../shared/interactive.js"></script>
+<script>
+  window.interactiveConfig = {
+    container: '#diagram',
+    contextMode: 'lightweight',
+    steps: [
+      {
+        id: 'overview',
+        title: 'The Meeting-to-Knowledge Pipeline',
+        description: 'End-to-end pipeline: Teams meeting → AI-extracted summary → human approval → searchable knowledge base. Built by Pete Puustinen at the Eggis Pharma hackathon in Budapest in just 2.5 days. Two agents, five stages, one seamless pipeline. Click through each stage to see how it works.',
+        highlight: ['.pipeline']
+      },
+      {
+        id: 'input',
+        title: 'Stage 1: Meeting Capture',
+        description: 'The pipeline starts with a Teams meeting transcript. A custom Graph API connector navigates the chain: base64 meeting chat ID → join URL → meeting ID → transcript ID → raw WebVTT. This is the most complex part of the build — but once built, it\'s fully reusable for every meeting.',
+        highlight: ['[data-layer="input"]']
+      },
+      {
+        id: 'scribe',
+        title: 'Stage 2: Scribe Agent',
+        description: 'The first agent processes the raw transcript, extracting key decisions, action items, open questions, and follow-ups into a structured Word document. Key insight from the hackathon: save the transcript to SharePoint first, then pass the link — not the raw content — to avoid hitting token limits on long meetings.',
+        highlight: ['[data-layer="scribe"]']
+      },
+      {
+        id: 'storage',
+        title: 'Stage 3: Two SharePoint Libraries',
+        description: 'Raw transcripts go to Library A (immutable archive, read-only for humans). Generated summaries go to Library B (editable, reviewable). Two libraries, not one — this clean separation prevents accidental modification of originals and creates a clear audit trail from source to output.',
+        highlight: ['[data-layer="storage"]', '[data-layer="storage-note"]']
+      },
+      {
+        id: 'gate',
+        title: 'Stage 4: Approval Gate',
+        description: 'The project owner reviews the AI-generated summary against the raw transcript before it enters the knowledge base. This is the Issue #005 Human-in-the-Loop pattern applied in practice — the agent never publishes directly without human approval. No hallucinations in the knowledge base.',
+        highlight: ['[data-layer="gate"]']
+      },
+      {
+        id: 'library',
+        title: 'Stage 5: Library Agent',
+        description: 'The second agent takes approved summaries, indexes them in Azure AI Search, and exposes a natural-language query interface. Leadership can ask: "What were the key decisions about Project X this month?" — and get sourced answers across all meeting knowledge.',
+        highlight: ['[data-layer="library"]']
+      },
+      {
+        id: 'landing',
+        title: 'The Hackathon Landing Motion',
+        description: '"What if every meeting your team runs this week was automatically documented, approved, and searchable by leadership by end of day?" Position this as a 2–3 day joint build. The Graph connector is the hardest part but it\'s reusable. The rest is configuration. Built at a real customer hackathon — this isn\'t a demo, it\'s a deployment pattern.',
+        highlight: ['[data-layer="landing"]']
+      }
+    ]
+  };
+</script>
+</body>
+</html>

@@ -570,6 +570,8 @@
     { num: '002', short: '#002', title: 'Scoped Multi-Source Search',     path: '../issue-002/', type: 'conceptual' },
     { num: '003', short: '#003', title: 'Prompt-Chained Triage',          path: '../issue-003/', type: 'practical' },
     { num: '004', short: '#004', title: 'Secure In-Boundary Processing',  path: '../issue-004/', type: 'conceptual' },
+    { num: '005', short: '#005', title: 'Approval Gates',                 path: '../issue-005/', type: 'conceptual' },
+    { num: '006', short: '#006', title: 'Meeting-to-Knowledge Pipeline',  path: '../issue-006/', type: 'practical' },
   ];
 
   function buildGlobalNav() {

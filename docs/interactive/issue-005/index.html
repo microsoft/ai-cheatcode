@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive: Human-in-the-Loop Approval Gates — The Cheat Code #005</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Outfit:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/interactive.css">
+<style>
+  /* --- Bento font overrides --- */
+  .boundary-label {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+  }
+  .layer-label {
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+  }
+  .comp-name {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+  .comp-desc {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+  .lock-badge {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .blocked-text {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+  .blocked-desc {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+  .guarantee {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  }
+
+  /* Issue-specific diagram styles */
+
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 0;
+  }
+
+  .layer {
+    border-radius: 14px;
+    padding: 16px 18px;
+    position: relative;
+    transition: all 0.4s ease;
+  }
+  .layer.dimmed { opacity: 0.25; transform: scale(0.98); }
+  .layer.highlighted { opacity: 1; transform: scale(1); box-shadow: 0 0 0 3px rgba(107,47,160,0.3); }
+
+  .layer-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .layer-copilot {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 1.5px solid #6B2FA0;
+  }
+  .layer-copilot .layer-label { color: #6B2FA0; }
+
+  .layer-mcp {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 1.5px solid #0078D4;
+  }
+  .layer-mcp .layer-label { color: #0078D4; }
+
+  .layer-process {
+    background: linear-gradient(135deg, #FFF8E1, #FFF0CC);
+    border: 1.5px solid #CA5010;
+  }
+  .layer-process .layer-label { color: #CA5010; }
+
+  .layer-ai {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 1.5px solid #107C10;
+  }
+  .layer-ai .layer-label { color: #107C10; }
+
+  .component-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .component {
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+    flex: 1;
+    min-width: 160px;
+  }
+  .comp-name {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .comp-desc { font-size: 11px; color: #6B6B8D; line-height: 1.4; }
+  .icon {
+    width: 26px; height: 26px; border-radius: 6px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px; color: white; flex-shrink: 0;
+  }
+  .icon-purple { background: #6B2FA0; }
+  .icon-blue { background: #0078D4; }
+  .icon-orange { background: #CA5010; }
+  .icon-amber { background: #CA5010; }
+  .icon-green { background: #107C10; }
+  .icon-red { background: #D13438; }
+
+  .lock-badge {
+    font-size: 9px;
+    font-weight: 600;
+    background: #CA5010;
+    color: white;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+
+  /* Flow arrows between layers */
+  .flow-arrow {
+    display: flex;
+    justify-content: center;
+    padding: 4px 0;
+  }
+  .varrow { display: flex; flex-direction: column; align-items: center; }
+  .varrow .shaft { width: 2px; height: 10px; background: #555; }
+  .varrow .head { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid #555; }
+  .varrow .label { font-size: 9px; color: #6B6B8D; font-style: italic; }
+
+  /* Blocked panel */
+  .blocked-panel {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    transition: all 0.4s ease;
+  }
+  .blocked-panel.dimmed { opacity: 0.25; }
+  .blocked-panel.highlighted { opacity: 1; }
+
+  .blocked-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #FDEDED;
+    border: 2px solid #D13438;
+    border-radius: 10px;
+    padding: 10px 16px;
+  }
+  .blocked-x {
+    width: 28px; height: 28px;
+    background: #D13438; color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; flex-shrink: 0;
+  }
+  .blocked-text { font-size: 12px; font-weight: 600; color: #D13438; }
+  .blocked-desc { font-size: 10px; color: #8B4444; }
+
+  .guarantee {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 12px;
+    color: #107C10;
+    font-weight: 600;
+    transition: all 0.4s ease;
+  }
+  .guarantee.dimmed { opacity: 0.25; }
+  .guarantee.highlighted { opacity: 1; }
+
+  /* Rejection feedback arrow */
+  .feedback-arrow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 9px;
+    color: #D13438;
+    font-style: italic;
+    margin-top: 6px;
+  }
+  .feedback-arrow .curved {
+    width: 20px;
+    height: 14px;
+    border: 2px solid #D13438;
+    border-top: none;
+    border-right: none;
+    border-radius: 0 0 0 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="interactive-page">
+  <div class="page-header">
+    <a href="../../" class="back-link">← Back to patterns</a>
+    <span class="issue-badge">Issue #005 · Conceptual</span>
+    <h1>Human-in-the-Loop Approval Gates</h1>
+    <p class="page-subtitle">When agents need a human checkpoint before acting — approval workflows, escalation patterns, and trust boundaries for high-stakes decisions</p>
+  </div>
+
+  <div class="diagram-canvas" id="diagram">
+
+    <div class="pipeline">
+      <!-- Layer 1: Generation Zone -->
+      <div class="layer layer-copilot" data-layer="generate"
+           data-context='{"title":"Generation Zone","what":"The AI agent generates content — summaries, proposals, responses, reports — and places it in a staging area. Nothing produced here goes live. The staging area acts as a buffer between AI speed and human judgment, ensuring every output is reviewable before publication.","requires":["Copilot Studio or custom agent runtime","Staging area (SharePoint draft library, database queue, or approval list)","Structured output format (JSON, adaptive card, or document template)"],"prerequisites":["Agent configured with appropriate data source connectors","Output template defined for consistent review format","Staging library or queue provisioned in SharePoint or Dataverse","Agent identity configured with write access to staging area only"],"links":[{"label":"Copilot Studio overview","url":"https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio"},{"label":"Power Automate cloud flows","url":"https://learn.microsoft.com/en-us/power-automate/overview-cloud"},{"label":"SharePoint document libraries","url":"https://learn.microsoft.com/en-us/sharepoint/libraries"}],"code":"// Agent output → staging area (never direct to live)\nconst draft = await agent.generate({\n  input: sourceData,\n  template: \"meeting-summary\",\n  outputFormat: \"adaptive-card\"\n});\n\n// Write to staging — NOT to live channel\nawait stagingQueue.enqueue({\n  content: draft,\n  sourceRef: sourceData.id,\n  generatedAt: new Date().toISOString(),\n  modelVersion: agent.modelVersion,\n  status: \"pending-review\"\n});"}'>
+        <div class="layer-label">🟣 Generation Zone</div>
+        <div class="component-row">
+          <div class="component"
+               data-context='{"title":"AI Agent","what":"The AI agent that generates content from source data — meeting transcripts, documents, customer emails, support tickets. It produces structured output (summaries, proposals, drafted responses) but has no authority to publish. Its role ends at generation.","requires":["Copilot Studio agent or Azure OpenAI integration","Source data connectors (Graph, SharePoint, ADO)","Prompt engineering for consistent output quality"],"prerequisites":["Agent deployed and tested in staging environment","Prompt templates reviewed by content owners","Output quality baseline established with sample data"],"links":[{"label":"Copilot Studio agent authoring","url":"https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-fundamentals"},{"label":"Azure OpenAI prompt engineering","url":"https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/prompt-engineering"}],"code":"// Agent generates but never publishes\nconst summary = await copilot.complete({\n  systemPrompt: instructions,\n  userPrompt: transcript,\n  temperature: 0.3,\n  maxTokens: 1500\n});\n// Returns draft — does NOT post anywhere"}'>
+            <div class="comp-name"><div class="icon icon-purple">🤖</div> AI Agent</div>
+            <div class="comp-desc">Generates content (summaries, proposals, responses) from source data. No publish authority.</div>
+          </div>
+          <div class="component"
+               data-context='{"title":"Output Staging","what":"A controlled staging area where AI-generated drafts land before human review. This is the critical buffer — it decouples AI generation speed from human review pace. Drafts sit here until explicitly approved or rejected. Common implementations: SharePoint draft library, Dataverse queue, or Power Automate approval request.","requires":["SharePoint draft library or Dataverse table","Status field (Pending / Approved / Rejected)","Metadata: timestamp, source reference, model version"],"prerequisites":["Draft library created with appropriate permissions","Only the agent identity can write; only reviewers can approve","Retention policy set to auto-delete rejected drafts after N days"],"links":[{"label":"SharePoint content approval","url":"https://learn.microsoft.com/en-us/sharepoint/governance/content-approval-policies"},{"label":"Dataverse tables","url":"https://learn.microsoft.com/en-us/power-apps/maker/data-platform/entity-overview"}],"code":"// Staging area schema\n{\n  \"id\": \"draft-001\",\n  \"content\": \"...\",\n  \"status\": \"pending-review\",\n  \"generatedAt\": \"2025-04-21T09:00:00Z\",\n  \"sourceRef\": \"transcript-abc-123\",\n  \"modelVersion\": \"gpt-4o-2024-08-06\",\n  \"promptHash\": \"sha256:a1b2c3...\",\n  \"reviewerAssigned\": null,\n  \"reviewedAt\": null\n}"}'>
+            <div class="comp-name"><div class="icon icon-purple">📦</div> Output Staging</div>
+            <div class="comp-desc">Draft lands in staging area — not yet live. Decouples AI speed from review pace.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Draft queued for review</div><div class="head"></div></div></div>
+
+      <!-- Layer 2: Immutable Source Layer -->
+      <div class="layer layer-mcp" data-layer="source"
+           data-context='{"title":"Immutable Source Layer","what":"The raw input that the AI processed is preserved separately and immutably. When a reviewer checks the AI output, they can always compare it against the original source. This creates an unbroken chain: source → generation → review → decision. Every step is traceable.","requires":["Immutable storage for source documents","Audit logging with timestamps and version hashes","Separate storage from staging area — source cannot be modified by the agent"],"prerequisites":["Immutable blob storage or SharePoint library with versioning enforced","Audit trail system configured (Microsoft Purview or custom logging)","Retention policy: source retained at least as long as approved output"],"links":[{"label":"SharePoint versioning","url":"https://learn.microsoft.com/en-us/sharepoint/governance/versioning-policy"},{"label":"Microsoft Purview audit","url":"https://learn.microsoft.com/en-us/purview/audit-solutions-overview"},{"label":"Azure Blob immutable storage","url":"https://learn.microsoft.com/en-us/azure/storage/blobs/immutable-storage-overview"}],"code":"// Preserve source alongside generated output\nawait auditLog.record({\n  action: \"content-generated\",\n  sourceDocId: transcript.id,\n  sourceHash: sha256(transcript.content),\n  outputDraftId: draft.id,\n  outputHash: sha256(draft.content),\n  modelVersion: \"gpt-4o-2024-08-06\",\n  promptHash: sha256(systemPrompt),\n  timestamp: new Date().toISOString()\n});"}'>
+        <div class="layer-label">🔵 Immutable Source Layer</div>
+        <div class="component-row">
+          <div class="component"
+               data-context='{"title":"Raw Input Archive","what":"The original transcript, document, or data that the AI agent processed. Stored immutably — cannot be modified after creation. Enables reviewers to verify AI output against the actual source material at any time.","requires":["Immutable storage (versioned SharePoint, Azure Blob with WORM)","Hash verification for integrity checks","Read-only access for reviewers"],"prerequisites":["Storage configured with immutability policy","Hash computed and stored at ingestion time","Reviewer role granted read-only access to archive"],"links":[{"label":"Azure Blob immutable storage","url":"https://learn.microsoft.com/en-us/azure/storage/blobs/immutable-storage-overview"},{"label":"SharePoint versioning","url":"https://learn.microsoft.com/en-us/sharepoint/governance/versioning-policy"}],"code":"// Archive raw input with integrity hash\nawait archive.store({\n  id: sourceDoc.id,\n  content: sourceDoc.rawContent,\n  hash: sha256(sourceDoc.rawContent),\n  archivedAt: new Date().toISOString(),\n  immutable: true\n});"}'>
+            <div class="comp-name"><div class="icon icon-blue">📁</div> Raw Input Archive</div>
+            <div class="comp-desc">Original transcript/doc/data saved separately. Immutable — cannot be modified after creation.</div>
+          </div>
+          <div class="component"
+               data-context='{"title":"Audit Trail","what":"Every generation event is logged with timestamp, model version, prompt hash, and source reference. Creates a complete lineage from source data through AI generation to human decision. Essential for compliance, dispute resolution, and continuous improvement.","requires":["Structured audit log (Microsoft Purview or custom)","Fields: timestamp, model version, prompt hash, source ref, output ref, reviewer, decision"],"prerequisites":["Purview audit log or Application Insights configured","Log retention policy aligned with compliance requirements","Log access restricted to compliance and admin roles"],"links":[{"label":"Microsoft Purview audit","url":"https://learn.microsoft.com/en-us/purview/audit-solutions-overview"},{"label":"Application Insights","url":"https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview"}],"code":"// Audit trail entry structure\n{\n  \"eventType\": \"ai-content-generation\",\n  \"timestamp\": \"2025-04-21T09:00:00Z\",\n  \"sourceDocId\": \"transcript-abc-123\",\n  \"sourceHash\": \"sha256:...\",\n  \"outputDraftId\": \"draft-001\",\n  \"modelVersion\": \"gpt-4o-2024-08-06\",\n  \"promptHash\": \"sha256:a1b2c3...\",\n  \"agentId\": \"meeting-summary-agent-v2\"\n}"}'>
+            <div class="comp-name"><div class="icon icon-blue">📋</div> Audit Trail</div>
+            <div class="comp-desc">Every generation logged: timestamp, model version, prompt hash. Full lineage from source to decision.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Review request triggered</div><div class="head"></div></div></div>
+
+      <!-- Layer 3: Approval Gate (HERO) -->
+      <div class="layer layer-process" data-layer="gate"
+           data-context='{"title":"The Approval Gate","what":"The central control point of the pattern. A human reviewer — not the AI — decides whether generated content goes live. Three possible outcomes: Approve (publish as-is), Edit-then-Approve (human corrects before publishing), or Reject (content loops back with feedback). If the reviewer doesn&apos;t act within a configurable threshold, auto-escalation routes to a backup approver.","requires":["Power Automate Approvals or custom approval workflow","Designated reviewer role with clear SLA","Auto-escalation timer (configurable threshold)","Feedback mechanism for rejections"],"prerequisites":["Approval flow created in Power Automate","Reviewer group defined in Entra ID security group","Escalation contacts configured","SLA threshold defined (e.g., 4 hours before escalation)","Teams Approval app enabled for reviewers"],"links":[{"label":"Power Automate Approvals","url":"https://learn.microsoft.com/en-us/power-automate/get-started-approvals"},{"label":"Teams Approval app","url":"https://learn.microsoft.com/en-us/microsoftteams/approval-admin"},{"label":"Power Automate escalation patterns","url":"https://learn.microsoft.com/en-us/power-automate/create-approval-response-options"}],"code":"// Power Automate approval flow (pseudo-code)\ntrigger: \"When item added to Staging Queue\"\n\naction: startApproval({\n  type: \"CustomResponse\",\n  title: `Review AI-generated: ${draft.title}`,\n  assignedTo: reviewerGroup,\n  details: draft.content,\n  responseOptions: [\"Approve\", \"Edit\", \"Reject\"],\n  enableReassignment: true\n});\n\n// Auto-escalation after threshold\nparallel: delay(\"PT4H\").then(() => {\n  if (approval.status === \"pending\") {\n    reassignTo(backupApprover);\n    notify(originalReviewer, \"Escalated\");\n  }\n});"}'>
+        <div class="layer-label">🟠 The Approval Gate <span class="lock-badge">⚡ HUMAN CHECKPOINT</span></div>
+        <div class="component-row">
+          <div class="component"
+               data-context='{"title":"Human Reviewer","what":"An authorized person who reviews AI-generated content against the original source material. The reviewer sees both the AI output and the raw input side-by-side, enabling informed approval decisions. Reviewers are assigned via Entra ID security groups with clear role definitions.","requires":["Entra ID security group for reviewers","Access to both staging area and source archive","Teams or Outlook for approval notifications"],"prerequisites":["Reviewer security group created in Entra ID","Members added with appropriate permissions","Notification channel configured (Teams, Outlook, or mobile)"],"links":[{"label":"Entra ID security groups","url":"https://learn.microsoft.com/en-us/entra/fundamentals/concept-learn-about-groups"},{"label":"Power Automate mobile approvals","url":"https://learn.microsoft.com/en-us/power-automate/mobile/mobile-approvals"}],"code":"// Reviewer assignment via security group\nconst reviewers = await graph.getGroupMembers({\n  groupId: \"approval-reviewers-group-id\"\n});\n\n// Round-robin or load-balanced assignment\nconst assignedReviewer = selectReviewer(reviewers);"}'>
+            <div class="comp-name"><div class="icon icon-amber">👤</div> Human Reviewer</div>
+            <div class="comp-desc">Authorized approver reviews AI output against source. Side-by-side comparison.</div>
+          </div>
+          <div class="component"
+               data-context='{"title":"Decision Point","what":"The three-way decision that gives humans meaningful control. Approve: content goes live as-is. Edit-then-Approve: reviewer corrects the AI output before publishing (tracked as a human edit in the audit trail). Reject: content is returned to the generation zone with structured feedback explaining why.","requires":["Three response options in approval flow","Edit capability within the approval interface","Structured rejection feedback form"],"prerequisites":["Custom approval response options configured in Power Automate","Inline editing enabled in the review interface","Rejection reason categories defined (inaccurate, incomplete, inappropriate, off-topic)"],"links":[{"label":"Power Automate custom responses","url":"https://learn.microsoft.com/en-us/power-automate/create-approval-response-options"},{"label":"Adaptive Cards for approvals","url":"https://learn.microsoft.com/en-us/power-automate/create-adaptive-cards-teams"}],"code":"// Decision handling\nswitch (approval.outcome) {\n  case \"Approve\":\n    await publish(draft);\n    await auditLog.record({ action: \"approved\", reviewer });\n    break;\n  case \"Edit\":\n    const edited = approval.editedContent;\n    await publish(edited);\n    await auditLog.record({ action: \"edited-and-approved\", reviewer, diff: computeDiff(draft, edited) });\n    break;\n  case \"Reject\":\n    await returnToGeneration(draft, approval.feedback);\n    await auditLog.record({ action: \"rejected\", reviewer, reason: approval.feedback });\n    break;\n}"}'>
+            <div class="comp-name"><div class="icon icon-amber">⚖️</div> Decision Point</div>
+            <div class="comp-desc">Approve · Edit-then-Approve · Reject — three clear outcomes, all audited.</div>
+          </div>
+          <div class="component"
+               data-context='{"title":"Auto-Escalation","what":"If the assigned reviewer doesn&apos;t act within a configurable time threshold, the approval automatically escalates to a backup approver. Prevents bottlenecks where a single person&apos;s absence blocks the entire pipeline. Escalation is logged in the audit trail.","requires":["Configurable timeout threshold","Backup approver or escalation group","Notification to original reviewer about escalation"],"prerequisites":["Escalation timeout defined (recommended: 4 hours for business-critical, 24 hours for routine)","Backup approver group configured","Escalation notification template created"],"links":[{"label":"Power Automate parallel branches","url":"https://learn.microsoft.com/en-us/power-automate/parallel-modern-approvals"},{"label":"Power Automate timeout settings","url":"https://learn.microsoft.com/en-us/power-automate/limits-and-config"}],"code":"// Auto-escalation configuration\n{\n  \"escalation\": {\n    \"threshold\": \"PT4H\",\n    \"backupApprover\": \"backup-reviewer@contoso.com\",\n    \"notifyOriginal\": true,\n    \"maxEscalations\": 2,\n    \"finalFallback\": \"team-lead@contoso.com\"\n  }\n}"}'>
+            <div class="comp-name"><div class="icon icon-amber">⏰</div> Auto-Escalation</div>
+            <div class="comp-desc">If idle > threshold, escalates to backup approver. No bottlenecks.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Approved content only</div><div class="head"></div></div></div>
+
+      <!-- Layer 4: Downstream Consumption -->
+      <div class="layer layer-ai" data-layer="publish"
+           data-context='{"title":"Downstream Consumption","what":"Only content that passes the approval gate reaches live systems. Approved content is published to the designated channels — SharePoint, knowledge bases, email, wikis. Rejected content loops back to the Generation Zone with structured feedback, creating a continuous improvement cycle.","requires":["Target publishing channels configured","Publish permissions scoped to approval workflow only","Rejection feedback loop to Generation Zone"],"prerequisites":["SharePoint site / Knowledge Base / Wiki provisioned as publish target","Service principal or managed identity with write access to publish targets","Feedback routing configured back to agent for rejected items"],"links":[{"label":"SharePoint content publishing","url":"https://learn.microsoft.com/en-us/sharepoint/governance/content-approval-policies"},{"label":"Microsoft Teams channels","url":"https://learn.microsoft.com/en-us/microsoftteams/teams-channels-overview"},{"label":"Power Automate connectors","url":"https://learn.microsoft.com/en-us/connectors/connector-reference/"}],"code":"// Publish approved content to target channels\nasync function publishApproved(draft, approval) {\n  const targets = draft.publishTargets;\n  \n  for (const target of targets) {\n    switch (target.type) {\n      case \"sharepoint\":\n        await sharepoint.publishPage(target.siteUrl, draft.content);\n        break;\n      case \"teams\":\n        await teams.postToChannel(target.channelId, draft.content);\n        break;\n      case \"email\":\n        await graph.sendMail(target.recipients, draft.content);\n        break;\n    }\n  }\n  \n  await auditLog.record({\n    action: \"published\",\n    draftId: draft.id,\n    approvedBy: approval.reviewer,\n    publishedTo: targets.map(t => t.type)\n  });\n}"}'>
+        <div class="layer-label">🟢 Downstream Consumption</div>
+        <div class="component-row">
+          <div class="component"
+               data-context='{"title":"Approved Channel","what":"The live publishing destinations where approved content reaches its audience. These channels are only writable by the approval workflow — no direct publishing path exists from the AI agent. Common targets: SharePoint pages, knowledge base articles, Teams channel posts, email distributions, wiki pages.","requires":["SharePoint Online or Knowledge Base","Teams channel for notifications","Email distribution list (optional)"],"prerequisites":["Publishing targets provisioned and tested","Write permissions granted only to the approval workflow service principal","Content format validated against target requirements"],"links":[{"label":"SharePoint modern pages","url":"https://learn.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/overview-client-side-web-parts"},{"label":"Teams incoming webhooks","url":"https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook"}],"code":"// Only the approval flow can write to live channels\n// Agent has NO direct publish permissions\nawait sharepoint.pages.create({\n  site: \"https://contoso.sharepoint.com/sites/knowledge\",\n  title: draft.title,\n  content: draft.approvedContent,\n  author: approval.reviewer,\n  metadata: {\n    aiGenerated: true,\n    approvedBy: approval.reviewer,\n    sourceRef: draft.sourceRef\n  }\n});"}'>
+            <div class="comp-name"><div class="icon icon-green">✅</div> Approved Channel</div>
+            <div class="comp-desc">SharePoint, Knowledge Base, Email, Wiki — only reachable via approval gate.</div>
+          </div>
+          <div class="component"
+               data-context='{"title":"Rejected Path","what":"When content is rejected, it loops back to the Generation Zone with structured feedback. The agent can use this feedback to regenerate improved content, creating a continuous improvement cycle. Rejection reasons are categorized (inaccurate, incomplete, inappropriate) and tracked for agent performance analytics.","requires":["Feedback routing back to Generation Zone","Structured rejection categories","Agent capability to incorporate feedback"],"prerequisites":["Rejection reason taxonomy defined","Feedback queue connected to agent input pipeline","Analytics dashboard tracking rejection rates and categories"],"links":[{"label":"Power Automate condition logic","url":"https://learn.microsoft.com/en-us/power-automate/add-condition"},{"label":"Application Insights custom metrics","url":"https://learn.microsoft.com/en-us/azure/azure-monitor/app/api-custom-events-metrics"}],"code":"// Rejection feedback loop\nasync function handleRejection(draft, feedback) {\n  await stagingQueue.update(draft.id, {\n    status: \"rejected\",\n    feedback: feedback.reason,\n    category: feedback.category, // inaccurate | incomplete | inappropriate\n    rejectedBy: feedback.reviewer,\n    rejectedAt: new Date().toISOString()\n  });\n  \n  // Track for agent improvement\n  telemetry.trackEvent(\"content-rejected\", {\n    category: feedback.category,\n    agentId: draft.agentId\n  });\n}"}'>
+            <div class="comp-name"><div class="icon icon-red">🔄</div> Rejected Path</div>
+            <div class="comp-desc">Loops back to Generation with structured feedback. Drives continuous improvement.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Blocked anti-patterns -->
+    <div class="blocked-panel" data-layer="blocked"
+         data-context='{"title":"Blocked Anti-Patterns","what":"Three explicit prohibitions that define the trust contract. These aren&apos;t technical limitations — they&apos;re deliberate architectural decisions. No AI output reaches a live system without human confirmation. No rejection is silent — every rejection includes feedback. No single person becomes a bottleneck — auto-escalation prevents approval fatigue.","requires":["Architectural enforcement at the workflow level","No direct publish path from agent to live systems","Mandatory feedback field on rejection forms","Auto-escalation timer on every approval request"],"prerequisites":["Publish permissions removed from agent service principal","Rejection form requires reason field (non-optional)","Escalation timer configured on all approval flows","Architecture review confirms no bypass paths exist"],"links":[{"label":"Power Automate governance","url":"https://learn.microsoft.com/en-us/power-platform/admin/governance-considerations"},{"label":"Power Platform DLP policies","url":"https://learn.microsoft.com/en-us/power-platform/admin/wp-data-loss-prevention"}],"code":"// Architectural constraints — enforced, not suggested\nconst approvalGatePolicy = {\n  directPublishFromAgent: false,    // BLOCKED\n  silentRejection: false,           // BLOCKED\n  singleApproverNoEscalation: false // BLOCKED\n};"}'>
+      <div class="blocked-item">
+        <div class="blocked-x">✕</div>
+        <div>
+          <div class="blocked-text">No Ungated Publishing</div>
+          <div class="blocked-desc">AI output never goes live without human confirmation</div>
+        </div>
+      </div>
+      <div class="blocked-item">
+        <div class="blocked-x">✕</div>
+        <div>
+          <div class="blocked-text">No Silent Failures</div>
+          <div class="blocked-desc">Rejection always includes a feedback loop</div>
+        </div>
+      </div>
+      <div class="blocked-item">
+        <div class="blocked-x">✕</div>
+        <div>
+          <div class="blocked-text">No Approval Fatigue</div>
+          <div class="blocked-desc">One approver, one action, auto-escalate if idle</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="guarantee" data-layer="trust"
+         data-context='{"title":"Trust Statement","what":"The positioning statement that reframes AI agent deployment for stakeholders. The AI does the heavy lifting — reading, summarizing, drafting — in seconds. But nothing reaches production without a human confirming it in one click. This is not a limitation; it&apos;s the feature that makes AI deployable in high-stakes environments.","requires":["Complete approval gate implementation","Stakeholder communication plan","Metrics dashboard showing approval rates and turnaround times"],"prerequisites":["End-to-end approval flow tested with real content","Approval metrics baseline established","Executive briefing prepared with approval rate data","User training completed for reviewers"],"links":[{"label":"Power Automate Approvals","url":"https://learn.microsoft.com/en-us/power-automate/get-started-approvals"},{"label":"Microsoft responsible AI principles","url":"https://www.microsoft.com/en-us/ai/responsible-ai"},{"label":"AI governance framework","url":"https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/innovate/best-practices/trusted-ai"}],"code":"// The value proposition in metrics\nconst approvalGateMetrics = {\n  avgGenerationTime: \"8 seconds\",\n  avgReviewTime: \"45 seconds\",\n  approvalRate: \"94%\",\n  editBeforeApproveRate: \"4%\",\n  rejectionRate: \"2%\",\n  avgEscalations: \"< 1 per week\",\n  // Total: AI drafts in 8s, human confirms in 45s\n  // vs. human writes from scratch: 15-30 minutes\n};"}'>
+      🛡️ The AI does the work in seconds. A human confirms in one click. Nothing goes live without that confirmation.
+    </div>
+
+  </div><!-- /#diagram -->
+</div><!-- /.interactive-page -->
+
+<div class="interactive-footer">
+  <p>The Cheat Code · ABS Tech Strategy · <a href="../../">Back to all patterns</a></p>
+</div>
+
+<script src="../shared/interactive.js"></script>
+<script>
+  window.interactiveConfig = {
+    container: '#diagram',
+    contextMode: 'lightweight',
+    steps: [
+      {
+        id: 'overview',
+        title: 'The Approval Gate Pattern',
+        description: 'When AI agents generate content for high-stakes environments — meeting summaries, customer proposals, knowledge articles — you need a human checkpoint before anything goes live. This pattern creates a four-stage pipeline: Generate → Stage → Human Review → Publish. Click through each stage to see how the approval gate works.',
+        highlight: ['.pipeline']
+      },
+      {
+        id: 'generate',
+        title: 'Stage 1: AI Generation',
+        description: 'The AI agent generates content from source data — transcripts, documents, emails — and places it in a staging area. Nothing produced here goes live. The staging buffer decouples AI speed from human review pace. The agent has write access to the staging queue but zero publish permissions to any live system.',
+        highlight: ['[data-layer="generate"]']
+      },
+      {
+        id: 'source',
+        title: 'Stage 2: Immutable Source',
+        description: 'The raw input that the AI processed is preserved separately and immutably. When a reviewer checks the AI output, they can always compare it against the original source. Every generation event is logged with timestamp, model version, and prompt hash — creating an unbroken audit chain from source to decision.',
+        highlight: ['[data-layer="source"]']
+      },
+      {
+        id: 'gate',
+        title: 'Stage 3: The Approval Gate',
+        description: 'The human checkpoint. A designated reviewer sees the AI output alongside the original source and makes one of three decisions: Approve (publish as-is), Edit-then-Approve (correct before publishing), or Reject (return with feedback). If the reviewer doesn\'t act within a configurable threshold, auto-escalation routes to a backup approver — no bottlenecks.',
+        highlight: ['[data-layer="gate"]']
+      },
+      {
+        id: 'publish',
+        title: 'Stage 4: Downstream Consumption',
+        description: 'Only content that passes the approval gate reaches live systems — SharePoint, knowledge bases, email, wikis. The approved channel has no direct path from the AI agent. Rejected content loops back to Generation with structured feedback, driving continuous improvement in agent output quality.',
+        highlight: ['[data-layer="publish"]']
+      },
+      {
+        id: 'blocked',
+        title: 'What\'s Explicitly Prevented',
+        description: 'Three anti-patterns are architecturally blocked. No ungated publishing — the AI agent has no write permissions to live channels. No silent failures — every rejection requires structured feedback. No approval fatigue — auto-escalation prevents one person from becoming a bottleneck. These aren\'t guidelines; they\'re enforced by the workflow.',
+        highlight: ['[data-layer="blocked"]']
+      },
+      {
+        id: 'trust',
+        title: 'Speed + Trust',
+        description: 'The AI does the heavy lifting — reading, summarizing, drafting — in seconds. But nothing reaches production without a human confirming it in one click. This is not a limitation; it\'s the feature that makes AI deployable in high-stakes environments. Average: 8 seconds to generate, 45 seconds to approve. Compare that to 15–30 minutes writing from scratch.',
+        highlight: ['[data-layer="trust"]']
+      }
+    ]
+  };
+</script>
+</body>
+</html>
