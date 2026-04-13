@@ -3,14 +3,14 @@ Subject: The Cheat Code =?utf-8?b?4oCU?= Issue #004: Secure In-Boundary
 From:
 To:
 Content-Type: multipart/alternative;
- boundary="===============4642167621405855478=="
+ boundary="===============5735670167203832555=="
 
---===============4642167621405855478==
+--===============5735670167203832555==
 MIME-Version: 1.0
 Content-Type: multipart/related;
- boundary="===============8939711507622301169=="
+ boundary="===============8642072101561869962=="
 
---===============8939711507622301169==
+--===============8642072101561869962==
 Content-Type: text/html; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -346,13 +346,9 @@ oe UI',sans-serif;font-size:12px;font-weight:700;width:24px;height:24px;line-=
 height:24px;text-align:center;border-radius:50%;">4</span></td>
           <td style=3D"padding-left:8px;"><strong>Combine with prior patterns=
 .</strong> Once the security objection is removed, you can layer on scoped se=
-arch (<a href=3D"https://microsoft.github.io/ai-cheatcode/issues/the_cheat_co=
-de_issue_002.html" style=3D"color:#6B2FA0;text-decoration:underline;">Issue #=
-002</a>) and prompt-chained triage (<a href=3D"https://microsoft.github.io/ai=
--cheatcode/issues/the_cheat_code_issue_003.html" style=3D"color:#6B2FA0;text-=
-decoration:underline;">Issue #003</a>) to build a complete agent solution. Th=
-e in-boundary architecture is the foundation that makes everything else possi=
-ble for these customers.</td>
+arch (Issue #002) and prompt-chained triage (Issue #003) to build a complete =
+agent solution. The in-boundary architecture is the foundation that makes eve=
+rything else possible for these customers.</td>
         </tr>
       </table>
 
@@ -490,7 +486,7 @@ al distribution</p>
 </body>
 </html>
 
---===============8939711507622301169==
+--===============8642072101561869962==
 Content-Type: image/png
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="issue_004_trust_boundary_rich.png"
@@ -8577,6 +8573,6 @@ ATsAAAAAAADARQjYAQAAAAAAAC5CwA4AAAAAAABwEQJ2AAAAAAAAgIsQsAMAAAAAAABchIAdAAAA
 AAAA4CIE7AAAAAAAAAAXIWAHAAAAAAAAuAgBOwAAAAAAAMBFCNgBAAAAAAAALkLADgAAAAAAAHCR
 /wcAAP//YOSsAwAAAAZJREFUAwAXGYBS1r00JAAAAABJRU5ErkJggg==
 
---===============8939711507622301169==--
+--===============8642072101561869962==--
 
---===============4642167621405855478==--
+--===============5735670167203832555==--
