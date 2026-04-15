@@ -146,6 +146,16 @@
 [data-theme="light"] .expand-panel .expand-details li { color: var(--text-primary); }
 [data-theme="light"] .expand-panel .expand-close:hover { color: var(--text-secondary); }
 
+[data-theme="light"] [data-tooltip]::after {
+  background: #1B1B3A;
+  color: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+[data-theme="light"] [data-tooltip]::before {
+  border-top-color: #1B1B3A;
+}
+
 html { scroll-behavior: smooth; }
 
 body {
