@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  The Cheat Code — favicon (simplified for 16–48px).
-  Single bold ↑↓ stacked pair, white on purple gradient.
+  The Cheat Code — Concept 3 favicon variant (static, no blink).
+  Simpler shoulders and larger prompt for 16–48px legibility.
 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="The Cheat Code">
   <defs>
-    <linearGradient id="fav-grad" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="cart-fav-edge" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#6B2FA0"/>
       <stop offset="100%" stop-color="#0078D4"/>
     </linearGradient>
   </defs>
-  <rect x="0" y="0" width="64" height="64" rx="14" ry="14" fill="url(#fav-grad)"/>
-  <g fill="#ffffff" font-family="'JetBrains Mono', 'SF Mono', 'Menlo', 'Consolas', monospace" font-weight="700" text-anchor="middle" dominant-baseline="central">
-    <text x="32" y="24" font-size="28">↑</text>
-    <text x="32" y="46" font-size="28">↓</text>
-  </g>
+  <path
+    d="M6 6
+       H22
+       V12
+       H42
+       V6
+       H58
+       a4 4 0 0 1 4 4
+       V56
+       a4 4 0 0 1 -4 4
+       H6
+       a4 4 0 0 1 -4 -4
+       V10
+       a4 4 0 0 1 4 -4 Z"
+    fill="#0E0E1F"
+    stroke="url(#cart-fav-edge)"
+    stroke-width="3"/>
+  <text x="32" y="38" text-anchor="middle" dominant-baseline="central"
+        font-family="'JetBrains Mono', 'SF Mono', 'Menlo', 'Consolas', monospace"
+        font-weight="700" font-size="26" fill="#ffffff">&gt;_</text>
 </svg>
