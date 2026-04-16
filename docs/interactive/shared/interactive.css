@@ -196,6 +196,15 @@ body {
 }
 .global-nav .nav-brand:hover { color: var(--text-secondary); }
 
+.global-nav .nav-brand-mark {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(107, 47, 160, 0.45);
+  flex-shrink: 0;
+}
+
 .global-nav .nav-brand .brand-accent {
   color: var(--purple-light);
 }

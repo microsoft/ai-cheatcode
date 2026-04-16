@@ -587,7 +587,18 @@
     const brand = document.createElement('a');
     brand.className = 'nav-brand';
     brand.href = '../../';
-    brand.textContent = 'The Cheat Code';
+    brand.setAttribute('aria-label', 'The Cheat Code — home');
+    const brandMark = document.createElement('img');
+    brandMark.className = 'nav-brand-mark';
+    brandMark.src = '../../assets/logo.svg';
+    brandMark.alt = '';
+    brandMark.width = 24;
+    brandMark.height = 24;
+    const brandText = document.createElement('span');
+    brandText.className = 'nav-brand-text';
+    brandText.textContent = 'The Cheat Code';
+    brand.appendChild(brandMark);
+    brand.appendChild(brandText);
 
     const divider = document.createElement('div');
     divider.className = 'nav-divider';

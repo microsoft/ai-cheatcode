@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Cheat Code — AI Agent Patterns</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo-favicon.svg" />
+  <link rel="apple-touch-icon" href="assets/logo.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -237,17 +239,15 @@
       width: 44px;
       height: 44px;
       border-radius: 12px;
-      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 50%, var(--blue) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 600;
-      font-size: 14px;
-      color: white;
-      letter-spacing: -0.5px;
       flex-shrink: 0;
       box-shadow: 0 0 20px rgba(107, 47, 160, 0.5);
+      overflow: hidden;
+    }
+    .brand-mark img,
+    .brand-mark svg {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
     .brand-text {
@@ -1270,7 +1270,7 @@
   <!-- Header -->
   <header class="site-header reveal">
     <div class="header-brand">
-      <div class="brand-mark">TC</div>
+      <div class="brand-mark" aria-hidden="true"><img src="assets/logo.svg" alt="" width="44" height="44" /></div>
       <div class="brand-text">
         <span class="brand-title">The Cheat Code</span>
         <span class="brand-sub">ABS Tech Strategy &bull; Frontier Architecture</span>
