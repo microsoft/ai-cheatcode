@@ -329,6 +329,8 @@
     { num: '001', short: '#001', title: 'Code-First Agent Delivery', path: '../issue-001/' },
     { num: '002', short: '#002', title: 'Scoped Multi-Source Search', path: '../issue-002/' },
     { num: '003', short: '#003', title: 'Prompt-Chained Triage', path: '../issue-003/' },
+    { num: '004', short: '#004', title: 'Secure In-Boundary Processing', path: '../issue-004/' },
+    { num: '005', short: '#005', title: 'Human-in-the-Loop Approval Gates', path: '../issue-005/' },
   ];
 
   function buildGlobalNav() {

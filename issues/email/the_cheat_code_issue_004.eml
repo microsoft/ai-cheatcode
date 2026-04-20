@@ -3,14 +3,14 @@ Subject: The Cheat Code =?utf-8?b?4oCU?= Issue #004: Secure In-Boundary
 From:
 To:
 Content-Type: multipart/alternative;
- boundary="===============5735670167203832555=="
+ boundary="===============2801065891307529854=="
 
---===============5735670167203832555==
+--===============2801065891307529854==
 MIME-Version: 1.0
 Content-Type: multipart/related;
- boundary="===============8642072101561869962=="
+ boundary="===============0128056897446942146=="
 
---===============8642072101561869962==
+--===============0128056897446942146==
 Content-Type: text/html; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -71,6 +71,8 @@ na,sans-serif;font-size:11px;">
 .5);text-decoration:none;padding:4px 8px;">#003</a>
       <a href=3D"../interactive/issue-004/" style=3D"color:rgba(255,255,255,0=
 .5);text-decoration:none;padding:4px 8px;">#004</a>
+      <a href=3D"../interactive/issue-005/" style=3D"color:rgba(255,255,255,0=
+.5);text-decoration:none;padding:4px 8px;">#005</a>
     </td>
     <td style=3D"text-align:right;font-family:'Segoe UI',Tahoma,Geneva,Verdan=
 a,sans-serif;font-size:11px;">
@@ -486,7 +488,7 @@ al distribution</p>
 </body>
 </html>
 
---===============8642072101561869962==
+--===============0128056897446942146==
 Content-Type: image/png
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="issue_004_trust_boundary_rich.png"
@@ -8573,6 +8575,6 @@ ATsAAAAAAADARQjYAQAAAAAAAC5CwA4AAAAAAABwEQJ2AAAAAAAAgIsQsAMAAAAAAABchIAdAAAA
 AAAA4CIE7AAAAAAAAAAXIWAHAAAAAAAAuAgBOwAAAAAAAMBFCNgBAAAAAAAALkLADgAAAAAAAHCR
 /wcAAP//YOSsAwAAAAZJREFUAwAXGYBS1r00JAAAAABJRU5ErkJggg==
 
---===============8642072101561869962==--
+--===============0128056897446942146==--
 
---===============5735670167203832555==--
+--===============2801065891307529854==--
