@@ -219,6 +219,25 @@
     <p class="page-subtitle">When agents need a human checkpoint before acting — approval workflows, escalation patterns, and trust boundaries for high-stakes decisions</p>
   </div>
 
+  <!-- ─── Why This Matters ─── -->
+  <section class="pattern-section pattern-why" aria-label="Why this matters">
+    <p class="pattern-eyebrow">🎯 Why this matters</p>
+    <p class="pattern-hook">Your customer loves the AI demo. Then someone asks: <em>"But who checks what the AI produces before it goes out?"</em> And the conversation stalls.</p>
+    <p class="pattern-lead"><strong>This pattern is the answer.</strong> An approval gate is the trust layer that lets humans validate AI-generated content before it enters any system others depend on — the single architectural detail that turns an impressive demo into something a regulated enterprise will actually deploy.</p>
+    <div class="pattern-meta-strip" aria-label="Pattern metadata">
+      <span class="meta-item"><span class="meta-label">Type</span> 🧠 Conceptual</span>
+      <span class="meta-item"><span class="meta-label">Builder</span> Pete Puustinen</span>
+      <span class="meta-item"><span class="meta-label">Customer</span> Eggis Pharma</span>
+      <span class="meta-item"><span class="meta-label">Paired build</span> Issue #006 (Apr 28)</span>
+      <span class="meta-item"><span class="meta-label">Published</span> April 21, 2026</span>
+    </div>
+  </section>
+
+  <!-- ─── Section heading for the interactive ─── -->
+  <section class="pattern-section" aria-hidden="true" style="margin-top:36px;margin-bottom:-20px;text-align:center;">
+    <p style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;color:var(--purple);letter-spacing:1.4px;text-transform:uppercase;margin:0;">▶ Step through the architecture</p>
+  </section>
+
   <div class="diagram-canvas" id="diagram">
 
     <div class="pipeline">
@@ -338,6 +357,73 @@
     </div>
 
   </div><!-- /#diagram -->
+
+  <!-- ─── Where else this lands ─── -->
+  <section class="pattern-section pattern-applications" aria-label="Where else this pattern lands">
+    <p class="pattern-eyebrow">🏆 Where else this lands</p>
+    <h3>The short answer: everywhere you deploy an agent</h3>
+    <p class="pattern-sub">The question isn't "where does this land?" — it's "where are you <em>not</em> using it?" Anywhere AI output crosses the boundary from draft to something others rely on, put a gate.</p>
+    <div class="pattern-apps-grid">
+      <div class="app-pill">
+        <p class="app-label">📄 Document generation</p>
+        <p class="app-desc">AI drafts a proposal, contract, or report → human reviews → approved version goes to the client or archive.</p>
+      </div>
+      <div class="app-pill">
+        <p class="app-label">✉️ Customer communications</p>
+        <p class="app-desc">AI drafts a response to a ticket or email → agent reviews tone and accuracy → approved version is sent.</p>
+      </div>
+      <div class="app-pill">
+        <p class="app-label">📚 Knowledge base curation</p>
+        <p class="app-desc">AI extracts and structures content from unstructured sources → SME validates → approved content enters the knowledge graph.</p>
+      </div>
+      <div class="app-pill">
+        <p class="app-label">🛠️ Code &amp; config changes</p>
+        <p class="app-desc">AI suggests a fix or config update → engineer reviews the diff → approved change is deployed.</p>
+      </div>
+      <div class="app-pill">
+        <p class="app-label">🎯 Work item triage</p>
+        <p class="app-desc">AI classifies and routes an item (see Issues #002–#004) → triage lead confirms → approved routing takes effect.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Design pitfall ─── -->
+  <section class="pattern-section" aria-label="Design pitfall">
+    <div class="pattern-pitfall">
+      <span class="pitfall-icon" aria-hidden="true">⚠</span>
+      <div class="pitfall-body">
+        <strong>Design pitfall.</strong> Don't make the gate so heavy that it becomes the bottleneck. Design for one approver, one action (approve / edit-then-approve / reject), and auto-escalation if it sits too long. If approval takes longer than the task the AI automated, you've lost the value.
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Try this now ─── -->
+  <section class="pattern-section pattern-try-now" aria-label="Try this now">
+    <p class="pattern-eyebrow">🛠️ Try this now</p>
+    <h3>Add an approval gate to any agent you're building</h3>
+    <ol>
+      <li><div class="step-body"><strong>Identify the trust boundary.</strong> In whatever agent you're building or pitching, find the moment where AI output transitions from "draft" to "something others will rely on." That's where the gate goes.</div></li>
+      <li><div class="step-body"><strong>Use what's already there.</strong> Power Automate Approvals, SharePoint content approval, Teams Approval app — you don't need a custom approval system. Wire the AI output into an existing flow. One approver, one click.</div></li>
+      <li><div class="step-body"><strong>Always save the source.</strong> Whatever input the AI worked from, preserve a copy alongside the output in separate storage. This is the audit trail compliance teams will ask about.</div></li>
+      <li><div class="step-body"><strong>Position it proactively.</strong> Introduce the gate as part of your architecture from the start — before the customer asks "but who checks this?" It preempts the trust objection and signals enterprise-readiness.</div></li>
+    </ol>
+    <div class="doors-quote">
+      <span class="doors-label">💡 The line that opens doors:</span> "The AI does the work in seconds. A human confirms it in one click. Nothing goes live without that confirmation. That's how you get speed <em>and</em> trust."
+    </div>
+  </section>
+
+  <!-- ─── Credits &amp; further reading ─── -->
+  <section class="pattern-section pattern-credits" aria-label="Credits and further reading">
+    <div class="credits-body">
+      Pattern surfaced by <strong>Pete Puustinen</strong> at a Budapest hackathon with <strong>Eggis Pharma</strong> — a meeting scribe agent whose summaries don't enter the searchable knowledge base until a project owner approves them. Full practical build in Issue #006.
+    </div>
+    <div class="credits-links">
+      <a class="credits-link" href="../../issues/the_cheat_code_issue_005.html" target="_blank" rel="noopener">📧 Full email write-up</a>
+      <a class="credits-link" href="../issue-004/">← Related: Secure Boundary (#004)</a>
+      <span class="credits-link is-pending" aria-disabled="true">Practical build → (#006 Apr 28)</span>
+    </div>
+  </section>
+
 </div><!-- /.interactive-page -->
 
 <div class="interactive-footer">

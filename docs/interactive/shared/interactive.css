@@ -1193,6 +1193,312 @@ body {
 }
 .interactive-footer a:hover { text-decoration: underline; }
 
+/* ============================================================
+   Article-Framing Sections (Phase 2: integrating newsletter
+   narrative around the interactive walkthrough)
+   ============================================================ */
+
+/* Common container for every framing section */
+.pattern-section {
+  max-width: 860px;
+  margin: 48px auto 0;
+  padding: 0 8px;
+}
+
+/* "Why this matters" intro */
+.pattern-why {
+  background: var(--card);
+  border: 1px solid var(--border-glass);
+  border-left: 4px solid var(--purple);
+  border-radius: 12px;
+  padding: 24px 28px;
+  box-shadow: 0 4px 18px var(--shadow);
+}
+.pattern-why .pattern-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--purple);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+}
+.pattern-why .pattern-hook {
+  font-family: 'Sora', sans-serif;
+  font-size: 20px;
+  line-height: 1.45;
+  font-weight: 600;
+  color: var(--navy);
+  margin: 0 0 12px;
+}
+.pattern-why .pattern-lead {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--muted);
+  margin: 0;
+}
+.pattern-why .pattern-lead strong {
+  color: var(--navy);
+}
+
+/* Meta strip (type · builder · pair · date) */
+.pattern-meta-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border-glass);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: var(--muted);
+  letter-spacing: 0.3px;
+}
+.pattern-meta-strip .meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.pattern-meta-strip .meta-label {
+  color: var(--purple);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 10px;
+}
+
+/* "Where else this lands" applications grid */
+.pattern-applications .pattern-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--amber);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+.pattern-applications h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 8px;
+}
+.pattern-applications .pattern-sub {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14.5px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0 0 18px;
+  max-width: 640px;
+}
+.pattern-apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+.pattern-apps-grid .app-pill {
+  background: var(--card);
+  border: 1px solid var(--border-glass);
+  border-left: 3px solid var(--amber);
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 10px var(--shadow);
+}
+.pattern-apps-grid .app-pill .app-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 4px;
+}
+.pattern-apps-grid .app-pill .app-desc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Design pitfall callout */
+.pattern-pitfall {
+  background: #FFF8E1;
+  border: 1px solid #FFE082;
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.pattern-pitfall .pitfall-icon {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #FFE082;
+  color: #795548;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+.pattern-pitfall .pitfall-body {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  color: #5D4037;
+  line-height: 1.6;
+}
+.pattern-pitfall .pitfall-body strong {
+  color: #3E2723;
+}
+
+/* "Try this now" CTA checklist */
+.pattern-try-now {
+  background: var(--card);
+  border: 1px solid var(--border-glass);
+  border-left: 4px solid var(--orange);
+  border-radius: 12px;
+  padding: 24px 28px;
+  box-shadow: 0 4px 18px var(--shadow);
+}
+.pattern-try-now .pattern-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--orange);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+.pattern-try-now h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 18px;
+}
+.pattern-try-now ol {
+  list-style: none;
+  counter-reset: try-step;
+  padding: 0;
+  margin: 0 0 16px;
+}
+.pattern-try-now ol li {
+  counter-increment: try-step;
+  display: flex;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border-glass);
+}
+.pattern-try-now ol li:last-child { border-bottom: none; }
+.pattern-try-now ol li::before {
+  content: counter(try-step);
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--orange);
+  color: white;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pattern-try-now ol li .step-body {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14.5px;
+  color: var(--navy);
+  line-height: 1.6;
+  padding-top: 2px;
+}
+.pattern-try-now ol li .step-body strong { color: var(--navy); font-weight: 700; }
+.pattern-try-now .doors-quote {
+  margin-top: 6px;
+  padding: 14px 18px;
+  background: #F0ECF5;
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  color: var(--navy);
+  line-height: 1.6;
+}
+.pattern-try-now .doors-quote .doors-label {
+  font-weight: 700;
+  color: var(--purple);
+}
+.pattern-try-now .doors-quote em { color: var(--purple); font-style: italic; }
+
+/* Credits & further reading strip */
+.pattern-credits {
+  margin-top: 48px;
+  padding: 18px 22px;
+  border-top: 1px solid var(--border-glass);
+  border-bottom: 1px solid var(--border-glass);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: center;
+}
+.pattern-credits .credits-body {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.pattern-credits .credits-body strong { color: var(--navy); }
+.pattern-credits .credits-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.pattern-credits .credits-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--border-glass);
+  color: var(--purple);
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+}
+.pattern-credits .credits-link:hover {
+  background: rgba(107,47,160,0.08);
+  transform: translateY(-1px);
+}
+.pattern-credits .credits-link.is-pending {
+  color: var(--muted);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+@media (max-width: 680px) {
+  .pattern-section { margin-top: 36px; padding: 0 4px; }
+  .pattern-why, .pattern-try-now { padding: 20px 20px; }
+  .pattern-why .pattern-hook { font-size: 18px; }
+  .pattern-applications h3, .pattern-try-now h3 { font-size: 19px; }
+  .pattern-apps-grid { grid-template-columns: 1fr; }
+  .pattern-credits {
+    grid-template-columns: 1fr;
+  }
+  .pattern-credits .credits-links { justify-content: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pattern-credits .credits-link { transition: none; }
+  .pattern-credits .credits-link:hover { transform: none; }
+}
+
 /* --- Konami Easter Egg --- */
 .konami-flash {
   position: fixed;

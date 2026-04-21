@@ -685,6 +685,23 @@ The portal uses the **Bento design language**, separate from the email newslette
 6. Update page header with issue badge and back link
 7. Test locally: `python3 -m http.server 8000 --directory docs`
 
+### Article-Framing Sections (added April 2026)
+
+Starting with Issue #005, the interactive page is wrapped with narrative sections derived from the newsletter so visitors get the *why* and *what to do next*, not just the *how*. Layout:
+
+1. Page header (existing)
+2. **`.pattern-why`** — customer hook + one-line lead + meta strip (type · builder · customer · paired build · date)
+3. Interactive walkthrough (existing)
+4. **`.pattern-applications`** — "Where else this lands" with a pill grid (4–5 scenarios)
+5. **`.pattern-pitfall`** — one-line warning callout (amber)
+6. **`.pattern-try-now`** — 4-step checklist + "line that opens doors" quote
+7. **`.pattern-credits`** — attribution + links to full email write-up, related issue, paired practical issue
+8. Footer (existing)
+
+All layout primitives are defined in `docs/interactive/shared/interactive.css` under "Article-Framing Sections". See `docs/interactive/issue-005/index.html` as the reference implementation.
+
+Required companion artifact: copy the email newsletter into `docs/issues/the_cheat_code_issue_NNN.html` and the diagram PNG into `docs/diagrams/` so the "Full email write-up" link resolves on GitHub Pages. The email file needs no edits — its relative path `../diagrams/...` resolves correctly from `docs/issues/`.
+
 ### Updating the Portal
 
 After creating the interactive page, update `docs/index.html`:
