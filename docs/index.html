@@ -336,6 +336,65 @@
       line-height: 1.7;
     }
 
+    /* ─── "How to use this" guidance row ─── */
+    .hero-guide {
+      position: relative;
+      z-index: 2;
+      list-style: none;
+      padding: 0;
+      margin: 28px 0 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      max-width: 780px;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.65s, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.65s;
+    }
+    .hero-guide.visible { opacity: 1; transform: translateY(0); }
+    .hero-guide li {
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.02);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    [data-theme="light"] .hero-guide li {
+      border-color: rgba(27,27,58,0.1);
+      background: rgba(255,255,255,0.6);
+    }
+    .hero-guide .hg-label {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-purple);
+      margin-bottom: 6px;
+    }
+    .hero-guide .hg-text {
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+    .hero-cta {
+      position: relative;
+      z-index: 2;
+      margin: 18px 0 0;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      opacity: 0;
+      transition: opacity 0.9s ease 0.55s;
+    }
+    .hero-cta.visible { opacity: 0.85; }
+    .hero-cta .arrow-hint { color: var(--accent-purple); }
+
+    @media (max-width: 720px) {
+      .hero-guide { grid-template-columns: 1fr; gap: 10px; }
+    }
+
     /* ─── Hero decorative diagonal pattern ─── */
     .hero-pattern {
       position: absolute;
@@ -1313,6 +1372,23 @@
     <p class="hero-desc">
       No theory. No slide decks. Each pattern is extracted from a validated customer build and turned into an interactive walkthrough you can land this week.
     </p>
+    <p class="hero-cta">
+      <span class="arrow-hint">→</span> Click any card below to open its interactive walkthrough.
+    </p>
+    <ul class="hero-guide" aria-label="What you get from each walkthrough">
+      <li>
+        <div class="hg-label">Step through it</div>
+        <div class="hg-text">A guided tour of the architecture — click through each component to see how the pattern actually works end-to-end.</div>
+      </li>
+      <li>
+        <div class="hg-label">Lift the build</div>
+        <div class="hg-text">Real requirements, prerequisites, and code snippets from the customer engagement — ready to adapt to your own deal.</div>
+      </li>
+      <li>
+        <div class="hg-label">Reuse the pattern</div>
+        <div class="hg-text">Every issue names a reusable pattern you can point a customer at. Bring it to your next architecture conversation.</div>
+      </li>
+    </ul>
   </section>
 
   <!-- ─────────────── BENTO GRID ─────────────── -->
@@ -1687,7 +1763,9 @@
       { el: document.querySelector('.hero-konami-deco'), delay: 200 },
       { el: document.querySelector('.hero-pattern'), delay: 150 },
       { el: document.querySelector('.hero-headline'), delay: 300 },
-      { el: document.querySelector('.hero-desc'), delay: 500 }
+      { el: document.querySelector('.hero-desc'), delay: 500 },
+      { el: document.querySelector('.hero-cta'), delay: 700 },
+      { el: document.querySelector('.hero-guide'), delay: 850 }
     ];
 
     if (prefersReduced) {
