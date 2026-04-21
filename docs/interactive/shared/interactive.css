@@ -473,7 +473,7 @@ body {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease, transform 0.25s ease;
-  z-index: 100;
+  z-index: 350;
 }
 
 [data-tooltip]::before {
@@ -487,18 +487,17 @@ body {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
-  z-index: 100;
+  z-index: 350;
 }
 
-[data-tooltip]:hover::after,
-[data-tooltip]:hover::before {
+/* Show tooltip only when hovering THIS element and no nested [data-tooltip] child is hovered.
+   Prevents parent (layer) + child (component) tooltips from stacking on top of each other. */
+[data-tooltip]:hover:not(:has([data-tooltip]:hover))::after,
+[data-tooltip]:hover:not(:has([data-tooltip]:hover))::before {
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
 }
-
-/* Override tooltip arrow transform */
-[data-tooltip]:hover::before {
-  transform: translateX(-50%);
+[data-tooltip]:hover:not(:has([data-tooltip]:hover))::after {
+  transform: translateX(-50%) translateY(0);
 }
 
 /* --- Narrative Panel --- */
