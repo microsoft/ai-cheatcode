@@ -1660,8 +1660,8 @@
       <span class="diagram-label">Pipeline</span>
     </a>
 
-    <!-- Issue 007: Holographic Memory — Coming Next (gated) -->
-    <div class="card card-conceptual card-medium span-6 row-3 reveal" style="opacity:0.65;cursor:default;" aria-label="Issue 007: Holographic Memory — Coming soon">
+    <!-- Issue 007: Holographic Memory — Conceptual -->
+    <a class="card card-conceptual card-medium span-6 row-3 arc-pair-c reveal" href="interactive/issue-007/" aria-label="Issue 007: Holographic Memory">
       <div class="hero-visual" aria-hidden="true">
         <svg class="hv-nodes" style="width:170px;height:160px;" viewBox="0 0 170 160" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- Distributed memory nodes -->
@@ -1695,10 +1695,61 @@
             <span class="tag">AI Search</span>
             <span class="tag">Resilience</span>
           </div>
-          <span class="coming-soon-chip">Coming May 5</span>
+          <span class="interactive-pill">
+            <svg viewBox="0 0 10 10" fill="none" aria-hidden="true"><circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1"/><polygon points="4,3 7,5 4,7" fill="currentColor"/></svg>
+            View interactive
+          </span>
         </div>
       </div>
       <span class="diagram-label">Memory</span>
+    </a>
+
+    <!-- Issue 008: Cross-Project Knowledge Agent — Coming Next (gated) -->
+    <div class="card card-practical card-medium span-6 row-3 reveal" style="opacity:0.65;cursor:default;" aria-label="Issue 008: Cross-Project Knowledge Agent — Coming soon">
+      <div class="hero-visual" aria-hidden="true">
+        <svg class="hv-nodes" style="width:170px;height:160px;" viewBox="0 0 170 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Project A cluster (left) -->
+          <circle cx="40" cy="55" r="12" stroke="#D83B01" stroke-width="1.8" fill="rgba(216,59,1,0.14)"/>
+          <text x="40" y="59" text-anchor="middle" font-size="10" fill="#D83B01">A</text>
+          <circle cx="22" cy="85" r="6" stroke="#D83B01" stroke-width="1.2" fill="rgba(216,59,1,0.10)"/>
+          <circle cx="55" cy="95" r="7" stroke="#D83B01" stroke-width="1.2" fill="rgba(216,59,1,0.10)"/>
+          <line x1="40" y1="65" x2="22" y2="80" stroke="#D83B01" stroke-width="1.2" opacity="0.5"/>
+          <line x1="40" y1="65" x2="55" y2="90" stroke="#D83B01" stroke-width="1.2" opacity="0.5"/>
+          <!-- Project B cluster (right) -->
+          <circle cx="130" cy="55" r="12" stroke="#0078D4" stroke-width="1.8" fill="rgba(0,120,212,0.14)"/>
+          <text x="130" y="59" text-anchor="middle" font-size="10" fill="#0078D4">B</text>
+          <circle cx="115" cy="95" r="7" stroke="#0078D4" stroke-width="1.2" fill="rgba(0,120,212,0.10)"/>
+          <circle cx="148" cy="85" r="6" stroke="#0078D4" stroke-width="1.2" fill="rgba(0,120,212,0.10)"/>
+          <line x1="130" y1="65" x2="115" y2="90" stroke="#0078D4" stroke-width="1.2" opacity="0.5"/>
+          <line x1="130" y1="65" x2="148" y2="80" stroke="#0078D4" stroke-width="1.2" opacity="0.5"/>
+          <!-- Cross-project bridge through agent -->
+          <rect x="73" y="60" width="24" height="24" rx="6" stroke="#9B5FD0" stroke-width="2" fill="rgba(107,47,160,0.16)"/>
+          <text x="85" y="78" text-anchor="middle" font-size="11" fill="#9B5FD0">🤖</text>
+          <line x1="52" y1="60" x2="73" y2="68" stroke="#9B5FD0" stroke-width="1.5" stroke-dasharray="3 2"/>
+          <line x1="97" y1="68" x2="118" y2="60" stroke="#9B5FD0" stroke-width="1.5" stroke-dasharray="3 2"/>
+          <!-- Output -->
+          <rect x="65" y="115" width="40" height="16" rx="4" stroke="#107C10" stroke-width="1.5" fill="rgba(16,124,16,0.10)"/>
+          <text x="85" y="127" text-anchor="middle" font-size="9" fill="#107C10">answer</text>
+          <line x1="85" y1="86" x2="85" y2="113" stroke="#107C10" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.6"/>
+        </svg>
+        <div class="card-glow" style="width:120px;height:100px;bottom:-20px;right:-10px;background:rgba(216,59,1,0.22);"></div>
+      </div>
+      <div class="card-inner">
+        <div class="issue-num">Issue 008</div>
+        <div class="issue-badge badge-practical">Practical</div>
+        <h2 class="card-title">Cross-Project Knowledge Agent</h2>
+        <p class="card-desc">The build that lands Holographic Memory in Copilot Studio — Azure AI Search index, custom enrichment skill, layer-aware retrieval, and a working cross-domain demo.</p>
+        <div class="card-meta">
+          <div class="card-builder">Tyson Dowd</div>
+          <div class="card-tags">
+            <span class="tag">Copilot Studio</span>
+            <span class="tag">Azure AI Search</span>
+            <span class="tag">Custom Skills</span>
+          </div>
+          <span class="coming-soon-chip">Coming May 12</span>
+        </div>
+      </div>
+      <span class="diagram-label">Build</span>
     </div>
 
     <!-- ══════════ ROW 7–8: UTILITY BAND ══════════ -->

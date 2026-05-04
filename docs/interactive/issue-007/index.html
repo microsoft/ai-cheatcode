@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="../../assets/logo-favicon.svg">
+<link rel="apple-touch-icon" href="../../assets/logo.svg">
+<title>Interactive: Holographic Memory — The Cheat Code #007</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Outfit:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/interactive.css">
+<style>
+  /* Bento font overrides */
+  .layer-label { font-family: 'Sora', 'Segoe UI', sans-serif; }
+  .comp-name   { font-family: 'Outfit', 'Segoe UI', sans-serif; }
+  .comp-desc   { font-family: 'Outfit', 'Segoe UI', sans-serif; }
+  .layer-badge { font-family: 'JetBrains Mono', monospace; }
+  .layer-legend { font-family: 'Outfit', 'Segoe UI', sans-serif; }
+
+  /* Issue-specific diagram styles */
+  .pipeline { display: flex; flex-direction: column; gap: 12px; padding: 20px 0; }
+
+  .layer {
+    border-radius: 14px;
+    padding: 16px 18px;
+    position: relative;
+    transition: all 0.4s ease;
+  }
+  .layer.dimmed       { opacity: 0.25; transform: scale(0.98); }
+  .layer.highlighted  { opacity: 1; transform: scale(1); box-shadow: 0 0 0 3px rgba(107,47,160,0.3); }
+
+  .layer-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.2px;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .layer-sources {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 1.5px solid #0078D4;
+  }
+  .layer-sources .layer-label { color: #0078D4; }
+
+  .layer-enrich {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 1.5px solid #6B2FA0;
+  }
+  .layer-enrich .layer-label { color: #6B2FA0; }
+
+  .layer-index {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 1.5px solid #0078D4;
+  }
+  .layer-index .layer-label { color: #0078D4; }
+
+  .layer-agent {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 1.5px solid #6B2FA0;
+  }
+  .layer-agent .layer-label { color: #6B2FA0; }
+
+  .layer-output {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 1.5px solid #107C10;
+  }
+  .layer-output .layer-label { color: #107C10; }
+
+  .component-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .component {
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 12px 14px;
+    border: 1px solid rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .component:hover {
+    box-shadow: 0 4px 16px rgba(107, 47, 160, 0.14);
+    border-color: rgba(107, 47, 160, 0.25);
+  }
+  .comp-name {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 600; font-size: 14px; color: #1B1B3A;
+    margin-bottom: 4px;
+  }
+  .comp-desc { font-size: 12px; line-height: 1.45; color: #5F5F7A; }
+  .icon {
+    width: 28px; height: 28px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 14px; flex-shrink: 0;
+  }
+  .icon-blue   { background: #0078D4; }
+  .icon-purple { background: #6B2FA0; }
+  .icon-green { background: #107C10; }
+
+  .layer-badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 3px 8px;
+    background: rgba(107, 47, 160, 0.15);
+    color: #6B2FA0;
+    font-size: 9.5px;
+    border-radius: 6px;
+    letter-spacing: 0.6px;
+  }
+
+  .flow-arrow { display: flex; justify-content: center; margin: 4px 0; }
+  .varrow .shaft { width: 2px; height: 18px; background: #6B2FA0; margin: 0 auto; }
+  .varrow .head {
+    width: 0; height: 0; margin: 0 auto;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid #6B2FA0;
+  }
+  .varrow .label {
+    font-size: 10px; font-family: 'JetBrains Mono', monospace;
+    color: #6B2FA0; text-align: center; padding: 2px 0;
+  }
+
+  .layer-legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    padding: 14px 16px;
+    background: #FAF7FE;
+    border: 1px dashed rgba(107, 47, 160, 0.25);
+    border-radius: 12px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: #5F5F7A;
+  }
+  .layer-legend strong { color: #1B1B3A; display: block; font-size: 12.5px; margin-bottom: 2px; }
+</style>
+</head>
+<body>
+
+<div class="interactive-page">
+  <div class="page-header">
+    <a href="../../" class="back-link">← Back to patterns</a>
+    <span class="issue-badge">Issue #007 · Conceptual</span>
+    <h1>Holographic Memory</h1>
+    <p class="page-subtitle">A knowledge architecture where every node carries enough redundant context to reconstruct meaning — giving your agent resilient cross-domain recall even when sources go missing.</p>
+  </div>
+
+  <!-- ─── Why This Matters ─── -->
+  <section class="pattern-section pattern-why" aria-label="Why this matters">
+    <p class="pattern-eyebrow">🎯 Why this matters</p>
+    <p class="pattern-hook">Your customer says: <em>&ldquo;We have AI tools everywhere now, but none of them remember what the others did.&rdquo;</em> Knowledge lives in scattered chats, repos, docs, and meetings — and when someone asks a question that spans two projects, the answer doesn&rsquo;t exist in any single system.</p>
+    <p class="pattern-lead"><strong>This pattern is the answer.</strong> Holographic Memory is the indexing architecture underneath any agent that needs cross-project recall — every node carries redundant context, every link is layered by abstraction distance, and every chat export becomes durable organizational memory.</p>
+    <div class="pattern-meta-strip" aria-label="Pattern metadata">
+      <span class="meta-item"><span class="meta-label">Type</span> 🧠 Conceptual</span>
+      <span class="meta-item"><span class="meta-label">Concept by</span> Tyson Dowd</span>
+      <span class="meta-item"><span class="meta-label">Origin</span> 1:1 conversation (March 24, 2026)</span>
+      <span class="meta-item"><span class="meta-label">Paired build</span> Issue #008 (May 12)</span>
+      <span class="meta-item"><span class="meta-label">Published</span> May 5, 2026</span>
+    </div>
+  </section>
+
+  <!-- ─── Layer legend ─── -->
+  <section class="pattern-section" aria-label="Linkage layer legend">
+    <p class="pattern-eyebrow">🧭 The four linkage layers</p>
+    <p class="pattern-sub" style="margin-bottom:14px;">Most knowledge systems use flat tags. Holographic Memory classifies every link by <em>abstraction distance</em>, so the agent knows how far to traverse for each kind of question.</p>
+    <div class="layer-legend">
+      <div><strong>🥾 Trails</strong>Direct, code-level references. Function X calls Function Y.</div>
+      <div><strong>🛣️ Roads</strong>Thematic connections inside one domain. API rate limiting ↔ token budgeting.</div>
+      <div><strong>⛵ Sea Routes</strong>Cross-domain abstractions. Auth in Project A ↔ Compliance in Project B.</div>
+      <div><strong>✈️ Air Routes</strong>High-level conceptual parallels. Design patterns ↔ Regulatory frameworks.</div>
+    </div>
+  </section>
+
+  <!-- ─── Section heading for the interactive ─── -->
+  <section class="pattern-section" aria-hidden="true" style="margin-top:36px;margin-bottom:-20px;text-align:center;">
+    <p style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;color:var(--purple);letter-spacing:1.4px;text-transform:uppercase;margin:0;">▶ Step through the architecture</p>
+  </section>
+
+  <div class="diagram-canvas" id="diagram">
+
+    <div class="pipeline">
+      <div class="layer layer-sources" data-layer="sources"
+           data-tooltip="The raw input layer."
+           data-context='{"title": "Source Artifacts Layer", "what": "The raw input layer. Every artifact your organization produces — design docs, specs, decision records, exported chat histories, meeting transcripts, repo READMEs and PR descriptions — feeds the holographic index. The trick is breadth over precision: pull from every system where knowledge accumulates, even ones that feel low-signal. The enrichment layer downstream will discover relevance.", "requires": ["SharePoint Online or OneDrive document libraries", "Chat export pipeline (Copilot, ChatGPT, Claude conversation history)", "Teams meeting transcripts via Issue #006 pipeline", "Source control with discoverable READMEs, ADRs, PR descriptions"], "prerequisites": ["Identify 2–3 high-traffic source systems to start (don&amp;apos;t boil the ocean)", "Confirm export rights for chat histories — some tenants restrict this", "Set up incremental ingestion (datestamps or change feed) for ongoing sync"], "links": [{"label": "SharePoint Graph API", "url": "https://learn.microsoft.com/en-us/graph/api/resources/sharepoint"}, {"label": "Export ChatGPT data", "url": "https://help.openai.com/en/articles/7260999-how-do-i-export-my-chatgpt-history-and-data"}, {"label": "Issue #006 — Meeting-to-Knowledge Pipeline", "url": "../issue-006/"}], "code": "// Pull artifacts from every system, not just the obvious ones\nconst sources = [\n  { type: &#39;sharepoint&#39;, siteId: &#39;projectA-design-docs&#39; },\n  { type: &#39;sharepoint&#39;, siteId: &#39;projectB-architecture&#39; },\n  { type: &#39;github&#39;, org: &#39;contoso&#39;, repos: [&#39;svc-auth&#39;, &#39;svc-billing&#39;] },\n  { type: &#39;teams-transcripts&#39;, channelId: &#39;leadership-syncs&#39; },\n  { type: &#39;chat-export&#39;, tool: &#39;copilot&#39;, userId: &#39;pmo-team&#39; }\n];"}'>
+        <div class="layer-label">🟦 Stage 1 · Source Artifacts <span class="layer-badge">BREADTH OVER PRECISION</span></div>
+        <div class="component-row">
+          <div class="component"
+               data-tooltip="Design documents, specs, and decision records spread across project sites."
+               data-context='{"title": "SharePoint Docs", "what": "Design documents, specs, and decision records spread across project sites. These are typically the highest-density knowledge artifacts — but they were authored in isolation, with no awareness of what other projects produced. The enrichment layer extracts the implicit relationships these docs have to other artifacts.", "requires": ["Microsoft Graph API access", "SharePoint sites/* permissions", "File enumeration via Search API or change feed"], "prerequisites": ["App registration with Files.Read.All scope", "Search index path defined per project site"], "links": [{"label": "Microsoft Graph SharePoint", "url": "https://learn.microsoft.com/en-us/graph/api/resources/sharepoint"}, {"label": "Azure AI Search SharePoint indexer", "url": "https://learn.microsoft.com/en-us/azure/search/search-howto-index-sharepoint-online"}], "code": "// Enumerate design docs across project sites\nconst docs = await graph.sites(&#39;projectA&#39;).drive.search({\n  query: &#39;fileType:docx OR fileType:pdf&#39;,\n  driveItemFields: [&#39;id&#39;, &#39;name&#39;, &#39;lastModifiedDateTime&#39;, &#39;webUrl&#39;]\n});"}'>
+            <div class="comp-name"><div class="icon icon-blue">📄</div> SharePoint Docs</div>
+            <div class="comp-desc">Design docs, specs, decision records across project sites.</div>
+          </div>
+          <div class="component"
+               data-tooltip="The breakthrough source for cross-tool knowledge."
+               data-context='{"title": "Chat Exports", "what": "The breakthrough source for cross-tool knowledge. Power users already chain across Copilot, ChatGPT, and Claude — exporting those conversations turns ephemeral tool usage into durable organizational memory. Each conversation becomes a node in the graph, cross-referenced to the docs, repos, and decisions it touched.", "requires": ["Chat export rights (some tenants restrict)", "Storage for conversation JSON", "PII review before indexing"], "prerequisites": ["Identify which tools your power users actually use", "Set ingestion cadence (weekly batch or on-demand)", "Run conversation content through Purview DLP scan"], "links": [{"label": "Copilot conversation export", "url": "https://learn.microsoft.com/en-us/copilot/microsoft-365/conversation-history"}, {"label": "ChatGPT data export", "url": "https://help.openai.com/en/articles/7260999-how-do-i-export-my-chatgpt-history-and-data"}], "code": "// Each chat export = one node in the holographic graph\nconst conversation = {\n  id: &#39;chat-2026-04-15-pmo-architecture&#39;,\n  source: &#39;copilot&#39;,\n  participants: [&#39;user@contoso.com&#39;],\n  topic: &#39;auth-strategy-evaluation&#39;,\n  references: [&#39;design-doc-projA-v3&#39;, &#39;pr-svc-auth-#142&#39;]\n};"}'>
+            <div class="comp-name"><div class="icon icon-blue">💬</div> Chat Exports</div>
+            <div class="comp-desc">Copilot, ChatGPT, Claude — exported conversation histories become durable nodes.</div>
+          </div>
+          <div class="component"
+               data-tooltip="Teams meeting transcripts indexed via the Issue #006 Meeting-to-Knowledge Pipeline."
+               data-context='{"title": "Meeting Transcripts", "what": "Teams meeting transcripts indexed via the Issue #006 Meeting-to-Knowledge Pipeline. Decisions made verbally during meetings — historically lost the moment the meeting ended — become first-class searchable artifacts. The pairing with Issue #006 is intentional: that pipeline produces the transcripts; this pattern weaves them into the cross-project graph.", "requires": ["Teams transcription enabled", "Issue #006 pipeline (meeting summary + approval)", "SharePoint library for approved summaries"], "prerequisites": ["Issue #006 pipeline deployed and approving summaries", "Per-project channel mapping defined"], "links": [{"label": "Issue #006 — Meeting-to-Knowledge Pipeline", "url": "../issue-006/"}, {"label": "Teams meeting transcription", "url": "https://learn.microsoft.com/en-us/microsoftteams/meeting-transcription"}], "code": "// Approved meeting summaries flow in from Issue #006 staging library\n"}'>
+            <div class="comp-name"><div class="icon icon-blue">🎙️</div> Meeting Transcripts</div>
+            <div class="comp-desc">Approved summaries from the Issue #006 meeting-to-knowledge pipeline.</div>
+          </div>
+          <div class="component"
+               data-tooltip="READMEs, ADRs (Architecture Decision Records), PR descriptions, and code comments are dense in implicit knowledge — they explain why code looks the way it does, what alternatives were rejected, what tradeoffs were accepted."
+               data-context='{"title": "Repo Artifacts", "what": "READMEs, ADRs (Architecture Decision Records), PR descriptions, and code comments are dense in implicit knowledge — they explain why code looks the way it does, what alternatives were rejected, what tradeoffs were accepted. Indexed alongside design docs, they let an agent answer &#39;why did we choose X?&#39; across every engineering project.", "requires": ["GitHub or Azure DevOps API access", "PR/issue history retention", "Glob patterns for ADR files"], "prerequisites": ["Service principal with read access across target repos", "ADR convention documented (e.g., docs/adr/*.md)"], "links": [{"label": "GitHub REST API for PRs", "url": "https://docs.github.com/en/rest/pulls/pulls"}, {"label": "ADR pattern", "url": "https://adr.github.io/"}], "code": "// Pull READMEs, ADRs, PR descriptions across repos\nconst repoArtifacts = await github.repos.getContent({\n  owner: &#39;contoso&#39;, repo: &#39;svc-auth&#39;,\n  path: &#39;docs/adr&#39;\n});"}'>
+            <div class="comp-name"><div class="icon icon-blue">📦</div> Repo Artifacts</div>
+            <div class="comp-desc">READMEs, ADRs, PR descriptions, code comments — dense in implicit knowledge.</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Raw artifacts queued for enrichment</div><div class="head"></div></div></div>
+
+      <div class="layer layer-enrich" data-layer="enrich"
+           data-tooltip="The hero of the pattern."
+           data-context='{"title": "Holographic Enrichment", "what": "The hero of the pattern. Every artifact passes through an AI-driven enrichment step that extracts entities, maps relationships, classifies links by abstraction layer (Trails → Roads → Sea Routes → Air Routes), and stamps each node with redundant context — who created it, what project it belongs to, what other artifacts it references, what decisions it influenced. The redundancy is the feature: every fragment carries a low-resolution image of the whole graph.", "requires": ["Azure AI Search with custom skillset", "Azure OpenAI (gpt-4o or gpt-4o-mini) for entity extraction", "Knowledge store for staging enriched JSON before indexing"], "prerequisites": ["Define the four linkage layers explicitly (Trails / Roads / Sea Routes / Air Routes)", "Author the enrichment prompt that classifies links by layer", "Provision a knowledge store (Azure Storage table or Cosmos DB)"], "links": [{"label": "Azure AI Search custom skills", "url": "https://learn.microsoft.com/en-us/azure/search/cognitive-search-custom-skill-interface"}, {"label": "AI Search knowledge store", "url": "https://learn.microsoft.com/en-us/azure/search/knowledge-store-concept-intro"}], "code": "// Enrichment skillset (excerpt)\n{\n  &#39;@odata.type&#39;: &#39;#Microsoft.Skills.Custom.WebApiSkill&#39;,\n  &#39;uri&#39;: &#39;https://func-enrich.azurewebsites.net/api/holographic&#39;,\n  &#39;inputs&#39;: [\n    { &#39;name&#39;: &#39;content&#39;, &#39;source&#39;: &#39;/document/content&#39; },\n    { &#39;name&#39;: &#39;projectContext&#39;, &#39;source&#39;: &#39;/document/metadata/project&#39; }\n  ],\n  &#39;outputs&#39;: [\n    { &#39;name&#39;: &#39;entities&#39; }, { &#39;name&#39;: &#39;relatedArtifacts&#39; },\n    { &#39;name&#39;: &#39;linkageLayer&#39; }, { &#39;name&#39;: &#39;redundantContext&#39; }\n  ]\n}"}'>
+        <div class="layer-label">🟪 Stage 2 · Holographic Enrichment <span class="layer-badge">⚡ HOLOGRAPHIC ENCODING</span></div>
+        <div class="component-row">
+          <div class="component"
+               data-tooltip="An LLM-driven step that identifies the people, projects, decisions, and concepts referenced in each artifact."
+               data-context='{"title": "Entity Extraction", "what": "An LLM-driven step that identifies the people, projects, decisions, and concepts referenced in each artifact. Where flat tagging fails, entity extraction succeeds — it captures the implicit references buried in prose.", "requires": ["Azure OpenAI deployment (gpt-4o-mini sufficient)", "Structured output schema", "Token budget per document"], "prerequisites": ["Define entity types relevant to your domain", "Test prompt against 10–20 sample documents", "Establish acceptable false-positive rate"], "links": [{"label": "Azure OpenAI structured outputs", "url": "https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/structured-outputs"}], "code": "// Structured entity extraction\nconst result = await openai.complete({\n  model: &#39;gpt-4o-mini&#39;,\n  messages: [{ role: &#39;system&#39;, content: ENTITY_PROMPT }, { role: &#39;user&#39;, content: doc.text }],\n  response_format: { type: &#39;json_schema&#39;, json_schema: ENTITIES_SCHEMA }\n});"}'>
+            <div class="comp-name"><div class="icon icon-purple">🧬</div> Entity Extraction</div>
+            <div class="comp-desc">LLM identifies people, projects, decisions, and concepts referenced in each artifact.</div>
+          </div>
+          <div class="component"
+               data-tooltip="For every pair of entities, infer the relationship type — references, supersedes, depends-on, contradicts, parallels."
+               data-context='{"title": "Relationship Mapping", "what": "For every pair of entities, infer the relationship type — references, supersedes, depends-on, contradicts, parallels. Relationships become typed edges in the knowledge graph. The retrieval layer uses these types to walk the graph intelligently, not just by keyword similarity.", "requires": ["Edge schema (source, target, type, confidence, evidence)", "Storage for the edge set (Cosmos DB graph or AI Search field)", "Confidence threshold for retention"], "prerequisites": ["Define relationship vocabulary (5–8 types is plenty)", "Implement deduplication for equivalent edges across artifacts"], "links": [{"label": "Cosmos DB Gremlin API", "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/gremlin/introduction"}], "code": "// Edge structure with provenance\nconst edge = {\n  source: &#39;doc:projA-auth-design-v3&#39;,\n  target: &#39;doc:projB-compliance-baseline&#39;,\n  type: &#39;depends-on&#39;,\n  confidence: 0.82,\n  evidence: &#39;Section 4.2 explicitly references projB compliance scope&#39;\n};"}'>
+            <div class="comp-name"><div class="icon icon-purple">🔗</div> Relationship Mapping</div>
+            <div class="comp-desc">Typed edges between entities — references, supersedes, depends-on, contradicts.</div>
+          </div>
+          <div class="component"
+               data-tooltip="The four-layer model: Trails (direct code-level references), Roads (thematic connections within a domain), Sea Routes (cross-domain abstractions), and Air Routes (high-level conceptual parallels)."
+               data-context='{"title": "Layer Classification", "what": "The four-layer model: Trails (direct code-level references), Roads (thematic connections within a domain), Sea Routes (cross-domain abstractions), and Air Routes (high-level conceptual parallels). Every link gets stamped with a layer tag. This is what gives the agent traversal control — a code question stays on trails; a strategy question takes air routes.", "requires": ["Layer taxonomy authored and reviewed", "Classification prompt with layer definitions", "Filterable layer field on every edge"], "prerequisites": ["Stakeholder agreement on the four layer definitions", "Test classifications against 50 representative links to validate accuracy"], "links": [{"label": "AI Search filterable fields", "url": "https://learn.microsoft.com/en-us/azure/search/search-filters"}], "code": "// Each edge classified by abstraction layer\nedge.layer = &#39;sea-route&#39;;  // cross-domain abstraction\n// Other values: &#39;trail&#39;, &#39;road&#39;, &#39;air-route&#39;"}'>
+            <div class="comp-name"><div class="icon icon-purple">📐</div> Layer Classification</div>
+            <div class="comp-desc">Each link tagged Trail / Road / Sea Route / Air Route — controls traversal depth.</div>
+          </div>
+          <div class="component"
+               data-tooltip="The holographic property in code."
+               data-context='{"title": "Redundant Context Stamp", "what": "The holographic property in code. Every node — even a single PR description — is stamped with a compact bundle of context: the project it belongs to, the people involved, the decisions it influenced, the artifacts it references. If any other node disappears, this one still carries enough context to answer at lower fidelity. Storage cost: 3–5x a flat index. Resilience benefit: priceless.", "requires": ["Compact context schema (~500 tokens per node)", "Indexer storage tier sized for 3–5x raw content size", "Filterable, not searchable, for cost control"], "prerequisites": ["Decide which fields are filterable vs. searchable up front", "Estimate index size on a sample to set Azure AI Search tier"], "links": [{"label": "AI Search field attributes", "url": "https://learn.microsoft.com/en-us/azure/search/search-what-is-an-index#index-schema"}, {"label": "AI Search pricing tiers", "url": "https://azure.microsoft.com/en-us/pricing/details/search/"}], "code": "// Every node carries this redundant context bundle\nnode.holographicContext = {\n  project: &#39;projA&#39;,\n  authors: [&#39;alice@contoso.com&#39;, &#39;bob@contoso.com&#39;],\n  influencedDecisions: [&#39;adr-007&#39;, &#39;adr-012&#39;],\n  relatedArtifacts: [&#39;doc:projA-spec-v2&#39;, &#39;pr:svc-auth#142&#39;],\n  domain: &#39;identity-and-access&#39;\n};"}'>
+            <div class="comp-name"><div class="icon icon-purple">🪞</div> Redundant Context Stamp</div>
+            <div class="comp-desc">Every node carries who, what project, related artifacts, decisions influenced.</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Enriched nodes ready to index</div><div class="head"></div></div></div>
+
+      <div class="layer layer-index" data-layer="index"
+           data-tooltip="The unified index where enriched nodes live."
+           data-context='{"title": "Azure AI Search Index", "what": "The unified index where enriched nodes live. Hybrid retrieval combines keyword BM25, vector similarity, and metadata filters in a single query. Layer tags are filterable, redundant context fields are retrievable but not searchable (cost control), and entities are facetable for the agent to enumerate quickly.", "requires": ["Azure AI Search Standard tier or higher (S1+ recommended for hybrid + custom skills)", "Vector field with embedding dimension matching your model", "Semantic ranker enabled"], "prerequisites": ["Index schema authored with hybrid fields", "Embedding skill deployed (Azure OpenAI text-embedding-3-large or similar)", "Semantic configuration applied for re-ranking"], "links": [{"label": "Azure AI Search hybrid queries", "url": "https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview"}, {"label": "Semantic ranker", "url": "https://learn.microsoft.com/en-us/azure/search/semantic-search-overview"}], "code": "// Hybrid query: keyword + vector + metadata filter\nconst results = await search.search({\n  search: query,\n  vectorQueries: [{ kind: &#39;text&#39;, text: query, fields: &#39;contentVector&#39;, k: 50 }],\n  filter: \"linkageLayer eq &#39;sea-route&#39; or linkageLayer eq &#39;air-route&#39;\",\n  queryType: &#39;semantic&#39;, semanticConfiguration: &#39;holographic-rerank&#39;,\n  select: &#39;id,title,project,redundantContext,relatedArtifacts&#39;\n});"}'>
+        <div class="layer-label">🟦 Stage 3 · Azure AI Search Index <span class="layer-badge">HYBRID RETRIEVAL</span></div>
+        <div class="component-row">
+          <div class="component"
+               data-tooltip="Keyword BM25 for exact references, vector similarity for conceptual matches, metadata filters for layer-aware retrieval."
+               data-context='{"title": "Hybrid Index", "what": "Keyword BM25 for exact references, vector similarity for conceptual matches, metadata filters for layer-aware retrieval. All three modalities work in a single query, and the semantic ranker re-orders the merged result set for relevance.", "requires": ["Azure AI Search S1+", "Vector field configured", "Semantic configuration"], "prerequisites": ["Index schema with searchable text + vector + filterable metadata"], "links": [{"label": "Hybrid search", "url": "https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview"}], "code": "// see parent layer code\n"}'>
+            <div class="comp-name"><div class="icon icon-blue">🔍</div> Hybrid Index</div>
+            <div class="comp-desc">Keyword BM25 + vector similarity + metadata filters in a single query.</div>
+          </div>
+          <div class="component"
+               data-tooltip="Every document carries its linkage layer (trail / road / sea-route / air-route) as a filterable field."
+               data-context='{"title": "Layer Tags", "what": "Every document carries its linkage layer (trail / road / sea-route / air-route) as a filterable field. The agent constrains its search by layer based on query type, dramatically narrowing the result set before re-ranking.", "requires": ["Filterable, facetable string field"], "prerequisites": ["Enrichment step populates layer tag deterministically per artifact relationship"], "links": [{"label": "AI Search faceted navigation", "url": "https://learn.microsoft.com/en-us/azure/search/search-faceted-navigation"}], "code": "// Filter on layer tag\nfilter: \"linkageLayer eq &#39;trail&#39;\"  // code-level questions only"}'>
+            <div class="comp-name"><div class="icon icon-blue">🏷️</div> Layer Tags</div>
+            <div class="comp-desc">Filterable layer field on every document — narrows retrieval before ranking.</div>
+          </div>
+          <div class="component"
+               data-tooltip="Azure AI Search custom skills let you call Azure OpenAI (or any HTTP endpoint) during indexing to compute fields automatically."
+               data-context='{"title": "Custom Skills", "what": "Azure AI Search custom skills let you call Azure OpenAI (or any HTTP endpoint) during indexing to compute fields automatically. The redundant-context layer is produced this way: a custom skill calls gpt-4o-mini to extract relationships and stamp context for every document at index time.", "requires": ["Azure Function or any HTTP endpoint", "Custom skill JSON wired into the skillset", "Throughput sized for indexing volume"], "prerequisites": ["Custom skill deployed and publicly addressable", "Throttling and retry configured for OpenAI calls"], "links": [{"label": "Custom skill interface", "url": "https://learn.microsoft.com/en-us/azure/search/cognitive-search-custom-skill-interface"}, {"label": "Custom skill example", "url": "https://learn.microsoft.com/en-us/azure/search/cognitive-search-custom-skill-python"}], "code": "# Azure Function — custom skill invoked per document\n@app.function_name(name=&#39;holographic&#39;)\n@app.route(route=&#39;holographic&#39;)\ndef enrich(req: func.HttpRequest) -&gt; func.HttpResponse:\n    docs = req.get_json()[&#39;values&#39;]\n    enriched = [enrich_one(d) for d in docs]\n    return func.HttpResponse(json.dumps({&#39;values&#39;: enriched}))"}'>
+            <div class="comp-name"><div class="icon icon-blue">⚙️</div> Custom Skills</div>
+            <div class="comp-desc">Azure Function calls gpt-4o-mini at index time to populate redundant context.</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Layer-tagged nodes ready for retrieval</div><div class="head"></div></div></div>
+
+      <div class="layer layer-agent" data-layer="agent"
+           data-tooltip="The retrieval intelligence."
+           data-context='{"title": "Layer-Aware Copilot Agent", "what": "The retrieval intelligence. Before issuing a query, the agent classifies the user&amp;apos;s question by abstraction level — code/factual stays on trails; thematic crosses roads; cross-domain takes sea routes; conceptual parallels jump to air routes. Then it traverses the graph at the appropriate depth, pulling redundant context from neighbors so even partial graph coverage produces meaningful answers.", "requires": ["Copilot Studio agent or custom agent runtime", "Tool/plugin to call Azure AI Search with layer filters", "Query classification prompt"], "prerequisites": ["Decide on Copilot Studio (low-code) vs. custom (Azure OpenAI Assistants or Semantic Kernel)", "Author the query classification system prompt"], "links": [{"label": "Copilot Studio knowledge sources", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-add-search"}, {"label": "Issue #002 — Scoped Multi-Source Search", "url": "../issue-002/"}], "code": "// Pseudo-code — agent classifies, then queries with layer filter\nconst layer = await classify(userQuery);\nconst results = await aiSearch({\n  query: userQuery,\n  filter: `linkageLayer eq &#39;${layer}&#39;`,\n  k: 20\n});\nconst synthesis = await openai.complete({\n  messages: [{ role: &#39;system&#39;, content: SYNTHESIS_PROMPT },\n             { role: &#39;user&#39;, content: formatResults(results) }]\n});"}'>
+        <div class="layer-label">🟪 Stage 4 · Layer-Aware Copilot Agent <span class="layer-badge">TRAVERSAL CONTROL</span></div>
+        <div class="component-row">
+          <div class="component"
+               data-tooltip="The first step the agent takes for every question."
+               data-context='{"title": "Query Classifier", "what": "The first step the agent takes for every question. A small LLM call classifies the question into one of the four linkage layers. This routes the retrieval intelligently rather than searching everything for everything.", "requires": ["Classification prompt", "Default fallback layer if confidence is low"], "prerequisites": ["Test classifications against 30+ representative questions", "Define routing rules for low-confidence cases (typically: search all layers)"], "links": [{"label": "Azure OpenAI structured outputs", "url": "https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/structured-outputs"}], "code": "// Classify the question to pick the right layer\nconst { layer, confidence } = await openai.complete({\n  model: &#39;gpt-4o-mini&#39;,\n  messages: [{ role: &#39;system&#39;, content: CLASSIFY_PROMPT }, { role: &#39;user&#39;, content: userQuery }],\n  response_format: { type: &#39;json_object&#39; }\n});"}'>
+            <div class="comp-name"><div class="icon icon-purple">🧭</div> Query Classifier</div>
+            <div class="comp-desc">Maps every question to a linkage layer — code stays on trails, strategy takes air routes.</div>
+          </div>
+          <div class="component"
+               data-tooltip="Once a layer is chosen, the agent traverses the knowledge graph at the matching depth — one hop on trails, two on roads, three on sea routes, four on air routes (rough heuristic)."
+               data-context='{"title": "Graph Traversal", "what": "Once a layer is chosen, the agent traverses the knowledge graph at the matching depth — one hop on trails, two on roads, three on sea routes, four on air routes (rough heuristic). At each hop, the redundant context bundle accompanies the node so the synthesis prompt has full context, not just terms.", "requires": ["Edge data accessible from Cosmos DB or AI Search complex fields", "Hop budget per layer", "Result deduplication"], "prerequisites": ["Decide where edges live (graph DB vs. denormalized into AI Search)", "Define hop budgets per layer based on token economics"], "links": [{"label": "Cosmos DB graph queries", "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/gremlin/headers"}], "code": "// Hop budgets shape the traversal\nconst HOPS = { trail: 1, road: 2, &#39;sea-route&#39;: 3, &#39;air-route&#39;: 4 };\nconst neighborhood = await traverse(seedNodes, HOPS[layer]);"}'>
+            <div class="comp-name"><div class="icon icon-purple">🕸️</div> Graph Traversal</div>
+            <div class="comp-desc">Hop budget per layer (1 → 4) — retrieves the right neighborhood, not the whole graph.</div>
+          </div>
+          <div class="component"
+               data-tooltip="The payoff."
+               data-context='{"title": "Cross-Domain Synthesis", "what": "The payoff. With a layer-filtered, holographically-enriched neighborhood in hand, the agent passes everything to a synthesis prompt that produces a coherent answer with citations. The redundant context fields let the prompt connect dots that were never explicitly linked — that&amp;apos;s the cross-domain magic.", "requires": ["gpt-4o or stronger for synthesis", "Citation format aligned with your downstream UI", "Token budget for context window"], "prerequisites": ["Synthesis prompt authored and tuned", "Citation rendering implemented in the consumer UI"], "links": [{"label": "Azure OpenAI gpt-4o", "url": "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models"}], "code": "// Synthesis with citations\nconst answer = await openai.complete({\n  model: &#39;gpt-4o&#39;,\n  messages: [\n    { role: &#39;system&#39;, content: SYNTHESIS_PROMPT },\n    { role: &#39;user&#39;, content: renderContextWithCitations(neighborhood) }\n  ]\n});"}'>
+            <div class="comp-name"><div class="icon icon-purple">📡</div> Cross-Domain Synthesis</div>
+            <div class="comp-desc">Connects nodes that were never explicitly linked using their redundant context.</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Synthesized answer with citations</div><div class="head"></div></div></div>
+
+      <div class="layer layer-output" data-layer="output"
+           data-tooltip="What the user sees: cross-domain answers with traceable citations and graceful degradation."
+           data-context='{"title": "Resilient Recall", "what": "What the user sees: cross-domain answers with traceable citations and graceful degradation. The architecture is what makes it possible — but the value lives here. The agent answers questions that no single tool, repo, or library could answer alone, and it keeps answering even when one source goes offline.", "requires": ["Consumer UI that supports inline citations", "Telemetry to measure cross-domain query coverage", "Fallback messaging when a domain is unavailable"], "prerequisites": ["Define success metrics — cross-project query rate, source attribution coverage, user satisfaction", "Establish the &#39;graceful degradation&#39; UX pattern in your consumer app"], "links": [{"label": "Adaptive cards for citations", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-adaptive-cards"}], "code": ""}'>
+        <div class="layer-label">🟩 Stage 5 · Resilient Recall <span class="layer-badge">GRACEFUL DEGRADATION</span></div>
+        <div class="component-row">
+          <div class="component"
+               data-tooltip="An answer synthesized across project boundaries, surfacing connections that no single document made explicit."
+               data-context='{"title": "Cross-Project Answer", "what": "An answer synthesized across project boundaries, surfacing connections that no single document made explicit. This is what the customer sees and remembers — and what justifies the storage and indexing investment.", "requires": ["Inline citations", "Project-attribution per citation", "Confidence indication when synthesis crosses sea-route or air-route layers"], "prerequisites": ["Citation UX validated with end users", "Confidence scoring rules defined"], "links": [], "code": ""}'>
+            <div class="comp-name"><div class="icon icon-green">🪐</div> Cross-Project Answer</div>
+            <div class="comp-desc">An answer synthesized across project boundaries — connections no single doc made explicit.</div>
+          </div>
+          <div class="component"
+               data-tooltip="Every claim in the answer is traceable back to a specific node — a doc, a chat export, a meeting transcript, a PR."
+               data-context='{"title": "Source Citations", "what": "Every claim in the answer is traceable back to a specific node — a doc, a chat export, a meeting transcript, a PR. Citations are non-negotiable for regulated industries and equally important for trust in any enterprise context.", "requires": ["Citation field on every retrieved node", "URL stable across the source system&amp;apos;s lifetime", "Source-system permission preserved (don&amp;apos;t leak content the user can&amp;apos;t see)"], "prerequisites": ["Per-source citation URL pattern documented", "Permission trimming verified at retrieval time"], "links": [{"label": "AI Search permission trimming", "url": "https://learn.microsoft.com/en-us/azure/search/search-security-trimming-for-azure-search"}], "code": "// Citation rendered inline with the answer\n{ text: &#39;Auth strategy depends on compliance baseline (Project B)&#39;,\n  citations: [\n    { id: &#39;doc:projB-compliance-baseline&#39;, url: &#39;...&#39; }\n  ]\n}"}'>
+            <div class="comp-name"><div class="icon icon-green">🔗</div> Source Citations</div>
+            <div class="comp-desc">Every claim traceable to a node — doc, chat export, transcript, or PR.</div>
+          </div>
+          <div class="component"
+               data-tooltip="The holographic property in action."
+               data-context='{"title": "Graceful Degradation", "what": "The holographic property in action. If the SharePoint library for Project B goes offline, the agent still answers from the redundant context stamped on Project A nodes that referenced it — at lower fidelity, but never with total failure. This is the resilience that distinguishes holographic memory from a brittle knowledge-graph join.", "requires": ["Redundant context populated at index time (Layer 2)", "Fallback messaging for partial results", "Telemetry on degraded responses"], "prerequisites": ["Test by intentionally taking a source offline and verifying coherent (lower-fidelity) answers continue", "User-facing message template for &amp;apos;answered from cached context&amp;apos; cases"], "links": [], "code": "// Detect degraded mode and surface a hint to the user\nif (results.some(r =&gt; r.source === &#39;redundant-context-only&#39;)) {\n  response.metadata.degradedMode = true;\n  response.metadata.degradationReason = &#39;projB index unavailable&#39;;\n}"}'>
+            <div class="comp-name"><div class="icon icon-green">🛡️</div> Graceful Degradation</div>
+            <div class="comp-desc">If a source goes offline, redundant context still answers at lower fidelity. Never total failure.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /#diagram -->
+
+  <!-- ─── Where else this lands ─── -->
+  <section class="pattern-section pattern-applications" aria-label="Where else this pattern lands">
+    <p class="pattern-eyebrow">🏆 Where this pattern lands</p>
+    <h3>The short answer: anywhere the answer to &ldquo;why did we do it this way?&rdquo; is trapped in someone&rsquo;s head</h3>
+    <p class="pattern-sub">This pattern hits hardest in organizations where knowledge is high-value, project-bounded, and currently invisible to AI tools. If your customer is past the &ldquo;chatbot&rdquo; phase and asking <em>&ldquo;how do we make AI remember?&rdquo;</em>, they&rsquo;re ready for this conversation.</p>
+    <div class="pattern-apps-grid">
+      <div class="app-pill">
+        <p class="app-label">🧑‍💼 Professional services &amp; consulting</p>
+        <p class="app-desc">Cross-engagement knowledge reuse, lessons learned across client projects, institutional memory through partner rotations.</p>
+      </div>
+      <div class="app-pill">
+        <p class="app-label">⚙️ Engineering &amp; R&amp;D</p>
+        <p class="app-desc">Cross-team architecture decisions, design pattern reuse, &ldquo;why did we choose X over Y?&rdquo; queries across repos and design docs.</p>
+      </div>
+      <div class="app-pill">
+        <p class="app-label">🏛️ Regulated industries</p>
+        <p class="app-desc">Compliance traceability across projects in pharma, finance, energy. Audit trail for decisions that span multiple workstreams.</p>
+      </div>
+      <div class="app-pill">
+        <p class="app-label">🤝 M&amp;A and integration</p>
+        <p class="app-desc">Rapidly connecting knowledge bases from two merging organizations where nothing was previously linked.</p>
+      </div>
+      <div class="app-pill">
+        <p class="app-label">🎓 Onboarding</p>
+        <p class="app-desc">New hires get full project context in days, not weeks — with traceable answers to &ldquo;what was already decided and why?&rdquo;</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Design pitfall ─── -->
+  <section class="pattern-section" aria-label="Design pitfall">
+    <div class="pattern-pitfall">
+      <span class="pitfall-icon" aria-hidden="true">⚠</span>
+      <div class="pitfall-body">
+        <strong>Design pitfall.</strong> Don&rsquo;t underestimate the storage cost. Redundant context at every node typically grows your index by 3–5x compared to a naive flat index. That&rsquo;s deliberate — you&rsquo;re spending storage to buy resilience and cross-domain recall — but it makes the Azure AI Search tier choice non-trivial. Mark metadata-heavy fields as <code>filterable</code> (not <code>searchable</code>) to keep query latency manageable.
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Try this now ─── -->
+  <section class="pattern-section pattern-try-now" aria-label="Try this now">
+    <p class="pattern-eyebrow">🛠️ Try this now</p>
+    <h3>Build a cross-project knowledge agent this week</h3>
+    <ol>
+      <li><div class="step-body"><strong>Find the cross-project pain.</strong> Ask the customer: <em>&ldquo;When someone new joins a project, how long does it take them to understand what decisions were already made and why?&rdquo;</em> If the answer is &ldquo;weeks&rdquo; or &ldquo;they ask around on Teams,&rdquo; you&rsquo;ve found the scenario. PMOs, architecture review boards, and R&amp;D leads are the sharpest entry points.</div></li>
+      <li><div class="step-body"><strong>Start with two data sources, not ten.</strong> Pick one SharePoint library and one repo (or meeting archive). Index them into Azure AI Search with enriched metadata: project name, author, date, related projects, key decisions referenced. This is your minimum viable holographic index.</div></li>
+      <li><div class="step-body"><strong>Add the &ldquo;related artifacts&rdquo; field.</strong> For every document you index, populate a metadata field <code>related_artifacts</code> with references to other documents it connects to. Use an Azure AI Search custom skill that calls Azure OpenAI to auto-extract these relationships at index time.</div></li>
+      <li><div class="step-body"><strong>Demo the cross-domain question.</strong> Ask your agent: <em>&ldquo;What decisions from Project A could affect the timeline of Project B?&rdquo;</em> If the agent can synthesize an answer from documents that never explicitly mentioned each other, you&rsquo;ve demonstrated the pattern. If not, you need richer metadata at indexing time.</div></li>
+    </ol>
+    <div class="doors-quote">
+      <span class="doors-label">💡 The line that opens doors:</span> &ldquo;What if your team could ask one question and get an answer that connects decisions across every project — even when those projects were never explicitly linked?&rdquo;
+    </div>
+  </section>
+
+  <!-- ─── Credits &amp; further reading ─── -->
+  <section class="pattern-section pattern-credits" aria-label="Credits and further reading">
+    <div class="credits-body">
+      Pattern surfaced by <strong>Tyson Dowd</strong> in a 1:1 conversation about the &ldquo;Windows 7 phase of AI&rdquo; — where the differentiator is no longer raw model capability but how systems carry memory across tools, projects, and time. Holographic Memory is the indexing half of the architecture; <a href="../issue-002/">Scoped Multi-Source Search (#002)</a> is the retrieval half.
+    </div>
+    <div class="credits-links">
+      <a class="credits-link" href="../../issues/the_cheat_code_issue_007.html" target="_blank" rel="noopener">📧 Full email write-up</a>
+      <a class="credits-link" href="../issue-002/">← Related: Scoped Multi-Source Search (#002)</a>
+      <span class="credits-link is-pending" aria-disabled="true">Practical build → Cross-Project Knowledge Agent (#008 · May 12)</span>
+    </div>
+  </section>
+
+</div><!-- /.interactive-page -->
+
+<div class="interactive-footer">
+  <p>The Cheat Code · ABS Tech Strategy · <a href="../../">Back to all patterns</a></p>
+</div>
+
+<script src="../shared/interactive.js"></script>
+<script>
+  window.interactiveConfig = {
+    container: '#diagram',
+    contextMode: 'lightweight',
+    steps: [
+      {
+        id: 'overview',
+        title: 'The Holographic Memory Pattern',
+        description: 'When agents need to answer questions that span tools, projects, or time, flat indexing breaks down. Holographic Memory is a five-stage architecture: Source Artifacts → Holographic Enrichment → Azure AI Search Index → Layer-Aware Agent → Resilient Recall. Every node carries enough redundant context to reconstruct the broader picture even when sources go missing. Click through each stage to see how it works.',
+        highlight: ['.pipeline']
+      },
+      {
+        id: 'sources',
+        title: 'Stage 1: Source Artifacts',
+        description: 'The raw input layer. Every artifact your organization produces — design docs, specs, decision records, exported chat histories, meeting transcripts, repo READMEs and PR descriptions — feeds the holographic index. The trick is breadth over precision: pull from every system where knowledge accumulates, even ones that feel low-signal. The enrichment layer downstream will discover relevance.',
+        highlight: ['[data-layer="sources"]']
+      },
+      {
+        id: 'enrich',
+        title: 'Stage 2: Holographic Enrichment',
+        description: 'The hero of the pattern. Every artifact passes through an AI-driven enrichment step that extracts entities, maps relationships, classifies links by abstraction layer (Trails → Roads → Sea Routes → Air Routes), and stamps each node with redundant context — who created it, what project it belongs to, what other artifacts it references. The redundancy is the feature: every fragment carries a low-resolution image of the whole.',
+        highlight: ['[data-layer="enrich"]']
+      },
+      {
+        id: 'index',
+        title: 'Stage 3: Azure AI Search Index',
+        description: 'The unified index where enriched nodes live. Hybrid retrieval combines keyword BM25, vector similarity, and metadata filters in a single query. Layer tags are filterable, redundant context fields are retrievable but not searchable (cost control), and entities are facetable for the agent to enumerate quickly.',
+        highlight: ['[data-layer="index"]']
+      },
+      {
+        id: 'agent',
+        title: 'Stage 4: Layer-Aware Copilot Agent',
+        description: 'The retrieval intelligence. Before issuing a query, the agent classifies the user&rsquo;s question by abstraction level — code questions stay on trails; thematic questions cross roads; cross-domain questions take sea routes; conceptual parallels jump to air routes. Then it traverses the graph at the appropriate depth, pulling redundant context from neighbors so even partial graph coverage produces meaningful answers.',
+        highlight: ['[data-layer="agent"]']
+      },
+      {
+        id: 'output',
+        title: 'Stage 5: Resilient Recall',
+        description: 'What the user sees: cross-domain answers with traceable citations and graceful degradation. If the SharePoint library for Project B goes offline, the agent still answers from the redundant context stamped on Project A nodes that referenced it — at lower fidelity, but never with total failure. This is the resilience that distinguishes holographic memory from a brittle knowledge-graph join.',
+        highlight: ['[data-layer="output"]']
+      }
+    ]
+  };
+</script>
+</body>
+</html>
