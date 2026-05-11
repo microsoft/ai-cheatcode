@@ -16,6 +16,8 @@
   table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
   img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
   body { margin: 0; padding: 0; width: 100% !important; -webkit-font-smoothing: antialiased; }
+  /* Render-only: strip anchor styling so static PNG doesn't show fake-clickable links */
+  a { color: inherit !important; text-decoration: none !important; }
   @media only screen and (max-width: 620px) {
     .wrapper { width: 100% !important; padding: 8px !important; }
     .content-block { padding: 16px !important; }
