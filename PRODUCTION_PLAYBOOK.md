@@ -172,6 +172,7 @@ Same sequence every issue (↑↑↓↓←→←→ B A START), different glyphs
 | #006 | ▴▾◂▸ | `&#9652; &#9662; &#9666; &#9656;` |
 | #007 | ⬆⬇⬅➡ | `&#11014; &#11015; &#11013; &#10145;` |
 | #008 | ⏶⏷⏴⏵ | `&#9206; &#9207; &#9204; &#9205;` |
+| #009 | ⮝⮟⮜⮞ | `&#11165; &#11167; &#11164; &#11166;` |
 
 Future issues: pick new Unicode arrow/triangle variants. Plenty available: ◀▶, ꜛꜜ, 🔼🔽, ⮝⮟⮜⮞, etc.
 

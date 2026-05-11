@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="../../assets/logo-favicon.svg">
+<link rel="apple-touch-icon" href="../../assets/logo.svg">
+<title>Interactive: Cross-Project Knowledge Agent — The Cheat Code #008</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Outfit:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/interactive.css">
+<style>
+  /* Bento font overrides */
+  .layer-label { font-family: 'Sora', 'Segoe UI', sans-serif; }
+  .comp-name   { font-family: 'Outfit', 'Segoe UI', sans-serif; }
+  .comp-desc   { font-family: 'Outfit', 'Segoe UI', sans-serif; }
+  .layer-badge { font-family: 'JetBrains Mono', monospace; }
+  .layer-legend { font-family: 'Outfit', 'Segoe UI', sans-serif; }
+
+  /* Issue-specific diagram styles */
+  .pipeline { display: flex; flex-direction: column; gap: 12px; padding: 20px 0; }
+
+  .layer {
+    border-radius: 14px;
+    padding: 16px 18px;
+    position: relative;
+    transition: all 0.4s ease;
+  }
+  .layer.dimmed       { opacity: 0.25; transform: scale(0.98); }
+  .layer.highlighted  { opacity: 1; transform: scale(1); box-shadow: 0 0 0 3px rgba(107,47,160,0.3); }
+
+  .layer-sources {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 1.5px solid #0078D4;
+  }
+  .layer-sources .layer-label { color: #0078D4; }
+
+  .layer-flow {
+    background: linear-gradient(135deg, #FDF0E6, #FBE0CC);
+    border: 1.5px solid #D83B01;
+  }
+  .layer-flow .layer-label { color: #D83B01; }
+
+  .layer-index {
+    background: linear-gradient(135deg, #EBF3FD, #D6E8FA);
+    border: 1.5px solid #0078D4;
+  }
+  .layer-index .layer-label { color: #0078D4; }
+
+  .layer-agent {
+    background: linear-gradient(135deg, #F5F0FA, #EDE5F5);
+    border: 1.5px solid #6B2FA0;
+  }
+  .layer-agent .layer-label { color: #6B2FA0; }
+
+  .layer-plugin {
+    background: linear-gradient(135deg, #FFF4E5, #FFE8CC);
+    border: 1.5px solid #CA5010;
+  }
+  .layer-plugin .layer-label { color: #CA5010; }
+
+  .layer-output {
+    background: linear-gradient(135deg, #E8F5E9, #D4EDD5);
+    border: 1.5px solid #107C10;
+  }
+  .layer-output .layer-label { color: #107C10; }
+
+  .layer-label {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.2px;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .layer-flow .step-num   { background: #D83B01; }
+  .layer-index .step-num  { background: #0078D4; }
+  .layer-agent .step-num  { background: #6B2FA0; }
+  .layer-plugin .step-num { background: #CA5010; }
+
+  .component-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .component {
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 12px 14px;
+    border: 1px solid rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .component:hover {
+    box-shadow: 0 4px 16px rgba(107, 47, 160, 0.14);
+    border-color: rgba(107, 47, 160, 0.25);
+  }
+  .comp-name {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 600; font-size: 14px; color: #1B1B3A;
+    margin-bottom: 4px;
+  }
+  .comp-desc { font-size: 12px; line-height: 1.45; color: #5F5F7A; }
+  .icon {
+    width: 28px; height: 28px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 14px; flex-shrink: 0;
+  }
+  .icon-blue   { background: #0078D4; }
+  .icon-purple { background: #6B2FA0; }
+  .icon-green  { background: #107C10; }
+  .icon-orange { background: #D83B01; }
+  .icon-amber  { background: #CA5010; }
+
+  .layer-badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 3px 8px;
+    background: rgba(107, 47, 160, 0.15);
+    color: #6B2FA0;
+    font-size: 9.5px;
+    border-radius: 6px;
+    letter-spacing: 0.6px;
+  }
+  .layer-flow .layer-badge   { background: rgba(216,59,1,0.15); color: #D83B01; }
+  .layer-index .layer-badge  { background: rgba(0,120,212,0.15); color: #0078D4; }
+  .layer-agent .layer-badge  { background: rgba(107,47,160,0.15); color: #6B2FA0; }
+  .layer-plugin .layer-badge { background: rgba(202,80,16,0.15); color: #CA5010; }
+  .layer-output .layer-badge { background: rgba(16,124,16,0.15); color: #107C10; }
+  .layer-sources .layer-badge { background: rgba(0,120,212,0.15); color: #0078D4; }
+
+  .flow-arrow { display: flex; justify-content: center; margin: 4px 0; }
+  .varrow .shaft { width: 2px; height: 18px; background: #6B2FA0; margin: 0 auto; }
+  .varrow .head {
+    width: 0; height: 0; margin: 0 auto;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid #6B2FA0;
+  }
+  .varrow .label {
+    font-size: 10px; font-family: 'JetBrains Mono', monospace;
+    color: #6B2FA0; text-align: center; padding: 2px 0;
+  }
+
+  .layer-legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    padding: 14px 16px;
+    background: #FAF7FE;
+    border: 1px dashed rgba(107, 47, 160, 0.25);
+    border-radius: 12px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: #5F5F7A;
+  }
+  .layer-legend strong { color: #1B1B3A; display: block; font-size: 12.5px; margin-bottom: 2px; }
+</style>
+</head>
+<body>
+
+<div class="interactive-page">
+  <div class="page-header">
+    <a href="../../" class="back-link">← Back to patterns</a>
+    <span class="issue-badge">Issue #008 · Practical</span>
+    <h1>Cross-Project Knowledge Agent</h1>
+    <p class="page-subtitle">The Copilot Studio build for <a href="../issue-007/" style="color:#9F7BC9;text-decoration:underline;">Issue #007&rsquo;s Holographic Memory</a> pattern &mdash; four components, zero custom code in the agent itself, and a customer demo on Day 1.</p>
+  </div>
+
+  <!-- ─── Why This Matters ─── -->
+  <section class="pattern-section pattern-why" aria-label="Why this matters">
+    <p class="pattern-eyebrow">🎯 Why this matters</p>
+    <p class="pattern-hook">Your customer just said: <em>&ldquo;Can we build one agent that answers questions across all our projects &mdash; even when those projects share nothing in common?&rdquo;</em> They have design docs in SharePoint, decision records in repos, and meeting notes from <a href="../issue-006/">Issue #006&rsquo;s pipeline</a>. Each data source is a silo. No single agent connects them today.</p>
+    <p class="pattern-lead"><strong>This is the build.</strong> A Copilot Studio agent backed by Azure AI Search with a custom skillset that stamps every document with cross-project metadata. The agent itself is trivially simple &mdash; generative answers pointed at the index. All the intelligence lives in the enrichment pipeline. Build the hard part once, get a working agent on Day 1.</p>
+    <div class="pattern-meta-strip" aria-label="Pattern metadata">
+      <span class="meta-item"><span class="meta-label">Type</span> 🔧 Practical Build</span>
+      <span class="meta-item"><span class="meta-label">Build by</span> Tyson Dowd</span>
+      <span class="meta-item"><span class="meta-label">Stack</span> Copilot Studio + AI Search + Power Automate</span>
+      <span class="meta-item"><span class="meta-label">Paired concept</span> Issue #007 · Holographic Memory</span>
+      <span class="meta-item"><span class="meta-label">Published</span> May 12, 2026</span>
+    </div>
+  </section>
+
+  <!-- ─── Component legend ─── -->
+  <section class="pattern-section" aria-label="Four components legend">
+    <p class="pattern-eyebrow">🧭 The four components, in build order</p>
+    <p class="pattern-sub" style="margin-bottom:14px;">Each numbered step below maps to a single thing you build. The order is intentional: the index schema comes first because everything else depends on it, but the Power Automate flow is what you spend the most time tuning.</p>
+    <div class="layer-legend">
+      <div><strong>1️⃣ Azure AI Search Index</strong>Custom schema with <code>project_name</code>, <code>decisions</code>, <code>related_artifacts</code>, <code>summary_context</code>.</div>
+      <div><strong>2️⃣ Power Automate Flow</strong>SharePoint trigger → Azure OpenAI enrichment → push to AI Search REST API.</div>
+      <div><strong>3️⃣ Copilot Studio Agent</strong>Generative answers + custom cross-project system prompt. Zero custom code.</div>
+      <div><strong>4️⃣ Plugin Action</strong>&ldquo;Index this conversation&rdquo; &mdash; turns chat exports into searchable knowledge.</div>
+    </div>
+  </section>
+
+  <!-- ─── Section heading for the interactive ─── -->
+  <section class="pattern-section" aria-hidden="true" style="margin-top:36px;margin-bottom:-20px;text-align:center;">
+    <p style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;color:var(--purple);letter-spacing:1.4px;text-transform:uppercase;margin:0;">▶ Step through the build</p>
+  </section>
+
+  <div class="diagram-canvas" id="diagram">
+
+    <div class="pipeline">
+
+      <!-- ─── Source Artifacts ─── -->
+      <div class="layer layer-sources" data-layer="sources"
+           data-tooltip="The raw input layer."
+           data-context='{"title": "Source Artifacts", "what": "The starting point of the pipeline. Pick two SharePoint sites from two different projects with 10&ndash;15 design docs, decision records, or architecture docs each. You don&apos;t need ten data sources to demo this pattern &mdash; two is enough to prove the cross-project synthesis. The Power Automate flow downstream will enrich whatever you index.", "requires": ["Two SharePoint sites with 10&ndash;15 docs each (different projects)", "Read permission on both sites for the service principal", "Optional: a repo with READMEs/ADRs and an Issue #006 meeting transcript archive"], "prerequisites": ["Pick two projects with implicit overlap (shared people, technologies, or decisions)", "Confirm export rights for chat histories if seeding the plugin action with sample data"], "links": [{"label": "SharePoint Graph API", "url": "https://learn.microsoft.com/en-us/graph/api/resources/sharepoint"}, {"label": "Issue #006 &mdash; Meeting-to-Knowledge Pipeline", "url": "../issue-006/"}], "code": "// Don&apos;t over-engineer. Two sites is enough to demo.\nconst sources = [\n  { type: &#39;sharepoint&#39;, siteUrl: &#39;contoso.sharepoint.com/sites/projectAlpha&#39; },\n  { type: &#39;sharepoint&#39;, siteUrl: &#39;contoso.sharepoint.com/sites/projectBeta&#39; }\n];"}'>
+        <div class="layer-label">🟦 Source Artifacts <span class="layer-badge">BREADTH OVER PRECISION</span></div>
+        <div class="component-row">
+          <div class="component"
+               data-tooltip="Design docs, decision records, and architecture specs across project sites."
+               data-context='{"title": "SharePoint Sites", "what": "Design docs, decision records, and architecture specs spread across project sites. These are typically the highest-density knowledge artifacts &mdash; but they were authored in isolation, with no awareness of what other projects produced. The enrichment flow downstream extracts the implicit relationships these docs have to other artifacts.", "requires": ["Microsoft Graph API access", "Sites.Read.All permission", "File enumeration via Search API or change feed"], "prerequisites": ["App registration with Files.Read.All scope", "Search index path defined per project site"], "links": [{"label": "Microsoft Graph SharePoint", "url": "https://learn.microsoft.com/en-us/graph/api/resources/sharepoint"}, {"label": "Azure AI Search SharePoint indexer", "url": "https://learn.microsoft.com/en-us/azure/search/search-howto-index-sharepoint-online"}], "code": "// Two SharePoint sites &mdash; one per project\nconst projectAlpha = await graph.sites(&#39;projectAlpha&#39;).drive.search({\n  query: &#39;fileType:docx OR fileType:pdf&#39;\n});"}'>
+            <div class="comp-name"><div class="icon icon-blue">📄</div> SharePoint Sites</div>
+            <div class="comp-desc">5+ project sites &mdash; design docs, decision records, architecture specs.</div>
+          </div>
+          <div class="component"
+               data-tooltip="READMEs, ADRs, PR descriptions across project repositories &mdash; dense in implicit knowledge."
+               data-context='{"title": "Repo Artifacts", "what": "READMEs, ADRs (Architecture Decision Records), PR descriptions, and code comments are dense in implicit knowledge &mdash; they explain why code looks the way it does, what alternatives were rejected, what tradeoffs were accepted. Indexed alongside design docs, they let an agent answer &#39;why did we choose X?&#39; across every engineering project.", "requires": ["GitHub or Azure DevOps API access", "PR/issue history retention", "Glob patterns for ADR files"], "prerequisites": ["Service principal with read access across target repos", "ADR convention documented (e.g., docs/adr/*.md)"], "links": [{"label": "GitHub REST API for PRs", "url": "https://docs.github.com/en/rest/pulls/pulls"}, {"label": "ADR pattern", "url": "https://adr.github.io/"}], "code": "// Pull READMEs, ADRs, PR descriptions across repos\nconst repoArtifacts = await github.repos.getContent({\n  owner: &#39;contoso&#39;, repo: &#39;svc-auth&#39;,\n  path: &#39;docs/adr&#39;\n});"}'>
+            <div class="comp-name"><div class="icon icon-blue">📦</div> Repo Artifacts</div>
+            <div class="comp-desc">READMEs, ADRs, PR descriptions across project repositories.</div>
+          </div>
+          <div class="component"
+               data-tooltip="Approved meeting summaries flowing in from the Issue #006 pipeline."
+               data-context='{"title": "Meeting Transcripts", "what": "Teams meeting transcripts indexed via the Issue #006 Meeting-to-Knowledge Pipeline. Decisions made verbally during meetings &mdash; historically lost the moment the meeting ended &mdash; become first-class searchable artifacts. The pairing with Issue #006 is intentional: that pipeline produces the approved summaries; this pattern weaves them into the cross-project graph.", "requires": ["Teams transcription enabled", "Issue #006 pipeline (meeting summary + approval)", "SharePoint library for approved summaries"], "prerequisites": ["Issue #006 pipeline deployed and approving summaries", "Per-project channel mapping defined"], "links": [{"label": "Issue #006 &mdash; Meeting-to-Knowledge Pipeline", "url": "../issue-006/"}, {"label": "Teams meeting transcription", "url": "https://learn.microsoft.com/en-us/microsoftteams/meeting-transcription"}], "code": "// Approved meeting summaries flow in from the Issue #006 staging library"}'>
+            <div class="comp-name"><div class="icon icon-blue">🎙️</div> Meeting Transcripts</div>
+            <div class="comp-desc">From Issue #006 pipeline &mdash; approved meeting summaries.</div>
+          </div>
+          <div class="component"
+               data-tooltip="Exported Copilot, Claude, or ChatGPT conversations pasted through the plugin action."
+               data-context='{"title": "Chat Exports", "what": "The breakthrough source for cross-tool knowledge. Power users already chain across Copilot, ChatGPT, and Claude &mdash; exporting those conversations turns ephemeral tool usage into durable organizational memory. The plugin action (Step 4) is the mechanism: users paste a transcript, the flow parses it, and the same enrichment runs as for any other document.", "requires": ["Chat export rights (some tenants restrict)", "Plugin action wired up (see Step 4)", "PII review before indexing"], "prerequisites": ["Identify which tools your power users actually use", "Set ingestion cadence (weekly batch or on-demand)", "Run conversation content through Purview DLP scan"], "links": [{"label": "Copilot conversation export", "url": "https://learn.microsoft.com/en-us/copilot/microsoft-365/conversation-history"}, {"label": "ChatGPT data export", "url": "https://help.openai.com/en/articles/7260999-how-do-i-export-my-chatgpt-history-and-data"}], "code": "// Each chat export = one indexable document\nconst conversation = {\n  id: &#39;chat-2026-04-15-pmo-architecture&#39;,\n  source: &#39;copilot&#39;,\n  topic: &#39;auth-strategy-evaluation&#39;\n};"}'>
+            <div class="comp-name"><div class="icon icon-blue">💬</div> Chat Exports</div>
+            <div class="comp-desc">Manually pasted via the plugin action (Step 4).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Trigger on create/modify</div><div class="head"></div></div></div>
+
+      <!-- ─── Step 2 · Power Automate Flow ─── -->
+      <div class="layer layer-flow" data-layer="flow"
+           data-tooltip="The enrichment pipeline. All the intelligence lives here."
+           data-context='{"title": "Step 2 &mdash; Power Automate Flow", "what": "The enrichment pipeline. Triggered when a file is created or modified in any monitored SharePoint site, the flow extracts document text, calls Azure OpenAI to pull out project name, decisions, related artifacts, and summary context, then POSTs the enriched document into the Azure AI Search REST API. This is where you spend the most tuning time &mdash; the enrichment prompt matters more than anything else in the build.", "requires": ["Power Automate premium licensing for HTTP and Azure OpenAI connectors", "Azure OpenAI deployment (gpt-4o or gpt-4o-mini)", "Azure AI Search admin key for the REST POST"], "prerequisites": ["Index schema created first (Step 1)", "Service principal with Sites.Read.All for SharePoint connector", "Test prompt against 5&ndash;10 sample documents before going wide"], "links": [{"label": "Power Automate SharePoint trigger", "url": "https://learn.microsoft.com/en-us/connectors/sharepointonline/#when-a-file-is-created-or-modified-(properties-only)"}, {"label": "Azure OpenAI connector", "url": "https://learn.microsoft.com/en-us/connectors/azureopenai/"}, {"label": "AI Search REST API &mdash; index documents", "url": "https://learn.microsoft.com/en-us/rest/api/searchservice/addupdate-or-delete-documents"}], "code": "// The enrichment prompt is the heart of the pipeline\nconst prompt = `Extract the project name, key decisions,\npeople mentioned, and any references to other projects\nor documents. Return as JSON.`;"}'>
+        <div class="layer-label"><span class="step-num">2</span> ⚡ Power Automate Flow <span class="layer-badge">ENRICHMENT</span></div>
+        <div class="component-row">
+          <div class="component"
+               data-tooltip="The trigger. Fires automatically as new content arrives in any monitored site."
+               data-context='{"title": "SharePoint Trigger", "what": "&ldquo;When a file is created or modified&rdquo; in a SharePoint site. Add one trigger per site you want to monitor &mdash; or use the Graph change notification webhook if you need a single flow listening to many sites. Either way: the trigger is what turns this from a one-shot index into a live, self-updating knowledge base.", "requires": ["SharePoint trigger &lsquo;When a file is created or modified (properties only)&rsquo;", "Service principal with site-level read", "Trigger conditions to filter file types (don&rsquo;t enrich every .tmp)"], "prerequisites": ["Decide on one-flow-per-site vs. Graph webhook (Graph is cleaner at scale)", "Set trigger conditions: file extensions, folder paths"], "links": [{"label": "SharePoint &mdash; trigger reference", "url": "https://learn.microsoft.com/en-us/connectors/sharepointonline/#when-a-file-is-created-or-modified-(properties-only)"}, {"label": "Graph change notifications", "url": "https://learn.microsoft.com/en-us/graph/webhooks"}], "code": "// Trigger condition: only enrich docs and PDFs\n@or(\n  endsWith(triggerOutputs()?[&#39;body/{FilenameWithExtension}&#39;], &#39;.docx&#39;),\n  endsWith(triggerOutputs()?[&#39;body/{FilenameWithExtension}&#39;], &#39;.pdf&#39;)\n)"}'>
+            <div class="comp-name"><div class="icon icon-orange">⚡</div> SharePoint Trigger</div>
+            <div class="comp-desc">Fires automatically when a file is created or modified in any monitored site.</div>
+          </div>
+          <div class="component"
+               data-tooltip="Pull document content using the SharePoint or Word connector. Strip formatting; keep semantic structure."
+               data-context='{"title": "Extract Text", "what": "Pull the document content. For .docx use the Word connector&rsquo;s &lsquo;Convert document to text&rsquo; action; for PDFs use the AI Builder or Document Intelligence action. Strip formatting but preserve headings and section structure &mdash; the enrichment LLM uses structure cues to identify decisions and references.", "requires": ["Word connector or AI Builder for text extraction", "Memory budget per file (large PDFs may need chunking)", "Error handler for unsupported file types"], "prerequisites": ["Decide on chunking strategy for docs over ~50 pages", "Add scope/try-catch around the extraction action"], "links": [{"label": "Word connector", "url": "https://learn.microsoft.com/en-us/connectors/wordonlinebusiness/"}, {"label": "Document Intelligence in Power Automate", "url": "https://learn.microsoft.com/en-us/ai-builder/prebuilt-doc-from-prebuilt-flow"}], "code": "// Convert .docx to plain text\n// Then strip multiple blank lines but keep headings"}'>
+            <div class="comp-name"><div class="icon icon-orange">📝</div> Extract Text</div>
+            <div class="comp-desc">SharePoint/Word connector pulls content. Strip formatting; keep semantic structure.</div>
+          </div>
+          <div class="component"
+               data-tooltip="A single Azure OpenAI prompt extracts project name, decisions, related artifacts, and summary context."
+               data-context='{"title": "Azure OpenAI Skill", "what": "The hero of the pipeline. A single Azure OpenAI prompt pulls out: (A) project name &amp; author, (B) key decisions and their rationale, (C) related artifacts &mdash; cross-project references the model can infer from context, (D) summary context &mdash; the &lsquo;hologram&rsquo; field. The related_artifacts output is what turns siloed search into cross-project synthesis. Spend your tuning time here, not on the agent system prompt.", "requires": ["Azure OpenAI deployment (gpt-4o-mini sufficient for most cases)", "Structured outputs / JSON mode enabled", "Token budget per document"], "prerequisites": ["Author the extraction prompt and validate against 20 sample docs", "Define entity types relevant to your domain", "Establish acceptable false-positive rate for related_artifacts"], "links": [{"label": "Azure OpenAI structured outputs", "url": "https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/structured-outputs"}, {"label": "Azure OpenAI connector in Power Automate", "url": "https://learn.microsoft.com/en-us/connectors/azureopenai/"}], "code": "// Structured extraction in one call\nconst result = await openai.complete({\n  model: &#39;gpt-4o-mini&#39;,\n  messages: [{ role: &#39;system&#39;, content: EXTRACTION_PROMPT },\n             { role: &#39;user&#39;, content: doc.text }],\n  response_format: { type: &#39;json_schema&#39;,\n                     json_schema: ENRICHED_DOC_SCHEMA }\n});"}'>
+            <div class="comp-name"><div class="icon icon-orange">🧬</div> Azure OpenAI Skill</div>
+            <div class="comp-desc">Single prompt extracts project, decisions, related artifacts, summary context.</div>
+          </div>
+          <div class="component"
+               data-tooltip="POST the enriched document to Azure AI Search REST API."
+               data-context='{"title": "Push to AI Search", "what": "The final action: POST the enriched document JSON to the Azure AI Search REST API (POST /indexes/{index}/docs/index). One call per document. Use the &lsquo;mergeOrUpload&rsquo; action so re-runs idempotently update existing docs instead of creating duplicates. This is the only place in the flow that talks to AI Search.", "requires": ["AI Search admin key (or RBAC role assignment)", "HTTP action in Power Automate", "Index schema deployed (Step 1)"], "prerequisites": ["Step 1 index schema deployed and verified", "Test the POST against the index from Postman before wiring it into the flow"], "links": [{"label": "AI Search &mdash; index documents", "url": "https://learn.microsoft.com/en-us/rest/api/searchservice/addupdate-or-delete-documents"}, {"label": "AI Search RBAC", "url": "https://learn.microsoft.com/en-us/azure/search/search-security-rbac"}], "code": "// Idempotent push to the index\nPOST /indexes/cross-project-index/docs/index?api-version=2023-11-01\n{\n  &#39;value&#39;: [{\n    &#39;@search.action&#39;: &#39;mergeOrUpload&#39;,\n    &#39;id&#39;: docId,\n    &#39;content&#39;: text,\n    &#39;project_name&#39;: extracted.projectName,\n    &#39;decisions&#39;: extracted.decisions,\n    &#39;related_artifacts&#39;: extracted.relatedArtifacts,\n    &#39;summary_context&#39;: extracted.summaryContext\n  }]\n}"}'>
+            <div class="comp-name"><div class="icon icon-orange">📤</div> Push to AI Search</div>
+            <div class="comp-desc">POST enriched document to Azure AI Search REST API (<code>/docs/index</code>).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Enriched documents (JSON)</div><div class="head"></div></div></div>
+
+      <!-- ─── Step 1 · Azure AI Search Index ─── -->
+      <div class="layer layer-index" data-layer="index"
+           data-tooltip="The index where enriched documents live. Build this first."
+           data-context='{"title": "Step 1 &mdash; Azure AI Search Index", "what": "The custom index schema is the foundation of the whole build. Without these fields, the rest of the pipeline has nowhere to land. Key choices: make project_name and decisions filterable (not just searchable) so the agent can scope queries cheaply; mark related_artifacts as searchable (this is what enables cross-project bridging); add a content vector for hybrid retrieval. Build this index first &mdash; before the Power Automate flow.", "requires": ["Azure AI Search instance (Basic tier is enough for the demo)", "Admin key or RBAC assignment", "Optional: vector embedding model deployed in Azure OpenAI"], "prerequisites": ["Decide on tier early &mdash; the redundant context grows storage 3&ndash;5x vs. flat index", "Provision the vectorizer if using hybrid retrieval"], "links": [{"label": "AI Search &mdash; create an index", "url": "https://learn.microsoft.com/en-us/azure/search/search-how-to-create-search-index"}, {"label": "Hybrid retrieval", "url": "https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview"}, {"label": "Filterable vs. searchable", "url": "https://learn.microsoft.com/en-us/azure/search/search-what-is-an-index"}], "code": "// Custom index schema &mdash; the foundation\nconst index = {\n  name: &#39;cross-project-index&#39;,\n  fields: [\n    { name: &#39;id&#39;, type: &#39;Edm.String&#39;, key: true },\n    { name: &#39;content&#39;, type: &#39;Edm.String&#39;, searchable: true },\n    { name: &#39;project_name&#39;, type: &#39;Edm.String&#39;, filterable: true },\n    { name: &#39;author&#39;, type: &#39;Edm.String&#39;, filterable: true },\n    { name: &#39;decisions&#39;, type: &#39;Collection(Edm.String)&#39;, filterable: true },\n    { name: &#39;related_artifacts&#39;, type: &#39;Collection(Edm.String)&#39;, searchable: true },\n    { name: &#39;summary_context&#39;, type: &#39;Edm.String&#39;, searchable: true },\n    { name: &#39;contentVector&#39;, type: &#39;Collection(Edm.Single)&#39;, dimensions: 1536 }\n  ]\n};"}'>
+        <div class="layer-label"><span class="step-num">1</span> 🟦 Azure AI Search Index <span class="layer-badge">HYBRID INDEX</span></div>
+        <div class="component-row">
+          <div class="component"
+               data-tooltip="The schema beyond standard content."
+               data-context='{"title": "Custom Index Schema", "what": "The four fields beyond standard content that make cross-project synthesis possible: project_name (filterable), author (filterable), decisions[] (filterable collection), related_artifacts[] (searchable collection &mdash; the bridge field), summary_context (the &lsquo;hologram&rsquo; that lets a single retrieved doc carry full context). Plus a contentVector for hybrid retrieval. This schema is fixed; don&rsquo;t improvise it.", "requires": ["AI Search instance with collection field support", "Vector field if using hybrid retrieval", "Suggester definitions if using autocomplete"], "prerequisites": ["Agree on the four extraction fields with stakeholders before authoring the prompt", "Verify embedding dimensions match your Azure OpenAI deployment (1536 for ada-002, 3072 for text-embedding-3-large)"], "links": [{"label": "AI Search field types", "url": "https://learn.microsoft.com/en-us/rest/api/searchservice/supported-data-types"}, {"label": "Collection fields", "url": "https://learn.microsoft.com/en-us/azure/search/search-howto-complex-data-types"}], "code": "// The four enrichment fields:\n// project_name      string       filterable\n// author            string       filterable\n// decisions         collection   filterable\n// related_artifacts collection   searchable  ← the bridge\n// summary_context   string       searchable  ← the hologram"}'>
+            <div class="comp-name"><div class="icon icon-blue">🗂️</div> Custom Index Schema</div>
+            <div class="comp-desc">Fields beyond standard content: project, author, decisions, related artifacts, summary context.</div>
+          </div>
+          <div class="component"
+               data-tooltip="Web API skill calls Azure OpenAI during indexing to populate related_artifacts &mdash; the cross-project bridge field."
+               data-context='{"title": "Custom Skillset", "what": "Optionally, you can move the enrichment from the Power Automate flow into a native AI Search custom skill (Web API skill). The trade-off: skillset runs inline with indexing (single source of truth), but Power Automate is easier to debug and to extend with non-AI-Search sinks. The newsletter shows the Power Automate path because it&rsquo;s the lower-friction starting point. If you need to support a multi-index or hybrid push, switch to the skillset.", "requires": ["Azure Function or hosted endpoint implementing the Web API skill contract", "Skillset definition referencing the endpoint", "Indexer pointing at the data source"], "prerequisites": ["Decide: Power Automate (easier to start) vs. native skillset (cleaner at scale)", "If using skillset, provision the function with managed identity for OpenAI access"], "links": [{"label": "AI Search custom skills", "url": "https://learn.microsoft.com/en-us/azure/search/cognitive-search-custom-skill-interface"}, {"label": "Web API skill", "url": "https://learn.microsoft.com/en-us/azure/search/cognitive-search-custom-skill-web-api"}], "code": "// Web API skill definition (excerpt)\n{\n  &#39;@odata.type&#39;: &#39;#Microsoft.Skills.Custom.WebApiSkill&#39;,\n  &#39;uri&#39;: &#39;https://func-enrich.azurewebsites.net/api/extract&#39;,\n  &#39;inputs&#39;: [{ &#39;name&#39;: &#39;content&#39;, &#39;source&#39;: &#39;/document/content&#39; }],\n  &#39;outputs&#39;: [\n    { &#39;name&#39;: &#39;project_name&#39; },\n    { &#39;name&#39;: &#39;decisions&#39; },\n    { &#39;name&#39;: &#39;related_artifacts&#39; },\n    { &#39;name&#39;: &#39;summary_context&#39; }\n  ]\n}"}'>
+            <div class="comp-name"><div class="icon icon-blue">🛠️</div> Custom Skillset (alternative)</div>
+            <div class="comp-desc">Web API skill calls Azure OpenAI during indexing &mdash; alternative to the Power Automate path.</div>
+          </div>
+          <div class="component"
+               data-tooltip="Keyword + vector + metadata filters in a single query."
+               data-context='{"title": "Hybrid Retrieval", "what": "At query time, the agent issues a hybrid search: keyword BM25 + vector similarity + metadata filters in one call. The search_filter parameter lets the agent scope by project_name on demand &mdash; useful for building topic-specific variants of the same agent without rebuilding the index. The top-N results plus all their fields (including summary_context and related_artifacts) flow into the agent for synthesis.", "requires": ["Hybrid retrieval enabled (vector + keyword)", "Top-N tuned to your token budget (typically 5&ndash;10)", "search_filter syntax understood for runtime scoping"], "prerequisites": ["Test queries against the index from Search Explorer before wiring up the agent", "Decide whether to expose filter knobs to end users or fix them in the agent prompt"], "links": [{"label": "Hybrid retrieval", "url": "https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview"}, {"label": "AI Search filters reference", "url": "https://learn.microsoft.com/en-us/azure/search/search-filters"}, {"label": "Issue #002 &mdash; Scoped Multi-Source Search", "url": "../issue-002/"}], "code": "// Hybrid query with optional project scope\nconst results = await aiSearch({\n  query: userQuestion,\n  vectorQueries: [{ vector: embed(userQuestion), kNearestNeighbors: 10 }],\n  filter: scope ? `project_name eq &#39;${scope}&#39;` : null,\n  top: 10,\n  select: [&#39;content&#39;, &#39;project_name&#39;, &#39;decisions&#39;,\n           &#39;related_artifacts&#39;, &#39;summary_context&#39;]\n});"}'>
+            <div class="comp-name"><div class="icon icon-blue">🔎</div> Hybrid Retrieval</div>
+            <div class="comp-desc">Keyword + vector + metadata filters. <code>search_filter</code> scopes by project on demand.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Top-N results + metadata</div><div class="head"></div></div></div>
+
+      <!-- ─── Step 3 · Copilot Studio Agent ─── -->
+      <div class="layer layer-agent" data-layer="agent"
+           data-tooltip="The conversational layer. Trivially simple by design."
+           data-context='{"title": "Step 3 &mdash; Copilot Studio Agent", "what": "The agent itself is intentionally simple: generative answers pointed at the Azure AI Search index. Zero custom code, zero topics &mdash; the intelligence lives in the index, not the agent. The one thing that matters here is the custom system prompt that instructs the agent to synthesize across projects and cite both sources. The enrichment prompt (Step 2) and the agent system prompt are the two text artifacts that define the whole experience.", "requires": ["Copilot Studio environment", "Azure AI Search added as a knowledge source", "Generative answers enabled", "Custom system prompt configured"], "prerequisites": ["Steps 1 &amp; 2 complete (index has enriched docs in it)", "Test the &lsquo;impossible&rsquo; question against the index from Search Explorer before adding the agent on top"], "links": [{"label": "Copilot Studio knowledge sources", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-add-search"}, {"label": "Generative answers", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/nlu-generative-answers"}, {"label": "Custom system prompt", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/customize-default-canvas"}], "code": "// The cross-project system prompt &mdash; the whole agent personality\nWhen answering, search across all projects.\nIf you find related decisions in different projects,\nexplicitly connect them and cite both sources.\nAlways state which projects your answer draws from."}'>
+        <div class="layer-label"><span class="step-num">3</span> 🟪 Copilot Studio Agent <span class="layer-badge">GENERATIVE</span></div>
+        <div class="component-row">
+          <div class="component"
+               data-tooltip="The build sequence inside Copilot Studio Maker Portal."
+               data-context='{"title": "Build Steps", "what": "Four clicks in the Copilot Studio Maker Portal: (1) Create new agent. (2) Add knowledge source &rarr; Azure AI Search &rarr; point at the index from Step 1. (3) Enable generative answers in the agent&rsquo;s configuration. (4) Paste the cross-project system prompt into the custom prompt field. That&rsquo;s it &mdash; no topics, no entities, no Power Fx. The whole agent is configured in under 10 minutes.", "requires": ["Copilot Studio license / environment", "Service principal or user account that can connect to AI Search from Power Platform", "AI Search admin key or RBAC role for the connector"], "prerequisites": ["Decide on environment (default vs. dedicated for this agent)", "Verify the Copilot Studio account can reach the AI Search instance (network/private endpoint considerations)"], "links": [{"label": "Build a Copilot Studio agent", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-get-started"}, {"label": "Add AI Search knowledge", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-add-search"}], "code": "// Maker Portal click path:\n// 1. + New agent\n// 2. Knowledge &rarr; Azure AI Search &rarr; cross-project-index\n// 3. Generative AI &rarr; enable generative answers\n// 4. System prompt &rarr; paste cross-project instructions\n// Done."}'>
+            <div class="comp-name"><div class="icon icon-purple">🪄</div> Build Steps</div>
+            <div class="comp-desc">Create agent → add AI Search knowledge → enable generative answers → paste prompt.</div>
+          </div>
+          <div class="component"
+               data-tooltip="The key to cross-project synthesis."
+               data-context='{"title": "Custom System Prompt", "what": "The single text artifact that turns a basic search agent into a cross-project intelligence tool. Instructs the agent to (1) search across all projects, not just the most relevant one, (2) explicitly connect related decisions found in different projects, (3) cite both sources, (4) always state which projects the answer draws from. Tune this prompt against a list of 10 representative cross-project questions before declaring the agent done.", "requires": ["Generative answers enabled on the agent", "Prompt no longer than the Copilot Studio system message limit", "Test set of 10 representative cross-project questions"], "prerequisites": ["Index populated with at least 20 enriched docs from two projects", "Customer&rsquo;s &lsquo;impossible question&rsquo; identified in advance so you can tune the prompt against it"], "links": [{"label": "Customize the agent system prompt", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/customize-default-canvas"}, {"label": "Prompt engineering &mdash; Azure OpenAI", "url": "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/prompt-engineering"}], "code": "// The cross-project synthesis prompt\nWhen answering, search across all projects.\nIf you find related decisions in different projects,\nexplicitly connect them and cite both sources.\nAlways state which projects your answer draws from.\nIf a question has no cross-project relevance,\nanswer from the single project and say so."}'>
+            <div class="comp-name"><div class="icon icon-purple">📝</div> Custom System Prompt</div>
+            <div class="comp-desc">Instructs the agent to synthesize across projects and cite both sources.</div>
+          </div>
+          <div class="component"
+               data-tooltip="No code inside Copilot Studio itself. Intelligence lives in the index."
+               data-context='{"title": "Zero Custom Code", "what": "Notice what&rsquo;s missing: no topics, no entities, no Power Fx, no plugins (yet). The whole agent is generative answers + a system prompt. Customers expect &lsquo;agents are complicated&rsquo; &mdash; demoing this build in 10 minutes flips their mental model. The corollary: don&rsquo;t add complexity in the agent layer that belongs in the index. If an answer is bad, fix the enrichment prompt, not the agent.", "requires": ["Discipline to keep complexity in the index", "Knowledge sources configured correctly", "Generative answers properly scoped"], "prerequisites": ["Stakeholder buy-in that &lsquo;agent simplicity&rsquo; is intentional, not a shortcut", "Documented decision: where complexity lives (index vs. agent)"], "links": [{"label": "Copilot Studio capabilities overview", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio"}], "code": "// What&rsquo;s in the Copilot Studio agent:\n// - 1 knowledge source (Azure AI Search)\n// - 1 system prompt (cross-project instructions)\n// - 0 topics\n// - 0 entities\n// - 0 lines of Power Fx"}'>
+            <div class="comp-name"><div class="icon icon-purple">⚙️</div> Zero Custom Code</div>
+            <div class="comp-desc">No code inside Copilot Studio. The agent is a thin conversational layer.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">Cross-project answer</div><div class="head"></div></div></div>
+
+      <!-- ─── Output ─── -->
+      <div class="layer layer-output" data-layer="output"
+           data-tooltip="What the user sees: cross-domain answers with traceable citations."
+           data-context='{"title": "Output &mdash; The Customer Experience", "what": "The agent answers questions no single document answers. Cross-project synthesis with inline citations to both source documents. This is the &lsquo;impossible question&rsquo; demo &mdash; the moment that flips the customer from skeptical to bought-in. The architecture is what makes it possible, but the value lives here.", "requires": ["Adaptive cards or rich-text UI for inline citations", "Per-source citation URL pattern documented", "Confidence indication when synthesis crosses project boundaries"], "prerequisites": ["Citation UX validated with end users", "Demo script with the &lsquo;impossible question&rsquo; rehearsed"], "links": [{"label": "Adaptive cards for citations", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-adaptive-cards"}, {"label": "Issue #007 &mdash; Holographic Memory", "url": "../issue-007/"}], "code": ""}'>
+        <div class="layer-label">🟩 Output <span class="layer-badge">USER VALUE</span></div>
+        <div class="component-row">
+          <div class="component"
+               data-tooltip="A cross-project answer synthesized from documents that were never explicitly linked."
+               data-context='{"title": "Copilot Chat", "what": "User asks a cross-project question: &lsquo;What decisions from Project Alpha&rsquo;s auth design affect Project Beta&rsquo;s compliance timeline?&rsquo; The agent synthesizes an answer like: &lsquo;Alpha chose OAuth 2.0 PKCE (no session tokens). Beta&rsquo;s Q4 audit requires session traceability &mdash; Alpha&rsquo;s choice eliminates one audit control gap but creates a token-rotation requirement.&rsquo; Citations point to both source documents.", "requires": ["End-user access to the published Copilot Studio agent", "Channels configured (Teams, web embed, or both)", "Telemetry to measure cross-project query coverage"], "prerequisites": ["Customer &lsquo;impossible question&rsquo; identified", "Two-project demo content seeded in the index"], "links": [{"label": "Publish Copilot Studio agents", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-fundamentals-publish-channels"}], "code": ""}'>
+            <div class="comp-name"><div class="icon icon-green">💬</div> Copilot Chat</div>
+            <div class="comp-desc">User asks a cross-project question and gets a synthesized answer.</div>
+          </div>
+          <div class="component"
+               data-tooltip="Every claim cites the source documents &mdash; across project boundaries."
+               data-context='{"title": "Source Citations", "what": "Every answer cites the documents it drew from &mdash; across project boundaries. This is non-negotiable for regulated industries and equally important for trust in any enterprise context. The agent should always state which projects the answer draws from, not just &lsquo;Source 1&rsquo; and &lsquo;Source 2&rsquo;.", "requires": ["Citation field on every retrieved node", "URL stable across the source system&rsquo;s lifetime", "Source-system permission preserved (don&rsquo;t leak content the user can&rsquo;t see)"], "prerequisites": ["Per-source citation URL pattern documented", "Permission trimming verified at retrieval time"], "links": [{"label": "AI Search permission trimming", "url": "https://learn.microsoft.com/en-us/azure/search/search-security-trimming-for-azure-search"}], "code": "// Inline citations in the agent response\n{ text: &#39;Alpha&rsquo;s auth design affects Beta&rsquo;s compliance...&#39;,\n  citations: [\n    { project: &#39;Alpha&#39;, doc: &#39;alpha-auth-design.md&#39;, url: &#39;...&#39; },\n    { project: &#39;Beta&#39;,  doc: &#39;beta-compliance-q3.docx&#39;, url: &#39;...&#39; }\n  ]\n}"}'>
+            <div class="comp-name"><div class="icon icon-green">📎</div> Source Citations</div>
+            <div class="comp-desc">Every answer cites documents from both projects &mdash; building reader trust.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="varrow"><div class="shaft"></div><div class="label">+ User-fed knowledge loop</div><div class="head"></div></div></div>
+
+      <!-- ─── Step 4 · Plugin Action ─── -->
+      <div class="layer layer-plugin" data-layer="plugin"
+           data-tooltip="Closes the loop: users actively feed the system."
+           data-context='{"title": "Step 4 &mdash; Plugin Action: &ldquo;Index this conversation&rdquo;", "what": "Exposed as a plugin action on the agent, this is a separate Power Automate cloud flow that turns ephemeral chat into durable knowledge. User pastes an exported Copilot / Claude / ChatGPT conversation transcript and invokes the action. The flow parses the transcript, runs the same Azure OpenAI enrichment as Step 2, and indexes the result into the same AI Search instance. The longer the agent is in use, the richer its cross-project memory becomes &mdash; even when source documents were never written down.", "requires": ["Power Automate cloud flow exposed as a Copilot Studio plugin action", "Same Azure OpenAI extraction prompt as Step 2 (reuse, don&rsquo;t fork)", "Same AI Search index"], "prerequisites": ["Steps 1, 2, 3 complete and verified", "DLP review on user-pasted content (could contain PII)", "Decide on user permissions: who can index conversations?"], "links": [{"label": "Copilot Studio plugin actions", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-flow"}, {"label": "Power Automate cloud flows", "url": "https://learn.microsoft.com/en-us/power-automate/getting-started"}], "code": "// Plugin action shape (Copilot Studio side)\n{\n  name: &#39;IndexThisConversation&#39;,\n  description: &#39;Index a pasted chat export into the knowledge base&#39;,\n  inputs: [{ name: &#39;transcript&#39;, type: &#39;text&#39; },\n           { name: &#39;sourceProject&#39;, type: &#39;text&#39; }],\n  flow: &#39;index-conversation-cloud-flow&#39;\n}"}'>
+        <div class="layer-label"><span class="step-num">4</span> 🧩 Plugin Action &mdash; &ldquo;Index This Conversation&rdquo; <span class="layer-badge">USER-FED KNOWLEDGE</span></div>
+        <div class="component-row">
+          <div class="component"
+               data-tooltip="User exports a conversation, pastes it, invokes the plugin action."
+               data-context='{"title": "User Workflow", "what": "User exports a Copilot / Claude / ChatGPT conversation as plain text or JSON, pastes the transcript into the agent, and invokes the &lsquo;Index this conversation&rsquo; plugin action. From the user&rsquo;s perspective: one paste, one click. From the system&rsquo;s perspective: another enriched node in the cross-project index.", "requires": ["Export rights from the originating tool", "Plugin action invokable from chat", "Optional: a side affordance for &lsquo;tag the project this came from&rsquo;"], "prerequisites": ["Document the export process for the 1&ndash;2 tools your power users actually use"], "links": [{"label": "Copilot conversation export", "url": "https://learn.microsoft.com/en-us/copilot/microsoft-365/conversation-history"}, {"label": "ChatGPT data export", "url": "https://help.openai.com/en/articles/7260999-how-do-i-export-my-chatgpt-history-and-data"}], "code": "// User flow\n// 1. Export conversation from Copilot / Claude / ChatGPT\n// 2. Open the cross-project agent\n// 3. /IndexThisConversation\n// 4. Paste transcript, optionally tag project\n// 5. Done &mdash; future queries will find this content"}'>
+            <div class="comp-name"><div class="icon icon-amber">🧑‍💻</div> User Workflow</div>
+            <div class="comp-desc">User exports a transcript, pastes it, invokes the plugin action.</div>
+          </div>
+          <div class="component"
+               data-tooltip="Exposed as a plugin action. Parses the conversation, runs Step 2 enrichment, indexes into the same AI Search instance."
+               data-context='{"title": "Power Automate Cloud Flow", "what": "A Power Automate cloud flow exposed as a Copilot Studio plugin action. Two inputs: transcript text and optional source-project tag. The flow parses the conversation (one turn per chunk), runs the same Azure OpenAI extraction prompt as Step 2, then POSTs the enriched record into the same AI Search instance. Same schema, same retrieval &mdash; the agent doesn&rsquo;t distinguish between &lsquo;document&rsquo; and &lsquo;conversation&rsquo; nodes.", "requires": ["Cloud flow with HTTP trigger or Copilot Studio action trigger", "Reuse of the Step 2 enrichment prompt", "Idempotent POST to AI Search (mergeOrUpload by conversation ID)"], "prerequisites": ["Step 2 flow stable so its prompt can be lifted into a shared module", "Naming convention for conversation IDs (e.g., chat-{date}-{topic-slug})"], "links": [{"label": "Power Automate cloud flows", "url": "https://learn.microsoft.com/en-us/power-automate/getting-started"}, {"label": "Plugin actions in Copilot Studio", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-flow"}], "code": "// Cloud flow outline\n// Trigger: Plugin action invoked\n// 1. Parse transcript &rarr; turn array\n// 2. Concatenate to single document\n// 3. Azure OpenAI enrichment (same prompt as Step 2)\n// 4. POST to /docs/index with mergeOrUpload"}'>
+            <div class="comp-name"><div class="icon icon-amber">⚡</div> Power Automate Cloud Flow</div>
+            <div class="comp-desc">Parses conversation, runs Step 2 enrichment, indexes into the same instance.</div>
+          </div>
+          <div class="component"
+               data-tooltip="The longer the agent runs, the richer its cross-project memory becomes."
+               data-context='{"title": "Closes the Loop", "what": "Step 4 is what turns this from a one-shot indexing project into a self-feeding system. Power users have already moved on from a single AI tool &mdash; they bounce across Copilot, Claude, and ChatGPT. Those conversations contain the highest-density implicit knowledge in the org. The plugin action captures that and turns it into permanent searchable memory. The longer the agent runs, the more knowledge it accumulates &mdash; even from sources that were never formally documented.", "requires": ["Sustained user engagement with the plugin action", "Periodic review of indexed conversation quality", "Optional: telemetry on which queries get answered from conversation-sourced nodes"], "prerequisites": ["Plugin action discoverable in the agent UX", "User training: when to index a conversation"], "links": [{"label": "Adoption playbooks for agents", "url": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/admin-monitor-channels"}], "code": ""}'>
+            <div class="comp-name"><div class="icon icon-amber">🔁</div> Closes the Loop</div>
+            <div class="comp-desc">Users actively feed the system &mdash; memory grows even without formal documents.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /#diagram -->
+
+  <!-- ─── Where else this lands ─── -->
+  <section class="pattern-section pattern-applications" aria-label="Where else this pattern lands">
+    <p class="pattern-eyebrow">🏆 Where this pattern lands</p>
+    <h3>The short answer: any team that has 3+ concurrent projects with implicit cross-project decisions</h3>
+    <p class="pattern-sub">This is the build behind <a href="../issue-007/">Issue #007&rsquo;s Holographic Memory pattern</a>. It hits hardest in organizations where institutional knowledge is high-value, project-bounded, and currently invisible to AI tools. Lead with the &ldquo;impossible question&rdquo; demo &mdash; it&rsquo;s the moment the room goes quiet.</p>
+    <div class="pattern-apps-grid">
+      <div class="app-pill">
+        <p class="app-label">🧑‍💼 Professional services &amp; consulting</p>
+        <p class="app-desc">&ldquo;What lessons from the Acme engagement apply to our new Baker project?&rdquo; Cross-engagement knowledge reuse without senior partner availability.</p>
+      </div>
+      <div class="app-pill">
+        <p class="app-label">⚙️ Engineering &amp; R&amp;D</p>
+        <p class="app-desc">&ldquo;Why did Team A choose OAuth PKCE and does that affect Team B&rsquo;s compliance approach?&rdquo; Architecture decision reuse across squads.</p>
+      </div>
+      <div class="app-pill">
+        <p class="app-label">🏛️ Regulated industries</p>
+        <p class="app-desc">&ldquo;Show me all decisions across all projects that affect our Q4 audit scope.&rdquo; Compliance traceability without manual cross-referencing.</p>
+      </div>
+      <div class="app-pill">
+        <p class="app-label">🤝 M&amp;A and integration</p>
+        <p class="app-desc">Rapidly connecting knowledge bases from two merging organizations where nothing was linked before.</p>
+      </div>
+      <div class="app-pill">
+        <p class="app-label">🎓 New hire onboarding</p>
+        <p class="app-desc">&ldquo;Catch me up on everything that happened on this project before I joined.&rdquo; The agent synthesizes from meeting notes, design docs, and decision records simultaneously.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Design pitfall ─── -->
+  <section class="pattern-section" aria-label="Design pitfall">
+    <div class="pattern-pitfall">
+      <span class="pitfall-icon" aria-hidden="true">⚠</span>
+      <div class="pitfall-body">
+        <strong>What Copilot Studio can&rsquo;t do (yet).</strong> The agent can&rsquo;t follow <code>related_artifacts</code> links hop-by-hop like a graph database. It retrieves the top-N search results and synthesizes from those. For deeper traversal, add a pre-query Power Automate flow that expands related documents before passing them to generative answers. Also: the <code>search_filter</code> parameter in the Azure AI Search connector lets you scope queries by project or metadata &mdash; use this to build topic-specific variants of the same agent.
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Try this now ─── -->
+  <section class="pattern-section pattern-try-now" aria-label="Try this now">
+    <p class="pattern-eyebrow">🛠️ Build the demo in one day</p>
+    <h3>Get a working agent on the customer call this week</h3>
+    <ol>
+      <li><div class="step-body"><strong>Pick two SharePoint sites from two different projects.</strong> 10&ndash;15 documents per site &mdash; enough to have cross-project overlap in people, technologies, or decisions. Don&rsquo;t over-engineer the selection &mdash; any two real projects will have implicit connections.</div></li>
+      <li><div class="step-body"><strong>Manually enrich 20 documents for the demo.</strong> For each doc, add a JSON metadata file with <code>project_name</code>, <code>decisions</code>, <code>related_artifacts</code>, <code>summary_context</code>. Yes, this is manual for the demo &mdash; the Power Automate pipeline automates it in production. ~2 minutes per doc with Copilot Chat helping you write the metadata.</div></li>
+      <li><div class="step-body"><strong>Create the index and the agent.</strong> Index the 20 enriched docs. Create a Copilot Studio agent, add Azure AI Search as a knowledge source, enable generative answers, paste in the cross-project system prompt. Test with: <em>&ldquo;What decisions from Project Alpha affect Project Beta?&rdquo;</em></div></li>
+      <li><div class="step-body"><strong>Demo the &ldquo;impossible&rdquo; question.</strong> Ask a question that no single document answers &mdash; one that requires connecting a decision in Project A with a constraint in Project B. If the agent synthesizes an answer citing both projects, you&rsquo;ve demonstrated the pattern. If not, the <code>related_artifacts</code> metadata needs richer cross-references.</div></li>
+    </ol>
+    <div class="doors-quote">
+      <span class="doors-label">💡 The line that opens doors:</span> &ldquo;What if a new hire could ask one question and get an answer that connects decisions across every project your team has ever run &mdash; with sources cited from documents that were never explicitly linked?&rdquo;
+    </div>
+  </section>
+
+  <!-- ─── Credits &amp; further reading ─── -->
+  <section class="pattern-section pattern-credits" aria-label="Credits and further reading">
+    <div class="credits-body">
+      Build pattern by <strong>Tyson Dowd</strong>, architected from a 1:1 discussion on March 24, 2026 about the &ldquo;Windows 7 phase of AI&rdquo; &mdash; where the differentiator is no longer raw model capability but how systems carry memory across tools, projects, and time. This is the practical build for <a href="../issue-007/">Issue #007 &mdash; Holographic Memory</a>. It also pairs with <a href="../issue-002/">Issue #002 &mdash; Scoped Multi-Source Search</a> (retrieval pattern) and <a href="../issue-006/">Issue #006 &mdash; Meeting-to-Knowledge Pipeline</a> (meeting transcript source).
+    </div>
+    <div class="credits-links">
+      <a class="credits-link" href="../../issues/the_cheat_code_issue_008.html" target="_blank" rel="noopener">📧 Full email write-up</a>
+      <a class="credits-link" href="../issue-007/">← Paired concept: Holographic Memory (#007)</a>
+      <a class="credits-link" href="../issue-006/">← Related: Meeting-to-Knowledge (#006)</a>
+    </div>
+  </section>
+
+</div><!-- /.interactive-page -->
+
+<div class="interactive-footer">
+  <p>The Cheat Code · ABS Tech Strategy · <a href="../../">Back to all patterns</a></p>
+</div>
+
+<script src="../shared/interactive.js"></script>
+<script>
+  window.interactiveConfig = {
+    container: '#diagram',
+    contextMode: 'lightweight',
+    steps: [
+      {
+        id: 'overview',
+        title: 'The Cross-Project Knowledge Agent Build',
+        description: 'A Copilot Studio agent backed by Azure AI Search with a custom skillset. Four components in build order: (1) the index schema, (2) the Power Automate enrichment flow, (3) the agent with a cross-project system prompt, (4) a plugin action that lets users index pasted chat exports. The agent itself is trivially simple &mdash; all the intelligence lives in the enrichment pipeline. Click through each component to see how it&rsquo;s built.',
+        highlight: ['.pipeline']
+      },
+      {
+        id: 'sources',
+        title: 'Source Artifacts',
+        description: 'The starting point. Pick two SharePoint sites from two different projects with 10&ndash;15 design docs each. Add repo READMEs/ADRs and meeting transcripts from Issue #006&rsquo;s pipeline if you have them. Chat exports come in later through Step 4&rsquo;s plugin action. You don&rsquo;t need ten data sources to demo this pattern &mdash; two projects with implicit overlap is enough to prove the cross-project synthesis works.',
+        highlight: ['[data-layer="sources"]']
+      },
+      {
+        id: 'flow',
+        title: 'Step 2 — Power Automate Flow',
+        description: 'The enrichment pipeline. Triggered when a file is created or modified in any monitored SharePoint site, the flow extracts document text, calls Azure OpenAI to pull out project name, decisions, related artifacts, and summary context, then POSTs the enriched document into the Azure AI Search REST API. This is where you spend the most tuning time &mdash; the enrichment prompt matters more than the agent system prompt.',
+        highlight: ['[data-layer="flow"]']
+      },
+      {
+        id: 'index',
+        title: 'Step 1 — Azure AI Search Index',
+        description: 'Build this first &mdash; everything else depends on it. The custom schema has four fields beyond standard content: project_name (filterable), author (filterable), decisions[] (filterable collection), related_artifacts[] (searchable collection &mdash; the bridge field), summary_context (the &ldquo;hologram&rdquo;). Plus a contentVector for hybrid retrieval. At query time, hybrid search combines keyword + vector + metadata filters in one call.',
+        highlight: ['[data-layer="index"]']
+      },
+      {
+        id: 'agent',
+        title: 'Step 3 — Copilot Studio Agent',
+        description: 'Four clicks in the Maker Portal: create the agent, add Azure AI Search as a knowledge source, enable generative answers, paste the cross-project system prompt. Zero custom code &mdash; no topics, no entities, no Power Fx. The agent is intentionally a thin conversational layer; all the intelligence lives in the index. If an answer is bad, fix the enrichment prompt (Step 2), not the agent.',
+        highlight: ['[data-layer="agent"]']
+      },
+      {
+        id: 'output',
+        title: 'Output — The Customer Experience',
+        description: 'The agent answers questions no single document answers. Cross-project synthesis with inline citations to both source documents. This is the &ldquo;impossible question&rdquo; demo &mdash; the moment that flips the customer from skeptical to bought-in. The architecture is what makes it possible, but the value lives here.',
+        highlight: ['[data-layer="output"]']
+      },
+      {
+        id: 'plugin',
+        title: 'Step 4 — Plugin Action: "Index This Conversation"',
+        description: 'Exposed as a plugin action on the agent, this is a Power Automate cloud flow that turns ephemeral chat into durable knowledge. User pastes an exported Copilot / Claude / ChatGPT conversation, invokes the action, and the same enrichment pipeline runs against the transcript. The longer the agent runs, the richer its cross-project memory becomes &mdash; even from conversations that were never formally documented.',
+        highlight: ['[data-layer="plugin"]']
+      }
+    ]
+  };
+</script>
+</body>
+</html>

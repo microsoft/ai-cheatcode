@@ -157,23 +157,25 @@ Concept by: @Tyson Dowd · Discussed in 1:1 (March 24, 2026)
 💬 Where are your customers hitting the "fragmented AI memory" wall? What's the most common scenario where knowledge lives in too many places?
 
 ============================================================
-ISSUE #008 — MAY 19, 2026
+ISSUE #008 — MAY 12, 2026
 ============================================================
 
-🎮 The Cheat Code — Issue #008: Adaptive Guardrails 🧠
+🎮 The Cheat Code — Issue #008: Cross-Project Knowledge Agent 🔧
 
-Your customer deployed an agent, and within a week security wanted it shut down. The guardrails were too rigid — blocking legitimate queries — or too loose — letting sensitive data through. Static rules don't scale.
+Last issue, we named the Holographic Memory pattern. This week, we build it — step by step in Copilot Studio.
 
-This week's pattern: Adaptive Guardrails — a three-layer system (input filtering, output validation, contextual gates) that adjusts safety boundaries based on query context, not hardcoded blocklists.
+Your customer has 6 concurrent projects with knowledge scattered across SharePoint sites, repos, and meeting notes. A new hire asks "What decisions from Project Alpha affect Project Beta's compliance timeline?" Nobody — and no agent — can connect those dots today.
 
-🔑 "The best guardrail is invisible when it's not needed and unmissable when it is."
+This week's build: A Copilot Studio agent backed by Azure AI Search with a custom enrichment skillset that stamps every document with cross-project metadata. Four components, zero custom code in the agent itself, and a working customer demo on Day 1. Pattern by @Tyson Dowd.
+
+🔑 "What if a new hire could ask one question and get an answer that connects decisions across every project your team has ever run — with sources cited from documents that were never explicitly linked?"
 
 📎 Full issue attached as PDF
 📬 Subscribe to The Cheat Code in Outlook Newsletters for weekly delivery
 
 ⏶⏶⏷⏷⏴⏵⏴⏵ B A START
 
-💬 How are your customers handling agent safety today? Static rules, prompt engineering, or something else? What's breaking?
+💬 What "impossible question" would your customer want to ask their cross-project agent? Drop it in the comments — we'll spotlight the sharpest ones.
 
 ============================================================
 ISSUE #009 — MAY 26, 2026

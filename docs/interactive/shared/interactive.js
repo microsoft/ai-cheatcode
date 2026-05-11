@@ -573,6 +573,7 @@
     { num: '005', short: '#005', title: 'Approval Gates',                 path: '../issue-005/', type: 'conceptual' },
     { num: '006', short: '#006', title: 'Meeting-to-Knowledge Pipeline',  path: '../issue-006/', type: 'practical' },
     { num: '007', short: '#007', title: 'Holographic Memory',             path: '../issue-007/', type: 'conceptual' },
+    { num: '008', short: '#008', title: 'Cross-Project Knowledge Agent',  path: '../issue-008/', type: 'practical' },
   ];
 
   function buildGlobalNav() {
