@@ -65,7 +65,7 @@ Starting with Issue #007, the series follows a two-issue arc model:
 **Rules for the cadence:**
 - Conceptual issue always drops first. Practical issue references it and links back.
 - Each pair is self-contained — either issue works standalone, but together they're a complete playbook.
-- The issue info bar gets a type tag: `ISSUE #007 · MAY 5 · 🧠 CONCEPTUAL PATTERN` or `ISSUE #008 · MAY 12 · 🔧 PRACTICAL BUILD`
+- The issue info bar gets a type tag: `ISSUE #007 · MAY 5 · 🧠 CONCEPTUAL PATTERN` or `ISSUE #008 · MAY 11 · 🔧 PRACTICAL BUILD`
 - Practical issues intro paragraph links to the conceptual pair: *"Last issue, we named the pattern. This issue, we build it."*
 - Conceptual issues use sections: Pattern Breakdown + Where This Lands + Quick Tips
 - Practical issues use sections: Agent Spotlight (the build) + Pattern Breakdown (components in build order) + Try This Now

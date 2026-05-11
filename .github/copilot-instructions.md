@@ -66,19 +66,19 @@ Each issue follows a fixed structure defined in `the_cheat_code_template.html`:
 | 005 | Human-in-the-Loop Approval Gates | 🧠 | Pete Puustinen | Apr 21 |
 | 006 | Meeting-to-Knowledge Pipeline | 🔧 | Pete Puustinen | Apr 28 |
 | 007 | Holographic Memory | 🧠 | Tyson Dowd | May 5 |
-| 008 | Cross-Project Knowledge Agent | 🔧 | Tyson Dowd | May 12 |
-| 009 | Adaptive Guardrails | 🧠 | TBD | May 19 |
-| 010 | Building Adaptive Guardrails | 🔧 | TBD | May 26 |
-| 011 | Multi-Agent Handoff | 🧠 | TBD | Jun 2 |
-| 012 | Building Multi-Agent Handoff | 🔧 | TBD | Jun 9 |
-| 013 | Persistent Agent Memory | 🧠 | TBD | Jun 16 |
-| 014 | Building Persistent Memory | 🔧 | TBD | Jun 23 |
-| 015 | Proactive Agent Triggers | 🧠 | TBD | Jun 30 |
-| 016 | Building Proactive Agents | 🔧 | TBD | Jul 7 |
-| 017 | Agent Evaluation & Trust Signals | 🧠 | TBD | Jul 14 |
-| 018 | Building Agent Analytics | 🔧 | TBD | Jul 21 |
-| 019 | Custom Connector Patterns | 🧠 | TBD | Jul 28 |
-| 020 | Building Custom Connectors | 🔧 | TBD | Aug 4 |
+| 008 | Cross-Project Knowledge Agent | 🔧 | Tyson Dowd | May 11 |
+| 009 | Adaptive Guardrails | 🧠 | TBD | May 18 |
+| 010 | Building Adaptive Guardrails | 🔧 | TBD | May 25 |
+| 011 | Multi-Agent Handoff | 🧠 | TBD | Jun 1 |
+| 012 | Building Multi-Agent Handoff | 🔧 | TBD | Jun 8 |
+| 013 | Persistent Agent Memory | 🧠 | TBD | Jun 15 |
+| 014 | Building Persistent Memory | 🔧 | TBD | Jun 22 |
+| 015 | Proactive Agent Triggers | 🧠 | TBD | Jun 29 |
+| 016 | Building Proactive Agents | 🔧 | TBD | Jul 6 |
+| 017 | Agent Evaluation & Trust Signals | 🧠 | TBD | Jul 13 |
+| 018 | Building Agent Analytics | 🔧 | TBD | Jul 20 |
+| 019 | Custom Connector Patterns | 🧠 | TBD | Jul 27 |
+| 020 | Building Custom Connectors | 🔧 | TBD | Aug 3 |
 
 Issues #001–008 are published. Issues #001–004 have interactive walkthroughs. Issues #002–006 are written and ready from prior work. Issues #007–020 are drafted.
 

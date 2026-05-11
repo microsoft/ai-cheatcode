@@ -15,7 +15,7 @@ Tracks where each newsletter issue came from: who built the original pattern, wh
 | 005 | Human-in-the-Loop Approval Gates | 🧠 | Pete Puustinen | **General enterprise pattern** — trust checkpoints between AI generation and consumption | Conceptual pattern observed across multiple engagements; Eggis Pharma meeting scribe used as primary example | Apr 21, 2026 |
 | 006 | Meeting-to-Knowledge Pipeline | 🔧 | Pete Puustinen | **Eggis Pharma** — Budapest Hackathon (2.5-day build with train-the-trainer Day 0) | Hackathon engagement: two-agent architecture (Scribe + Library) built end-to-end with customer team | Apr 28, 2026 |
 | 007 | Holographic Memory | 🧠 | Tyson Dowd | **Internal 1:1 discussion** — cross-project knowledge synthesis problem | Pattern developed from internal conversations about how to handle multi-project knowledge with graceful degradation | May 5, 2026 |
-| 008 | Cross-Project Knowledge Agent | 🔧 | Tyson Dowd | **Internal 1:1 discussion** — practical build of the Holographic Memory pattern | Implementation companion to #007; enriched Azure AI Search + Copilot Studio generative answers | May 12, 2026 |
+| 008 | Cross-Project Knowledge Agent | 🔧 | Tyson Dowd | **Internal 1:1 discussion** — practical build of the Holographic Memory pattern | Implementation companion to #007; enriched Azure AI Search + Copilot Studio generative answers | May 11, 2026 |
 
 ## Planned Issues
 

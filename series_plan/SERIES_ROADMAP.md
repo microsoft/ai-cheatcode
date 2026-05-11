@@ -236,18 +236,18 @@ Note: Verify uniqueness against Symbol Registry in PRODUCTION_PLAYBOOK.md before
 | 5 | Apr 21 | #005 | 🧠 | Approval Gates | Pete | ✅ Published |
 | 6 | Apr 28 | #006 | 🔧 | Meeting-to-Knowledge Pipeline | Pete | ✅ Published |
 | 7 | May 5 | #007 | 🧠 | Holographic Memory | Tyson | 📝 Draft |
-| 8 | May 12 | #007 Alt | 🔧 | Cross-Project Knowledge Agent | Tyson | 📝 Draft |
-| 9 | May 19 | #008 | 🧠 | Adaptive Guardrails | TBD | 🔲 Planned |
-| 10 | May 26 | #009 | 🔧 | Building Adaptive Guardrails | TBD | 🔲 Planned |
-| 11 | Jun 2 | #010 | 🧠 | Multi-Agent Handoff | TBD | 🔲 Planned |
-| 12 | Jun 9 | #011 | 🔧 | Building Multi-Agent Handoff | TBD | 🔲 Planned |
-| 13 | Jun 16 | #012 | 🧠 | Persistent Agent Memory | TBD | 🔲 Planned |
-| 14 | Jun 23 | #013 | 🔧 | Building Persistent Memory | TBD | 🔲 Planned |
-| 15 | Jun 30 | #014 | 🧠 | Proactive Agent Triggers | TBD | 🔲 Planned |
-| 16 | Jul 7 | #015 | 🔧 | Building Proactive Agents | TBD | 🔲 Planned |
-| 17 | Jul 14 | #016 | 🧠 | Agent Evaluation & Trust | TBD | 🔲 Planned |
-| 18 | Jul 21 | #017 | 🔧 | Building Agent Analytics | TBD | 🔲 Planned |
-| 19 | Jul 28 | #018 | 🧠 | Custom Connector Patterns | TBD | 🔲 Planned |
-| 20 | Aug 4 | #019 | 🔧 | Building Custom Connectors | TBD | 🔲 Planned |
+| 8 | May 11 | #007 Alt | 🔧 | Cross-Project Knowledge Agent | Tyson | 📝 Draft |
+| 9 | May 18 | #008 | 🧠 | Adaptive Guardrails | TBD | 🔲 Planned |
+| 10 | May 25 | #009 | 🔧 | Building Adaptive Guardrails | TBD | 🔲 Planned |
+| 11 | Jun 1 | #010 | 🧠 | Multi-Agent Handoff | TBD | 🔲 Planned |
+| 12 | Jun 8 | #011 | 🔧 | Building Multi-Agent Handoff | TBD | 🔲 Planned |
+| 13 | Jun 15 | #012 | 🧠 | Persistent Agent Memory | TBD | 🔲 Planned |
+| 14 | Jun 22 | #013 | 🔧 | Building Persistent Memory | TBD | 🔲 Planned |
+| 15 | Jun 29 | #014 | 🧠 | Proactive Agent Triggers | TBD | 🔲 Planned |
+| 16 | Jul 6 | #015 | 🔧 | Building Proactive Agents | TBD | 🔲 Planned |
+| 17 | Jul 13 | #016 | 🧠 | Agent Evaluation & Trust | TBD | 🔲 Planned |
+| 18 | Jul 20 | #017 | 🔧 | Building Agent Analytics | TBD | 🔲 Planned |
+| 19 | Jul 27 | #018 | 🧠 | Custom Connector Patterns | TBD | 🔲 Planned |
+| 20 | Aug 3 | #019 | 🔧 | Building Custom Connectors | TBD | 🔲 Planned |
 
 Builder assignments are TBD — source from team meetings and 1:1s as demos surface.

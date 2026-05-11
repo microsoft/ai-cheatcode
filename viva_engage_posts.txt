@@ -157,7 +157,7 @@ Concept by: @Tyson Dowd · Discussed in 1:1 (March 24, 2026)
 💬 Where are your customers hitting the "fragmented AI memory" wall? What's the most common scenario where knowledge lives in too many places?
 
 ============================================================
-ISSUE #008 — MAY 12, 2026
+ISSUE #008 — MAY 11, 2026
 ============================================================
 
 🎮 The Cheat Code — Issue #008: Cross-Project Knowledge Agent 🔧
