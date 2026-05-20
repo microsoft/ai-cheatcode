@@ -405,14 +405,16 @@ body {
 }
 
 /* Dimmed state when a step is active */
-.step-active [data-step] {
+.step-active [data-step],
+.step-active [data-layer] {
   opacity: 0.25;
   filter: grayscale(0.5);
   transform: scale(0.98);
 }
 
 /* Highlighted step element */
-.step-active [data-step].step-highlight {
+.step-active [data-step].step-highlight,
+.step-active [data-layer].step-highlight {
   opacity: 1;
   filter: none;
   transform: scale(1.02);
@@ -430,7 +432,10 @@ body {
 .step-active [data-step].step-highlight.analyzer-zone,
 .step-active [data-step].step-highlight.process-zone,
 .step-active [data-step].step-highlight.playbook-box,
-.step-active [data-step].step-highlight.conn-row {
+.step-active [data-step].step-highlight.conn-row,
+.step-active [data-layer].step-highlight.layer,
+.step-active [data-layer].step-highlight.boundary,
+.step-active [data-layer].step-highlight.pipeline-step {
   box-shadow: 0 0 0 4px rgba(107, 47, 160, 0.2),
               0 8px 32px rgba(107, 47, 160, 0.15);
 }
