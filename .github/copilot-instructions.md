@@ -66,7 +66,7 @@ Each issue follows a fixed structure defined in `the_cheat_code_template.html`:
 | 005 | Human-in-the-Loop Approval Gates | 🧠 | Pete Puustinen | Apr 21 |
 | 006 | Meeting-to-Knowledge Pipeline | 🔧 | Pete Puustinen | Apr 28 |
 | 007 | Holographic Memory | 🧠 | Tyson Dowd | May 5 |
-| 008 | Cross-Project Knowledge Agent | 🔧 | Tyson Dowd | May 11 |
+| 008 | Cross-Project Knowledge Agent | 🔧 | Tyson Dowd | Jun 8 |
 | 009 | Adaptive Guardrails | 🧠 | TBD | May 18 |
 | 010 | Building Adaptive Guardrails | 🔧 | TBD | May 25 |
 | 011 | Multi-Agent Handoff | 🧠 | TBD | Jun 1 |

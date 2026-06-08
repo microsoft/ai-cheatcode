@@ -236,7 +236,7 @@ Note: Verify uniqueness against Symbol Registry in PRODUCTION_PLAYBOOK.md before
 | 5 | Apr 21 | #005 | 🧠 | Approval Gates | Pete | ✅ Published |
 | 6 | Apr 28 | #006 | 🔧 | Meeting-to-Knowledge Pipeline | Pete | ✅ Published |
 | 7 | May 5 | #007 | 🧠 | Holographic Memory | Tyson | 📝 Draft |
-| 8 | May 11 | #007 Alt | 🔧 | Cross-Project Knowledge Agent | Tyson | 📝 Draft |
+| 8 | Jun 8 | #008 | 🔧 | Cross-Project Knowledge Agent | Tyson | ✅ Published |
 | 9 | May 18 | #008 | 🧠 | Adaptive Guardrails | TBD | 🔲 Planned |
 | 10 | May 25 | #009 | 🔧 | Building Adaptive Guardrails | TBD | 🔲 Planned |
 | 11 | Jun 1 | #010 | 🧠 | Multi-Agent Handoff | TBD | 🔲 Planned |
